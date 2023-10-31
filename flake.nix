@@ -17,7 +17,7 @@
       overlays = [rust-overlay.overlays.default];
     };
 
-    toolchain = pkgs.rust-bin.fromRustupToolchainFile ./toolchain.toml;
+    # toolchain = pkgs.rust-bin.fromRustupToolchainFile ./toolchain.toml;
 
     awscli-local = pkgs.callPackage ./awscli-local.nix {};
   in {
@@ -27,15 +27,12 @@
         # toolchain
         # pkgs.rust-analyzer-unwrapped
 
+        # web
         pkgs.awscli2
         pkgs.nodejs
         pkgs.yarn
-
-        # dependencies
         # pkgs.nodePackages_latest.serverless
         pkgs.nodePackages.tailwindcss
-
-        # editor tools
         pkgs.nodePackages.prettier
         pkgs.nodePackages.eslint
 
@@ -59,5 +56,3 @@
     };
   };
 }
-# nix js docs
-# https://github.com/NixOS/nixpkgs/blob/nixpkgs-unstable/doc/languages-frameworks/javascript.section.md

@@ -1,5 +1,5 @@
 {
-  description = "Nardo Web project with T3 and rust stack";
+  description = "Nardo Web project with T3 and rust stack deployed to localstack";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
@@ -19,7 +19,8 @@
 
     # toolchain = pkgs.rust-bin.fromRustupToolchainFile ./toolchain.toml;
 
-    awscli-local = pkgs.callPackage ./awscli-local.nix {};
+    awscli = pkgs.callPackage ./localaws/awscli-local.nix {};
+    awscdk = pkgs.callPackage ./localaws/awscdk-local.nix {};
   in {
     devShells.${system}.default = pkgs.mkShell {
       packages = [
@@ -28,17 +29,20 @@
         # pkgs.rust-analyzer-unwrapped
 
         # web
-        pkgs.awscli2
         pkgs.nodejs
         pkgs.yarn
         # pkgs.nodePackages_latest.serverless
-        pkgs.nodePackages.tailwindcss
+        # pkgs.nodePackages.tailwindcss
         pkgs.nodePackages.prettier
         pkgs.nodePackages.eslint
 
-        # testing/deployment
+        ## AWS
+        pkgs.awscli2
+        pkgs.nodePackages_latest.aws-cdk
+        # local AWS
         pkgs.localstack
-        awscli-local
+        awscli
+        awscdk
       ];
 
       # RUST_SRC_PATH = "${toolchain}/lib/rustlib/src/rust/library";
@@ -48,11 +52,6 @@
       AWS_ACCESS_KEY_ID = "test";
       AWS_SECRET_ACCESS_KEY = "test";
       AWS_DEFAULT_REGION = "us-east-1";
-
-      shellHook = ''
-        echo "Welcome to the Nardo Web development environment!"
-        echo "Run yarn dev to start the development server."
-      '';
     };
   };
 }

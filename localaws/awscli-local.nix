@@ -1,5 +1,4 @@
 {
-  lib,
   python310Packages,
   awscli2,
   substituteAll,
@@ -30,8 +29,8 @@ python310Packages.buildPythonApplication rec {
     })
   ];
 
-  # checkPhase = ''
-  #   $out/bin/awslocal -h
-  #   $out/bin/awslocal --version
-  # '';
+  checkPhase = ''
+    $out/bin/awslocal -h
+    $out/bin/awslocal --version
+  '';
 }

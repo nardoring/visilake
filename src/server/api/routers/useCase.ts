@@ -56,4 +56,15 @@ export const useCaseRouter = createTRPCRouter({
 
       return mockResponse;
     }),
+
+  submitUseCase: publicProcedure
+    .input(
+      z.object({
+        useCaseName: z.string().min(1),
+        useCaseDescription: z.string(),
+        tags: z.array(z.string()),
+        analysisTypeId: z.number().positive(),
+      }),
+    )
+    .mutation(({ input }) => {}),
 });

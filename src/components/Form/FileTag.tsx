@@ -2,11 +2,10 @@ import React, { useEffect, useState } from "react";
 
 interface FileTagProps {
   updateTags: (newTags: string[]) => void;
+  inputStyles: string;
 }
 
-const FileTag: React.FC<FileTagProps> = ({ updateTags }) => {
-  const inputStyles =
-    "block w-full rounded-md border-0 py-1.5 pl-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-300 sm:text-sm sm:leading-6";
+const FileTag: React.FC<FileTagProps> = ({updateTags, inputStyles}) => {
   const [tags, setTags] = useState<string[]>([]);
   const [currentTag, setCurrentTag] = useState<string>("");
 

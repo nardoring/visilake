@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import FileTag from "./FileTag";
+import FileTags from "./FileTags";
 
 export default function Form() {
   const inputStyles =
@@ -63,7 +63,7 @@ export default function Form() {
           </select>
         </div>
         <div className="col-span-2">
-          <FileTag updateTags={updateTags} inputStyles={`${inputStyles} ${submitAttempted && tags.length === 0 ? 'ring-red-500 ring-2' : ''}`}/>
+          <FileTags tags={tags} updateTags={updateTags} inputStyles={`${inputStyles} ${submitAttempted && tags.length === 0 ? 'ring-red-500 ring-2' : ''}`}/>
         </div>
         <div className="col-span-2">
           <label htmlFor="useCaseDescription">Use Case Description</label>

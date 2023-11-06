@@ -1,23 +1,19 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
-interface FileTagProps {
+interface FileTagsProps {
+  tags: string[],
   updateTags: (newTags: string[]) => void;
   inputStyles: string;
 }
 
-const FileTag: React.FC<FileTagProps> = ({updateTags, inputStyles}) => {
-  const [tags, setTags] = useState<string[]>([]);
+const FileTags: React.FC<FileTagsProps> = ({tags, updateTags, inputStyles}) => {
   const [currentTag, setCurrentTag] = useState<string>("");
-
-  useEffect(() => {
-    updateTags(tags)
-  }, [tags]);
 
   const handleTagEntry = (e: React.KeyboardEvent<HTMLInputElement> | React.FocusEvent<HTMLInputElement>) => {
     if (e.key === "Enter" || e.type === "blur") {
       e.preventDefault(); // Prevent form submission
       if (currentTag.trim() !== "") {
-        setTags([...tags, currentTag]);
+        updateTags([...tags, currentTag]);
         setCurrentTag("");
       }
     }
@@ -25,7 +21,7 @@ const FileTag: React.FC<FileTagProps> = ({updateTags, inputStyles}) => {
 
   const removeTag = (index: number) => {
     const updatedTags = tags.filter((_, i) => i !== index);
-    setTags(updatedTags);
+    updateTags(updatedTags);
   };
 
   return (
@@ -43,7 +39,7 @@ const FileTag: React.FC<FileTagProps> = ({updateTags, inputStyles}) => {
       <div className="flex flex-wrap gap-2">
         {tags.map((tag, index) => (
           <div
-            key={index}
+            key={`file tag ${index}`}
             className="m-1 flex items-center justify-center rounded-full border border-green-300 bg-green-100 px-2 py-1 font-medium text-green-700"
           >
             <div className="max-w-full flex-initial text-xs font-normal leading-none">
@@ -78,4 +74,4 @@ const FileTag: React.FC<FileTagProps> = ({updateTags, inputStyles}) => {
   );
 };
 
-export default FileTag;
+export default FileTags;

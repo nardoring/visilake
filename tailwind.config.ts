@@ -1,12 +1,17 @@
 import { type Config } from "tailwindcss";
-import { fontFamily } from "tailwindcss/defaultTheme";
 
 export default {
   content: ["./src/**/*.tsx"],
   theme: {
     extend: {
+        colors: {
+        lightGrey: "#F2F2F2",
+        lightBlue: "#F4F7FC",
+        darkBlue: "#0A3749",
+        veryDarkBlue: "#1C3E76"
+      },
       fontFamily: {
-        sans: ["var(--font-sans)", ...fontFamily.sans],
+        'Nunito': ['Nunito', 'sans'],
       },
     },
   },

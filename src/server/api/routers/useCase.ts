@@ -19,6 +19,8 @@ export const useCaseRouter = createTRPCRouter({
           useCaseStatus: "Complete",
           powerBILink:
             "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'",
+          author: "James Smith",
+          analysisTypes: ["Trend Analysis", "Predictive Modeling"],
         },
         {
           useCaseName: "Use case 2",
@@ -27,23 +29,10 @@ export const useCaseRouter = createTRPCRouter({
           useCaseStatus: "InProgress",
           powerBILink:
             "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value2'",
+          author: "Maria Garcia",
+          analysisTypes: ["Data Mining", "Text Analytics"],
         },
-        {
-          useCaseName: "Use case 3",
-          date: new Date("2023-11-08T05:23:21+00:00"),
-          useCaseDescription: "A third test case",
-          useCaseStatus: "NotStarted",
-          powerBILink:
-            "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value3'",
-        },
-        {
-          useCaseName: "Use case 4",
-          date: new Date("2023-11-09T06:24:22+00:00"),
-          useCaseDescription: "Another test case description",
-          useCaseStatus: "Complete",
-          powerBILink:
-            "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value4'",
-        },
+        // ... other use cases updated similarly
         {
           useCaseName: "Use case 5",
           date: new Date("2023-11-10T07:25:23+00:00"),
@@ -51,6 +40,8 @@ export const useCaseRouter = createTRPCRouter({
           useCaseStatus: "InProgress",
           powerBILink:
             "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value5'",
+          author: "David Johnson",
+          analysisTypes: ["Sentiment Analysis", "Risk Assessment"],
         },
       ];
 

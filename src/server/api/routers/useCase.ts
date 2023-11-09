@@ -63,7 +63,7 @@ export const useCaseRouter = createTRPCRouter({
         useCaseName: z.string().min(1),
         useCaseDescription: z.string(),
         tags: z.array(z.string()),
-        analysisTypeId: z.number().positive(),
+        analysisTypeId: z.array(z.number().positive()),
       }),
     )
     .mutation(({ input }) => {}),

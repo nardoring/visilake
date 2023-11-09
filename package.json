@@ -19,6 +19,7 @@
     "next-auth": "^4.23.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
+    "react-multi-select-component": "^4.3.4",
     "superjson": "^1.13.1",
     "zod": "^3.22.4"
   },

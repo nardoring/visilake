@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import FileTags from "./FileTags";
+import { MultiSelect } from "react-multi-select-component";
 
 export default function Form() {
   const inputStyles =
@@ -10,6 +11,13 @@ export default function Form() {
   const [tags, setTags] = useState<string[]>([]);
   const [useCaseDescription, setUseCaseDescription] = useState("");
   const [submitAttempted, setSubmitAttempted] = useState(false);
+  const [analysisTypes, setAnalysisTypes] = useState([]);
+
+  const analysisTypeOptions = [
+    { label: "Analysis Type 1", value: "Analysis Type 1" },
+    { label: "Analysis Type 2", value: "Analysis Type 2" },
+    { label: "Analysis Type 3", value: "Analysis Type 3" },
+  ];
 
   // Callback function used by FileTag to pass tags data
   const updateTags = (newTags: string[]) => {
@@ -42,7 +50,11 @@ export default function Form() {
         <div>
           <label htmlFor="useCaseTitle">Use Case Title</label>
           <input
-            className={`${inputStyles} ${submitAttempted && useCaseTitle.trim() === "" ? 'ring-red-500 ring-2' : ''}`}
+            className={`${inputStyles} ${
+              submitAttempted && useCaseTitle.trim() === ""
+                ? "ring-2 ring-red-500"
+                : ""
+            }`}
             type="text"
             id="useCaseTitle"
             onKeyDown={handleKeyDown}
@@ -50,25 +62,38 @@ export default function Form() {
           />
         </div>
         <div>
-          <label htmlFor="analysisType">Analysis Type</label>
-          <select
-            className={`${inputStyles} ${submitAttempted && analysisType.trim() === "" ? 'ring-red-500 ring-2' : ''}`}
-            id="analysisType"
-            onChange={(e) => setAnalysisType(e.target.value)}
-          >
-            <option></option>
-            <option>Analysis Type 1</option>
-            <option>Analysis Type 2</option>
-            <option>Analysis Type 3</option>
-          </select>
+          <label htmlFor="analysisType">Analysis Type(s)</label>
+          <MultiSelect
+            options={analysisTypeOptions}
+            value={analysisTypes}
+            onChange={setAnalysisTypes}
+            labelledBy="AnalysisTypeSelect"
+            hasSelectAll={false}
+            disableSearch={true}
+            className={`${"rounded shadow-sm"} ${
+              submitAttempted && analysisTypes.length === 0
+                ? "ring-2 ring-red-500"
+                : ""
+            }`}
+          />
         </div>
         <div className="col-span-2">
-          <FileTags tags={tags} updateTags={updateTags} inputStyles={`${inputStyles} ${submitAttempted && tags.length === 0 ? 'ring-red-500 ring-2' : ''}`}/>
+          <FileTags
+            tags={tags}
+            updateTags={updateTags}
+            inputStyles={`${inputStyles} ${
+              submitAttempted && tags.length === 0 ? "ring-red-500 ring-2" : ""
+            }`}
+          />
         </div>
         <div className="col-span-2">
           <label htmlFor="useCaseDescription">Use Case Description</label>
           <textarea
-            className={`${inputStyles} ${submitAttempted && useCaseDescription.trim() === "" ? 'ring-red-500 ring-2' : ''}`}
+            className={`${inputStyles} ${
+              submitAttempted && useCaseDescription.trim() === ""
+                ? "ring-2 ring-red-500"
+                : ""
+            }`}
             rows={4}
             id="useCaseDescription"
             onKeyDown={handleKeyDown}

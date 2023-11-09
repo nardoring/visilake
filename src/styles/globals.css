@@ -2,3 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 @import url(https://fonts.googleapis.com/css2?family=Inter:wght@100;400;600;700&family=Nunito:wght@400;500;600&display=swap);
+
+.rmsc {
+    --rmsc-main: #101010 !important;
+    --rmsc-border: #d1d5db !important;
+    --rmsc-gray: #101010 !important;
+    --rmsc-h: 34px !important;
+}

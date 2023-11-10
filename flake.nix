@@ -31,13 +31,13 @@
         # web
         pkgs.nodejs
         pkgs.yarn
-        # pkgs.nodePackages_latest.serverless
+        pkgs.nodePackages_latest.serverless
         # pkgs.nodePackages.tailwindcss
         pkgs.nodePackages.prettier
         pkgs.nodePackages.eslint
 
         ## AWS
-        pkgs.awscli2
+        pkgs.awscli
         pkgs.nodePackages_latest.aws-cdk
         # local AWS
         pkgs.localstack
@@ -48,7 +48,9 @@
       # RUST_SRC_PATH = "${toolchain}/lib/rustlib/src/rust/library";
 
       # Localstack/AWS env vars
+      LOCALSTACK_API_KEY = "1n5HqMitb2"; ## add api key
       LOCALSTACK = "true";
+      DEBUG = "1";
       AWS_ACCESS_KEY_ID = "test";
       AWS_SECRET_ACCESS_KEY = "test";
       AWS_DEFAULT_REGION = "us-east-1";

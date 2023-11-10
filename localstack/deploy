@@ -1,0 +1,44 @@
+#!/usr/bin/env bash
+
+echo "Creating a new ECR repository locally"
+repoUri=$(awslocal ecr create-repository --repository-name repo1 | jq -r '.repository.repositoryUri')
+
+echo "Building the Docker image, pushing it to local ECR URL: $repoUri"
+sleep 3
+docker build -t "$repoUri" .
+docker push "$repoUri"
+docker rmi "$repoUri"
+
+echo "Creating ECS infrastructure locally"
+# awslocal cloudformation create-stack --stack-name infra --template-body file://infra/ecs.infra.yml
+# awslocal cloudformation wait stack-create-complete --stack-name infra
+awslocal cloudformation create-stack --stack-name infra --template-body file://infra/private.vpc.yml
+awslocal cloudformation wait stack-create-complete --stack-name infra
+
+echo "Deploying ECS app to local environment"
+awslocal cloudformation create-stack --stack-name nardo \
+    --template-body file://infra/private.nardo.yml \
+    --parameters ParameterKey=ImageUrl,ParameterValue=$repoUri
+awslocal cloudformation wait stack-create-complete --stack-name nardo
+
+echo "ECS app successfully deployed. Trying to access app endpoint."
+cluster_arn=$(awslocal ecs list-clusters | jq -r '.clusterArns[0]')
+echo $cluster_arn
+for i in {1..5}; do
+    task_arn=$(awslocal ecs list-tasks --cluster $cluster_arn | jq -r '.taskArns[0]')
+    if [ "$task_arn" != "null" ]; then
+        break
+    fi
+    sleep 2
+done
+echo $task_arn
+for i in {1..5}; do
+    app_port=$(awslocal ecs describe-tasks --cluster $cluster_arn --tasks $task_arn | jq -r '.tasks[0].containers[0].networkBindings[0].hostPort')
+    if [ "$app_port" != "null" ]; then
+        break
+    fi
+    sleep 2
+done
+echo $task_arn
+echo "curling localhost:$app_port"
+echo "App successfully deployed to http://localhost:$app_port"

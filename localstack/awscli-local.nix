@@ -1,6 +1,6 @@
 {
   python310Packages,
-  awscli2,
+  awscli,
   substituteAll,
 }:
 python310Packages.buildPythonApplication rec {
@@ -25,7 +25,7 @@ python310Packages.buildPythonApplication rec {
     # hardcode paths to aws in awscli2 package
     (substituteAll {
       src = ./fix-path.patch;
-      aws = "${awscli2}/bin/aws";
+      aws = "${awscli}/bin/aws";
     })
   ];
 

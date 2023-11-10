@@ -19,8 +19,8 @@
 
     # toolchain = pkgs.rust-bin.fromRustupToolchainFile ./toolchain.toml;
 
-    awscli = pkgs.callPackage ./localaws/awscli-local.nix {};
-    awscdk = pkgs.callPackage ./localaws/awscdk-local.nix {};
+    awscli = pkgs.callPackage ./localstack/awscli-local.nix {};
+    awscdk = pkgs.callPackage ./localstack/awscdk-local.nix {};
   in {
     devShells.${system}.default = pkgs.mkShell {
       packages = [

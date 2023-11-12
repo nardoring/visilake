@@ -5,7 +5,7 @@ export AWS_DEFAULT_REGION = us-east-1
 usage:		## Show this help
 	@fgrep -h "##" $(MAKEFILE_LIST) | fgrep -v fgrep | sed -e 's/\\$$//' | sed -e 's/##//'
 
-install:		## Check dependencies
+install:	## Check dependencies
 	@which aws
 	@which docker
 	@which localstack || pip install localstack
@@ -14,7 +14,7 @@ install:		## Check dependencies
 run:		## Build and deploy the app locally
 	@./localstack/deploy
 
-clean:		## Stop localstack and docker containers
+clean:		## Stop localstack and remove docker containers
 	@./localstack/stop
 
 logs:		## Output localstack logs to logs.txt
@@ -24,4 +24,4 @@ test-ci:
 	make install run; return_code=`echo $$?`;\
 	make logs; make clean; exit $$return_code;
 
-.PHONY: usage check start deploy stop logs test-ci
+.PHONY: usage install run clean logs test-ci

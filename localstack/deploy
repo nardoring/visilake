@@ -2,8 +2,8 @@
 
 echo "Starting Localstack daemon"
 localstack start -d
-echo "Waiting for LocalStack startup..."  # Wait 30 seconds for the LocalStack container
-localstack wait -t 30                     # to become ready before timing out
+echo "Waiting for LocalStack startup..."
+localstack wait -t 30
 echo "Startup complete"
 
 echo "Creating a new ECR repository locally"
@@ -26,22 +26,36 @@ awslocal cloudformation create-stack --stack-name nardo \
 awslocal cloudformation wait stack-create-complete --stack-name nardo
 
 echo "ECS app successfully deployed. Trying to access app endpoint."
-cluster_arn=$(awslocal ecs list-clusters | jq -r '.clusterArns[0]')
-echo $cluster_arn
+clusters=$(awslocal ecs list-clusters)
+echo -e "\nClusters: $clusters\n"
+
+cluster_arn=$(echo $clusters | jq -r '.clusterArns[0]')
+# echo -e "Cluster arn: $cluster_arn\n"
+
+## Get cluster tasks
 for i in {1..5}; do
-    task_arn=$(awslocal ecs list-tasks --cluster $cluster_arn | jq -r '.taskArns[0]')
+    tasks=$(awslocal ecs list-tasks --cluster $cluster_arn)
+    echo -e "Tasks: $tasks\n"
+    task_arn=$(echo $tasks | jq -r '.taskArns[0]')
     if [ "$task_arn" != "null" ]; then
         break
     fi
     sleep 2
 done
-echo $task_arn
+# echo -e "Task arn: $task_arn\n"
+
+## Get task ports
 for i in {1..5}; do
-    app_port=$(awslocal ecs describe-tasks --cluster $cluster_arn --tasks $task_arn | jq -r '.tasks[0].containers[0].networkBindings[0].hostPort')
+    app=$(awslocal ecs describe-tasks --cluster $cluster_arn --tasks $task_arn)
+    echo -e "App: $app\n"
+    app_port=$(echo $app | jq -r '.tasks[0].containers[0].networkBindings[0].hostPort')
     if [ "$app_port" != "null" ]; then
         break
     fi
     sleep 2
 done
-echo $task_arn
-echo "App successfully deployed to http://localhost:$app_port"
+
+echo -e "Curling localhost:$app_port\n"
+curl localhost:$app_port
+
+echo -e "\n\nApp successfully deployed to http://localhost:$app_port"

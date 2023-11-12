@@ -1,0 +1,57 @@
+#+TITLE: AWS Deployment
+
+* Fargate Deployment
+[[./private.nardo.yml]]
+
+** Overview
+This deploys a service on AWS Fargate, hosted in a private subnet and accessible via a private load balancer.
+
+** Parameters
+- /StackName/: Name of the parent Fargate networking stack. Default: infra
+- /ServiceName/: A name for the service. Default: nardo
+- /ImageUrl/: URL of a Docker image for the service. Default: nardo
+- /ContainerPort/: Port number the application in the container binds to. Default: 3000
+- /HostPort/: Port number the application on the host binds to. Default: 45139
+- /ContainerCpu/: CPU allocation for the container. Default: 256
+- /ContainerMemory/: Memory allocation for the container in MB. Default: 512
+- /Path/: Path on the load balancer for the service. Default: "*"
+- /Priority/: Priority for the routing rule on the load balancer. Default: 1
+- /DesiredCount/: Number of service task copies to run. Default: 2
+- /Role/: Optional IAM role for service's containers. Default: ""
+
+** Conditions
+- /HasCustomRole/: Determines if a custom IAM role is provided
+
+** Resources
+- /TaskDefinition/: Defines the Docker container and resource requirements
+- /Service/: Manages multiple instances of the task, monitoring, and logging
+- /TargetGroup/: Tracks tasks, IP addresses, and port numbers
+- /LoadBalancerRule/: Routes traffic to the target group based on specified conditions
+
+* VPC Cluster Deployment
+[[./private.vpc.yml]]
+
+** Overview
+ This deploys a Fargate cluster within a VPC that includes both public and private subnets with two types of load balancers: one public (for routing external traffic to containers in the private subnet) and one private (for internal traffic between services).
+
+** Template Mapping
+- CIDR Blocks for VPC and Subnets:
+  + VPC: 10.0.0.0/16
+  + Public Subnets: 10.0.0.0/24, 10.0.1.0/24
+  + Private Subnets: 10.0.2.0/24, 10.0.3.0/24
+
+** Key Resources
+- /VPC/: Creates a VPC for networking containers, with both public and private subnets.
+- /PublicSubnetOne/ and /PublicSubnetTwo/: Two public subnets allowing containers to have public IP addresses.
+- /PrivateSubnetOne/ and /PrivateSubnetTwo/: Two private subnets for containers with private IP addresses, reachable only within the VPC.
+- /InternetGateway/ and /GatewayAttachment/: Sets up an Internet Gateway for the public subnets.
+- /NatGatewayOne/ and /NatGatewayTwo/: NAT gateways for each private subnet.
+- /ECSCluster/: Defines the ECS Cluster for managing Fargate services.
+- /FargateContainerSecurityGroup/: Security group for the containers in Fargate.
+- /PublicLoadBalancer/ and /PrivateLoadBalancer/: Load balancers for routing traffic to Fargate containers.
+- /ECSRole/ and /ECSTaskExecutionRole/: IAM roles for ECS management and task execution.
+
+** Networking Details
+- Public subnets use an Internet Gateway for network traffic.
+- Private subnets utilize NAT gateways for external communication.
+- Security groups are set up to manage access to Fargate containers and load balancers.

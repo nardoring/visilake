@@ -3,20 +3,27 @@
 ** Localstack Usage
 
 #+begin_src shell
-# Build and deploy the app locally
-make deploy
+# Check dependencies
+make install
 
 # Start LocalStack in detached (preferred) mode
-make start
+# Build and deploy the app locally
+make run
 
 # Stop and remove created containers
-make stop
+make clean
 
 # Output LocalStack logs to logs.txt
 make logs
 #+end_src
 
 The app will be deployed to [[http://localhost:45139]]
+
+*** Prerequisites
+Docker
+Localstack
+[[https://docs.aws.amazon.com/cli/v1/userguide/cli-chap-install.html][awscli v1]] (do not use v2)
+[[https://github.com/localstack/awscli-local][awscli-local]]
 
 *** AWS Networking
 

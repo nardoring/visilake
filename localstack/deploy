@@ -1,5 +1,11 @@
 #!/usr/bin/env bash
 
+echo "Starting Localstack daemon"
+localstack start -d
+echo "Waiting for LocalStack startup..."  # Wait 30 seconds for the LocalStack container
+localstack wait -t 30                     # to become ready before timing out
+echo "Startup complete"
+
 echo "Creating a new ECR repository locally"
 repoUri=$(awslocal ecr create-repository --repository-name repo1 | jq -r '.repository.repositoryUri')
 
@@ -10,8 +16,6 @@ docker push "$repoUri"
 docker rmi "$repoUri"
 
 echo "Creating ECS infrastructure locally"
-# awslocal cloudformation create-stack --stack-name infra --template-body file://infra/ecs.infra.yml
-# awslocal cloudformation wait stack-create-complete --stack-name infra
 awslocal cloudformation create-stack --stack-name infra --template-body file://infra/private.vpc.yml
 awslocal cloudformation wait stack-create-complete --stack-name infra
 
@@ -40,5 +44,4 @@ for i in {1..5}; do
     sleep 2
 done
 echo $task_arn
-echo "curling localhost:$app_port"
 echo "App successfully deployed to http://localhost:$app_port"

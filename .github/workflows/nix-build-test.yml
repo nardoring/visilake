@@ -15,8 +15,5 @@ jobs:
         nix_path: nixpkgs=channel:nixos-unstable
     - run: nix flake check
     - run: |
-        nix develop
-        ls
         docker pull localstack/localstack
-        ./localstack/deploy
-        ./localstack/stop
+        nix develop -c ./localstack/deploy

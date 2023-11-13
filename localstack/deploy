@@ -9,6 +9,8 @@ echo "Startup complete"
 echo "Creating a new ECR repository locally"
 repoUri=$(awslocal ecr create-repository --repository-name repo1 | jq -r '.repository.repositoryUri')
 
+echo -e "Repo URI: $repoUri"
+
 echo "Building the Docker image, pushing it to local ECR URL: $repoUri"
 sleep 3
 docker build -t "$repoUri" .

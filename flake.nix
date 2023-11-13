@@ -14,6 +14,7 @@
     system = "x86_64-linux";
     pkgs = import nixpkgs {
       inherit system;
+      config.allowUnfree = true;
       # overlays = [rust-overlay.overlays.default];
     };
 
@@ -21,6 +22,7 @@
 
     awscli = pkgs.callPackage ./localstack/awscli-local.nix {};
     awscdk = pkgs.callPackage ./localstack/awscdk-local.nix {};
+    terraform-local = pkgs.callPackage ./localstack/terraform-local.nix {};
   in {
     devShells.${system}.default = pkgs.mkShell {
       packages = [
@@ -38,11 +40,13 @@
 
         ## AWS
         pkgs.awscli
+        pkgs.terraform
         pkgs.nodePackages_latest.aws-cdk
         # local AWS
         pkgs.localstack
         awscli
         awscdk
+        terraform-local
       ];
 
       # RUST_SRC_PATH = "${toolchain}/lib/rustlib/src/rust/library";

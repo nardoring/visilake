@@ -3,12 +3,14 @@
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    localstack.url = "github:nardoring/localstack-nix";
     # rust-overlay.url = "github:oxalica/rust-overlay";
   };
 
   outputs = {
     self,
     nixpkgs,
+      localstack,
     # rust-overlay,
   }: let
     system = "x86_64-linux";
@@ -19,10 +21,6 @@
     };
 
     # toolchain = pkgs.rust-bin.fromRustupToolchainFile ./toolchain.toml;
-
-    awscli = pkgs.callPackage ./localstack/awscli-local.nix {};
-    awscdk = pkgs.callPackage ./localstack/awscdk-local.nix {};
-    terraform-local = pkgs.callPackage ./localstack/terraform-local.nix {};
   in {
     devShells.${system}.default = pkgs.mkShell {
       packages = [
@@ -41,12 +39,10 @@
         ## AWS
         pkgs.awscli
         pkgs.terraform
+        pkgs.localstack
         pkgs.nodePackages_latest.aws-cdk
         # local AWS
-        pkgs.localstack
-        awscli
-        awscdk
-        terraform-local
+        localstack.localstack-nix
       ];
 
       # RUST_SRC_PATH = "${toolchain}/lib/rustlib/src/rust/library";

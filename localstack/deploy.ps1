@@ -1,5 +1,7 @@
+param (
+    [string]$LocalStackApiKey
+)
 
-# Function to poll for tasks until we get the task
 function Get-NonEmptyTasks {
     param (
         [string]$ClusterArn,
@@ -66,8 +68,7 @@ function Start-SleepTillStacksCreated {
 }
 
 
-
-$env:LOCALSTACK_API_KEY="3jxETuP1fU";
+$env:LOCALSTACK_API_KEY=$LocalStackApiKey;
 $env:AWS_ACCESS_KEY_ID="test";
 $env:AWS_SECRET_ACCESS_KEY="test";
 $env:AWS_DEFAULT_REGION="us-east-1";

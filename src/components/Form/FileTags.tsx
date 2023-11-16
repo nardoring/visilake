@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { api } from "~/utils/api";
 
 interface FileTagsProps {
   tags: string[],
@@ -6,8 +7,13 @@ interface FileTagsProps {
   inputStyles: string;
 }
 
+const validateTag = (tag: string) => {
+  return api.tag.validateTag.useQuery({tag: tag}).data?.isValid || false
+};
+
 const FileTags: React.FC<FileTagsProps> = ({tags, updateTags, inputStyles}) => {
   const [currentTag, setCurrentTag] = useState<string>("");
+  const [invalidTagErrorMessage, setInvalidTagErrorMessage] = useState<string>("");
 
   /* const handleTagEntry = (e: React.KeyboardEvent<HTMLInputElement> | React.FocusEvent<HTMLInputElement>) => {
    *   if (e.key === "Enter" || e.type === "blur") {
@@ -24,9 +30,15 @@ const FileTags: React.FC<FileTagsProps> = ({tags, updateTags, inputStyles}) => {
     if (e instanceof KeyboardEvent && e.key === "Enter") {
       e.preventDefault(); // Prevent form submission
       if (currentTag.trim() !== "") {
-        updateTags([...tags, currentTag]);
-        setCurrentTag("");
+        if (validateTag(currentTag)) {
+          updateTags([...tags, currentTag]);
+          setCurrentTag("");
+        } else {
+          setInvalidTagErrorMessage("The provided tag '" + currentTag + "' is invalid")
+        }
       }
+    } else if (invalidTagErrorMessage !== "") {
+      setInvalidTagErrorMessage("")
     }
     // Check if it's a blur event
     else if (e.type === "blur") {
@@ -54,6 +66,7 @@ const FileTags: React.FC<FileTagsProps> = ({tags, updateTags, inputStyles}) => {
         onBlur={handleTagEntry}
         onKeyDown={handleTagEntry}
       />
+      <p className="text-red-700">{invalidTagErrorMessage}</p>
       <div className="flex flex-wrap gap-2">
         {tags.map((tag, index) => (
           <div

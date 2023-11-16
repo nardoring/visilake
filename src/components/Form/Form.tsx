@@ -1,23 +1,25 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import FileTags from "./FileTags";
 import { MultiSelect } from "react-multi-select-component";
+import { api } from "~/utils/api";
+import { AnalysisType } from "~/utils/types";
+
 
 export default function Form() {
   const inputStyles =
     "block w-full rounded-md border-0 py-1.5 pl-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-300";
 
   const [useCaseTitle, setUseCaseTitle] = useState("");
-  const [analysisType, setAnalysisType] = useState("");
   const [tags, setTags] = useState<string[]>([]);
   const [useCaseDescription, setUseCaseDescription] = useState("");
   const [submitAttempted, setSubmitAttempted] = useState(false);
-  const [analysisTypes, setAnalysisTypes] = useState([]);
+  const [analysisTypes, setAnalysisTypes] = useState<AnalysisType[]>([]);
 
-  const analysisTypeOptions = [
-    { label: "Analysis Type 1", value: "Analysis Type 1" },
-    { label: "Analysis Type 2", value: "Analysis Type 2" },
-    { label: "Analysis Type 3", value: "Analysis Type 3" },
-  ];
+  const analysisTypeOptions: AnalysisType[] =
+    api.analysis.getAnalysisTypes.useQuery().data?.types?.map((option) => ({
+      label: option.name,
+      value: option.id,
+    })) || [];
 
   // Callback function used by FileTag to pass tags data
   const updateTags = (newTags: string[]) => {
@@ -31,16 +33,34 @@ export default function Form() {
     }
   };
 
+  const useCaseSubmission = api.useCase.submitUseCase.useMutation();
+
   // Check that all input fields have some value
   function handleSubmit(e: React.FormEvent) {
     setSubmitAttempted(true);
     if (
       useCaseTitle.trim() === "" ||
-      analysisType.trim() === "" ||
+      analysisTypes.length === 0 ||
       tags.length === 0 ||
       useCaseDescription.trim() === ""
     ) {
       e.preventDefault();
+    } else {
+      const analysisTypeIDs: number[] = analysisTypes.map(type => type.value)
+      useCaseSubmission.mutate({
+        tags: tags,
+        useCaseDescription: useCaseDescription,
+        useCaseName: useCaseTitle,
+        analysisTypeIds: analysisTypeIDs,
+      });
+      if (!useCaseSubmission.isSuccess) {
+        // TODO : Handle a failed form submission more throughouly.
+        //        This is when the user submits valid data, but the mutation still fails. 
+        //        We likely want to do some form of logging for such an error.
+        window.alert('Failed to submit the form. Please try again.\nIf the issue persists, please contact an administrator');
+        console.error('Mutation failed', useCaseSubmission.error);
+        e.preventDefault();
+      }
     }
   }
 

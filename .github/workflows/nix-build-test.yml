@@ -10,14 +10,15 @@ on:
   workflow_dispatch:
 
 jobs:
-  tests:
-    runs-on: ubuntu-latest
+  check:
+    runs-on: ubuntu-22.04
     steps:
-    - uses: actions/checkout@v3
-    - uses: cachix/install-nix-action@v20
-      with:
-        nix_path: nixpkgs=channel:nixos-unstable
-    - run: nix flake check
-    - run: |
-        docker pull localstack/localstack
-        nix develop -c ./localstack/deploy
+      - uses: actions/checkout@v3
+      - uses: DeterminateSystems/nix-installer-action@main
+      - uses: DeterminateSystems/magic-nix-cache-action@main
+      - name: Run `nix flake check`
+      - run: nix flake check
+      - name: Test deploy infrastructure
+      - run: |
+          docker pull localstack/localstack
+          nix develop -c ./infra/deploy

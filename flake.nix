@@ -34,7 +34,7 @@
       name = "load-image";
       text = ''
         echo "Loading the Localstack Docker image..."
-        docker load < $(nix path-info .#localstackImage)
+        docker load < "$(nix path-info .#localstackImage)"
       '';
     };
 

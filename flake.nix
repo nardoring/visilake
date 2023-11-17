@@ -24,15 +24,12 @@
   in {
     devShells.${system}.default = pkgs.mkShell {
       packages = [
-        # rust
+        ## rust
         # toolchain
         # pkgs.rust-analyzer-unwrapped
 
-        # web
+        ## web
         pkgs.nodejs
-        pkgs.yarn
-        pkgs.nodePackages_latest.serverless
-        # pkgs.nodePackages.tailwindcss
         pkgs.nodePackages.prettier
         pkgs.nodePackages.eslint
 
@@ -40,8 +37,7 @@
         pkgs.awscli
         pkgs.terraform
         pkgs.localstack
-        pkgs.nodePackages_latest.aws-cdk
-        # local AWS
+        ## local AWS
         localstack.localstack-nix
       ];
 

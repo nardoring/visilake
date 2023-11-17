@@ -5,16 +5,17 @@
         "nixpkgs": "nixpkgs"
       },
       "locked": {
-        "dirtyRev": "c78da13247c8c03357a8f1f4429edaca168949a7-dirty",
-        "dirtyShortRev": "c78da13-dirty",
-        "lastModified": 1700062731,
-        "narHash": "sha256-dhJ7HjTpmK5akiemmGu+QOrZQJbpM+lh4IOaakmVmMk=",
-        "type": "git",
-        "url": "file:///home/bh/projects/capstone/localstack-nix"
+        "lastModified": 1700065825,
+        "narHash": "sha256-RC5s3Cf1od35Kw8Y6MwKEXqWElQ9QzvxJBGBG0yNL7k=",
+        "owner": "nardoring",
+        "repo": "localstack-nix",
+        "rev": "a74ea09819f053eaa0f25a2f464ac972effd3ce9",
+        "type": "github"
       },
       "original": {
-        "type": "git",
-        "url": "file:///home/bh/projects/capstone/localstack-nix"
+        "owner": "nardoring",
+        "repo": "localstack-nix",
+        "type": "github"
       }
     },
     "nixpkgs": {

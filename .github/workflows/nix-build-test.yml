@@ -18,7 +18,7 @@ jobs:
       - uses: DeterminateSystems/magic-nix-cache-action@main
       - name: Run `nix flake check`
         run: nix flake check
+      - name: Pull and load Localstack docker image
+        run: nix run .#load-image
       - name: Test deploy infrastructure
-        run: |
-          docker pull localstack/localstack
-          nix develop -c ./infra/deploy
+        run: nix develop -c ./infra/deploy

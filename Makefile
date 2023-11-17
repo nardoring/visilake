@@ -12,10 +12,10 @@ install:	## Check dependencies
 	@which awslocal || pip install awscli-local[ver1]
 
 run:		## Build and deploy the app locally
-	@./localstack/deploy
+	@./infra/deploy
 
 clean:		## Stop localstack and remove docker containers
-	@./localstack/stop
+	@./infra/stop
 
 logs:		## Output localstack logs to logs.txt
 	@localstack logs > logs.txt

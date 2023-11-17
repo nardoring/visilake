@@ -1,0 +1,26 @@
+name: Build with Localstack and Nix
+
+on:
+  pull_request:
+    branches: [ "main" ]
+    paths-ignore:
+      - '**/README.*'
+      - '**/*.md'
+      - '**/*.org'
+  workflow_dispatch:
+
+jobs:
+  check:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v3
+      - uses: DeterminateSystems/nix-installer-action@main
+      - uses: DeterminateSystems/magic-nix-cache-action@main
+      - name: Run `nix flake check`
+        run: nix flake check
+      - name: Pull Localstack docker image
+        run: nix build -L .#localstackImage
+      - name: Load Localstack docker image
+        run: nix run .#load-image
+      - name: Test deploy infrastructure
+        run: nix develop -c ./infra/deploy

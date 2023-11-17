@@ -9,9 +9,27 @@ interface FileTagsProps {
 const FileTags: React.FC<FileTagsProps> = ({tags, updateTags, inputStyles}) => {
   const [currentTag, setCurrentTag] = useState<string>("");
 
+  /* const handleTagEntry = (e: React.KeyboardEvent<HTMLInputElement> | React.FocusEvent<HTMLInputElement>) => {
+   *   if (e.key === "Enter" || e.type === "blur") {
+   *     e.preventDefault(); // Prevent form submission
+   *     if (currentTag.trim() !== "") {
+   *       updateTags([...tags, currentTag]);
+   *       setCurrentTag("");
+   *     }
+   *   }
+   * }; */
+
   const handleTagEntry = (e: React.KeyboardEvent<HTMLInputElement> | React.FocusEvent<HTMLInputElement>) => {
-    if (e.key === "Enter" || e.type === "blur") {
+    // Check if it's a keyboard event and if 'Enter' was pressed
+    if (e instanceof KeyboardEvent && e.key === "Enter") {
       e.preventDefault(); // Prevent form submission
+      if (currentTag.trim() !== "") {
+        updateTags([...tags, currentTag]);
+        setCurrentTag("");
+      }
+    }
+    // Check if it's a blur event
+    else if (e.type === "blur") {
       if (currentTag.trim() !== "") {
         updateTags([...tags, currentTag]);
         setCurrentTag("");

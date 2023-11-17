@@ -3,55 +3,104 @@
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-    rust-overlay.url = "github:oxalica/rust-overlay";
+    localstack.url = "github:nardoring/localstack-nix";
+    # rust-overlay.url = "github:oxalica/rust-overlay";
   };
 
   outputs = {
     self,
     nixpkgs,
-    rust-overlay,
+    localstack,
+    # rust-overlay,
   }: let
     system = "x86_64-linux";
     pkgs = import nixpkgs {
       inherit system;
-      overlays = [rust-overlay.overlays.default];
+      config.allowUnfree = true;
+      # overlays = [rust-overlay.overlays.default];
     };
 
-    # toolchain = pkgs.rust-bin.fromRustupToolchainFile ./toolchain.toml;
+    # Pull Localstack Docker Image
+    localstackImage = pkgs.dockerTools.pullImage {
+      imageName = "localstack/localstack";
+      imageDigest = "sha256:31300a9a8a80cfe32aa579b0d0873f130dabcf54d7525803bf9a40f76ee1fa62";
+      sha256 = "0rrd2swcpal7yswx933ig016zarpazmdfgxvzk9v98szc554ssc8";
+      finalImageName = "localstack/localstack";
+      finalImageTag = "latest";
+    };
 
-    awscli = pkgs.callPackage ./localaws/awscli-local.nix {};
-    awscdk = pkgs.callPackage ./localaws/awscdk-local.nix {};
+    # Load Localstack Docker Image
+    load-image = pkgs.writeShellApplication {
+      name = "load-image";
+      text = ''
+        echo "Loading the Localstack Docker image..."
+        docker load < "$(nix path-info .#localstackImage)"
+      '';
+    };
+
+    nardo = pkgs.buildNpmPackage {
+      pname = "nardo-web";
+      version = "0.1.0";
+      src = ./.;
+      npmDepsHash = "sha256-bDtTlun5Oq2hW/Qny2XSDooVx5KMeNEA5qhfHmTKkcg=";
+      npmPackFlags = ["--ignore-scripts"];
+    };
+
+    # TODO get this working
+    # nardoImage = pkgs.dockerTools.buildImage {
+    #   name = "nardo-web-app";
+    #   tag = "latest";
+    #   created = "now";
+    #   copyToRoot = pkgs.buildEnv {
+    #     name = "image-root";
+    #     paths = [pkgs.nodejs nardo];
+    #     pathsToLink = ["/"];
+    #   };
+    #   config = {
+    #     WorkingDir = "/app";
+    #     ExposedPorts = {
+    #       "3000/tcp" = {};
+    #     };
+    #     Cmd = ["node" "server.js"];
+    #   };
+    # };
+    #
   in {
     devShells.${system}.default = pkgs.mkShell {
       packages = [
-        # rust
+        ## rust
         # toolchain
         # pkgs.rust-analyzer-unwrapped
 
-        # web
+        ## web
         pkgs.nodejs
-        pkgs.yarn
-        # pkgs.nodePackages_latest.serverless
-        # pkgs.nodePackages.tailwindcss
         pkgs.nodePackages.prettier
         pkgs.nodePackages.eslint
 
         ## AWS
-        pkgs.awscli2
-        pkgs.nodePackages_latest.aws-cdk
-        # local AWS
+        pkgs.awscli
+        pkgs.terraform
         pkgs.localstack
-        awscli
-        awscdk
+        ## local AWS
+        localstack.localstack-nix
       ];
 
       # RUST_SRC_PATH = "${toolchain}/lib/rustlib/src/rust/library";
 
       # Localstack/AWS env vars
+      LOCALSTACK_API_KEY = "1n5HqMitb2"; ## add api key
       LOCALSTACK = "true";
+      DEBUG = "1";
       AWS_ACCESS_KEY_ID = "test";
       AWS_SECRET_ACCESS_KEY = "test";
       AWS_DEFAULT_REGION = "us-east-1";
+    };
+
+    packages.${system} = {
+      localstackImage = localstackImage;
+      load-image = load-image;
+      nardo = nardo;
+      # nardoImage = nardoImage;
     };
   };
 }

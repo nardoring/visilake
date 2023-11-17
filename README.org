@@ -1,0 +1,36 @@
+* Nardo Web
+
+** Localstack Usage
+
+#+begin_src shell
+# Check dependencies
+make install
+
+# Start LocalStack in detached (preferred) mode
+# Build and deploy the app locally
+make run
+
+# Stop and remove created containers
+make clean
+
+# Output LocalStack logs to logs.txt
+make logs
+#+end_src
+
+The app will be deployed to [[http://localhost:45139]]
+
+*** Prerequisites
+Docker
+Localstack
+[[https://docs.aws.amazon.com/cli/v1/userguide/cli-chap-install.html][awscli v1]] (do not use v2)
+[[https://github.com/localstack/awscli-local][awscli-local]]
+
+*** AWS Networking
+
+- Private VPC subnet without direct internet access
+
+- AWS Fargate for hands-off container execution without managing EC2 instances
+
+- A private, internal load balancer that only accepts traffic from other containers in the cluster
+
+[[file:./infra/res/private-task-private-loadbalancer.svg]]

@@ -33,4 +33,4 @@ Localstack
 
 - A private, internal load balancer that only accepts traffic from other containers in the cluster
 
-[[file:./localstack/res/private-task-private-loadbalancer.svg]]
+[[file:./infra/res/private-task-private-loadbalancer.svg]]

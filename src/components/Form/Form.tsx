@@ -4,7 +4,6 @@ import { MultiSelect } from "react-multi-select-component";
 import { api } from "~/utils/api";
 import { AnalysisType } from "~/utils/types";
 
-
 export default function Form() {
   const inputStyles =
     "block w-full rounded-md border-0 py-1.5 pl-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-300";
@@ -14,12 +13,14 @@ export default function Form() {
   const [useCaseDescription, setUseCaseDescription] = useState("");
   const [submitAttempted, setSubmitAttempted] = useState(false);
   const [analysisTypes, setAnalysisTypes] = useState<AnalysisType[]>([]);
+  const { data: analysisTypeOptionsData, isLoading: analysisTypeOptionsIsLoading} = api.analysis.getAnalysisTypes.useQuery();
 
-  const analysisTypeOptions: AnalysisType[] =
-    api.analysis.getAnalysisTypes.useQuery().data?.types?.map((option) => ({
-      label: option.name,
-      value: option.id,
-    })) || [];
+  const analysisTypeOptions: AnalysisType[] = analysisTypeOptionsIsLoading
+    ? []
+    : analysisTypeOptionsData?.types?.map((option: { name: string; id: number; }) => ({
+        label: option.name,
+        value: option.id,
+      })) || [];
 
   // Callback function used by FileTag to pass tags data
   const updateTags = (newTags: string[]) => {
@@ -88,6 +89,7 @@ export default function Form() {
             value={analysisTypes}
             onChange={setAnalysisTypes}
             labelledBy="AnalysisTypeSelect"
+            isLoading={analysisTypeOptionsIsLoading}
             hasSelectAll={false}
             disableSearch={true}
             className={`${"rounded shadow-sm"} ${

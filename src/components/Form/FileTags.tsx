@@ -26,6 +26,15 @@ const FileTags  = ({ getTags, setTags, inputStyles }: FileTagsProps) => {
     setTags(getTags().filter((val, _) => val.name !== tag.name));
   };
 
+  const updateTag = (tag: Tag, isValid: boolean) => {
+    const updatedTags = getTags().map((t) =>
+        t.name === tag.name
+          ? { ...t, isValid: isValid }
+          : t,
+    );
+    setTags(updatedTags);
+  }
+
   const handleTagEntry = (
     e:
       | React.KeyboardEvent<HTMLInputElement>
@@ -57,7 +66,7 @@ const FileTags  = ({ getTags, setTags, inputStyles }: FileTagsProps) => {
             key={`file-tag-${tag.name}`}
             tag={tag}
             onRemove={handleRemoveTag}
-            getTags={getTags}
+            updateTag={updateTag}
             setTags={setTags}
           />
         ))}

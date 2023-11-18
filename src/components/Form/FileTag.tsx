@@ -4,29 +4,21 @@ import { Tag } from "~/utils/types";
 
 interface FileTagProps {
   tag: Tag;
-  getTags: () => Tag[];
+  updateTag: (tag: Tag, isValid: boolean) => void;
   onRemove: (tag: Tag) => void;
   setTags: React.Dispatch<React.SetStateAction<Tag[]>>;
 }
 
-const FileTag = ({ tag, getTags, onRemove, setTags }: FileTagProps) => {
+const FileTag = ({ tag, updateTag, onRemove, setTags }: FileTagProps) => {
   const [queryExecuted, setQueryExecuted] = useState<boolean>(false);
   const { data: tagValidationData, isLoading } = api.tag.validateTag.useQuery(
     { tag: tag.name },
-    { enabled: !queryExecuted },
+    { enabled: !queryExecuted, 
+      onSuccess: (data) => {
+        updateTag(tag, data.isValid);
+        setQueryExecuted(true);
+      } },
   );
-
-  useEffect(() => {
-    if (!isLoading) {
-      const updatedTags = getTags().map((t) =>
-        t.name === tag.name
-          ? { ...t, isValid: tagValidationData?.isValid || false }
-          : t,
-      );
-      setQueryExecuted(true);
-      setTags(updatedTags);
-    }
-  }, [isLoading]);
 
   const loading = isLoading && !tagValidationData;
 

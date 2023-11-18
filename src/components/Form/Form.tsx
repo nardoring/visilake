@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import FileTags from "./FileTags";
 import { MultiSelect } from "react-multi-select-component";
 import { api } from "~/utils/api";
-import { AnalysisTypeOption, Tag } from "~/utils/types";
+import type { AnalysisTypeOption, Tag } from "~/utils/types";
 
 export default function Form() {
   const inputStyles =
@@ -25,7 +25,7 @@ export default function Form() {
           label: option.name,
           value: option.id,
         }),
-      ) || [];
+      ) ?? [];
 
   const getTags = (): Tag[] => {
     return tags;
@@ -56,7 +56,7 @@ export default function Form() {
     ) {
       const analysisTypeIDs: number[] = analysisTypes.map((type) => type.value);
       try {
-        const result = await useCaseSubmission.mutateAsync({
+        await useCaseSubmission.mutateAsync({
           tags: getValidTags(),
           useCaseDescription: useCaseDescription,
           useCaseName: useCaseTitle,

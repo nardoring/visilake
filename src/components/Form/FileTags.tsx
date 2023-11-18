@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { api } from "~/utils/api";
 import FileTag from "./FileTag";
 import { Tag } from "~/utils/types";
 
@@ -10,29 +9,39 @@ interface FileTagsProps {
 }
 
 const FileTags: React.FC<FileTagsProps> = React.memo(
-  ({ getTags, setTags, inputStyles }) => {
+  ({ getTags, setTags, inputStyles }: FileTagsProps) => {
     const [currentTag, setCurrentTag] = useState<string>("");
 
-  const handleTagEntry = (
+    const checkTagEntry = () => {
+      if (
+        currentTag.trim() !== "" &&
+        !getTags().some((tag) => tag.name === currentTag)
+      ) {
+        setTags([...getTags(), { name: currentTag, isValid: false }]);
+        setCurrentTag("");
+      }
+    };
+
+    const isKeyboardEvent = (
+      e:
+        | React.KeyboardEvent<HTMLInputElement>
+        | React.FocusEvent<HTMLInputElement>,
+    ): e is React.KeyboardEvent<HTMLInputElement> => {
+      return (e as React.KeyboardEvent<HTMLInputElement>).key !== undefined;
+    };
+
+    const handleTagEntry = (
       e:
         | React.KeyboardEvent<HTMLInputElement>
         | React.FocusEvent<HTMLInputElement>,
     ) => {
-      // Check if it's a keyboard event and if 'Enter' was pressed
-    if (e instanceof KeyboardEvent && e.key === "Enter") {
+      if (isKeyboardEvent(e) && e.key === "Enter") {
         e.preventDefault(); // Prevent form submission
-        if (currentTag.trim() !== "" && !getTags().some((tag) => tag.name === currentTag)) {
-          setTags([...getTags(), {name: currentTag, isValid: false}])
-          setCurrentTag("");
-        }
+        checkTagEntry();
+      } else if (e.type === "blur") {
+        checkTagEntry();
       }
-      // Check if it's a blur event
-    else if (e.type === "blur") {
-      if (currentTag.trim() !== "" && !getTags().some((tag) => tag.name === currentTag)) {
-        setTags([...getTags(), {name: currentTag, isValid: false}])
-        setCurrentTag("");
-      }
-    }
+    };
 
     return (
       <>

@@ -3,6 +3,7 @@ import FileTags from "./FileTags";
 import { MultiSelect } from "react-multi-select-component";
 import { api } from "~/utils/api";
 import { AnalysisTypeOption, Tag } from "~/utils/types";
+import { error } from "console";
 
 export default function Form() {
   const inputStyles =
@@ -10,6 +11,7 @@ export default function Form() {
 
   const [useCaseTitle, setUseCaseTitle] = useState("");
   const [tags, setTags] = useState<Tag[]>([]);
+  const [validTags, setValidTags] = useState<string[]>([]);
   const [useCaseDescription, setUseCaseDescription] = useState("");
   const [submitAttempted, setSubmitAttempted] = useState(false);
   const [analysisTypes, setAnalysisTypes] = useState<AnalysisTypeOption[]>([]);
@@ -27,7 +29,9 @@ export default function Form() {
         }),
       ) || [];
 
-  const getTags = (): Tag[] => {return tags}
+  const getTags = (): Tag[] => {
+    return tags;
+  };
 
   // Prevent Enter key from submitting the form
   const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -39,35 +43,41 @@ export default function Form() {
   const useCaseSubmission = api.useCase.submitUseCase.useMutation();
 
   // Check that all input fields have some value
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
     setSubmitAttempted(true);
+    const valTags = tags
+      .filter((tag) => tag.isValid === true)
+      .map((tag) => tag.name);
+    setValidTags(valTags);
     if (
-      useCaseTitle.trim() === "" ||
-      analysisTypes.length === 0 ||
-      tags.length === 0 ||
-      useCaseDescription.trim() === ""
+      useCaseTitle.trim() !== "" &&
+      analysisTypes.length !== 0 &&
+      valTags.length !== 0 &&
+      useCaseDescription.trim() !== ""
     ) {
-      e.preventDefault();
-    } else {
       const analysisTypeIDs: number[] = analysisTypes.map((type) => type.value);
-      const validTags: string[] = tags
-        .filter((tag) => tag.isValid)
-        .map((tag) => tag.name);
-      useCaseSubmission.mutate({
-        tags: validTags,
-        useCaseDescription: useCaseDescription,
-        useCaseName: useCaseTitle,
-        analysisTypeIds: analysisTypeIDs,
-      });
-      if (!useCaseSubmission.isSuccess) {
-        // TODO : Handle a failed form submission more throughouly.
-        //        This is when the user submits valid data, but the mutation still fails.
-        //        We likely want to do some form of logging for such an error.
-        window.alert(
-          "Failed to submit the form. Please try again.\nIf the issue persists, please contact an administrator",
-        );
-        console.error("Mutation failed", useCaseSubmission.error);
-        e.preventDefault();
+      try {
+        const result = await useCaseSubmission.mutateAsync({
+          tags: valTags,
+          useCaseDescription: useCaseDescription,
+          useCaseName: useCaseTitle,
+          analysisTypeIds: analysisTypeIDs,
+        });
+        const form = e.target as HTMLFormElement;
+        form.submit();
+      } catch (error) {
+        // TODO : Handle a failed connection to an endpoint once we get things more integrated
+        // This is when the user submits valid data, but the mutation still fails.
+        // We likely want to do some form of logging for such an error.
+        // if (!useCaseSubmission.isSuccess) {
+        //   window.alert(
+        //     "Failed to submit the form. Please try again.\nIf the issue persists, please contact an administrator",
+        //   );
+        //   console.error("Mutation failed", useCaseSubmission.error);
+        //   e.preventDefault();
+        // }
+        console.log(error);
       }
     }
   }
@@ -111,7 +121,9 @@ export default function Form() {
             getTags={getTags}
             setTags={setTags}
             inputStyles={`${inputStyles} ${
-              submitAttempted && tags.length === 0 ? "ring-red-500 ring-2" : ""
+              submitAttempted && validTags.length === 0
+                ? "ring-red-500 ring-2"
+                : ""
             }`}
           />
         </div>

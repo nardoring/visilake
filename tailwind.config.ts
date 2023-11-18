@@ -5,6 +5,8 @@ export default {
   theme: {
     extend: {
         colors: {
+        lightIndigo: "#F7F9FD",
+        darkIndigo: "#EBF0FA",
         lightGrey: "#F2F2F2",
         lightBlue: "#F4F7FC",
         darkBlue: "#0A3749",

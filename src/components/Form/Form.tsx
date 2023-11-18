@@ -10,7 +10,6 @@ export default function Form() {
 
   const [useCaseTitle, setUseCaseTitle] = useState("");
   const [tags, setTags] = useState<Tag[]>([]);
-  const [validTags, setValidTags] = useState<string[]>([]);
   const [useCaseDescription, setUseCaseDescription] = useState("");
   const [submitAttempted, setSubmitAttempted] = useState(false);
   const [analysisTypes, setAnalysisTypes] = useState<AnalysisTypeOption[]>([]);
@@ -32,6 +31,10 @@ export default function Form() {
     return tags;
   };
 
+  const getValidTags = (): string[] => {
+    return tags.filter((tag) => tag.isValid === true).map((tag) => tag.name) || [];
+  };
+
   // Prevent Enter key from submitting the form
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter") {
@@ -45,20 +48,16 @@ export default function Form() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setSubmitAttempted(true);
-    const valTags = tags
-      .filter((tag) => tag.isValid === true)
-      .map((tag) => tag.name);
-    setValidTags(valTags);
     if (
       useCaseTitle.trim() !== "" &&
       analysisTypes.length !== 0 &&
-      valTags.length !== 0 &&
+      getValidTags().length !== 0 &&
       useCaseDescription.trim() !== ""
     ) {
       const analysisTypeIDs: number[] = analysisTypes.map((type) => type.value);
       try {
         const result = await useCaseSubmission.mutateAsync({
-          tags: valTags,
+          tags: getValidTags(),
           useCaseDescription: useCaseDescription,
           useCaseName: useCaseTitle,
           analysisTypeIds: analysisTypeIDs,
@@ -120,7 +119,7 @@ export default function Form() {
             getTags={getTags}
             setTags={setTags}
             inputStyles={`${inputStyles} ${
-              submitAttempted && validTags.length === 0
+              submitAttempted && getValidTags().length === 0
                 ? "ring-red-500 ring-2"
                 : ""
             }`}

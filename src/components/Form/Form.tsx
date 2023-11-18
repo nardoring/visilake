@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import FileTags from "./FileTags";
 import { MultiSelect } from "react-multi-select-component";
 import { api } from "~/utils/api";
@@ -39,6 +40,8 @@ export default function Form() {
       e.preventDefault();
     }
   };
+
+  const useCaseSubmission = api.useCase.submitUseCase.useMutation();
 
   const useCaseSubmission = api.useCase.submitUseCase.useMutation();
 

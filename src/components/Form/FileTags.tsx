@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import FileTag from "./FileTag";
-import { Tag } from "~/utils/types";
+import type { Tag } from "~/utils/types";
 import { isKeyboardEvent } from "~/utils/keyboardEvent";
 
 interface FileTagsProps {
@@ -67,7 +67,6 @@ const FileTags  = ({ getTags, setTags, inputStyles }: FileTagsProps) => {
             tag={tag}
             onRemove={handleRemoveTag}
             updateTag={updateTag}
-            setTags={setTags}
           />
         ))}
       </div>

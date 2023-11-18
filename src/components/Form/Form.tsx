@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from "react";
-import React, { useState, useEffect } from "react";
 import FileTags from "./FileTags";
 import { MultiSelect } from "react-multi-select-component";
 import { api } from "~/utils/api";
 import { AnalysisTypeOption, Tag } from "~/utils/types";
-import { error } from "console";
 
 export default function Form() {
   const inputStyles =
@@ -40,8 +38,6 @@ export default function Form() {
       e.preventDefault();
     }
   };
-
-  const useCaseSubmission = api.useCase.submitUseCase.useMutation();
 
   const useCaseSubmission = api.useCase.submitUseCase.useMutation();
 

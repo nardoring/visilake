@@ -57,6 +57,14 @@ for i in {1..5}; do
     sleep 2
 done
 
+# Get tables
+tables=$(awslocal dynamodb list-tables)
+echo -e "Tables: $tables\n"
+
+# Get queues
+queues=$(awslocal sqs list-queues)
+echo -e "Queues: $queues\n"
+
 echo -e "Curling localhost:$app_port\n"
 curl localhost:$app_port
 

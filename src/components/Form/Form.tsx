@@ -2,30 +2,32 @@ import React, { useState, useEffect } from "react";
 import FileTags from "./FileTags";
 import { MultiSelect } from "react-multi-select-component";
 import { api } from "~/utils/api";
-import { AnalysisType } from "~/utils/types";
+import { AnalysisTypeOption, Tag } from "~/utils/types";
 
 export default function Form() {
   const inputStyles =
     "block w-full rounded-md border-0 py-1.5 pl-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-300";
 
   const [useCaseTitle, setUseCaseTitle] = useState("");
-  const [tags, setTags] = useState<string[]>([]);
+  const [tags, setTags] = useState<Tag[]>([]);
   const [useCaseDescription, setUseCaseDescription] = useState("");
   const [submitAttempted, setSubmitAttempted] = useState(false);
-  const [analysisTypes, setAnalysisTypes] = useState<AnalysisType[]>([]);
-  const { data: analysisTypeOptionsData, isLoading: analysisTypeOptionsIsLoading} = api.analysis.getAnalysisTypes.useQuery();
+  const [analysisTypes, setAnalysisTypes] = useState<AnalysisTypeOption[]>([]);
+  const {
+    data: analysisTypeOptionsData,
+    isLoading: analysisTypeOptionsIsLoading,
+  } = api.analysis.getAnalysisTypes.useQuery();
 
-  const analysisTypeOptions: AnalysisType[] = analysisTypeOptionsIsLoading
+  const analysisTypeOptions: AnalysisTypeOption[] = analysisTypeOptionsIsLoading
     ? []
-    : analysisTypeOptionsData?.types?.map((option: { name: string; id: number; }) => ({
-        label: option.name,
-        value: option.id,
-      })) || [];
+    : analysisTypeOptionsData?.types?.map(
+        (option: { name: string; id: number }) => ({
+          label: option.name,
+          value: option.id,
+        }),
+      ) || [];
 
-  // Callback function used by FileTag to pass tags data
-  const updateTags = (newTags: string[]) => {
-    setTags(newTags);
-  };
+  const getTags = (): Tag[] => {return tags}
 
   // Prevent Enter key from submitting the form
   const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -47,19 +49,24 @@ export default function Form() {
     ) {
       e.preventDefault();
     } else {
-      const analysisTypeIDs: number[] = analysisTypes.map(type => type.value)
+      const analysisTypeIDs: number[] = analysisTypes.map((type) => type.value);
+      const validTags: string[] = tags
+        .filter((tag) => tag.isValid)
+        .map((tag) => tag.name);
       useCaseSubmission.mutate({
-        tags: tags,
+        tags: validTags,
         useCaseDescription: useCaseDescription,
         useCaseName: useCaseTitle,
         analysisTypeIds: analysisTypeIDs,
       });
       if (!useCaseSubmission.isSuccess) {
         // TODO : Handle a failed form submission more throughouly.
-        //        This is when the user submits valid data, but the mutation still fails. 
+        //        This is when the user submits valid data, but the mutation still fails.
         //        We likely want to do some form of logging for such an error.
-        window.alert('Failed to submit the form. Please try again.\nIf the issue persists, please contact an administrator');
-        console.error('Mutation failed', useCaseSubmission.error);
+        window.alert(
+          "Failed to submit the form. Please try again.\nIf the issue persists, please contact an administrator",
+        );
+        console.error("Mutation failed", useCaseSubmission.error);
         e.preventDefault();
       }
     }
@@ -101,8 +108,8 @@ export default function Form() {
         </div>
         <div className="col-span-2">
           <FileTags
-            tags={tags}
-            updateTags={updateTags}
+            getTags={getTags}
+            setTags={setTags}
             inputStyles={`${inputStyles} ${
               submitAttempted && tags.length === 0 ? "ring-red-500 ring-2" : ""
             }`}

@@ -1,108 +1,64 @@
 import React, { useState } from "react";
 import { api } from "~/utils/api";
+import FileTag from "./FileTag";
+import { Tag } from "~/utils/types";
 
 interface FileTagsProps {
-  tags: string[],
-  updateTags: (newTags: string[]) => void;
+  getTags: () => Tag[];
+  setTags: React.Dispatch<React.SetStateAction<Tag[]>>;
   inputStyles: string;
 }
 
-const validateTag = (tag: string) => {
-  return api.tag.validateTag.useQuery({tag: tag}).data?.isValid || false
-};
+const FileTags: React.FC<FileTagsProps> = React.memo(
+  ({ getTags, setTags, inputStyles }) => {
+    const [currentTag, setCurrentTag] = useState<string>("");
 
-const FileTags: React.FC<FileTagsProps> = ({tags, updateTags, inputStyles}) => {
-  const [currentTag, setCurrentTag] = useState<string>("");
-  const [invalidTagErrorMessage, setInvalidTagErrorMessage] = useState<string>("");
-
-  /* const handleTagEntry = (e: React.KeyboardEvent<HTMLInputElement> | React.FocusEvent<HTMLInputElement>) => {
-   *   if (e.key === "Enter" || e.type === "blur") {
-   *     e.preventDefault(); // Prevent form submission
-   *     if (currentTag.trim() !== "") {
-   *       updateTags([...tags, currentTag]);
-   *       setCurrentTag("");
-   *     }
-   *   }
-   * }; */
-
-  const handleTagEntry = (e: React.KeyboardEvent<HTMLInputElement> | React.FocusEvent<HTMLInputElement>) => {
-    // Check if it's a keyboard event and if 'Enter' was pressed
+  const handleTagEntry = (
+      e:
+        | React.KeyboardEvent<HTMLInputElement>
+        | React.FocusEvent<HTMLInputElement>,
+    ) => {
+      // Check if it's a keyboard event and if 'Enter' was pressed
     if (e instanceof KeyboardEvent && e.key === "Enter") {
-      e.preventDefault(); // Prevent form submission
-      if (currentTag.trim() !== "") {
-        if (validateTag(currentTag)) {
-          updateTags([...tags, currentTag]);
+        e.preventDefault(); // Prevent form submission
+        if (currentTag.trim() !== "" && !getTags().some((tag) => tag.name === currentTag)) {
+          setTags([...getTags(), {name: currentTag, isValid: false}])
           setCurrentTag("");
-        } else {
-          setInvalidTagErrorMessage("The provided tag '" + currentTag + "' is invalid")
         }
       }
-    } else if (invalidTagErrorMessage !== "") {
-      setInvalidTagErrorMessage("")
-    }
-    // Check if it's a blur event
+      // Check if it's a blur event
     else if (e.type === "blur") {
-      if (currentTag.trim() !== "") {
-        updateTags([...tags, currentTag]);
+      if (currentTag.trim() !== "" && !getTags().some((tag) => tag.name === currentTag)) {
+        setTags([...getTags(), {name: currentTag, isValid: false}])
         setCurrentTag("");
       }
     }
-  };
 
-  const removeTag = (index: number) => {
-    const updatedTags = tags.filter((_, i) => i !== index);
-    updateTags(updatedTags);
-  };
-
-  return (
-    <>
-      <label htmlFor="fileTags">File Tags</label>
-      <input
-        className={inputStyles}
-        type="text"
-        id="fileTags"
-        value={currentTag}
-        onChange={(e) => setCurrentTag(e.target.value)}
-        onBlur={handleTagEntry}
-        onKeyDown={handleTagEntry}
-      />
-      <p className="text-red-700">{invalidTagErrorMessage}</p>
-      <div className="flex flex-wrap gap-2">
-        {tags.map((tag, index) => (
-          <div
-            key={`file tag ${index}`}
-            className="m-1 flex items-center justify-center rounded-full border border-green-300 bg-green-100 px-2 py-1 font-medium text-green-700"
-          >
-            <div className="max-w-full flex-initial text-xs font-normal leading-none">
-              {tag}
-            </div>
-            <div
-              className="flex flex-auto flex-row-reverse"
-              onClick={() => removeTag(index)}
-            >
-              <div>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="100%"
-                  height="100%"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="feather feather-x ml-2 h-4 w-4 cursor-pointer rounded-full hover:text-indigo-400"
-                >
-                  <line x1="18" y1="6" x2="6" y2="18"></line>
-                  <line x1="6" y1="6" x2="18" y2="18"></line>
-                </svg>
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
-    </>
-  );
-};
+    return (
+      <>
+        <label htmlFor="fileTags">File Tags</label>
+        <input
+          className={inputStyles}
+          type="text"
+          id="fileTags"
+          value={currentTag}
+          onChange={(e) => setCurrentTag(e.target.value)}
+          onBlur={handleTagEntry}
+          onKeyDown={handleTagEntry}
+        />
+        <div className="flex flex-wrap gap-0">
+          {getTags().map((tag) => (
+            <FileTag
+              key={`file-tag-${tag.name}`}
+              tag={tag}
+              getTags={getTags}
+              setTags={setTags}
+            />
+          ))}
+        </div>
+      </>
+    );
+  },
+);
 
 export default FileTags;

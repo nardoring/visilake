@@ -13,7 +13,7 @@ echo -e "Repo URI: $repoUri"
 
 echo "Building the Docker image, pushing it to local ECR URL: $repoUri"
 sleep 3
-docker build -t "$repoUri" .
+docker build -t "$repoUri" . || exit 1  # Exit if Docker build fails.
 docker push "$repoUri"
 docker rmi "$repoUri"
 

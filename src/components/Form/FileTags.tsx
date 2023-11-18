@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import FileTag from "./FileTag";
 import { Tag } from "~/utils/types";
+import { isKeyboardEvent } from "~/utils/keyboardEvent";
 
 interface FileTagsProps {
   getTags: () => Tag[];
@@ -21,12 +22,8 @@ const FileTags  = ({ getTags, setTags, inputStyles }: FileTagsProps) => {
     }
   };
 
-  const isKeyboardEvent = (
-    e:
-      | React.KeyboardEvent<HTMLInputElement>
-      | React.FocusEvent<HTMLInputElement>,
-  ): e is React.KeyboardEvent<HTMLInputElement> => {
-    return (e as React.KeyboardEvent<HTMLInputElement>).key !== undefined;
+  const handleRemoveTag = (tag: Tag) => {
+    setTags(getTags().filter((val, _) => val.name !== tag.name));
   };
 
   const handleTagEntry = (
@@ -59,6 +56,7 @@ const FileTags  = ({ getTags, setTags, inputStyles }: FileTagsProps) => {
           <FileTag
             key={`file-tag-${tag.name}`}
             tag={tag}
+            onRemove={handleRemoveTag}
             getTags={getTags}
             setTags={setTags}
           />

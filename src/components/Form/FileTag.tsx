@@ -5,19 +5,16 @@ import { Tag } from "~/utils/types";
 interface FileTagProps {
   tag: Tag;
   getTags: () => Tag[];
+  onRemove: (tag: Tag) => void;
   setTags: React.Dispatch<React.SetStateAction<Tag[]>>;
 }
 
-const FileTag = ({ tag, getTags, setTags }: FileTagProps) => {
+const FileTag = ({ tag, getTags, onRemove, setTags }: FileTagProps) => {
   const [queryExecuted, setQueryExecuted] = useState<boolean>(false);
   const { data: tagValidationData, isLoading } = api.tag.validateTag.useQuery(
     { tag: tag.name },
     { enabled: !queryExecuted },
   );
-
-  const handleRemoveTag = (tag: Tag) => {
-    setTags(getTags().filter((val, _) => val.name !== tag.name));
-  };
 
   useEffect(() => {
     if (!isLoading) {
@@ -48,7 +45,7 @@ const FileTag = ({ tag, getTags, setTags }: FileTagProps) => {
       </div>
       <div
         className="flex flex-auto flex-row-reverse"
-        onClick={() => handleRemoveTag(tag)}
+        onClick={() => onRemove(tag)}
       >
         <div>
           <svg

@@ -3,10 +3,6 @@ import { createTRPCRouter, publicProcedure } from "../trpc";
 import { UseCase } from "~/models/useCase";
 import AWS from "aws-sdk";
 
-const sqs = new AWS.SQS({ apiVersion: "2012-11-05" });
-const queueURL =
-  "http://sqs.us-east-1.localhost.localstack.cloud:4566/000000000000/requestQueue";
-
 export const useCaseRouter = createTRPCRouter({
   getUseCases: publicProcedure
     .input(
@@ -76,8 +72,12 @@ export const useCaseRouter = createTRPCRouter({
           }),
       }),
     )
-    .mutation(async ({ input }) => {
-      await sqs.sendMessage({
+    .mutation(({ input }) => {
+      const sqs = new AWS.SQS({ apiVersion: "2012-11-05" });
+      const queueURL =
+        "http://sqs.us-east-1.localhost.localstack.cloud:4566/000000000000/requestQueue";
+
+      sqs.sendMessage({
         MessageBody: JSON.stringify(input),
         QueueUrl: queueURL,
       });

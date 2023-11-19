@@ -1,5 +1,7 @@
 import { api } from "~/utils/api";
-import TableItem from "./TableItem";
+import StatusChip from "./StatusChip";
+
+
 import {
   flexRender,
   getCoreRowModel,
@@ -40,7 +42,7 @@ export default function UseCaseTable() {
       accessorKey: "useCaseStatus",
       header: "Status",
       size: (1920/10)*1,
-      cell: (props: { getValue: () => string }) => <p>{props.getValue()}</p>,
+      cell: (props: { getValue: () => string }) => <StatusChip status={props.getValue()}>{props.getValue()}</StatusChip>,
     },
     {
       accessorKey: "date",
@@ -129,7 +131,7 @@ export default function UseCaseTable() {
                 {row.getVisibleCells().map((cell) => (
                   <td
                     key={cell.id}
-                    className="pl-2 text-[#595C64] text-base font-[400]"
+                    className="pl-4 text-[#595C64] text-base font-[400]"
                     style={{ width: `${cell.column.getSize()}px` }}
                   >
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}

@@ -1,6 +1,8 @@
 import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "../trpc";
 import { UseCase } from "~/models/useCase";
+import generateMockUseCases from "~/utils/mockUseCaseGenerator";
+import { api } from "~/utils/api";
 
 export const useCaseRouter = createTRPCRouter({
   getUseCases: publicProcedure
@@ -45,7 +47,7 @@ export const useCaseRouter = createTRPCRouter({
         },
       ];
 
-      return mockResponse;
+      return generateMockUseCases(20);
     }),
 
   submitUseCase: publicProcedure
@@ -59,3 +61,4 @@ export const useCaseRouter = createTRPCRouter({
     )
     .mutation(({ input }) => {}),
 });
+

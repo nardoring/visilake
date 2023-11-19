@@ -5,6 +5,7 @@ export default {
   theme: {
     extend: {
         colors: {
+        tableColumnFont: '#464F60',
         lightIndigo: "#F7F9FD",
         darkIndigo: "#EBF0FA",
         lightGrey: "#F2F2F2",

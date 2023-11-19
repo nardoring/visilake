@@ -21,27 +21,32 @@ export default function UseCaseTable() {
     {
       accessorKey: "useCaseName",
       header: "Use Case Name",
+      size: (1920/10)*1,
       cell: (props: { getValue: () => string }) => <p>{props.getValue()}</p>,
     },
     {
       accessorKey: "useCaseDescription",
       header: "Description",
+      size: (1920/10)*2,
       cell: (props: { getValue: () => string }) => <p>{props.getValue()}</p>,
     },
     {
       accessorKey: "analysisTypes",
       header: "Analysis Types",
+      size: (1920/10)*1,
       cell: (props: { getValue: () => string[] }) => <p>{props.getValue()}</p>,
     },
     {
       accessorKey: "useCaseStatus",
       header: "Status",
+      size: (1920/10)*1,
       cell: (props: { getValue: () => string }) => <p>{props.getValue()}</p>,
     },
     {
       accessorKey: "date",
       header: "Date Created",
-      cell: (props) => {
+      size: (1920/10)*1,
+      cell: (props: { getValue: () => Date }) => {
         const rawDate = props.getValue(); // Assuming rawDate is a valid date string
         const dateObject = new Date(rawDate);
 
@@ -71,6 +76,7 @@ export default function UseCaseTable() {
     {
       accessorKey: "author",
       header: "Created By",
+      size: (1920/10)*4,
       cell: (props: { getValue: () => string }) => <p>{props.getValue()}</p>,
     },
   ];
@@ -79,19 +85,34 @@ export default function UseCaseTable() {
     data: data ?? [],
     columns,
     getCoreRowModel: getCoreRowModel(),
+    columnResizeMode: "onChange"
   });
 
   console.log();
   return (
     <div>
-      <div className="table w-full overflow-x-auto bg-lightIndigo">
-        <table className="w-full">
+      <div className="bg-lightIndigo table w-full overflow-x-auto font-nunito">
+        <table
+          className="w-full"
+          style={{ width: `${table.getTotalSize()}px` }}
+        >
           <thead>
             {table.getHeaderGroups().map((headerGroup) => (
               <tr key={headerGroup.id}>
                 {headerGroup.headers.map((header) => (
-                  <th key={header.id}>
+                  <th
+                    key={header.id}
+                    className="p-2 pl-4 font-bold text-left text-[#595C64]"
+                    style={{ width: `${header.getSize()}px` }}
+                  >
                     {String(header.column.columnDef.header)}
+                    <div
+                      onMouseDown={header.getResizeHandler()}
+                      onTouchStart={header.getResizeHandler()}
+                      className={`resizer ${
+                        header.column.getIsResizing() ? "isResizing" : ""
+                      }`}
+                    />
                   </th>
                 ))}
               </tr>
@@ -99,9 +120,18 @@ export default function UseCaseTable() {
           </thead>
           <tbody>
             {table.getRowModel().rows.map((row) => (
-              <tr key={row.id} className={row.index % 2 === 0 ? 'bg-white' : 'bg-veryLightGrey'}>
+              <tr
+                key={row.id}
+                className={`${
+                  row.index % 2 === 0 ? "bg-white" : "bg-veryLightGrey"
+                } h-[4.4rem]`}
+              >
                 {row.getVisibleCells().map((cell) => (
-                  <td key={cell.id}>
+                  <td
+                    key={cell.id}
+                    className="pl-2 text-[#595C64] text-base font-[400]"
+                    style={{ width: `${cell.column.getSize()}px` }}
+                  >
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </td>
                 ))}

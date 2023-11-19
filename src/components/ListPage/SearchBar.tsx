@@ -42,7 +42,7 @@ export default function SearchBar({ setColumnFilters }: SearchBarProps) {
       <button
         className="ml-4 rounded bg-blue-600 px-4 py-2 text-white shadow-md"
         type="submit"
-        onClick={(e) => {
+        onClick={() => {
           void router.push("/");
         }}
       >

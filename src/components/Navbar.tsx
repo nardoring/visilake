@@ -24,7 +24,7 @@ export default function Navbar() {
       {!isCurrentPage("/ListPage") ? (
         <button
           className="ml-4 px-4 py-2 text-darkBlue font-medium"
-          onClick={(e) => {
+          onClick={() => {
             void router.push("/ListPage");
           }}
         >

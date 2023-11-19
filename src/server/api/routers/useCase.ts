@@ -1,6 +1,5 @@
 import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "../trpc";
-import type { UseCase } from "~/models/useCase";
 import generateMockUseCases from "~/utils/mockUseCaseGenerator";
 
 export const useCaseRouter = createTRPCRouter({
@@ -11,8 +10,8 @@ export const useCaseRouter = createTRPCRouter({
         maxAmount: z.number().positive(),
       }),
     )
-    .query(async ({ input }) => {
-      await new Promise((resolve) => setTimeout(resolve, 200));
+    .query(async ({}) => {
+      await new Promise((resolve) => setTimeout(resolve, 500));
       return generateMockUseCases(20);
     }),
 

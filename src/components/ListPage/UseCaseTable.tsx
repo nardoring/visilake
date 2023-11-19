@@ -4,12 +4,12 @@ import { formatDate } from "~/utils/date";
 import SearchBar from "./SearchBar";
 
 import {
-  ColumnFilter,
   flexRender,
   getCoreRowModel,
   getFilteredRowModel,
   useReactTable,
 } from "@tanstack/react-table";
+import type { ColumnFilter } from "@tanstack/react-table";
 import { useState } from "react";
 
 export default function UseCaseTable() {
@@ -92,7 +92,7 @@ export default function UseCaseTable() {
   }
   return (
     <div>
-      <SearchBar setColumnFilters={setColumnFilters}/>
+      <SearchBar setColumnFilters={setColumnFilters} />
       <div className="font-nunito table w-full overflow-x-auto bg-lightIndigo">
         <table
           className="w-full"

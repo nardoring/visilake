@@ -19,7 +19,7 @@ export default function StatusChip({ status }: StatusChipProps) {
       inprogress: "bg-blue-100 border-blue-300 text-blue-700",
       notstarted: "bg-yellow-100 border-yellow-300 text-yellow-700",
       failed: "bg-red-100 border-red-300 text-red-700",
-    }[statusKey] || "bg-gray-300 border-gray-400 text-gray-700";
+    }[statusKey] ?? "bg-gray-300 border-gray-400 text-gray-700";
 
   return (
     <div>

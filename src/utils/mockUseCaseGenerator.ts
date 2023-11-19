@@ -1,4 +1,4 @@
-import { UseCase } from "~/models/useCase";
+import type { UseCase } from "~/models/useCase";
 
 function generateMockUseCases(count: number): UseCase[] {
   const mockResponse: UseCase[] = [];

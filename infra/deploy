@@ -1,9 +1,8 @@
 #!/usr/bin/env bash
-
 echo "Starting Localstack daemon"
 localstack start -d
 echo "Waiting for LocalStack startup..."
-localstack wait -t 30
+localstack wait -t 30 || exit 1
 echo "Startup complete"
 
 echo "Creating a new ECR repository locally"
@@ -13,9 +12,12 @@ echo -e "Repo URI: $repoUri"
 
 echo "Building the Docker image, pushing it to local ECR URL: $repoUri"
 sleep 3
-docker build -t "$repoUri" .
-docker push "$repoUri"
-docker rmi "$repoUri"
+export REPO_URI="$repoUri"
+docker compose build nardo || exit 1 # Exit if Docker Compose build fails.
+docker ps
+sleep 5
+docker compose push nardo
+docker rmi "$REPO_URI"
 
 echo "Creating ECS infrastructure locally"
 awslocal cloudformation create-stack --stack-name infra --template-body file://infra/private.vpc.yml
@@ -39,6 +41,9 @@ for i in {1..5}; do
     tasks=$(awslocal ecs list-tasks --cluster $cluster_arn)
     echo -e "Tasks: $tasks\n"
     task_arn=$(echo $tasks | jq -r '.taskArns[0]')
+    if [ "$task_arn" == "null" ]; then
+        exit 1
+    fi
     if [ "$task_arn" != "null" ]; then
         break
     fi
@@ -51,6 +56,9 @@ for i in {1..5}; do
     app=$(awslocal ecs describe-tasks --cluster $cluster_arn --tasks $task_arn)
     echo -e "App: $app\n"
     app_port=$(echo $app | jq -r '.tasks[0].containers[0].networkBindings[0].hostPort')
+    if [ "$app_port" == "null" ]; then
+        exit 1
+    fi
     if [ "$app_port" != "null" ]; then
         break
     fi

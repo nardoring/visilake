@@ -1,6 +1,11 @@
 import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "../trpc";
 import { UseCase } from "~/models/useCase";
+import AWS from "aws-sdk";
+
+const sqs = new AWS.SQS({ apiVersion: "2012-11-05" });
+const queueURL =
+  "http://sqs.us-east-1.localhost.localstack.cloud:4566/000000000000/requestQueue";
 
 export const useCaseRouter = createTRPCRouter({
   getUseCases: publicProcedure
@@ -57,5 +62,10 @@ export const useCaseRouter = createTRPCRouter({
         analysisTypeId: z.array(z.number().positive()),
       }),
     )
-    .mutation(({ input }) => {}),
+    .mutation(async ({ input }) => {
+      await sqs.sendMessage({
+        MessageBody: JSON.stringify(input),
+        QueueUrl: queueURL,
+      });
+    }),
 });

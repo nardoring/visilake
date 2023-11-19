@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-
 echo "Starting Localstack daemon"
 localstack start -d
 echo "Waiting for LocalStack startup..."
@@ -13,9 +12,12 @@ echo -e "Repo URI: $repoUri"
 
 echo "Building the Docker image, pushing it to local ECR URL: $repoUri"
 sleep 3
-docker build -t "$repoUri" . || exit 1 # Exit if Docker build fails.
-docker push "$repoUri"
-docker rmi "$repoUri"
+export REPO_URI="$repoUri"
+docker compose build nardo || exit 1 # Exit if Docker Compose build fails.
+docker ps
+sleep 5
+docker compose push nardo
+docker rmi "$REPO_URI"
 
 echo "Creating ECS infrastructure locally"
 awslocal cloudformation create-stack --stack-name infra --template-body file://infra/private.vpc.yml

@@ -92,8 +92,11 @@ if ($null -eq $repo) {exit;}
 
 Write-Output "Building the Docker image, pushing it to local ECR URL: $repoUri";
 Start-Sleep -Seconds 3;
-docker build -t "$repoUri" .;
-docker push "$repoUri";
+$env:REPO_URI="$repoUri"
+docker compose build nardo;
+docker ps
+Start-Sleep -Seconds 5
+docker compose push nardo;
 docker rmi "$repoUri";
 
 Write-Output "Creating ECS infrastructure locally";

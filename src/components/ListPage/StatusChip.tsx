@@ -25,7 +25,7 @@ export default function StatusChip({ status }: StatusChipProps) {
     <div>
       <div className="flex flex-wrap gap-2">
         <div
-          className={`justify-left m-1 flex items-center rounded-full border ${statusClasses} w-[5.1rem] px-2 py-1 text-xs font-medium`}
+          className={`justify-center m-1 flex items-center rounded-full border ${statusClasses} w-[5.1rem] px-2 py-1 text-xs font-medium`}
         >
           <div className="max-w-full flex-initial leading-none">
             {statusValue}

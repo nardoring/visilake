@@ -12,7 +12,7 @@ export const useCaseRouter = createTRPCRouter({
       }),
     )
     .query(async ({ input }) => {
-      await new Promise((resolve) => setTimeout(resolve, 3000));
+      await new Promise((resolve) => setTimeout(resolve, 200));
       return generateMockUseCases(20);
     }),
 

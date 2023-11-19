@@ -1,19 +1,27 @@
 import { api } from "~/utils/api";
 import StatusChip from "./StatusChip";
 import { formatDate } from "~/utils/date";
+import SearchBar from "./SearchBar";
 
 import {
+  ColumnFilter,
   flexRender,
   getCoreRowModel,
+  getFilteredRowModel,
   useReactTable,
 } from "@tanstack/react-table";
+import { useState } from "react";
 
 export default function UseCaseTable() {
+  const [queryExecuted, setQueryExecuted] = useState<boolean>(false);
+  const [columnFilters, setColumnFilters] = useState<ColumnFilter[]>([]);
+
   const { data, isLoading } = api.useCase.getUseCases.useQuery(
     { minId: 1, maxAmount: 10 },
     {
+      enabled: !queryExecuted,
       onSuccess: () => {
-        console.log(data);
+        setQueryExecuted(true);
       },
     },
   );
@@ -34,8 +42,10 @@ export default function UseCaseTable() {
     {
       accessorKey: "analysisTypes",
       header: "Analysis Types",
-      size: (1920 / 10) * 1,
-      cell: (props: { getValue: () => string[] }) => <p>{props.getValue()}</p>,
+      size: (1920 / 10) * 1.5,
+      cell: (props: { getValue: () => string[] }) => (
+        <p>{props.getValue().join(", ")}</p>
+      ),
     },
     {
       accessorKey: "useCaseStatus",
@@ -56,7 +66,7 @@ export default function UseCaseTable() {
     {
       accessorKey: "author",
       header: "Created By",
-      size: (1920 / 10) * 4,
+      size: (1920 / 10) * 3.5,
       cell: (props: { getValue: () => string }) => <p>{props.getValue()}</p>,
     },
   ];
@@ -64,7 +74,11 @@ export default function UseCaseTable() {
   const table = useReactTable({
     data: data ?? [],
     columns,
+    state: {
+      columnFilters,
+    },
     getCoreRowModel: getCoreRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
     columnResizeMode: "onChange",
   });
 
@@ -72,12 +86,13 @@ export default function UseCaseTable() {
     // Render a loading indicator or message
     return (
       <div className="fixed flex h-full w-full items-center justify-center bg-lightIndigo">
-        <p className="text-black pb-80">Loading Data...</p>
+        <p className="pb-80 text-black">Loading Data...</p>
       </div>
     );
   }
   return (
     <div>
+      <SearchBar setColumnFilters={setColumnFilters}/>
       <div className="font-nunito table w-full overflow-x-auto bg-lightIndigo">
         <table
           className="w-full"

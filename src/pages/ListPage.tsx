@@ -7,7 +7,6 @@ export default function ListPage() {
     <>
       <main className="min-h-screen bg-lightGrey">
         <Navbar />
-        <SearchBar />
         <UseCaseTable/>
       </main>
     </>

@@ -45,7 +45,7 @@ export const useCaseRouter = createTRPCRouter({
         },
       ];
 
-      return mockResponse;
+      return generateMockUseCases(20);
     }),
 
     submitUseCase: publicProcedure
@@ -69,3 +69,4 @@ export const useCaseRouter = createTRPCRouter({
       await new Promise(resolve => setTimeout(resolve, 1000));
     }),
 });
+

@@ -4,6 +4,7 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     localstack.url = "github:nardoring/localstack-nix";
+    nardo-proc.url = "/home/bh/projects/capstone/nardo-proc";
     # rust-overlay.url = "github:oxalica/rust-overlay";
   };
 
@@ -11,6 +12,7 @@
     self,
     nixpkgs,
     localstack,
+    nardo-proc,
     # rust-overlay,
   }: let
     system = "x86_64-linux";
@@ -100,6 +102,7 @@
       localstackImage = localstackImage;
       load-image = load-image;
       nardo = nardo;
+      nardo-proc = nardo-proc.nardo-proc;
       # nardoImage = nardoImage;
     };
   };

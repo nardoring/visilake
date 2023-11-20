@@ -9,8 +9,12 @@
     "start": "next start"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^6.4.2",
+    "@fortawesome/free-solid-svg-icons": "^6.4.2",
+    "@fortawesome/react-fontawesome": "^0.2.0",
     "@t3-oss/env-nextjs": "^0.7.0",
     "@tanstack/react-query": "^4.32.6",
+    "@tanstack/react-table": "^8.10.7",
     "@trpc/client": "^10.37.1",
     "@trpc/next": "^10.37.1",
     "@trpc/react-query": "^10.37.1",
@@ -20,6 +24,7 @@
     "next-auth": "^4.23.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
+    "react-fontawesome": "^1.7.1",
     "react-multi-select-component": "^4.3.4",
     "superjson": "^1.13.1",
     "uuid": "^3.4.0",
@@ -31,6 +36,7 @@
     "@types/react": "^18.2.20",
     "@types/react-dom": "^18.2.7",
     "@types/uuid": "^9.0.7",
+    "@types/react-fontawesome": "^1.6.8",
     "@typescript-eslint/eslint-plugin": "^6.3.0",
     "@typescript-eslint/parser": "^6.3.0",
     "autoprefixer": "^10.4.14",

@@ -32,7 +32,7 @@ export default function UseCaseTable() {
       accessorKey: "useCaseName",
       header: "Use Case Name",
       size: (1920 / 10) * 1,
-      cell: (props: { getValue: () => string }) => <p>{props.getValue()}</p>,
+      cell: (props: { getValue: () => string }) => <p className="font-medium">{props.getValue()}</p>,
     },
     {
       accessorKey: "useCaseDescription",

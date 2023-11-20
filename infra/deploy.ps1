@@ -2,6 +2,11 @@ param (
     [string]$LocalStackApiKey
 )
 
+if ($null -eq $LocalStackApiKey -or $LocalStackApiKey -eq "") {
+    Write-Output "Please input your localstack API key. E.g. ./deploy.ps1 -LocalStackApiKey `"YOUR API KEY HERE`""
+    exit
+}
+
 function Get-NonEmptyTasks {
     param (
         [string]$ClusterArn,
@@ -83,10 +88,15 @@ Write-Output "Creating a new ECR repository locally";
 $repo = awslocal ecr create-repository --repository-name repo1 --region us-east-1 | ConvertFrom-Json;
 $repoUri = $repo.repository.repositoryUri;
 
+if ($null -eq $repo) {exit;}
+
 Write-Output "Building the Docker image, pushing it to local ECR URL: $repoUri";
 Start-Sleep -Seconds 3;
-docker build -t "$repoUri" .;
-docker push "$repoUri";
+$env:REPO_URI="$repoUri"
+docker compose build nardo;
+docker ps
+Start-Sleep -Seconds 5
+docker compose push nardo;
 docker rmi "$repoUri";
 
 Write-Output "Creating ECS infrastructure locally";
@@ -119,3 +129,10 @@ if ($null -ne $taskArn) {
 } else {
     Write-Output "No tasks found."
 }
+
+
+$tables = awslocal dynamodb list-tables
+Write-Output "Tables: $tables\n"
+
+$queues = awslocal sqs list-queues
+Write-Output "Queues: $queues\n"

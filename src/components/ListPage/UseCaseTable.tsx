@@ -74,7 +74,7 @@ export default function UseCaseTable() {
       accessorKey: "powerBILink",
       header: "Power BI Data Link",
       size: (1920 / 10) * 4.5,
-      cell: (props: { getValue: () => string }) => <PowerBIButton link={props.getValue()} />,
+      cell: (props: { getValue: () => string, row: any}) => <PowerBIButton link={props.getValue()} status={props.row.original.useCaseStatus}/>,
     },
   ];
 

@@ -1,27 +1,24 @@
-
-
 interface PowerBIButtonProps {
   link: string;
+  status: string;
 }
 
-export default function PowerBIButton({ link }: PowerBIButtonProps) {
+export default function PowerBIButton({ link, status }: PowerBIButtonProps) {
   const handleCopyClick = () => {
-    navigator.clipboard
-      .writeText(link)
-      .then(() => {
-        console.log("Link copied to clipboard:", link);
-      })
-      .catch((error) => {
-        console.error("Unable to copy link to clipboard", error);
-      });
+    navigator.clipboard.writeText(link);
   };
+
+  const isDisabled = status !== "Complete";
 
   return (
     <button
-      className="ml rounded bg-[#f2c811] px-4 py-2 text-black shadow-md flex items-center font-medium"
+      className={`ml flex items-center rounded px-4 py-2 font-medium text-black shadow-md ${
+        isDisabled ? "cursor-not-allowed bg-gray-300" : "bg-[#f2c811]"
+      }`}
       onClick={handleCopyClick}
+      disabled={isDisabled}
     >
-      <img src="Power-BI.png" alt="" className="w-6 mr-2"/>
+      <img src="Power-BI.png" alt="" className="mr-2 w-6" />
       Copy PowerBI Link
     </button>
   );

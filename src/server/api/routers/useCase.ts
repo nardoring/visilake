@@ -9,17 +9,17 @@ import { createTRPCRouter, publicProcedure } from "../trpc";
 import { UseCase } from "~/models/useCase";
 // import AWS from "aws-sdk";
 
-const AWS = require('aws-sdk');
-const uuidv4 = require('uuid/v4');
+const AWS = require("aws-sdk");
+const uuidv4 = require("uuid/v4");
 
 const LOCALSTACK_HOSTNAME = process.env.LOCALSTACK_HOSTNAME;
 const ENDPOINT = `http://localhost:4566`;
-process.env.AWS_SECRET_ACCESS_KEY = 'test';
-process.env.AWS_ACCESS_KEY_ID = 'test';
+process.env.AWS_SECRET_ACCESS_KEY = "test";
+process.env.AWS_ACCESS_KEY_ID = "test";
 process.env.AWS_DEFAULT_REGION = "us-east-1";
 
-const QUEUE_NAME = 'requestQueue';
-const CLIENT_CONFIG = LOCALSTACK_HOSTNAME ? {endpoint: ENDPOINT} : {};
+const QUEUE_NAME = "requestQueue";
+const CLIENT_CONFIG = LOCALSTACK_HOSTNAME ? { endpoint: ENDPOINT } : {};
 
 const connectSQS = () => new AWS.SQS(CLIENT_CONFIG);
 const connectDynamoDB = () => new AWS.DynamoDB(CLIENT_CONFIG);
@@ -94,7 +94,7 @@ export const useCaseRouter = createTRPCRouter({
           }),
       }),
     )
-    .mutation( async ({ input }) => {
+    .mutation(async ({ input }) => {
       // TODO:
       // const sqs = connectSQS();
       const sqs = new AWS.SQS({
@@ -107,14 +107,15 @@ export const useCaseRouter = createTRPCRouter({
       const requestID = shortUid();
       console.log("RequestID:\n", requestID);
 
-      const message = {'requestID': requestID};
-      const queueUrl = (await sqs.getQueueUrl({QueueName: QUEUE_NAME}).promise()).QueueUrl;
+      const message = { useCase: input };
+      const queueUrl = (
+        await sqs.getQueueUrl({ QueueName: QUEUE_NAME }).promise()
+      ).QueueUrl;
 
       let params = {
-          MessageBody: JSON.stringify(message),
-          QueueUrl: queueUrl
+        MessageBody: JSON.stringify(input),
+        QueueUrl: queueUrl,
       };
       await sqs.sendMessage(params).promise();
-
     }),
 });

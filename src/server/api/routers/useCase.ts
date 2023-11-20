@@ -93,7 +93,7 @@ export const useCaseRouter = createTRPCRouter({
 
       const requestID = shortUid();
       console.log("\nRequestID:\n", requestID);
-      const message = { requestID: requestID };
+      const message = { requestID: requestID, ...input };
 
       const queueUrlResponse = await sqs
         .getQueueUrl({ QueueName: QUEUE_NAME })
@@ -134,6 +134,22 @@ export const useCaseRouter = createTRPCRouter({
           },
           status: {
             S: status,
+          },
+          name: {
+            S: input.useCaseName,
+          },
+          description: {
+            S: input.useCaseDescription,
+          },
+          analysisTypes: {
+            L: input.analysisTypeIds.map((id) => ({
+              N: id.toString(),
+            })),
+          },
+          tags: {
+            L: input.tags.map((tag) => ({
+              S: tag,
+            })),
           },
         },
       };

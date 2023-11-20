@@ -6,23 +6,12 @@
 
 import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "../trpc";
-import { UseCase } from "~/models/useCase";
-// import AWS from "aws-sdk";
-
-const AWS = require("aws-sdk");
-const uuidv4 = require("uuid/v4");
-
-const LOCALSTACK_HOSTNAME = process.env.LOCALSTACK_HOSTNAME;
-const ENDPOINT = `http://localhost:4566`;
-process.env.AWS_SECRET_ACCESS_KEY = "test";
-process.env.AWS_ACCESS_KEY_ID = "test";
-process.env.AWS_DEFAULT_REGION = "us-east-1";
+import type { UseCase } from "~/models/useCase";
+import { v4 as uuidv4 } from "uuid";
+import AWS from "aws-sdk";
 
 const QUEUE_NAME = "requestQueue";
-const CLIENT_CONFIG = LOCALSTACK_HOSTNAME ? { endpoint: ENDPOINT } : {};
-
-const connectSQS = () => new AWS.SQS(CLIENT_CONFIG);
-const connectDynamoDB = () => new AWS.DynamoDB(CLIENT_CONFIG);
+const DYNAMODB_TABLE = "mockRequests";
 const shortUid = () => uuidv4().substring(0, 8);
 
 export const useCaseRouter = createTRPCRouter({
@@ -95,27 +84,59 @@ export const useCaseRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ input }) => {
-      // TODO:
-      // const sqs = connectSQS();
+      // TODO fix endpoint
       const sqs = new AWS.SQS({
-        // endpoint: "http://localhost:4566/000000000000/requestQueue",
         endpoint: "http://sqs.us-east-1.localhost.localstack.cloud:4566/",
         region: "us-east-1",
       });
-      console.log("SQS Config:\n", sqs);
+      console.log("\nSQS Config:\n", sqs);
 
       const requestID = shortUid();
-      console.log("RequestID:\n", requestID);
+      console.log("\nRequestID:\n", requestID);
+      const message = { requestID: requestID };
 
-      const message = { useCase: input };
-      const queueUrl = (
-        await sqs.getQueueUrl({ QueueName: QUEUE_NAME }).promise()
-      ).QueueUrl;
+      const queueUrlResponse = await sqs
+        .getQueueUrl({ QueueName: QUEUE_NAME })
+        .promise();
+      const queueUrl = queueUrlResponse.QueueUrl;
 
-      let params = {
-        MessageBody: JSON.stringify(input),
+      if (!queueUrl) {
+        throw new Error("Failed to get the SQS queue URL");
+      }
+
+      let sqsParams = {
+        MessageBody: JSON.stringify(message),
         QueueUrl: queueUrl,
       };
-      await sqs.sendMessage(params).promise();
+
+      await sqs.sendMessage(sqsParams).promise();
+
+      // TODO fix endpoint
+      const dynamodb = new AWS.DynamoDB({
+        endpoint: "http://dynamodb.us-east-1.localhost.localstack.cloud:4566/",
+        region: "us-east-1",
+      });
+      console.log("\nDynamoDB Config:\n", dynamodb);
+
+      // set status in DynamoDB to QUEUED
+      const status = "QUEUED";
+      let dynamodbParams = {
+        TableName: DYNAMODB_TABLE,
+        Item: {
+          id: {
+            S: shortUid(),
+          },
+          requestID: {
+            S: requestID,
+          },
+          timestamp: {
+            N: "" + Date.now(),
+          },
+          status: {
+            S: status,
+          },
+        },
+      };
+      await dynamodb.putItem(dynamodbParams).promise();
     }),
 });

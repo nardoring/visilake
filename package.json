@@ -16,13 +16,13 @@
     "@trpc/react-query": "^10.37.1",
     "@trpc/server": "^10.37.1",
     "aws-sdk": "^2.814.0",
-    "uuid": "^3.4.0",
     "next": "^13.5.4",
     "next-auth": "^4.23.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-multi-select-component": "^4.3.4",
     "superjson": "^1.13.1",
+    "uuid": "^3.4.0",
     "zod": "^3.22.4"
   },
   "devDependencies": {
@@ -30,6 +30,7 @@
     "@types/node": "^18.16.0",
     "@types/react": "^18.2.20",
     "@types/react-dom": "^18.2.7",
+    "@types/uuid": "^9.0.7",
     "@typescript-eslint/eslint-plugin": "^6.3.0",
     "@typescript-eslint/parser": "^6.3.0",
     "autoprefixer": "^10.4.14",

@@ -2,6 +2,7 @@ import { api } from "~/utils/api";
 import StatusChip from "./StatusChip";
 import { formatDate } from "~/utils/date";
 import SearchBar from "./SearchBar";
+import PowerBIButton from "./PowerBIButton";
 
 import {
   flexRender,
@@ -66,8 +67,14 @@ export default function UseCaseTable() {
     {
       accessorKey: "author",
       header: "Created By",
-      size: (1920 / 10) * 3.5,
+      size: (1920 / 10) * 1,
       cell: (props: { getValue: () => string }) => <p>{props.getValue()}</p>,
+    },
+    {
+      accessorKey: "powerBILink",
+      header: "Power BI Data Link",
+      size: (1920 / 10) * 4.5,
+      cell: (props: { getValue: () => string }) => <PowerBIButton link={props.getValue()} />,
     },
   ];
 

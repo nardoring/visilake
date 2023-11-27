@@ -22,10 +22,10 @@
 
     # Pull Localstack Docker Image
     localstackImage = pkgs.dockerTools.pullImage {
-      imageName = "localstack/localstack";
-      imageDigest = "sha256:31300a9a8a80cfe32aa579b0d0873f130dabcf54d7525803bf9a40f76ee1fa62";
-      sha256 = "0rrd2swcpal7yswx933ig016zarpazmdfgxvzk9v98szc554ssc8";
-      finalImageName = "localstack/localstack";
+      imageName = "localstack/localstack-pro";
+      imageDigest = "sha256:b6bb4d7b1209b47daccd2d58e669b0fb19ace3ecd98572ec6e3e75921768f6f6";
+      sha256 = "sha256-oJlIFsIRtvZSLtABjapc+ZJeJUcDi+xhct/H3o/5pck=";
+      finalImageName = "localstack/localstack-pro";
       finalImageTag = "latest";
     };
 

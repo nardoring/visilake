@@ -83,7 +83,7 @@ export default function Form() {
 
   return (
     <form className="mx-auto max-w-screen-md p-4 " onSubmit={handleSubmit}>
-      <FormPopup></FormPopup>
+      <FormPopup popupTitle={"Use Case Submitted Successfully"} popupText={"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi rhoncus, erat eu consectetur tempor, massa arcu efficitur neque, a imperdiet dui libero vel nibh. In blandit laoreet tincidunt."} formSuccess={true}></FormPopup>
       <div className="font-nunito mt-10 grid grid-cols-2 gap-x-6 gap-y-4 rounded border border-slate-400 bg-lightBlue p-4 font-medium shadow-md">
         <div>
           <label htmlFor="useCaseTitle">Use Case Title</label>

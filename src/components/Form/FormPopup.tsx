@@ -33,8 +33,8 @@ export default function FormPopup({
                 {/* SVG Source: https://fontawesome.com/icons/circle-check?f=classic&s=solid */}
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  height="100"
-                  width="100"
+                  height="50"
+                  width="50"
                   viewBox="0 0 512 512"
                   className="mt-4"
                 >
@@ -42,34 +42,26 @@ export default function FormPopup({
                   fill="rgba(54, 180, 114, 0.9)"/>
                 </svg>
                 {/*header*/}
-                <div className="flex items-start justify-between rounded-t p-5">
-                  <h3 className="text-3xl font-semibold">{popupTitle}</h3>
-                  <button
-                    className="float-right ml-auto border-0 bg-transparent p-1 text-3xl font-semibold leading-none text-black opacity-5 outline-none focus:outline-none"
-                    onClick={() => setShowModal(false)}
-                  >
-                    <span className="block h-6 w-6 bg-transparent text-2xl text-black opacity-5 outline-none focus:outline-none">
-                      ×
-                    </span>
-                  </button>
+                <div className="flex rounded-t pt-5">
+                  <h3 className="text-2xl font-semibold">{popupTitle}</h3>
                 </div>
                 {/*body*/}
-                <div className="relative flex-auto p-6">
+                <div className="relative flex-auto pl-5 pr-5">
                   <p className="text-blueGray-500 my-4 text-lg leading-relaxed">
                     {popupText}
                   </p>
                 </div>
                 {/*footer*/}
-                <div className="border-blueGray-200 flex items-center justify-end rounded-b p-6">
+                <div className="border-blueGray-200 flex items-center justify-end rounded-b pb-6">
                   <button
-                    className="background-transparent mb-1 mr-1 px-6 py-2 text-sm font-bold uppercase text-red-500 outline-none transition-all duration-150 ease-linear focus:outline-none"
+                    className="background-transparent mb-1 mr-1 px-6 py-2 text-sm font-bold uppercase outline-none transition-all duration-150 ease-linear focus:outline-none"
                     type="button"
                     onClick={() => setShowModal(false)}
                   >
                     Close
                   </button>
                   <button
-                    className="mb-1 mr-1 rounded bg-emerald-500 px-6 py-3 text-sm font-bold uppercase text-white shadow outline-none transition-all duration-150 ease-linear hover:shadow-lg focus:outline-none active:bg-emerald-600"
+                    className="mb-1 mr-1 rounded bg-blue-500 px-6 py-3 text-sm font-bold uppercase text-white shadow outline-none transition-all duration-150 ease-linear hover:shadow-lg focus:outline-none active:bg-emerald-600"
                     type="button"
                     onClick={() => setShowModal(false)}
                   >

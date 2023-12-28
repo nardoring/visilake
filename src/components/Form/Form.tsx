@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import FileTags from "./FileTags";
+import FormPopup from "./FormPopup";
 import { MultiSelect } from "react-multi-select-component";
 import { api } from "~/utils/api";
 import type { AnalysisTypeOption, Tag } from "~/utils/types";
@@ -82,6 +83,7 @@ export default function Form() {
 
   return (
     <form className="mx-auto max-w-screen-md p-4 " onSubmit={handleSubmit}>
+      <FormPopup></FormPopup>
       <div className="font-nunito mt-10 grid grid-cols-2 gap-x-6 gap-y-4 rounded border border-slate-400 bg-lightBlue p-4 font-medium shadow-md">
         <div>
           <label htmlFor="useCaseTitle">Use Case Title</label>

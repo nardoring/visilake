@@ -29,7 +29,7 @@ export default function FormPopup({
             <div className="relative mx-auto my-6 w-auto max-w-3xl">
               {/*content*/}
 
-              <div className="relative flex w-full flex-col rounded-lg border-0 bg-white shadow-lg outline-none focus:outline-none items-center">
+              <div className="relative flex w-full flex-col items-center rounded-lg border-0 bg-white shadow-lg outline-none focus:outline-none">
                 {/* SVG Source: https://fontawesome.com/icons/circle-check?f=classic&s=solid */}
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -38,8 +38,10 @@ export default function FormPopup({
                   viewBox="0 0 512 512"
                   className="mt-4"
                 >
-                  <path d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM369 209L241 337c-9.4 9.4-24.6 9.4-33.9 0l-64-64c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l47 47L335 175c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9z" 
-                  fill="rgba(54, 180, 114, 0.9)"/>
+                  <path
+                    d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zM369 209L241 337c-9.4 9.4-24.6 9.4-33.9 0l-64-64c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l47 47L335 175c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9z"
+                    fill="rgba(54, 180, 114, 0.9)"
+                  />
                 </svg>
                 {/*header*/}
                 <div className="flex rounded-t pt-5">
@@ -63,7 +65,10 @@ export default function FormPopup({
                   <button
                     className="mb-1 mr-1 rounded bg-blue-500 px-6 py-3 text-sm font-bold uppercase text-white shadow outline-none transition-all duration-150 ease-linear hover:shadow-lg focus:outline-none active:bg-emerald-600"
                     type="button"
-                    onClick={() => setShowModal(false)}
+                    onClick={() => {
+                      setShowModal(false);
+                      void router.push("/ListPage");
+                    }}
                   >
                     View Use Cases
                   </button>
@@ -75,15 +80,5 @@ export default function FormPopup({
         </>
       ) : null}
     </>
-    // <>
-    //   <button
-    //     className="ml-4 px-4 py-2 font-medium text-darkBlue"
-    //     onClick={() => {
-    //       void router.push("/ListPage");
-    //     }}
-    //   >
-    //     View Use Cases
-    //   </button>
-    // </>
   );
 }

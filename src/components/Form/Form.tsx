@@ -18,6 +18,9 @@ export default function Form() {
     data: analysisTypeOptionsData,
     isLoading: analysisTypeOptionsIsLoading,
   } = api.analysis.getAnalysisTypes.useQuery();
+  const [showPopup, setShowPopup] = useState(false);
+  const [formSuccess, setFormSuccess] = useState(false);
+
 
   const analysisTypeOptions: AnalysisTypeOption[] = analysisTypeOptionsIsLoading
     ? []
@@ -57,33 +60,23 @@ export default function Form() {
     ) {
       const analysisTypeIDs: number[] = analysisTypes.map((type) => type.value);
       try {
-        await useCaseSubmission.mutateAsync({
-          tags: getValidTags(),
-          useCaseDescription: useCaseDescription,
-          useCaseName: useCaseTitle,
-          analysisTypeIds: analysisTypeIDs,
-        });
-        const form = e.target as HTMLFormElement;
-        form.submit();
+        // await useCaseSubmission.mutateAsync({
+        //   tags: getValidTags(),
+        //   useCaseDescription: useCaseDescription,
+        //   useCaseName: useCaseTitle,
+        //   analysisTypeIds: analysisTypeIDs,
+        // });
+        setFormSuccess(true);
       } catch (error) {
-        // TODO : Handle a failed connection to an endpoint once we get things more integrated
-        // This is when the user submits valid data, but the mutation still fails.
-        // We likely want to do some form of logging for such an error.
-        // if (!useCaseSubmission.isSuccess) {
-        //   window.alert(
-        //     "Failed to submit the form. Please try again.\nIf the issue persists, please contact an administrator",
-        //   );
-        //   console.error("Mutation failed", useCaseSubmission.error);
-        //   e.preventDefault();
-        // }
+        setFormSuccess(false);
         console.log(error);
       }
+      setShowPopup(true);
     }
   }
 
   return (
-    <form className="mx-auto max-w-screen-md p-4 " onSubmit={handleSubmit}>
-      <FormPopup popupTitle={"Use Case Submitted Successfully"} popupText={"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi rhoncus, erat eu consectetur tempor, massa arcu efficitur neque, a imperdiet dui libero vel nibh. In blandit laoreet tincidunt."} formSuccess={true}></FormPopup>
+    <form className="mx-auto max-w-screen-md p-4 " onSubmit={handleSubmit} id="useSubmissionCaseForm">
       <div className="font-nunito mt-10 grid grid-cols-2 gap-x-6 gap-y-4 rounded border border-slate-400 bg-lightBlue p-4 font-medium shadow-md">
         <div>
           <label htmlFor="useCaseTitle">Use Case Title</label>
@@ -149,6 +142,7 @@ export default function Form() {
             Submit Use Case
           </button>
         </div>
+        <FormPopup formSuccess={formSuccess} showPopup={showPopup} setShowPopup={setShowPopup}/>
       </div>
     </form>
   );

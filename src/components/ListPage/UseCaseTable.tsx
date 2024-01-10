@@ -52,7 +52,7 @@ export default function UseCaseTable() {
     {
       accessorKey: "useCaseStatus",
       header: "Status",
-      size: (1920 / 10) * 1,
+      size: (1920 / 10) * 0.75,
       cell: (props: { getValue: () => string }) => (
         <StatusChip status={props.getValue()} />
       ),
@@ -74,7 +74,7 @@ export default function UseCaseTable() {
     {
       accessorKey: "powerBILink",
       header: "Power BI Data Link",
-      size: (1920 / 10) * 4.5,
+      size: (1920 / 10) * 3,
       cell: (props: { getValue: () => string, row: Row<UseCase>}) => <PowerBIButton link={props.getValue()} status={props.row.original.useCaseStatus}/>,
     },
   ];
@@ -133,7 +133,7 @@ export default function UseCaseTable() {
               <tr
                 key={row.id}
                 className={`${
-                  row.index % 2 === 0 ? "bg-white" : "bg-veryLightGrey"
+                  row.index % 2 === 0 ? "bg-white" : "bg-lightIndigo"
                 } h-[4.4rem]`}
               >
                 {row.getVisibleCells().map((cell) => (

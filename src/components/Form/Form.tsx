@@ -60,12 +60,12 @@ export default function Form() {
     ) {
       const analysisTypeIDs: number[] = analysisTypes.map((type) => type.value);
       try {
-        // await useCaseSubmission.mutateAsync({
-        //   tags: getValidTags(),
-        //   useCaseDescription: useCaseDescription,
-        //   useCaseName: useCaseTitle,
-        //   analysisTypeIds: analysisTypeIDs,
-        // });
+        await useCaseSubmission.mutateAsync({
+          tags: getValidTags(),
+          useCaseDescription: useCaseDescription,
+          useCaseName: useCaseTitle,
+          analysisTypeIds: analysisTypeIDs,
+        });
         setFormSuccess(true);
       } catch (error) {
         setFormSuccess(false);

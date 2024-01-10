@@ -1,3 +1,4 @@
+import Image from 'next/image';
 
 interface PowerBIButtonProps {
   link: string;
@@ -26,7 +27,7 @@ export default function PowerBIButton({ link, status }: PowerBIButtonProps) {
       onClick={handleCopyClick}
       disabled={isDisabled}
     >
-      <img src="Power-BI.png" alt="" className="mr-2 w-6" />
+      <Image src="/Power-BI.png" width={24} height={24} alt="" className="mr-2" />
       Copy PowerBI Link
     </button>
   );

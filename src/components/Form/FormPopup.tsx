@@ -1,5 +1,5 @@
+import type { Dispatch, SetStateAction } from "react";
 import { useRouter } from "next/router";
-import React, { Dispatch, SetStateAction } from "react";
 
 interface FormPopupProps {
   formSuccess: boolean;
@@ -22,9 +22,11 @@ export default function FormPopup({
               {/*content*/}
 
               <div className="relative flex w-full flex-col items-center rounded-lg border-0 bg-white shadow-lg outline-none focus:outline-none">
-                {/* Success SVG Source: https://fontawesome.com/icons/circle-check?f=classic&s=solid */}
-                {/* Failure SVG Source: https://fontawesome.com/icons/circle-xmark?f=classic&s=solid */}
-                // Show a green checkmark svg for a successful form submission, and a red x elsewise.
+                {/*
+                  Success SVG Source: https://fontawesome.com/icons/circle-check?f=classic&s=solid
+                  Failure SVG Source: https://fontawesome.com/icons/circle-xmark?f=classic&s=solid
+                  Show a green checkmark svg for a successful form submission, and a red x elsewise. 
+                */}
                 {formSuccess ? (
                   <svg
                     xmlns="http://www.w3.org/2000/svg"

@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+set -e  # Exit immediately if a command exits with a non-zero status
+
 echo "Starting Localstack daemon"
 localstack start -d
 echo "Waiting for LocalStack startup..."
@@ -8,16 +10,21 @@ echo "Startup complete"
 echo "Creating a new ECR repository locally"
 repoUri=$(awslocal ecr create-repository --repository-name repo1 | jq -r '.repository.repositoryUri')
 
-echo -e "Repo URI: $repoUri"
+if [ "$repoUri" != "" ]; then
+    echo -e "Repo URI: $repoUri"
 
-echo "Building the Docker image, pushing it to local ECR URL: $repoUri"
-sleep 3
-export REPO_URI="$repoUri"
-docker compose build nardo || exit 1 # Exit if Docker Compose build fails.
-docker ps
-sleep 5
-docker compose push nardo
-docker rmi "$REPO_URI"
+    echo "Building the Docker image, pushing it to local ECR URL: $repoUri"
+    sleep 3
+    export REPO_URI="$repoUri"
+    docker compose build nardo || exit 1 # Exit if Docker Compose build fails.
+    docker ps
+    sleep 5
+    docker compose push nardo
+    docker rmi "$REPO_URI"
+else
+    echo -e "\033[1;33mFailed to create a new ECR repository locally \033[0m\n"
+    exit 1
+fi
 
 echo "Creating ECS infrastructure locally"
 awslocal cloudformation create-stack --stack-name infra --template-body file://infra/private.vpc.yml
@@ -42,6 +49,7 @@ for i in {1..5}; do
     echo -e "Tasks: $tasks\n"
     task_arn=$(echo $tasks | jq -r '.taskArns[0]')
     if [ "$task_arn" == "null" ]; then
+        echo -e "\033[1;33mNo task found \033[0m\n"
         exit 1
     fi
     if [ "$task_arn" != "null" ]; then
@@ -56,7 +64,8 @@ for i in {1..5}; do
     app=$(awslocal ecs describe-tasks --cluster $cluster_arn --tasks $task_arn)
     echo -e "App: $app\n"
     app_port=$(echo $app | jq -r '.tasks[0].containers[0].networkBindings[0].hostPort')
-    if [ "$app_port" == "null" ]; then
+    if [ "$app_port" == "" ]; then
+        echo -e "\033[1;33mNo application found \033[0m\n"
         exit 1
     fi
     if [ "$app_port" != "null" ]; then

@@ -24,11 +24,11 @@
         "nixpkgs": "nixpkgs"
       },
       "locked": {
-        "lastModified": 1705266276,
-        "narHash": "sha256-VHzNpf0eHzsvSG+PPkZClwS6BhhZbFAsxJCuhtedFTM=",
+        "lastModified": 1705267005,
+        "narHash": "sha256-mXFPGO/YDadAcbg7P7ZCCkVqU10EWD1JianimNH5B1I=",
         "owner": "nardoring",
         "repo": "localstack-nix",
-        "rev": "505ae363532c0facbfdb861dace83b0466379e1d",
+        "rev": "16fbc3ef2898980a2509d40480301b6ef5dfad72",
         "type": "github"
       },
       "original": {

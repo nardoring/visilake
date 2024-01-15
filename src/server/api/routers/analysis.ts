@@ -1,18 +1,19 @@
+import AWS from "aws-sdk";
 import { createTRPCRouter, publicProcedure } from "../trpc";
+
+const DYNAMODB_TABLE = "analysisTypes";
 
 export const analysisRouter = createTRPCRouter({
   getAnalysisTypes: publicProcedure.query(async () => {
-    const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+    const delay = (ms: number) =>
+      new Promise((resolve) => setTimeout(resolve, ms));
 
-    // Introduce a delay for testing loading elements
-    await delay(2000);
+    // TODO fix endpoint
+    const dynamodb = new AWS.DynamoDB({
+      endpoint: "http://dynamodb.us-east-1.localhost.localstack.cloud:4566/",
+      region: "us-east-1",
+    });
 
-    return {
-      types: [
-        { name: "Rolling Mean", id: 1 },
-        { name: "Rolling Std Deviation", id: 2 },
-        { name: "Autocorrelation", id: 3 },
-      ],
-    };
+    return dynamodb.scan({ TableName: DYNAMODB_TABLE });
   }),
 });

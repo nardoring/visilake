@@ -78,6 +78,12 @@ done
 tables=$(awslocal dynamodb list-tables)
 echo -e "Tables: $tables\n"
 
+# Add mock records
+echo -e "Adding Mock Records"
+awslocal dynamodb put-item --table-name analysisTypes --item '{"Name": {"S": "Rolling Mean"}}'
+awslocal dynamodb put-item --table-name analysisTypes --item '{"Name": {"S": "Rolling Std Deviation"}}'
+awslocal dynamodb put-item --table-name analysisTypes --item '{"Name": {"S": "Autocorrelation"}}'
+
 # Get queues
 queues=$(awslocal sqs list-queues)
 echo -e "Queues: $queues\n"

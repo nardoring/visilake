@@ -136,3 +136,5 @@ Write-Output "Tables: $tables\n"
 
 $queues = awslocal sqs list-queues
 Write-Output "Queues: $queues\n"
+
+awslocal dynamodb batch-write-item --request-items file://./infra/useCases/mockUseCasesBatchCommand.json

@@ -1,0 +1,368 @@
+{
+  "mockRequests": [
+    {
+      "PutRequest": {
+        "Item": {
+          "id": { "S": "1" },
+          "requestID": { "S": "7c41a5dd-091d-4408-bf8c-4c96c4e5b699" },
+          "useCaseDescription": { "S": "This is a test" },
+          "useCaseStatus": { "S": "Complete" },
+          "powerBILink": {
+            "S": "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'"
+          },
+          "author": { "S": "James Smith" },
+          "analysisTypes": {
+            "L": [{ "S": "Trend Analysis" }, { "S": "Predictive Modeling" }]
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "id": { "S": "2" },
+          "requestID": { "S": "a1234567-8901-2345-6789-bcdef0123456" },
+          "useCaseDescription": { "S": "Another test" },
+          "useCaseStatus": { "S": "NotStarted" },
+          "powerBILink": {
+            "S": "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'"
+          },
+          "author": { "S": "Sarah Johnson" },
+          "analysisTypes": {
+            "L": [{ "S": "Data Mining" }, { "S": "Regression Analysis" }]
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "id": { "S": "3" },
+          "requestID": { "S": "b9876543-2109-8765-4321-fedcba098765" },
+          "useCaseDescription": { "S": "Third test" },
+          "useCaseStatus": { "S": "InProgress" },
+          "powerBILink": {
+            "S": "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'"
+          },
+          "author": { "S": "John Doe" },
+          "analysisTypes": {
+            "L": [
+              { "S": "Descriptive Statistics" },
+              { "S": "Cluster Analysis" }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "id": { "S": "4" },
+          "requestID": { "S": "c3456789-0123-4567-8901-fedcba987654" },
+          "useCaseDescription": { "S": "Fourth test" },
+          "useCaseStatus": { "S": "Failed" },
+          "powerBILink": {
+            "S": "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'"
+          },
+          "author": { "S": "Emily Davis" },
+          "analysisTypes": {
+            "L": [
+              { "S": "Hypothesis Testing" },
+              { "S": "Time Series Analysis" }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "id": { "S": "5" },
+          "requestID": { "S": "d2345678-9012-3456-7890-fedcba098765" },
+          "useCaseDescription": { "S": "Fifth test" },
+          "useCaseStatus": { "S": "Complete" },
+          "powerBILink": {
+            "S": "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'"
+          },
+          "author": { "S": "Michael Wilson" },
+          "analysisTypes": {
+            "L": [
+              { "S": "Correlation Analysis" },
+              { "S": "Logistic Regression" }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "id": { "S": "6" },
+          "requestID": { "S": "e4567890-1234-5678-9012-fedcba987654" },
+          "useCaseDescription": { "S": "Sixth test" },
+          "useCaseStatus": { "S": "InProgress" },
+          "powerBILink": {
+            "S": "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'"
+          },
+          "author": { "S": "Mary Brown" },
+          "analysisTypes": {
+            "L": [{ "S": "ANOVA" }, { "S": "Principal Component Analysis" }]
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "id": { "S": "7" },
+          "requestID": { "S": "f5678901-2345-6789-0123-fedcba098765" },
+          "useCaseDescription": { "S": "Seventh test" },
+          "useCaseStatus": { "S": "NotStarted" },
+          "powerBILink": {
+            "S": "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'"
+          },
+          "author": { "S": "David Lee" },
+          "analysisTypes": {
+            "L": [{ "S": "Chi-Square Test" }, { "S": "Factor Analysis" }]
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "id": { "S": "8" },
+          "requestID": { "S": "g6789012-3456-7890-1234-fedcba987654" },
+          "useCaseDescription": { "S": "Eighth test" },
+          "useCaseStatus": { "S": "Complete" },
+          "powerBILink": {
+            "S": "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'"
+          },
+          "author": { "S": "Linda Garcia" },
+          "analysisTypes": {
+            "L": [{ "S": "Regression Analysis" }, { "S": "Data Mining" }]
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "id": { "S": "9" },
+          "requestID": { "S": "h7890123-4567-8901-2345-fedcba098765" },
+          "useCaseDescription": { "S": "Ninth test" },
+          "useCaseStatus": { "S": "InProgress" },
+          "powerBILink": {
+            "S": "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'"
+          },
+          "author": { "S": "Robert Johnson" },
+          "analysisTypes": {
+            "L": [
+              { "S": "Cluster Analysis" },
+              { "S": "Descriptive Statistics" }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "id": { "S": "10" },
+          "requestID": { "S": "i8901234-5678-9012-3456-fedcba987654" },
+          "useCaseDescription": { "S": "Tenth test" },
+          "useCaseStatus": { "S": "Failed" },
+          "powerBILink": {
+            "S": "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'"
+          },
+          "author": { "S": "Susan Williams" },
+          "analysisTypes": {
+            "L": [
+              { "S": "Time Series Analysis" },
+              { "S": "Hypothesis Testing" }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "id": { "S": "11" },
+          "requestID": { "S": "j1234567-8901-2345-6789-bcdef0123456" },
+          "useCaseDescription": { "S": "Eleventh test" },
+          "useCaseStatus": { "S": "InProgress" },
+          "powerBILink": {
+            "S": "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'"
+          },
+          "author": { "S": "Mark Taylor" },
+          "analysisTypes": {
+            "L": [{ "S": "Regression Analysis" }, { "S": "Data Mining" }]
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "id": { "S": "12" },
+          "requestID": { "S": "k9876543-2109-8765-4321-fedcba098765" },
+          "useCaseDescription": { "S": "Twelfth test" },
+          "useCaseStatus": { "S": "Failed" },
+          "powerBILink": {
+            "S": "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'"
+          },
+          "author": { "S": "Laura Adams" },
+          "analysisTypes": {
+            "L": [{ "S": "ANOVA" }, { "S": "Principal Component Analysis" }]
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "id": { "S": "13" },
+          "requestID": { "S": "l3456789-0123-4567-8901-fedcba987654" },
+          "useCaseDescription": { "S": "Thirteenth test" },
+          "useCaseStatus": { "S": "Complete" },
+          "powerBILink": {
+            "S": "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'"
+          },
+          "author": { "S": "Alex Turner" },
+          "analysisTypes": {
+            "L": [{ "S": "Chi-Square Test" }, { "S": "Factor Analysis" }]
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "id": { "S": "14" },
+          "requestID": { "S": "m2345678-9012-3456-7890-fedcba098765" },
+          "useCaseDescription": { "S": "Fourteenth test" },
+          "useCaseStatus": { "S": "NotStarted" },
+          "powerBILink": {
+            "S": "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'"
+          },
+          "author": { "S": "Rachel Brown" },
+          "analysisTypes": {
+            "L": [
+              { "S": "Correlation Analysis" },
+              { "S": "Logistic Regression" }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "id": { "S": "15" },
+          "requestID": { "S": "n4567890-1234-5678-9012-fedcba987654" },
+          "useCaseDescription": { "S": "Fifteenth test" },
+          "useCaseStatus": { "S": "InProgress" },
+          "powerBILink": {
+            "S": "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'"
+          },
+          "author": { "S": "Daniel Martin" },
+          "analysisTypes": {
+            "L": [{ "S": "ANOVA" }, { "S": "Principal Component Analysis" }]
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "id": { "S": "16" },
+          "requestID": { "S": "o5678901-2345-6789-0123-fedcba098765" },
+          "useCaseDescription": { "S": "Sixteenth test" },
+          "useCaseStatus": { "S": "Complete" },
+          "powerBILink": {
+            "S": "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'"
+          },
+          "author": { "S": "Emma Lee" },
+          "analysisTypes": {
+            "L": [{ "S": "Chi-Square Test" }, { "S": "Factor Analysis" }]
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "id": { "S": "17" },
+          "requestID": { "S": "p6789012-3456-7890-1234-fedcba987654" },
+          "useCaseDescription": { "S": "Seventeenth test" },
+          "useCaseStatus": { "S": "NotStarted" },
+          "powerBILink": {
+            "S": "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'"
+          },
+          "author": { "S": "Sophia Johnson" },
+          "analysisTypes": {
+            "L": [
+              { "S": "Hypothesis Testing" },
+              { "S": "Time Series Analysis" }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "id": { "S": "18" },
+          "requestID": { "S": "q7890123-4567-8901-2345-fedcba098765" },
+          "useCaseDescription": { "S": "Eighteenth test" },
+          "useCaseStatus": { "S": "Failed" },
+          "powerBILink": {
+            "S": "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'"
+          },
+          "author": { "S": "Aiden Smith" },
+          "analysisTypes": {
+            "L": [
+              { "S": "Correlation Analysis" },
+              { "S": "Logistic Regression" }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "id": { "S": "19" },
+          "requestID": { "S": "r8901234-5678-9012-3456-fedcba987654" },
+          "useCaseDescription": { "S": "Nineteenth test" },
+          "useCaseStatus": { "S": "InProgress" },
+          "powerBILink": {
+            "S": "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'"
+          },
+          "author": { "S": "Olivia Davis" },
+          "analysisTypes": {
+            "L": [{ "S": "ANOVA" }, { "S": "Principal Component Analysis" }]
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "id": { "S": "20" },
+          "requestID": { "S": "s2345678-9012-3456-7890-fedcba098765" },
+          "useCaseDescription": { "S": "Twentieth test" },
+          "useCaseStatus": { "S": "Complete" },
+          "powerBILink": {
+            "S": "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'"
+          },
+          "author": { "S": "Lucas Wilson" },
+          "analysisTypes": {
+            "L": [{ "S": "Chi-Square Test" }, { "S": "Factor Analysis" }]
+          }
+        }
+      }
+    }
+  ]
+}

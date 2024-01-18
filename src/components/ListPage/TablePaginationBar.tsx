@@ -55,9 +55,8 @@ export default function TablePaginationBar({ table }: TablePaginationBarProps) {
     };
 
   const renderPageButton = (pageNumber: number) => (
-    <a
+    <span
       key={"paginationButton" + pageNumber}
-      href="#"
       className={`relative inline-flex items-center ${buttonSize} px-4 py-2 text-sm font-semibold ${
         pageNumber === pageIndex
           ? "bg-indigo-600 text-white focus:z-20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
@@ -65,7 +64,7 @@ export default function TablePaginationBar({ table }: TablePaginationBarProps) {
       }`}
     >
       {pageNumber}
-    </a>
+    </span>
   );
 
   const renderEllipsis = () => (
@@ -79,9 +78,9 @@ export default function TablePaginationBar({ table }: TablePaginationBarProps) {
       <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
         <div>
           <p className="text-sm text-gray-700">
-            Showing <span className="font-medium">1</span> to{" "}
-            <span className="font-medium">{pageIndex}</span> of{" "}
-            <span className="font-medium">{pageCount}</span> results
+            Showing <span className="font-medium">{(pageIndex - 1) * 10 + 1}</span> to{" "}
+            <span className="font-medium">{Math.min(pageIndex * 10, table.options.data.length)}</span> of{" "}
+            <span className="font-medium">{table.options.data.length}</span> results
           </p>
         </div>
         <div>

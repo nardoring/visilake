@@ -3,6 +3,7 @@ import StatusChip from "./StatusChip";
 import { formatDate } from "~/utils/date";
 import SearchBar from "./SearchBar";
 import PowerBIButton from "./PowerBIButton";
+import TablePaginationBar from "./TablePaginationBar";
 
 import {
   flexRender,
@@ -121,7 +122,7 @@ export default function UseCaseTable() {
                 {headerGroup.headers.map((header) => (
                   <th
                     key={header.id}
-                    className="pl-4 text-left font-bold text-[#595C64]"
+                    className="pb-2 pl-4 text-left font-bold text-[#595C64]"
                     style={{ width: `${header.getSize()}px` }}
                   >
                     {String(header.column.columnDef.header)}
@@ -143,7 +144,7 @@ export default function UseCaseTable() {
                 key={row.id}
                 className={`${
                   row.index % 2 === 0 ? "bg-white" : "bg-veryLightGrey"
-                } h-[4.4rem]`}
+                } h-[4.3rem]`}
               >
                 {row.getVisibleCells().map((cell) => (
                   <td
@@ -158,24 +159,7 @@ export default function UseCaseTable() {
             ))}
           </tbody>
         </table>
-        <div>
-          <p>
-            Page {table.getState().pagination.pageIndex + 1} of{" "}
-            {table.getPageCount()}
-          </p>
-          <button
-            onClick={() => table.previousPage()}
-            disabled={!table.getCanPreviousPage()}
-          >
-            {"<"}
-          </button>
-          <button
-            onClick={() => table.nextPage()}
-            disabled={!table.getCanNextPage()}
-          >
-            {">"}
-          </button>
-        </div>
+        <TablePaginationBar table={table}/>
       </div>
     </div>
   );

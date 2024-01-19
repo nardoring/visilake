@@ -55,7 +55,8 @@ export default function TablePaginationBar({ table }: TablePaginationBarProps) {
     };
 
   const renderPageButton = (pageNumber: number) => (
-    <span
+    <button
+      onClick={() => table.setPageIndex(pageNumber - 1)}
       key={"paginationButton" + pageNumber}
       className={`relative inline-flex items-center ${buttonSize} px-4 py-2 text-sm font-semibold ${
         pageNumber === pageIndex
@@ -64,7 +65,7 @@ export default function TablePaginationBar({ table }: TablePaginationBarProps) {
       }`}
     >
       {pageNumber}
-    </span>
+    </button>
   );
 
   const renderEllipsis = () => (

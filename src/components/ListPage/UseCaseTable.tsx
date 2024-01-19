@@ -144,7 +144,7 @@ export default function UseCaseTable() {
                 key={row.id}
                 className={`${
                   row.index % 2 === 0 ? "bg-white" : "bg-veryLightGrey"
-                } h-[4.3rem]`}
+                } h-[4.28rem]`}
               >
                 {row.getVisibleCells().map((cell) => (
                   <td
@@ -159,7 +159,9 @@ export default function UseCaseTable() {
             ))}
           </tbody>
         </table>
-        <TablePaginationBar table={table}/>
+        <div className="fixed bottom-0 left-0 w-full bg-white">
+          <TablePaginationBar table={table} />
+        </div>
       </div>
     </div>
   );

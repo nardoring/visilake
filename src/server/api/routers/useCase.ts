@@ -9,6 +9,7 @@ import { createTRPCRouter, publicProcedure } from "../trpc";
 import type { UseCase } from "~/models/useCase";
 import { v4 as uuidv4 } from "uuid";
 import AWS from "aws-sdk";
+import mapUseCases from "~/mappers/useCaseMappers";
 
 const QUEUE_NAME = "requestQueue";
 const DYNAMODB_TABLE = "mockRequests";
@@ -28,25 +29,31 @@ export const useCaseRouter = createTRPCRouter({
         endpoint: "http://dynamodb.us-east-1.localhost.localstack.cloud:4566/",
         region: "us-east-1",
       });
-      console.log("\nDynamoDB Config:\n", dynamodb);
+      //console.log("\nDynamoDB Config:\n", dynamodb);
 
       const useCaseQueryParams = {
         TableName: DYNAMODB_TABLE,
-        KeyConditionExpression: "id > :pkValue",
+        FilterExpression: "requestID > :minId",
         ExpressionAttributeValues: {
-          ":pkValue": { S: "1" },
+          ":minId": { N: "1" },
         },
+        Limit: 10,
+        ProjectionExpression:
+          "useCaseName, useCaseDescription, useCaseStatus, powerBILink, author, analysisTypes",
       };
 
-      return await new Promise((resolve, reject) =>
-        dynamodb.query(useCaseQueryParams, (err, data) => {
-          if (err || !data.Items) {
-            console.log(data, err);
-            reject(err ?? (!data.Items ? "No Items" : "Unknown error"));
-          } else {
-            resolve(data.Items);
-          }
-        }),
+      return mapUseCases(
+        await new Promise((resolve, reject) =>
+          dynamodb.scan(useCaseQueryParams, (err, data) => {
+            if (err || !data.Items) {
+              console.log(data, err);
+              reject(err ?? (!data.Items ? "No Items" : "Unknown error"));
+            } else {
+              console.log(data.Items);
+              resolve(data.Items);
+            }
+          }),
+        ),
       );
     }),
 

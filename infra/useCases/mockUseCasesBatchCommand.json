@@ -3,9 +3,10 @@
     {
       "PutRequest": {
         "Item": {
-          "id": { "S": "1" },
-          "requestID": { "S": "7c41a5dd-091d-4408-bf8c-4c96c4e5b699" },
+          "requestID": { "N": "1" },
+          "id": { "S": "7c41a5dd-091d-4408-bf8c-4c96c4e5b699" },
           "useCaseDescription": { "S": "This is a test" },
+          "useCaseName": { "S": "This is a test" },
           "useCaseStatus": { "S": "Complete" },
           "powerBILink": {
             "S": "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'"
@@ -20,9 +21,10 @@
     {
       "PutRequest": {
         "Item": {
-          "id": { "S": "2" },
-          "requestID": { "S": "a1234567-8901-2345-6789-bcdef0123456" },
+          "requestID": { "N": "2" },
+          "id": { "S": "a1234567-8901-2345-6789-bcdef0123456" },
           "useCaseDescription": { "S": "Another test" },
+          "useCaseName": { "S": "Another test" },
           "useCaseStatus": { "S": "NotStarted" },
           "powerBILink": {
             "S": "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'"
@@ -37,9 +39,10 @@
     {
       "PutRequest": {
         "Item": {
-          "id": { "S": "3" },
-          "requestID": { "S": "b9876543-2109-8765-4321-fedcba098765" },
+          "requestID": { "N": "3" },
+          "id": { "S": "b9876543-2109-8765-4321-fedcba098765" },
           "useCaseDescription": { "S": "Third test" },
+          "useCaseName": { "S": "Third test" },
           "useCaseStatus": { "S": "InProgress" },
           "powerBILink": {
             "S": "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'"
@@ -57,9 +60,10 @@
     {
       "PutRequest": {
         "Item": {
-          "id": { "S": "4" },
-          "requestID": { "S": "c3456789-0123-4567-8901-fedcba987654" },
+          "requestID": { "N": "4" },
+          "id": { "S": "c3456789-0123-4567-8901-fedcba987654" },
           "useCaseDescription": { "S": "Fourth test" },
+          "useCaseName": { "S": "Fourth test" },
           "useCaseStatus": { "S": "Failed" },
           "powerBILink": {
             "S": "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'"
@@ -77,9 +81,10 @@
     {
       "PutRequest": {
         "Item": {
-          "id": { "S": "5" },
-          "requestID": { "S": "d2345678-9012-3456-7890-fedcba098765" },
+          "requestID": { "N": "5" },
+          "id": { "S": "d2345678-9012-3456-7890-fedcba098765" },
           "useCaseDescription": { "S": "Fifth test" },
+          "useCaseName": { "S": "Fifth test" },
           "useCaseStatus": { "S": "Complete" },
           "powerBILink": {
             "S": "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'"
@@ -97,9 +102,10 @@
     {
       "PutRequest": {
         "Item": {
-          "id": { "S": "6" },
-          "requestID": { "S": "e4567890-1234-5678-9012-fedcba987654" },
+          "requestID": { "N": "6" },
+          "id": { "S": "e4567890-1234-5678-9012-fedcba987654" },
           "useCaseDescription": { "S": "Sixth test" },
+          "useCaseName": { "S": "Sixth test" },
           "useCaseStatus": { "S": "InProgress" },
           "powerBILink": {
             "S": "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'"
@@ -114,9 +120,10 @@
     {
       "PutRequest": {
         "Item": {
-          "id": { "S": "7" },
-          "requestID": { "S": "f5678901-2345-6789-0123-fedcba098765" },
+          "requestID": { "N": "7" },
+          "id": { "S": "f5678901-2345-6789-0123-fedcba098765" },
           "useCaseDescription": { "S": "Seventh test" },
+          "useCaseName": { "S": "Seventh test" },
           "useCaseStatus": { "S": "NotStarted" },
           "powerBILink": {
             "S": "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'"
@@ -131,9 +138,10 @@
     {
       "PutRequest": {
         "Item": {
-          "id": { "S": "8" },
-          "requestID": { "S": "g6789012-3456-7890-1234-fedcba987654" },
+          "requestID": { "N": "8" },
+          "id": { "S": "g6789012-3456-7890-1234-fedcba987654" },
           "useCaseDescription": { "S": "Eighth test" },
+          "useCaseName": { "S": "Eighth test" },
           "useCaseStatus": { "S": "Complete" },
           "powerBILink": {
             "S": "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'"
@@ -148,9 +156,10 @@
     {
       "PutRequest": {
         "Item": {
-          "id": { "S": "9" },
-          "requestID": { "S": "h7890123-4567-8901-2345-fedcba098765" },
+          "requestID": { "N": "9" },
+          "id": { "S": "h7890123-4567-8901-2345-fedcba098765" },
           "useCaseDescription": { "S": "Ninth test" },
+          "useCaseName": { "S": "Ninth test" },
           "useCaseStatus": { "S": "InProgress" },
           "powerBILink": {
             "S": "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'"
@@ -168,9 +177,10 @@
     {
       "PutRequest": {
         "Item": {
-          "id": { "S": "10" },
-          "requestID": { "S": "i8901234-5678-9012-3456-fedcba987654" },
+          "requestID": { "N": "10" },
+          "id": { "S": "i8901234-5678-9012-3456-fedcba987654" },
           "useCaseDescription": { "S": "Tenth test" },
+          "useCaseName": { "S": "Tenth test" },
           "useCaseStatus": { "S": "Failed" },
           "powerBILink": {
             "S": "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'"
@@ -188,9 +198,10 @@
     {
       "PutRequest": {
         "Item": {
-          "id": { "S": "11" },
-          "requestID": { "S": "j1234567-8901-2345-6789-bcdef0123456" },
+          "requestID": { "N": "11" },
+          "id": { "S": "j1234567-8901-2345-6789-bcdef0123456" },
           "useCaseDescription": { "S": "Eleventh test" },
+          "useCaseName": { "S": "Eleventh test" },
           "useCaseStatus": { "S": "InProgress" },
           "powerBILink": {
             "S": "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'"
@@ -205,9 +216,10 @@
     {
       "PutRequest": {
         "Item": {
-          "id": { "S": "12" },
-          "requestID": { "S": "k9876543-2109-8765-4321-fedcba098765" },
+          "requestID": { "N": "12" },
+          "id": { "S": "k9876543-2109-8765-4321-fedcba098765" },
           "useCaseDescription": { "S": "Twelfth test" },
+          "useCaseName": { "S": "Twelfth test" },
           "useCaseStatus": { "S": "Failed" },
           "powerBILink": {
             "S": "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'"
@@ -222,9 +234,10 @@
     {
       "PutRequest": {
         "Item": {
-          "id": { "S": "13" },
-          "requestID": { "S": "l3456789-0123-4567-8901-fedcba987654" },
+          "requestID": { "N": "13" },
+          "id": { "S": "l3456789-0123-4567-8901-fedcba987654" },
           "useCaseDescription": { "S": "Thirteenth test" },
+          "useCaseName": { "S": "Thirteenth test" },
           "useCaseStatus": { "S": "Complete" },
           "powerBILink": {
             "S": "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'"
@@ -239,9 +252,10 @@
     {
       "PutRequest": {
         "Item": {
-          "id": { "S": "14" },
-          "requestID": { "S": "m2345678-9012-3456-7890-fedcba098765" },
+          "requestID": { "N": "14" },
+          "id": { "S": "m2345678-9012-3456-7890-fedcba098765" },
           "useCaseDescription": { "S": "Fourteenth test" },
+          "useCaseName": { "S": "Fourteenth test" },
           "useCaseStatus": { "S": "NotStarted" },
           "powerBILink": {
             "S": "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'"
@@ -259,9 +273,10 @@
     {
       "PutRequest": {
         "Item": {
-          "id": { "S": "15" },
-          "requestID": { "S": "n4567890-1234-5678-9012-fedcba987654" },
+          "requestID": { "N": "15" },
+          "id": { "S": "n4567890-1234-5678-9012-fedcba987654" },
           "useCaseDescription": { "S": "Fifteenth test" },
+          "useCaseName": { "S": "Fifteenth test" },
           "useCaseStatus": { "S": "InProgress" },
           "powerBILink": {
             "S": "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'"
@@ -276,9 +291,10 @@
     {
       "PutRequest": {
         "Item": {
-          "id": { "S": "16" },
-          "requestID": { "S": "o5678901-2345-6789-0123-fedcba098765" },
+          "requestID": { "N": "16" },
+          "id": { "S": "o5678901-2345-6789-0123-fedcba098765" },
           "useCaseDescription": { "S": "Sixteenth test" },
+          "useCaseName": { "S": "Sixteenth test" },
           "useCaseStatus": { "S": "Complete" },
           "powerBILink": {
             "S": "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'"
@@ -293,9 +309,10 @@
     {
       "PutRequest": {
         "Item": {
-          "id": { "S": "17" },
-          "requestID": { "S": "p6789012-3456-7890-1234-fedcba987654" },
+          "requestID": { "N": "17" },
+          "id": { "S": "p6789012-3456-7890-1234-fedcba987654" },
           "useCaseDescription": { "S": "Seventeenth test" },
+          "useCaseName": { "S": "Seventeenth test" },
           "useCaseStatus": { "S": "NotStarted" },
           "powerBILink": {
             "S": "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'"
@@ -313,9 +330,10 @@
     {
       "PutRequest": {
         "Item": {
-          "id": { "S": "18" },
-          "requestID": { "S": "q7890123-4567-8901-2345-fedcba098765" },
+          "requestID": { "N": "18" },
+          "id": { "S": "q7890123-4567-8901-2345-fedcba098765" },
           "useCaseDescription": { "S": "Eighteenth test" },
+          "useCaseName": { "S": "Eighteenth test" },
           "useCaseStatus": { "S": "Failed" },
           "powerBILink": {
             "S": "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'"
@@ -333,9 +351,10 @@
     {
       "PutRequest": {
         "Item": {
-          "id": { "S": "19" },
-          "requestID": { "S": "r8901234-5678-9012-3456-fedcba987654" },
+          "requestID": { "N": "19" },
+          "id": { "S": "r8901234-5678-9012-3456-fedcba987654" },
           "useCaseDescription": { "S": "Nineteenth test" },
+          "useCaseName": { "S": "Nineteenth test" },
           "useCaseStatus": { "S": "InProgress" },
           "powerBILink": {
             "S": "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'"
@@ -350,9 +369,10 @@
     {
       "PutRequest": {
         "Item": {
-          "id": { "S": "20" },
-          "requestID": { "S": "s2345678-9012-3456-7890-fedcba098765" },
+          "requestID": { "N": "20" },
+          "id": { "S": "s2345678-9012-3456-7890-fedcba098765" },
           "useCaseDescription": { "S": "Twentieth test" },
+          "useCaseName": { "S": "Twentieth test" },
           "useCaseStatus": { "S": "Complete" },
           "powerBILink": {
             "S": "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'"

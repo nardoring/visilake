@@ -26,8 +26,8 @@ export default function TablePaginationBar({ table }: TablePaginationBarProps) {
         }
       } else {
         // Determine the range of buttons to show based on the current page
-        var start = Math.max(1, pageIndex - Math.floor(maxVisibleButtons / 2));
-        var end = Math.min(pageCount, start + maxVisibleButtons - 1);
+        let start = Math.max(1, pageIndex - Math.floor(maxVisibleButtons / 2));
+        let end = Math.min(pageCount, start + maxVisibleButtons - 1);
 
         if ((pageCount - start) <= maxVisibleButtons) {
             start = pageCount - maxVisibleButtons;
@@ -87,7 +87,6 @@ export default function TablePaginationBar({ table }: TablePaginationBarProps) {
         <div>
           <nav
             className="isolate inline-flex -space-x-px rounded-md shadow-sm"
-            aria-label="Pagination"
           >
             {/* Previous Button */}
             <button
@@ -99,7 +98,6 @@ export default function TablePaginationBar({ table }: TablePaginationBarProps) {
               <FontAwesomeIcon
                 icon={faChevronLeft}
                 className="h-5 w-5"
-                aria-hidden="true"
               />
             </button>
 
@@ -116,7 +114,6 @@ export default function TablePaginationBar({ table }: TablePaginationBarProps) {
               <FontAwesomeIcon
                 icon={faChevronRight}
                 className="h-5 w-5"
-                aria-hidden="true"
               />
             </button>
           </nav>

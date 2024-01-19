@@ -24,7 +24,7 @@ export const useCaseRouter = createTRPCRouter({
       }),
     )
     .query(({}) => {
-      return generateMockUseCases(43);
+      return generateMockUseCases(253);
     }),
 
   submitUseCase: publicProcedure

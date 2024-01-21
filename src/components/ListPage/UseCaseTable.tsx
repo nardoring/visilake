@@ -56,7 +56,7 @@ export default function UseCaseTable() {
     {
       accessorKey: "useCaseStatus",
       header: "Status",
-      size: (1920 / 10) * 1,
+      size: (1920 / 10) * 0.75,
       cell: (props: { getValue: () => string }) => (
         <StatusChip status={props.getValue()} />
       ),

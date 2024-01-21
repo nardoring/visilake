@@ -7,7 +7,7 @@ export default function Navbar() {
 
   return (
     <nav className="flex items-center justify-between bg-white p-4 shadow-md">
-      <svg version="1.1" viewBox="0 0 352 120" width="12%" className="p-1">
+      <svg version="1.1" viewBox="0 0 352 120" width="12em" className="p-1">
         <g>
           <polygon
             id="_Pfad__2_"

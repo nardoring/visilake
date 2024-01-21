@@ -11,6 +11,7 @@
     self,
     nixpkgs,
     localstack,
+    ...
     # rust-overlay,
   }: let
     system = "x86_64-linux";
@@ -45,7 +46,6 @@
       npmDepsHash = "sha256-bDtTlun5Oq2hW/Qny2XSDooVx5KMeNEA5qhfHmTKkcg=";
       npmPackFlags = ["--ignore-scripts"];
     };
-
     # TODO get this working
     # nardoImage = pkgs.dockerTools.buildImage {
     #   name = "nardo-web-app";
@@ -67,28 +67,28 @@
     #
   in {
     devShells.${system}.default = pkgs.mkShell {
-      packages = [
-        ## rust
-        # toolchain
-        # pkgs.rust-analyzer-unwrapped
+      buildInputs =
+        [
+          ## rust
+          # toolchain
+          # pkgs.rust-analyzer-unwrapped
 
-        ## web
-        pkgs.nodejs
-        pkgs.nodePackages.prettier
-        pkgs.nodePackages.eslint
+          ## web
+          pkgs.nodejs
+          pkgs.nodePackages.prettier
+          pkgs.nodePackages.eslint
 
-        ## AWS
-        pkgs.awscli
-        pkgs.terraform
-        pkgs.localstack
-        ## local AWS
-        localstack.localstack-nix
-      ];
+          ## AWS
+          pkgs.awscli
+          pkgs.terraform
+          # pkgs.localstack # broken on nixpkgs
+        ]
+        ++ localstack.devShells.${system}.default.buildInputs;
 
       # RUST_SRC_PATH = "${toolchain}/lib/rustlib/src/rust/library";
 
       # Localstack/AWS env vars
-      LOCALSTACK_API_KEY = "1n5HqMitb2"; ## add api key
+      LOCALSTACK_API_KEY = "4CVxMCDrKZ";
       LOCALSTACK = "true";
       DEBUG = "1";
       AWS_ACCESS_KEY_ID = "test";

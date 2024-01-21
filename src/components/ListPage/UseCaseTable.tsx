@@ -3,14 +3,16 @@ import StatusChip from "./StatusChip";
 import { formatDate } from "~/utils/date";
 import SearchBar from "./SearchBar";
 import PowerBIButton from "./PowerBIButton";
+import TablePaginationBar from "./TablePaginationBar";
 
 import {
   flexRender,
   getCoreRowModel,
   getFilteredRowModel,
+  getPaginationRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import type { ColumnFilter, Row} from "@tanstack/react-table";
+import type { ColumnFilter, Row } from "@tanstack/react-table";
 import { useState } from "react";
 import type { UseCase } from "~/models/useCase";
 
@@ -33,7 +35,9 @@ export default function UseCaseTable() {
       accessorKey: "useCaseName",
       header: "Use Case Name",
       size: (1920 / 10) * 1,
-      cell: (props: { getValue: () => string }) => <p className="font-medium">{props.getValue()}</p>,
+      cell: (props: { getValue: () => string }) => (
+        <p className="font-medium">{props.getValue()}</p>
+      ),
     },
     {
       accessorKey: "useCaseDescription",
@@ -74,8 +78,13 @@ export default function UseCaseTable() {
     {
       accessorKey: "powerBILink",
       header: "Power BI Data Link",
-      size: (1920 / 10) * 4.5,
-      cell: (props: { getValue: () => string, row: Row<UseCase>}) => <PowerBIButton link={props.getValue()} status={props.row.original.useCaseStatus}/>,
+      size: (1920 / 10) * 2.5,
+      cell: (props: { getValue: () => string; row: Row<UseCase> }) => (
+        <PowerBIButton
+          link={props.getValue()}
+          status={props.row.original.useCaseStatus}
+        />
+      ),
     },
   ];
 
@@ -87,6 +96,7 @@ export default function UseCaseTable() {
     },
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
     columnResizeMode: "onChange",
   });
 
@@ -112,7 +122,7 @@ export default function UseCaseTable() {
                 {headerGroup.headers.map((header) => (
                   <th
                     key={header.id}
-                    className="p-2 pl-4 text-left font-bold text-[#595C64]"
+                    className="pb-2 pl-4 text-left font-bold text-[#595C64]"
                     style={{ width: `${header.getSize()}px` }}
                   >
                     {String(header.column.columnDef.header)}
@@ -134,7 +144,7 @@ export default function UseCaseTable() {
                 key={row.id}
                 className={`${
                   row.index % 2 === 0 ? "bg-white" : "bg-veryLightGrey"
-                } h-[4.4rem]`}
+                } h-[4.28rem]`}
               >
                 {row.getVisibleCells().map((cell) => (
                   <td
@@ -149,6 +159,9 @@ export default function UseCaseTable() {
             ))}
           </tbody>
         </table>
+        <div className="fixed bottom-0 left-0 w-full bg-white">
+          <TablePaginationBar table={table} />
+        </div>
       </div>
     </div>
   );

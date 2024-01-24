@@ -18,7 +18,7 @@ import type { UseCase } from "~/models/useCase";
 
 export default function UseCaseTable() {
   const [queryExecuted, setQueryExecuted] = useState<boolean>(false);
-  const [columnFilters, setColumnFilters] = useState<ColumnFilter[]>([]);
+  const [globalFilter, setGlobalFilter] = useState<string>("");
 
   const { data, isLoading } = api.useCase.getUseCases.useQuery(
     { minId: 1, maxAmount: 10 },
@@ -92,11 +92,12 @@ export default function UseCaseTable() {
     data: data ?? [],
     columns,
     state: {
-      columnFilters,
+      globalFilter: globalFilter,
     },
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
+    onGlobalFilterChange: setGlobalFilter,
     columnResizeMode: "onChange",
   });
 
@@ -110,7 +111,7 @@ export default function UseCaseTable() {
   }
   return (
     <div>
-      <SearchBar setColumnFilters={setColumnFilters} />
+      <SearchBar setGlobalFilter={setGlobalFilter} />
       <div className="font-nunito table w-full overflow-x-auto bg-lightIndigo">
         <table
           className="w-full"

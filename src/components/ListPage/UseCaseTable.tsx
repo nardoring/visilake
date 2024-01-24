@@ -10,7 +10,7 @@ import {
   getFilteredRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import type { ColumnFilter, Row} from "@tanstack/react-table";
+import type { ColumnFilter, Row } from "@tanstack/react-table";
 import { useState } from "react";
 import type { UseCase } from "~/models/useCase";
 
@@ -18,22 +18,21 @@ export default function UseCaseTable() {
   const [queryExecuted, setQueryExecuted] = useState<boolean>(false);
   const [columnFilters, setColumnFilters] = useState<ColumnFilter[]>([]);
 
-  const { data, isLoading } = api.useCase.getUseCases.useQuery(
-    { minId: 1, maxAmount: 10 },
-    {
-      enabled: !queryExecuted,
-      onSuccess: () => {
-        setQueryExecuted(true);
-      },
+  const { data, isLoading } = api.useCase.getUseCases.useQuery(undefined, {
+    enabled: !queryExecuted,
+    onSuccess: () => {
+      setQueryExecuted(true);
     },
-  );
+  });
 
   const columns = [
     {
       accessorKey: "useCaseName",
       header: "Use Case Name",
       size: (1920 / 10) * 1,
-      cell: (props: { getValue: () => string }) => <p className="font-medium">{props.getValue()}</p>,
+      cell: (props: { getValue: () => string }) => (
+        <p className="font-medium">{props.getValue()}</p>
+      ),
     },
     {
       accessorKey: "useCaseDescription",
@@ -75,7 +74,12 @@ export default function UseCaseTable() {
       accessorKey: "powerBILink",
       header: "Power BI Data Link",
       size: (1920 / 10) * 4.5,
-      cell: (props: { getValue: () => string, row: Row<UseCase>}) => <PowerBIButton link={props.getValue()} status={props.row.original.useCaseStatus}/>,
+      cell: (props: { getValue: () => string; row: Row<UseCase> }) => (
+        <PowerBIButton
+          link={props.getValue()}
+          status={props.row.original.useCaseStatus}
+        />
+      ),
     },
   ];
 

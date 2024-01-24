@@ -16,46 +16,33 @@ const DYNAMODB_TABLE = "mockRequests";
 const shortUid = () => uuidv4().substring(0, 8);
 
 export const useCaseRouter = createTRPCRouter({
-  getUseCases: publicProcedure
-    .input(
-      z.object({
-        minId: z.number().positive(),
-        maxAmount: z.number().positive(),
-      }),
-    )
-    .query(async ({ input }) => {
-      // TODO fix endpoint
-      const dynamodb = new AWS.DynamoDB({
-        endpoint: "http://dynamodb.us-east-1.localhost.localstack.cloud:4566/",
-        region: "us-east-1",
-      });
-      //console.log("\nDynamoDB Config:\n", dynamodb);
+  getUseCases: publicProcedure.query(async () => {
+    // TODO fix endpoint
+    const dynamodb = new AWS.DynamoDB({
+      endpoint: "http://dynamodb.us-east-1.localhost.localstack.cloud:4566/",
+      region: "us-east-1",
+    });
 
-      const useCaseQueryParams = {
-        TableName: DYNAMODB_TABLE,
-        FilterExpression: "requestID > :minId",
-        ExpressionAttributeValues: {
-          ":minId": { N: "1" },
-        },
-        Limit: 10,
-        ProjectionExpression:
-          "useCaseName, useCaseDescription, useCaseStatus, powerBILink, author, analysisTypes",
-      };
+    const useCaseQueryParams = {
+      TableName: DYNAMODB_TABLE,
+      ProjectionExpression:
+        "useCaseName, useCaseDescription, useCaseStatus, powerBILink, author, analysisTypes, creationDate",
+    };
 
-      return mapUseCases(
-        await new Promise((resolve, reject) =>
-          dynamodb.scan(useCaseQueryParams, (err, data) => {
-            if (err || !data.Items) {
-              console.log(data, err);
-              reject(err ?? (!data.Items ? "No Items" : "Unknown error"));
-            } else {
-              console.log(data.Items);
-              resolve(data.Items);
-            }
-          }),
-        ),
-      );
-    }),
+    return mapUseCases(
+      await new Promise((resolve, reject) =>
+        dynamodb.scan(useCaseQueryParams, (err, data) => {
+          if (err || !data.Items) {
+            console.log(data, err);
+            reject(err ?? (!data.Items ? "No Items" : "Unknown error"));
+          } else {
+            console.log(data.Items);
+            resolve(data.Items);
+          }
+        }),
+      ),
+    );
+  }),
 
   submitUseCase: publicProcedure
     .input(
@@ -126,7 +113,7 @@ export const useCaseRouter = createTRPCRouter({
           requestID: {
             S: requestID,
           },
-          timestamp: {
+          creationDate: {
             N: "" + Date.now(),
           },
           status: {

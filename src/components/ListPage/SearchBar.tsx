@@ -1,7 +1,6 @@
 import { useRouter } from "next/router";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
-import type { ColumnFilter } from "@tanstack/react-table";
 import type { Dispatch, SetStateAction } from "react";
 
 interface SearchBarProps {
@@ -11,9 +10,6 @@ interface SearchBarProps {
 
 export default function SearchBar({ setGlobalFilter }: SearchBarProps) {
   const router = useRouter();
-  // const useCaseNameFilter=
-  //   columnFilters.find((filter: { id: string }) => filter.id === "useCaseName")
-  //     ?.value ?? "";
 
   return (
     <div className="flex items-center justify-between bg-lightIndigo p-5 ">

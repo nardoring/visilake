@@ -12,7 +12,7 @@ import {
   getPaginationRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import type { ColumnFilter, Row } from "@tanstack/react-table";
+import type { Row } from "@tanstack/react-table";
 import { useState } from "react";
 import type { UseCase } from "~/models/useCase";
 

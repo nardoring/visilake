@@ -15,6 +15,7 @@ import {
 import type { Row } from "@tanstack/react-table";
 import { useState } from "react";
 import type { UseCase } from "~/models/useCase";
+import FilterDropdown from "./FilterDropdown";
 
 export default function UseCaseTable() {
   const [queryExecuted, setQueryExecuted] = useState<boolean>(false);
@@ -127,6 +128,7 @@ export default function UseCaseTable() {
                     style={{ width: `${header.getSize()}px` }}
                   >
                     {String(header.column.columnDef.header)}
+                    {header.column.columnDef.header === "Status" && <FilterDropdown/>}
                     <div
                       onMouseDown={header.getResizeHandler()}
                       onTouchStart={header.getResizeHandler()}

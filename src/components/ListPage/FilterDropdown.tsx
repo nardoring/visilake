@@ -1,16 +1,26 @@
-import { Fragment } from "react";
+import { Dispatch, Fragment, SetStateAction, useState } from "react";
 import { Menu, Transition } from "@headlessui/react";
 import { faFilter } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import StatusChip from "./StatusChip";
+import { ColumnFilter } from "@tanstack/react-table";
 
-function classNames(...classes: string[]) {
-  return classes.filter(Boolean).join(" ");
+interface FilterDropdownProps {
+  dropdownItems: string[];
+  setColumnFilters: Dispatch<SetStateAction<ColumnFilter[]>>;
 }
 
-export default function FilterDropdown() {
+export default function FilterDropdown({
+  dropdownItems,
+  setColumnFilters,
+}: FilterDropdownProps) {
+  // State of each checkbox in the menu, to retain its state between each opening and closing of the menu
+  const [checkboxValues, setCheckboxValues] = useState<{
+    [key: string]: boolean;
+  }>(Object.fromEntries(dropdownItems.map((item) => [item, false])));
+
   return (
-    <Menu as="div" className="relative inline-block text-left pl-5">
+    <Menu as="div" className="relative inline-block pl-5 text-left">
       <div>
         <Menu.Button>
           <FontAwesomeIcon
@@ -29,28 +39,58 @@ export default function FilterDropdown() {
         leaveFrom="transform opacity-100 scale-100"
         leaveTo="transform opacity-0 scale-95"
       >
-        <Menu.Items className="absolute left-0 z-10 mt-2 px-@ origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-          <div className="py-1">
-            <Menu.Item>
-              {({ active }) => (
-                <StatusChip status={"Complete"}/>
-              )}
-            </Menu.Item>
-            <Menu.Item>
-              {({ active }) => (
-                <StatusChip status={"InProgress"}/>
-              )}
-            </Menu.Item>
-            <Menu.Item>
-              {({ active }) => (
-                <StatusChip status={"NotStarted"}/>
-              )}
-            </Menu.Item>
-            <Menu.Item>
-              {({ active }) => (
-                <StatusChip status={"Failed"}/>
-              )}
-            </Menu.Item>
+        <Menu.Items className="px-@ absolute left-0 z-10 mt-2 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+          <div className="px-3 py-2">
+            {dropdownItems.map((item) => (
+              <Menu.Item key={item}>
+                {({ active }) => (
+                  <div className="flex">
+                    <StatusChip status={item} className="mr-3" />
+                    <input
+                      type="checkbox"
+                      className="ml-auto w-5"
+                      checked={checkboxValues[item]}
+                      onClick={(e) => e.stopPropagation()}
+                      onChange={(e) => {
+                        setCheckboxValues((prev) => ({
+                          ...prev,
+                          [item]: e.target.checked,
+                        }));
+                        setColumnFilters((prev) => {
+                          const existingFilterIndex = prev.findIndex(
+                            (filter) => filter.id === "useCaseStatus",
+                          );
+
+                          if (existingFilterIndex !== -1) {
+                            // Filter exists, update its value
+                            const updatedFilter = {
+                              ...prev[existingFilterIndex],
+                            } as ColumnFilter;
+                            const newValues = e.target.checked
+                              ? (updatedFilter.value as string[]).concat(item)
+                              : (updatedFilter.value as string[]).filter(
+                                  (s) => s !== item,
+                                );
+
+                            updatedFilter.value = newValues;
+                            prev[existingFilterIndex] = updatedFilter;
+                            return [...prev];
+                          } else if (e.target.checked) {
+                            // Filter doesn't exist, add a new one
+                            return prev.concat({
+                              id: "useCaseStatus",
+                              value: [item],
+                            });
+                          }
+                          // No change if unchecking a checkbox when the filter doesn't exist
+                          return prev;
+                        });
+                      }}
+                    />
+                  </div>
+                )}
+              </Menu.Item>
+            ))}
           </div>
         </Menu.Items>
       </Transition>

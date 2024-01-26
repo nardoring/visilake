@@ -12,7 +12,7 @@ import {
   getPaginationRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import type { Row } from "@tanstack/react-table";
+import type { ColumnFilter, Row } from "@tanstack/react-table";
 import { useState } from "react";
 import type { UseCase } from "~/models/useCase";
 import FilterDropdown from "./FilterDropdown";
@@ -20,6 +20,7 @@ import FilterDropdown from "./FilterDropdown";
 export default function UseCaseTable() {
   const [queryExecuted, setQueryExecuted] = useState<boolean>(false);
   const [globalFilter, setGlobalFilter] = useState<string>("");
+  const [columnFilters, setColumnFilters] = useState<ColumnFilter[]>([]);
 
   const { data, isLoading } = api.useCase.getUseCases.useQuery(
     { minId: 1, maxAmount: 10 },
@@ -61,6 +62,15 @@ export default function UseCaseTable() {
       cell: (props: { getValue: () => string }) => (
         <StatusChip status={props.getValue()} />
       ),
+      filterFn: (
+        row: Row<UseCase>,
+        columnId: string,
+        filterStatuses: string[],
+      ) => {
+        if (filterStatuses.length === 0) return true;
+        const status: string = row.getValue(columnId);
+        return filterStatuses.includes(status);
+      },
     },
     {
       accessorKey: "date",
@@ -94,6 +104,7 @@ export default function UseCaseTable() {
     columns,
     state: {
       globalFilter: globalFilter,
+      columnFilters,
     },
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
@@ -128,7 +139,17 @@ export default function UseCaseTable() {
                     style={{ width: `${header.getSize()}px` }}
                   >
                     {String(header.column.columnDef.header)}
-                    {header.column.columnDef.header === "Status" && <FilterDropdown/>}
+                    {header.column.columnDef.header === "Status" && (
+                      <FilterDropdown
+                        dropdownItems={[
+                          "Complete",
+                          "InProgress",
+                          "NotStarted",
+                          "Failed",
+                        ]}
+                        setColumnFilters={setColumnFilters}
+                      />
+                    )}
                     <div
                       onMouseDown={header.getResizeHandler()}
                       onTouchStart={header.getResizeHandler()}

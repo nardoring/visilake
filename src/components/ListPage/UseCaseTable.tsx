@@ -8,6 +8,7 @@ import TablePaginationBar from "./TablePaginationBar";
 import {
   flexRender,
   getCoreRowModel,
+  getFacetedUniqueValues,
   getFilteredRowModel,
   getPaginationRowModel,
   useReactTable,
@@ -110,6 +111,7 @@ export default function UseCaseTable() {
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     onGlobalFilterChange: setGlobalFilter,
+    getFacetedUniqueValues: getFacetedUniqueValues(),
     columnResizeMode: "onChange",
   });
 
@@ -141,12 +143,10 @@ export default function UseCaseTable() {
                     {String(header.column.columnDef.header)}
                     {header.column.columnDef.header === "Status" && (
                       <FilterDropdown
-                        dropdownItems={[
-                          "Complete",
-                          "InProgress",
-                          "NotStarted",
-                          "Failed",
-                        ]}
+                        dropdownItems={Array.from(
+                          header.column.getFacetedUniqueValues().keys(),
+                        )}
+                        filterId={header.id}
                         setColumnFilters={setColumnFilters}
                       />
                     )}

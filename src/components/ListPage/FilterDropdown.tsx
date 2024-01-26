@@ -7,11 +7,13 @@ import { ColumnFilter } from "@tanstack/react-table";
 
 interface FilterDropdownProps {
   dropdownItems: string[];
+  filterId: string;
   setColumnFilters: Dispatch<SetStateAction<ColumnFilter[]>>;
 }
 
 export default function FilterDropdown({
   dropdownItems,
+  filterId,
   setColumnFilters,
 }: FilterDropdownProps) {
   // State of each checkbox in the menu, to retain its state between each opening and closing of the menu
@@ -45,7 +47,11 @@ export default function FilterDropdown({
               <Menu.Item key={item}>
                 {({ active }) => (
                   <div className="flex">
-                    <StatusChip status={item} className="mr-3" />
+                    {filterId === "useCaseStatus" ? (
+                      <StatusChip status={item} className="mr-3" />
+                    ) : (
+                      <p className="mr-3">{item}</p>
+                    )}               
                     <input
                       type="checkbox"
                       className="ml-auto w-5"
@@ -58,7 +64,7 @@ export default function FilterDropdown({
                         }));
                         setColumnFilters((prev) => {
                           const existingFilterIndex = prev.findIndex(
-                            (filter) => filter.id === "useCaseStatus",
+                            (filter) => filter.id === filterId,
                           );
 
                           if (existingFilterIndex !== -1) {
@@ -78,7 +84,7 @@ export default function FilterDropdown({
                           } else if (e.target.checked) {
                             // Filter doesn't exist, add a new one
                             return prev.concat({
-                              id: "useCaseStatus",
+                              id: filterId,
                               value: [item],
                             });
                           }

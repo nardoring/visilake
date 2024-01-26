@@ -12,7 +12,7 @@ function mapAnalysisTypeLists(analysisTypes: any[]): string[] {
 function mapUseCase(useCase: any): UseCase {
   return {
     useCaseName: useCase.useCaseName.S as string,
-    date: new Date(),
+    date: new Date(useCase.creationDate.N),
     useCaseDescription: useCase.useCaseDescription.S as string,
     useCaseStatus: useCase.useCaseStatus.S as UseCaseStatus,
     powerBILink: useCase.powerBILink.S as string,

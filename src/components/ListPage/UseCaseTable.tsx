@@ -20,6 +20,7 @@ import { useState } from "react";
 import type { UseCase } from "~/models/useCase";
 import FilterDropdown from "./FilterDropdown";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import ColumnSortButton from "./ColumnSortButton";
 
 export default function UseCaseTable() {
   const filterDropdownColumns = new Set([
@@ -209,11 +210,7 @@ export default function UseCaseTable() {
                     {/* Sorting Button */}
                     {typeof header.column.columnDef.header === "string" &&
                       sortableColumns.has(header.column.columnDef.header) && (
-                        <FontAwesomeIcon
-                          icon={faSort}
-                          className="ml-3 mr-1 h-5 w-5 text-darkBlue"
-                          onClick={header.column.getToggleSortingHandler()}
-                        />
+                        <ColumnSortButton columnSortToggle={header.column.getToggleSortingHandler()}/>
                       )}
                     <div
                       onMouseDown={header.getResizeHandler()}

@@ -127,6 +127,8 @@ export default function UseCaseTable() {
           status={props.row.original.useCaseStatus}
         />
       ),
+      enableGlobalFilter: false,
+      enableColumnFilter: false
     },
   ];
 

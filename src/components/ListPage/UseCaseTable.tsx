@@ -4,6 +4,7 @@ import { formatDate } from "~/utils/date";
 import SearchBar from "./SearchBar";
 import PowerBIButton from "./PowerBIButton";
 import TablePaginationBar from "./TablePaginationBar";
+import { faSort } from "@fortawesome/free-solid-svg-icons";
 
 import {
   flexRender,
@@ -11,15 +12,18 @@ import {
   getFacetedUniqueValues,
   getFilteredRowModel,
   getPaginationRowModel,
+  getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
 import type { ColumnFilter, Row } from "@tanstack/react-table";
 import { useState } from "react";
 import type { UseCase } from "~/models/useCase";
 import FilterDropdown from "./FilterDropdown";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export default function UseCaseTable() {
-  const filterHeaders = new Set(["Status", "Created By", "Analysis Types"]);
+  const filterDropdownColumns = new Set(["Status", "Created By", "Analysis Types"]);
+  const sortableColumns = new Set(["Date Created"]);
   const [queryExecuted, setQueryExecuted] = useState<boolean>(false);
   const [globalFilter, setGlobalFilter] = useState<string>("");
   const [columnFilters, setColumnFilters] = useState<ColumnFilter[]>([]);
@@ -101,6 +105,7 @@ export default function UseCaseTable() {
       cell: (props: { getValue: () => Date }) => {
         return <p>{formatDate(props.getValue())}</p>;
       },
+      sortType: "datetime",
     },
     {
       accessorKey: "author",
@@ -128,7 +133,7 @@ export default function UseCaseTable() {
         />
       ),
       enableGlobalFilter: false,
-      enableColumnFilter: false
+      enableColumnFilter: false,
     },
   ];
 
@@ -142,12 +147,13 @@ export default function UseCaseTable() {
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
+    getSortedRowModel: getSortedRowModel(),
     onGlobalFilterChange: setGlobalFilter,
     getFacetedUniqueValues: getFacetedUniqueValues(),
     columnResizeMode: "onChange",
   });
 
-  if (isLoading) {
+  if (isLoading || analysisTypeOptionsIsLoading) {
     // Render a loading indicator or message
     return (
       <div className="fixed flex h-full w-full items-center justify-center bg-lightIndigo">
@@ -173,8 +179,9 @@ export default function UseCaseTable() {
                     style={{ width: `${header.getSize()}px` }}
                   >
                     {String(header.column.columnDef.header)}
+                    {/* Filter Dropdowns */}
                     {typeof header.column.columnDef.header === "string" &&
-                      filterHeaders.has(header.column.columnDef.header) && (
+                      filterDropdownColumns.has(header.column.columnDef.header) && (
                         <FilterDropdown
                           dropdownItems={Array.from(
                             header.column.columnDef.header === "Analysis Types"
@@ -185,6 +192,15 @@ export default function UseCaseTable() {
                           setColumnFilters={setColumnFilters}
                         />
                       )}
+                    {/* Sorting Button */}
+                    {typeof header.column.columnDef.header === "string" &&
+                      sortableColumns.has(header.column.columnDef.header) && (
+                      <FontAwesomeIcon
+                        icon={faSort}
+                        className="mr-1 ml-3 h-5 w-5 text-darkBlue"
+                        onClick={header.column.getToggleSortingHandler()}
+                      />
+                    )}
                     <div
                       onMouseDown={header.getResizeHandler()}
                       onTouchStart={header.getResizeHandler()}

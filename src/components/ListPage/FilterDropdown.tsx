@@ -27,7 +27,7 @@ export default function FilterDropdown({
         <Menu.Button>
           <FontAwesomeIcon
             icon={faFilter}
-            className="-mr-1 h-5 w-5 text-darkBlue"
+            className="mr-1 h-5 w-5 text-darkBlue"
           />
         </Menu.Button>
       </div>

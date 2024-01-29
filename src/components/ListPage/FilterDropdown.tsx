@@ -1,9 +1,10 @@
-import { Dispatch, Fragment, SetStateAction, useState } from "react";
+import { Fragment, useState } from "react";
+import type { Dispatch, SetStateAction } from "react";
 import { Menu, Transition } from "@headlessui/react";
 import { faFilter } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import StatusChip from "./StatusChip";
-import { ColumnFilter } from "@tanstack/react-table";
+import type { ColumnFilter } from "@tanstack/react-table";
 
 interface FilterDropdownProps {
   dropdownItems: string[];
@@ -17,9 +18,9 @@ export default function FilterDropdown({
   setColumnFilters,
 }: FilterDropdownProps) {
   // State of each checkbox in the menu, to retain its state between each opening and closing of the menu
-  const [checkboxValues, setCheckboxValues] = useState<{
-    [key: string]: boolean;
-  }>(Object.fromEntries(dropdownItems.map((item) => [item, false])));
+  const [checkboxValues, setCheckboxValues] = useState<Record<string, boolean>>(
+    Object.fromEntries(dropdownItems.map((item) => [item, false])),
+  );
 
   return (
     <Menu as="div" className="relative inline-block pl-5 text-left">
@@ -43,15 +44,17 @@ export default function FilterDropdown({
       >
         <Menu.Items className="px-@ absolute left-0 z-10 mt-2 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
           <div className="px-3 py-2">
-            {dropdownItems.map((item) => (
+            {dropdownItems.sort().map((item) => (
               <Menu.Item key={item}>
-                {({ active }) => (
+                {() => (
                   <div className="flex py-1">
                     {filterId === "useCaseStatus" ? (
                       <StatusChip status={item} className="mr-3" />
                     ) : (
-                      <p className="mr-3 whitespace-nowrap text-darkBlue">{item}</p>
-                    )}               
+                      <p className="mr-3 whitespace-nowrap text-darkBlue">
+                        {item}
+                      </p>
+                    )}
                     <input
                       type="checkbox"
                       className="ml-auto w-5"

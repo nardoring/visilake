@@ -4,7 +4,6 @@ import { formatDate } from "~/utils/date";
 import SearchBar from "./SearchBar";
 import PowerBIButton from "./PowerBIButton";
 import TablePaginationBar from "./TablePaginationBar";
-import { faSort } from "@fortawesome/free-solid-svg-icons";
 
 import {
   flexRender,
@@ -19,7 +18,6 @@ import type { ColumnFilter, Row } from "@tanstack/react-table";
 import { useState } from "react";
 import type { UseCase } from "~/models/useCase";
 import FilterDropdown from "./FilterDropdown";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import ColumnSortButton from "./ColumnSortButton";
 
 export default function UseCaseTable() {

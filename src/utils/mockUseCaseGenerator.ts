@@ -1,4 +1,3 @@
-import { number } from "zod";
 import type { UseCase } from "~/models/useCase";
 
 const mockAuthorNames = [

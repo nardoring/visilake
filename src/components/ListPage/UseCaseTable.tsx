@@ -19,9 +19,19 @@ import type { UseCase } from "~/models/useCase";
 import FilterDropdown from "./FilterDropdown";
 
 export default function UseCaseTable() {
+  const filterHeaders = new Set(["Status", "Created By", "Analysis Types"]);
   const [queryExecuted, setQueryExecuted] = useState<boolean>(false);
   const [globalFilter, setGlobalFilter] = useState<string>("");
   const [columnFilters, setColumnFilters] = useState<ColumnFilter[]>([]);
+  const {
+    data: analysisTypeOptionsData,
+    isLoading: analysisTypeOptionsIsLoading,
+  } = api.analysis.getAnalysisTypes.useQuery();
+  const analysisTypeOptions: string[] = analysisTypeOptionsIsLoading
+    ? []
+    : analysisTypeOptionsData?.types?.map(
+        (option: { name: string }) => option.name,
+      ) ?? [];
 
   const { data, isLoading } = api.useCase.getUseCases.useQuery(
     { minId: 1, maxAmount: 10 },
@@ -55,6 +65,17 @@ export default function UseCaseTable() {
       cell: (props: { getValue: () => string[] }) => (
         <p>{props.getValue().join(", ")}</p>
       ),
+      filterFn: (
+        row: Row<UseCase>,
+        columnId: string,
+        filterAnalysisTypes: string[],
+      ) => {
+        if (filterAnalysisTypes.length === 0) return true;
+        const analysisTypes: string[] = row.getValue(columnId);
+        return filterAnalysisTypes.some((analysisType) =>
+          analysisTypes.includes(analysisType),
+        );
+      },
     },
     {
       accessorKey: "useCaseStatus",
@@ -69,8 +90,8 @@ export default function UseCaseTable() {
         filterStatuses: string[],
       ) => {
         if (filterStatuses.length === 0) return true;
-        const status: string = row.getValue(columnId);
-        return filterStatuses.includes(status);
+        const author: string = row.getValue(columnId);
+        return filterStatuses.includes(author);
       },
     },
     {
@@ -86,6 +107,15 @@ export default function UseCaseTable() {
       header: "Created By",
       size: (1920 / 10) * 1,
       cell: (props: { getValue: () => string }) => <p>{props.getValue()}</p>,
+      filterFn: (
+        row: Row<UseCase>,
+        columnId: string,
+        filterAuthorNames: string[],
+      ) => {
+        if (filterAuthorNames.length === 0) return true;
+        const status: string = row.getValue(columnId);
+        return filterAuthorNames.includes(status);
+      },
     },
     {
       accessorKey: "powerBILink",
@@ -141,15 +171,18 @@ export default function UseCaseTable() {
                     style={{ width: `${header.getSize()}px` }}
                   >
                     {String(header.column.columnDef.header)}
-                    {header.column.columnDef.header === "Status" && (
-                      <FilterDropdown
-                        dropdownItems={Array.from(
-                          header.column.getFacetedUniqueValues().keys(),
-                        )}
-                        filterId={header.id}
-                        setColumnFilters={setColumnFilters}
-                      />
-                    )}
+                    {typeof header.column.columnDef.header === "string" &&
+                      filterHeaders.has(header.column.columnDef.header) && (
+                        <FilterDropdown
+                          dropdownItems={Array.from(
+                            header.column.columnDef.header === "Analysis Types"
+                              ? analysisTypeOptions
+                              : header.column.getFacetedUniqueValues().keys(),
+                          )}
+                          filterId={header.id}
+                          setColumnFilters={setColumnFilters}
+                        />
+                      )}
                     <div
                       onMouseDown={header.getResizeHandler()}
                       onTouchStart={header.getResizeHandler()}

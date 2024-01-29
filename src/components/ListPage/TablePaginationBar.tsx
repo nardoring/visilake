@@ -81,7 +81,7 @@ export default function TablePaginationBar({ table }: TablePaginationBarProps) {
           <p className="text-sm text-gray-700">
             Showing <span className="font-medium">{(pageIndex - 1) * 10 + 1}</span> to{" "}
             <span className="font-medium">{Math.min(pageIndex * 10, table.options.data.length)}</span> of{" "}
-            <span className="font-medium">{table.options.data.length}</span> results
+            <span className="font-medium">{table.getFilteredRowModel().rows.length}</span> results
           </p>
         </div>
         <div>

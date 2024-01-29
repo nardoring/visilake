@@ -22,7 +22,11 @@ import FilterDropdown from "./FilterDropdown";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export default function UseCaseTable() {
-  const filterDropdownColumns = new Set(["Status", "Created By", "Analysis Types"]);
+  const filterDropdownColumns = new Set([
+    "Status",
+    "Created By",
+    "Analysis Types",
+  ]);
   const sortableColumns = new Set(["Date Created"]);
   const [queryExecuted, setQueryExecuted] = useState<boolean>(false);
   const [globalFilter, setGlobalFilter] = useState<string>("");
@@ -144,6 +148,14 @@ export default function UseCaseTable() {
       globalFilter: globalFilter,
       columnFilters,
     },
+    initialState: {
+      sorting: [
+        {
+          id: 'date',
+          desc: true,
+        }
+      ]
+    },
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
@@ -181,7 +193,9 @@ export default function UseCaseTable() {
                     {String(header.column.columnDef.header)}
                     {/* Filter Dropdowns */}
                     {typeof header.column.columnDef.header === "string" &&
-                      filterDropdownColumns.has(header.column.columnDef.header) && (
+                      filterDropdownColumns.has(
+                        header.column.columnDef.header,
+                      ) && (
                         <FilterDropdown
                           dropdownItems={Array.from(
                             header.column.columnDef.header === "Analysis Types"
@@ -195,12 +209,12 @@ export default function UseCaseTable() {
                     {/* Sorting Button */}
                     {typeof header.column.columnDef.header === "string" &&
                       sortableColumns.has(header.column.columnDef.header) && (
-                      <FontAwesomeIcon
-                        icon={faSort}
-                        className="mr-1 ml-3 h-5 w-5 text-darkBlue"
-                        onClick={header.column.getToggleSortingHandler()}
-                      />
-                    )}
+                        <FontAwesomeIcon
+                          icon={faSort}
+                          className="ml-3 mr-1 h-5 w-5 text-darkBlue"
+                          onClick={header.column.getToggleSortingHandler()}
+                        />
+                      )}
                     <div
                       onMouseDown={header.getResizeHandler()}
                       onTouchStart={header.getResizeHandler()}

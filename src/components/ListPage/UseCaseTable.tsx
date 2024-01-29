@@ -72,7 +72,7 @@ export default function UseCaseTable() {
       ) => {
         if (filterAnalysisTypes.length === 0) return true;
         const analysisTypes: string[] = row.getValue(columnId);
-        return filterAnalysisTypes.some((analysisType) =>
+        return filterAnalysisTypes.every((analysisType) =>
           analysisTypes.includes(analysisType),
         );
       },

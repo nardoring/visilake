@@ -3,11 +3,13 @@ import StatusChip from "./StatusChip";
 import { formatDate } from "~/utils/date";
 import SearchBar from "./SearchBar";
 import PowerBIButton from "./PowerBIButton";
+import TablePaginationBar from "./TablePaginationBar";
 
 import {
   flexRender,
   getCoreRowModel,
   getFilteredRowModel,
+  getPaginationRowModel,
   useReactTable,
 } from "@tanstack/react-table";
 import type { ColumnFilter, Row } from "@tanstack/react-table";
@@ -51,7 +53,7 @@ export default function UseCaseTable() {
     {
       accessorKey: "useCaseStatus",
       header: "Status",
-      size: (1920 / 10) * 1,
+      size: (1920 / 10) * 0.75,
       cell: (props: { getValue: () => string }) => (
         <StatusChip status={props.getValue()} />
       ),
@@ -91,6 +93,7 @@ export default function UseCaseTable() {
     },
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
     columnResizeMode: "onChange",
   });
 
@@ -116,7 +119,7 @@ export default function UseCaseTable() {
                 {headerGroup.headers.map((header) => (
                   <th
                     key={header.id}
-                    className="p-2 pl-4 text-left font-bold text-[#595C64]"
+                    className="pb-2 pl-4 text-left font-bold text-[#595C64]"
                     style={{ width: `${header.getSize()}px` }}
                   >
                     {String(header.column.columnDef.header)}
@@ -138,7 +141,7 @@ export default function UseCaseTable() {
                 key={row.id}
                 className={`${
                   row.index % 2 === 0 ? "bg-white" : "bg-veryLightGrey"
-                } h-[4.4rem]`}
+                } h-[4.28rem]`}
               >
                 {row.getVisibleCells().map((cell) => (
                   <td
@@ -153,6 +156,9 @@ export default function UseCaseTable() {
             ))}
           </tbody>
         </table>
+        <div className="fixed bottom-0 left-0 w-full bg-white">
+          <TablePaginationBar table={table} />
+        </div>
       </div>
     </div>
   );

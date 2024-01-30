@@ -14,7 +14,7 @@ import {
 } from "@tanstack/react-table";
 import type { ColumnFilter, Row } from "@tanstack/react-table";
 import { useState } from "react";
-import type { UseCase } from "~/models/useCase";
+import type { UseCase } from "~/models/domain/useCase";
 
 export default function UseCaseTable() {
   const [queryExecuted, setQueryExecuted] = useState<boolean>(false);

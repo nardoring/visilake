@@ -1,23 +1,20 @@
-import { UseCase } from "~/models/useCase";
-import { UseCaseStatus } from "~/models/useCaseStatus";
+import { UseCase } from "~/models/domain/useCase";
+import { UseCaseStatus } from "~/models/domain/useCaseStatus";
+import { UseCase as DatabaseUseCase } from "~/models/db/useCase";
 
-function mapUseCases(output: any[]): UseCase[] {
+function mapUseCases(output: DatabaseUseCase[]): UseCase[] {
   return output.map((o) => mapUseCase(o));
 }
 
-function mapAnalysisTypeLists(analysisTypes: any[]): string[] {
-  return analysisTypes.map((t) => t.S);
-}
-
-function mapUseCase(useCase: any): UseCase {
+function mapUseCase(useCase: DatabaseUseCase): UseCase {
   return {
-    useCaseName: useCase.useCaseName.S as string,
+    useCaseName: useCase.useCaseName.S,
     date: new Date(useCase.creationDate.N),
-    useCaseDescription: useCase.useCaseDescription.S as string,
+    useCaseDescription: useCase.useCaseDescription.S,
     useCaseStatus: useCase.useCaseStatus.S as UseCaseStatus,
-    powerBILink: useCase.powerBILink.S as string,
-    author: useCase.author.S as string,
-    analysisTypes: mapAnalysisTypeLists(useCase.analysisTypes.L),
+    powerBILink: useCase.powerBILink.S,
+    author: useCase.author.S,
+    analysisTypes: useCase.analysisTypes.L.map((t) => t.S),
   } as UseCase;
 }
 

@@ -6,7 +6,7 @@
 
 import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "../trpc";
-import type { UseCase } from "~/models/useCase";
+import type { UseCase } from "~/models/db/useCase";
 import { v4 as uuidv4 } from "uuid";
 import AWS from "aws-sdk";
 import mapUseCases from "~/mappers/useCaseMappers";
@@ -37,7 +37,7 @@ export const useCaseRouter = createTRPCRouter({
             reject(err ?? (!data.Items ? "No Items" : "Unknown error"));
           } else {
             console.log(data.Items);
-            resolve(data.Items);
+            resolve(data.Items as unknown as UseCase[]);
           }
         }),
       ),

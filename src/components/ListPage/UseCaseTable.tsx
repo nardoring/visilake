@@ -16,7 +16,7 @@ import {
 } from "@tanstack/react-table";
 import type { ColumnFilter, Row } from "@tanstack/react-table";
 import { useState } from "react";
-import type { UseCase } from "~/models/useCase";
+import type { UseCase } from "~/models/domain/useCase";
 import FilterDropdown from "./FilterDropdown";
 import ColumnSortButton from "./ColumnSortButton";
 
@@ -44,6 +44,7 @@ export default function UseCaseTable() {
     enabled: !queryExecuted,
     onSuccess: () => {
       setQueryExecuted(true);
+      console.log(data)
     },
   });
 
@@ -102,7 +103,9 @@ export default function UseCaseTable() {
       accessorKey: "date",
       header: "Date Created",
       size: (1920 / 10) * 1,
-      cell: (props: { getValue: () => Date }) => {
+      cell: (props: { getValue: () => Date}) => {
+        console.log(props.getValue())
+        console.log(data)
         return <p>{formatDate(props.getValue())}</p>;
       },
       sortType: "datetime",

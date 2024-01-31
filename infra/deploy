@@ -86,3 +86,5 @@ echo -e "Curling localhost:$app_port\n"
 curl localhost:$app_port
 
 echo -e "\n\nApp successfully deployed to http://localhost:$app_port"
+
+awslocal dynamodb batch-write-item --request-items file://./infra/useCases/mockUseCasesBatchCommand.json

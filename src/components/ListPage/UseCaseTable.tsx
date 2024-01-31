@@ -14,21 +14,18 @@ import {
 } from "@tanstack/react-table";
 import type { ColumnFilter, Row } from "@tanstack/react-table";
 import { useState } from "react";
-import type { UseCase } from "~/models/useCase";
+import type { UseCase } from "~/models/domain/useCase";
 
 export default function UseCaseTable() {
   const [queryExecuted, setQueryExecuted] = useState<boolean>(false);
   const [columnFilters, setColumnFilters] = useState<ColumnFilter[]>([]);
 
-  const { data, isLoading } = api.useCase.getUseCases.useQuery(
-    { minId: 1, maxAmount: 10 },
-    {
-      enabled: !queryExecuted,
-      onSuccess: () => {
-        setQueryExecuted(true);
-      },
+  const { data, isLoading } = api.useCase.getUseCases.useQuery(undefined, {
+    enabled: !queryExecuted,
+    onSuccess: () => {
+      setQueryExecuted(true);
     },
-  );
+  });
 
   const columns = [
     {
@@ -78,7 +75,7 @@ export default function UseCaseTable() {
     {
       accessorKey: "powerBILink",
       header: "Power BI Data Link",
-      size: (1920 / 10) * 2.5,
+      size: (1920 / 10) * 4.5,
       cell: (props: { getValue: () => string; row: Row<UseCase> }) => (
         <PowerBIButton
           link={props.getValue()}

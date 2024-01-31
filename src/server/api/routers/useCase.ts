@@ -116,24 +116,32 @@ export const useCaseRouter = createTRPCRouter({
           creationDate: {
             N: "" + Date.now(),
           },
-          status: {
+          useCaseStatus: {
             S: status,
           },
-          name: {
+          useCaseName: {
             S: input.useCaseName,
           },
-          description: {
+          useCaseDescription: {
             S: input.useCaseDescription,
+          },
+          author: {
+            // S: input.author, // TODO do we have author name yet?
+            S: "Test Author",
           },
           analysisTypes: {
             L: input.analysisTypeIds.map((id) => ({
-              N: id.toString(),
+              S: id.toString(), // TODO check
             })),
           },
           tags: {
             L: input.tags.map((tag) => ({
               S: tag,
             })),
+          },
+          powerBILink: {
+            // S: input.powerBILink, // TODO fix later
+            S: "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'",
           },
         },
       };

@@ -104,6 +104,7 @@ export const useCaseRouter = createTRPCRouter({
 
       // set status in DynamoDB to QUEUED
       const status = "QUEUED";
+      console.log(Date.now().toString())
       let dynamodbParams = {
         TableName: DYNAMODB_TABLE,
         Item: {
@@ -114,7 +115,7 @@ export const useCaseRouter = createTRPCRouter({
             S: requestID,
           },
           creationDate: {
-            N: "" + Date.now(),
+            N: Date.now().toString(),
           },
           useCaseStatus: {
             S: status,

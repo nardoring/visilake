@@ -1,4 +1,4 @@
-import type { UseCase } from "~/models/useCase";
+import type { UseCase } from "~/models/domain/useCase";
 
 const mockAuthorNames = [
   "Emily Johnson",
@@ -40,6 +40,6 @@ function getRandomStatus(): "Complete" | "InProgress" | "NotStarted" | "Failed" 
     const statusOptions = ["Complete", "InProgress", "NotStarted", "Failed"];
     const randomIndex = Math.floor(Math.random() * statusOptions.length);
     return statusOptions[randomIndex] as "Complete" | "InProgress" | "NotStarted" | "Failed";
-  }
+}
 
 export default generateMockUseCases;

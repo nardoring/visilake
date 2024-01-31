@@ -6,26 +6,43 @@
 
 import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "../trpc";
-import type { UseCase } from "~/models/useCase";
+import type { UseCase } from "~/models/db/useCase";
 import { v4 as uuidv4 } from "uuid";
 import AWS from "aws-sdk";
-import generateMockUseCases from "~/utils/mockUseCaseGenerator";
+import mapUseCases from "~/mappers/useCaseMappers";
 
 const QUEUE_NAME = "requestQueue";
 const DYNAMODB_TABLE = "mockRequests";
 const shortUid = () => uuidv4().substring(0, 8);
 
 export const useCaseRouter = createTRPCRouter({
-  getUseCases: publicProcedure
-    .input(
-      z.object({
-        minId: z.number().positive(),
-        maxAmount: z.number().positive(),
-      }),
-    )
-    .query(({}) => {
-      return generateMockUseCases(253);
-    }),
+  getUseCases: publicProcedure.query(async () => {
+    // TODO fix endpoint
+    const dynamodb = new AWS.DynamoDB({
+      endpoint: "http://dynamodb.us-east-1.localhost.localstack.cloud:4566/",
+      region: "us-east-1",
+    });
+
+    const useCaseQueryParams = {
+      TableName: DYNAMODB_TABLE,
+      ProjectionExpression:
+        "useCaseName, useCaseDescription, useCaseStatus, powerBILink, author, analysisTypes, creationDate",
+    };
+
+    return mapUseCases(
+      await new Promise((resolve, reject) =>
+        dynamodb.scan(useCaseQueryParams, (err, data) => {
+          if (err || !data.Items) {
+            console.log(data, err);
+            reject(err ?? (!data.Items ? "No Items" : "Unknown error"));
+          } else {
+            console.log(data.Items);
+            resolve(data.Items as unknown as UseCase[]);
+          }
+        }),
+      ),
+    );
+  }),
 
   submitUseCase: publicProcedure
     .input(
@@ -96,21 +113,25 @@ export const useCaseRouter = createTRPCRouter({
           requestID: {
             S: requestID,
           },
-          timestamp: {
+          creationDate: {
             N: "" + Date.now(),
           },
-          status: {
+          useCaseStatus: {
             S: status,
           },
-          name: {
+          useCaseName: {
             S: input.useCaseName,
           },
-          description: {
+          useCaseDescription: {
             S: input.useCaseDescription,
+          },
+          author: {
+            // S: input.author, // TODO do we have author name yet?
+            S: "Test Author",
           },
           analysisTypes: {
             L: input.analysisTypeIds.map((id) => ({
-              N: id.toString(),
+              S: id.toString(), // TODO check
             })),
           },
           tags: {
@@ -118,9 +139,12 @@ export const useCaseRouter = createTRPCRouter({
               S: tag,
             })),
           },
+          powerBILink: {
+            // S: input.powerBILink, // TODO fix later
+            S: "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'",
+          },
         },
       };
       await dynamodb.putItem(dynamodbParams).promise();
     }),
 });
-

@@ -40,15 +40,12 @@ export default function UseCaseTable() {
         (option: { name: string }) => option.name,
       ) ?? [];
 
-  const { data, isLoading } = api.useCase.getUseCases.useQuery(
-    { minId: 1, maxAmount: 10 },
-    {
-      enabled: !queryExecuted,
-      onSuccess: () => {
-        setQueryExecuted(true);
-      },
+  const { data, isLoading } = api.useCase.getUseCases.useQuery(undefined, {
+    enabled: !queryExecuted,
+    onSuccess: () => {
+      setQueryExecuted(true);
     },
-  );
+  });
 
   const columns = [
     {
@@ -128,7 +125,7 @@ export default function UseCaseTable() {
     {
       accessorKey: "powerBILink",
       header: "Power BI Data Link",
-      size: (1920 / 10) * 2.5,
+      size: (1920 / 10) * 4.5,
       cell: (props: { getValue: () => string; row: Row<UseCase> }) => (
         <PowerBIButton
           link={props.getValue()}

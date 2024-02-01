@@ -59,12 +59,12 @@ export const useCaseRouter = createTRPCRouter({
         tags: z.array(z.string()).refine((data) => data.length > 0, {
           message: "tags should not be empty",
         }),
-        analysisTypeIds: z
-          .array(z.number().positive())
+        analysisTypes: z
+          .array(z.string())
           .refine((data) => data.length > 0, {
             message:
-              "analysisTypeIds should not be empty and should only contain positive numbers",
-          }),
+              "analysisTypes should not be empty",
+        }),
       }),
     )
     .mutation(async ({ input }) => {
@@ -131,8 +131,8 @@ export const useCaseRouter = createTRPCRouter({
             S: "Test Author",
           },
           analysisTypes: {
-            L: input.analysisTypeIds.map((id) => ({
-              S: id.toString(), // TODO check
+            L: input.analysisTypes.map((type) => ({
+              S: type, // TODO check
             })),
           },
           tags: {

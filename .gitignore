@@ -45,6 +45,3 @@ yarn-error.log*
 
 # typescript
 *.tsbuildinfo
-
-# mock data
-*mockUseCasesBatchCommand.json

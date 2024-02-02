@@ -44,7 +44,6 @@ export default function UseCaseTable() {
     enabled: !queryExecuted,
     onSuccess: () => {
       setQueryExecuted(true);
-      console.log(data)
     },
   });
 
@@ -104,8 +103,6 @@ export default function UseCaseTable() {
       header: "Date Created",
       size: (1920 / 10) * 1,
       cell: (props: { getValue: () => Date}) => {
-        console.log(props.getValue())
-        console.log(data)
         return <p>{formatDate(props.getValue())}</p>;
       },
       sortType: "datetime",

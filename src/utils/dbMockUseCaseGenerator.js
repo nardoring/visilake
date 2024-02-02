@@ -86,5 +86,6 @@ function getRandomAuthor() {
   return mockAuthorNames[Math.floor(Math.random() * mockAuthorNames.length)] ?? "Jane Doe";
 }
 
-const outputFilePath = path.join(__dirname, 'output.json');
+const mockDataDirectory = path.resolve(__dirname, '../../infra/useCases/');
+const outputFilePath = path.join(mockDataDirectory, 'mockUseCasesBatchCommand.json');
 generateMockUseCases(NUM_OF_ITEMS, outputFilePath);

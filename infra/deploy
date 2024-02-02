@@ -1,8 +1,6 @@
 #!/usr/bin/env bash
 set -e  # Exit immediately if a command exits with a non-zero status
 
-useMockData=false # Data is pulled from /infra/useCases/mockUseCasesBatchCommand.js
-
 echo "Starting Localstack daemon"
 localstack start -d
 echo "Waiting for LocalStack startup..."
@@ -89,6 +87,4 @@ curl localhost:$app_port
 
 echo -e "\n\nApp successfully deployed to http://localhost:$app_port"
 
-if [ "$useMockData" = "true" ]; then
-    awslocal dynamodb batch-write-item --request-items file://./infra/useCases/mockUseCasesBatchCommand.json
-fi
+awslocal dynamodb batch-write-item --request-items file://./infra/useCases/mockUseCasesBatchCommand.json

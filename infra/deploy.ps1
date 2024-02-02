@@ -1,5 +1,5 @@
 param (
-    [string]$LocalStackApiKey="4CVxMCDrKZ"
+    [string]$LocalStackApiKey=""
     [bool]$useMockData = $false # Data is pulled from /infra/useCases/mockUseCasesBatchCommand.js
 )
 

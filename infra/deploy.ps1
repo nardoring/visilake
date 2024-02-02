@@ -1,5 +1,6 @@
 param (
-    [string]$LocalStackApiKey
+    [string]$LocalStackApiKey="4CVxMCDrKZ"
+    [bool]$useMockData = $false # Data is pulled from /infra/useCases/mockUseCasesBatchCommand.js
 )
 
 if ($null -eq $LocalStackApiKey -or $LocalStackApiKey -eq "") {
@@ -101,12 +102,14 @@ docker rmi "$repoUri";
 
 Write-Output "Creating ECS infrastructure locally";
 awslocal cloudformation create-stack --stack-name infra --template-body file://infra/private.vpc.yml;
+Start-Sleep -Seconds 2
 Start-SleepTillStacksCreated -stackName "infra"
 
 Write-Output "Deploying ECS app to local environment"
 awslocal cloudformation create-stack --stack-name nardo `
     --template-body file://infra/private.nardo.yml `
     --parameters ParameterKey=ImageUrl,ParameterValue=$repoUri;
+Start-Sleep -Seconds 2
 Start-SleepTillStacksCreated -stackName "nardo"
 
 Write-Output "ECS app successfully deployed. Trying to access app endpoint."
@@ -137,4 +140,6 @@ Write-Output "Tables: $tables\n"
 $queues = awslocal sqs list-queues
 Write-Output "Queues: $queues\n"
 
-awslocal dynamodb batch-write-item --request-items file://./infra/useCases/mockUseCasesBatchCommand.json
+if ($useMockData) {
+    awslocal dynamodb batch-write-item --request-items file://./infra/useCases/mockUseCasesBatchCommand.json
+}

@@ -9,7 +9,7 @@ function mapUseCases(output: DatabaseUseCase[]): UseCase[] {
 function mapUseCase(useCase: DatabaseUseCase): UseCase {
   return {
     useCaseName: useCase.useCaseName.S,
-    date: new Date(useCase.creationDate.N * 1),
+    date: new Date(Number(useCase.creationDate.N)),
     useCaseDescription: useCase.useCaseDescription.S,
     useCaseStatus: useCase.useCaseStatus.S as UseCaseStatus,
     powerBILink: useCase.powerBILink.S,

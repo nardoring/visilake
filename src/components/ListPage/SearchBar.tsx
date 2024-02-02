@@ -1,29 +1,15 @@
 import { useRouter } from "next/router";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
-import type { ColumnFilter } from "@tanstack/react-table";
 import type { Dispatch, SetStateAction } from "react";
 
 interface SearchBarProps {
   // columnFilters: ColumnFilter[];
-  setColumnFilters: Dispatch<SetStateAction<ColumnFilter[]>>;
+  setGlobalFilter: Dispatch<SetStateAction<string>>;
 }
 
-export default function SearchBar({ setColumnFilters }: SearchBarProps) {
+export default function SearchBar({ setGlobalFilter }: SearchBarProps) {
   const router = useRouter();
-  // const useCaseNameFilter=
-  //   columnFilters.find((filter: { id: string }) => filter.id === "useCaseName")
-  //     ?.value ?? "";
-
-  const onFilterChange = (id: string, value: string) =>
-    setColumnFilters((prev) =>
-      prev
-        .filter((f: { id: string }) => f.id !== id)
-        .concat({
-          id,
-          value,
-        }),
-    );
 
   return (
     <div className="flex items-center justify-between bg-lightIndigo p-5 ">
@@ -35,7 +21,7 @@ export default function SearchBar({ setColumnFilters }: SearchBarProps) {
           className="block min-w-[20vw] rounded-md border border-black bg-darkIndigo py-1.5 pl-7 text-gray-900 shadow-sm focus:ring-2 focus:ring-inset focus:ring-indigo-300"
           type="text"
           onChange={(e) => {
-            onFilterChange("useCaseName", e.target.value);
+            setGlobalFilter(e.target.value);
           }}
         />
       </div>

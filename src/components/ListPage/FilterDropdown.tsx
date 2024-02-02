@@ -48,13 +48,15 @@ export default function FilterDropdown({
               <Menu.Item key={item}>
                 {() => (
                   <div className="flex py-1">
-                    {filterId === "useCaseStatus" ? (
-                      <StatusChip status={item} className="mr-3" />
-                    ) : (
-                      <p className="mr-3 whitespace-nowrap text-darkBlue">
-                        {item}
-                      </p>
-                    )}
+                    <div className="mr-3">
+                      {filterId === "useCaseStatus" ? (
+                        <StatusChip status={item}/>
+                      ) : (
+                        <p className="mr-3 whitespace-nowrap text-darkBlue">
+                          {item}
+                        </p>
+                      )}
+                    </div>
                     <input
                       type="checkbox"
                       className="ml-auto w-5"

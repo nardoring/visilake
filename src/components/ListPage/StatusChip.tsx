@@ -1,9 +1,8 @@
 interface StatusChipProps {
   status: string;
-  className?: string; 
 }
 
-export default function StatusChip({ status, className }: StatusChipProps) {
+export default function StatusChip({ status }: StatusChipProps) {
   const statusMap: Record<string, string> = {
     complete: "Complete",
     inprogress: "In Progress",
@@ -23,14 +22,12 @@ export default function StatusChip({ status, className }: StatusChipProps) {
     }[statusKey] ?? "bg-gray-300 border-gray-400 text-gray-700";
 
   return (
-    <div>
-      <div className={`flex flex-wrap gap-2 ${className}`}>
-        <div
-          className={`justify-center m-1 flex items-center rounded-full border ${statusClasses} w-[5.1rem] px-2 py-1 text-xs font-medium`}
-        >
-          <div className="max-w-full flex-initial leading-none">
-            {statusValue}
-          </div>
+    <div className={`flex flex-wrap gap-2`}>
+      <div
+        className={`m-1 flex items-center justify-center rounded-full border ${statusClasses} w-[5.1rem] px-2 py-1 text-xs font-medium`}
+      >
+        <div className="max-w-full flex-initial leading-none">
+          {statusValue}
         </div>
       </div>
     </div>

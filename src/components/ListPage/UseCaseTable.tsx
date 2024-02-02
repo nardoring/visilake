@@ -161,7 +161,7 @@ export default function UseCaseTable() {
     columnResizeMode: "onChange",
   });
 
-  if (isLoading || analysisTypeOptionsIsLoading) {
+  if (isLoading) {
     // Render a loading indicator or message
     return (
       <div className="fixed flex h-full w-full items-center justify-center bg-lightIndigo">

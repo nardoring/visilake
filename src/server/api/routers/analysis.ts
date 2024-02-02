@@ -1,7 +1,7 @@
 import { createTRPCRouter, publicProcedure } from "../trpc";
 
 export const analysisRouter = createTRPCRouter({
-  getAnalysisTypes: publicProcedure.query(async () => {
+  getAnalysisTypes: publicProcedure.query(() => {
     return {
       types: [
         { name: "Rolling Mean", id: 1 },

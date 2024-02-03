@@ -1,12 +1,7 @@
 import { createTRPCRouter, publicProcedure } from "../trpc";
 
 export const analysisRouter = createTRPCRouter({
-  getAnalysisTypes: publicProcedure.query(async () => {
-    const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
-
-    // Introduce a delay for testing loading elements
-    await delay(2000);
-
+  getAnalysisTypes: publicProcedure.query(() => {
     return {
       types: [
         { name: "Rolling Mean", id: 1 },

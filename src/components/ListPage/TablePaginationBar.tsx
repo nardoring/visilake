@@ -36,7 +36,7 @@ export default function TablePaginationBar({ table }: TablePaginationBarProps) {
 
       // Show ellipsis if there are pages before the visible range
       if (start > 2) {
-        buttons.push(renderEllipsis());
+        buttons.push(renderEllipsis(0));
         start += 1;
       }
 
@@ -47,7 +47,7 @@ export default function TablePaginationBar({ table }: TablePaginationBarProps) {
 
       // Show ellipsis if there are pages after the visible range
       if (end < pageCount - 1) {
-        buttons.push(renderEllipsis());
+        buttons.push(renderEllipsis(pageCount - 1));
       }
     }
 
@@ -68,10 +68,14 @@ export default function TablePaginationBar({ table }: TablePaginationBarProps) {
     </button>
   );
 
-  const renderEllipsis = () => (
-    <span className="${buttonSize} relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-700 ring-1 ring-inset ring-gray-300 focus:outline-offset-0">
+  const renderEllipsis = (pageIndex: number) => (
+    <button
+      className="${buttonSize} relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-700 ring-1 ring-inset ring-gray-300 focus:outline-offset-0"
+      onClick={() => table.setPageIndex(pageIndex)}
+      key={"paginationEllipsesButton" + pageIndex}
+    >
       ...
-    </span>
+    </button>
   );
 
   return (
@@ -79,9 +83,19 @@ export default function TablePaginationBar({ table }: TablePaginationBarProps) {
       <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
         <div>
           <p className="text-sm text-gray-700">
-            Showing <span className="font-medium">{(pageIndex - 1) * 10 + 1}</span> to{" "}
-            <span className="font-medium">{Math.min(pageIndex * 10, table.getFilteredRowModel().rows.length)}</span> of{" "}
-            <span className="font-medium">{table.getFilteredRowModel().rows.length}</span> results
+            Showing{" "}
+            <span className="font-medium">{(pageIndex - 1) * 10 + 1}</span> to{" "}
+            <span className="font-medium">
+              {Math.min(
+                pageIndex * 10,
+                table.getFilteredRowModel().rows.length,
+              )}
+            </span>{" "}
+            of{" "}
+            <span className="font-medium">
+              {table.getFilteredRowModel().rows.length}
+            </span>{" "}
+            results
           </p>
         </div>
         <div>

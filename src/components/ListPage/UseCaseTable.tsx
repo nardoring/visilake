@@ -224,7 +224,7 @@ export default function UseCaseTable() {
               <tr
                 key={row.id}
                 className={`${
-                  row.index % 2 === 0 ? "bg-white" : "bg-veryLightGrey"
+                  table.getRowModel().rows.indexOf(row) % 2 === 0 ? "bg-white" : "bg-veryLightGrey"
                 } h-[4.28rem]`}
               >
                 {row.getVisibleCells().map((cell) => (

@@ -33,8 +33,10 @@ export const useCaseRouter = createTRPCRouter({
       await new Promise((resolve, reject) =>
         dynamodb.scan(useCaseQueryParams, (err, data) => {
           if (err || !data.Items) {
+            console.log(data, err);
             reject(err ?? (!data.Items ? "No Items" : "Unknown error"));
           } else {
+            console.log(data.Items);
             resolve(data.Items as unknown as UseCase[]);
           }
         }),
@@ -57,8 +59,11 @@ export const useCaseRouter = createTRPCRouter({
         tags: z.array(z.string()).refine((data) => data.length > 0, {
           message: "tags should not be empty",
         }),
-        analysisTypes: z.array(z.string()).refine((data) => data.length > 0, {
-          message: "analysisTypes should not be empty",
+        analysisTypes: z
+          .array(z.string())
+          .refine((data) => data.length > 0, {
+            message:
+              "analysisTypes should not be empty",
         }),
       }),
     )

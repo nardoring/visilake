@@ -8,17 +8,37 @@ import TablePaginationBar from "./TablePaginationBar";
 import {
   flexRender,
   getCoreRowModel,
+  getFacetedUniqueValues,
   getFilteredRowModel,
   getPaginationRowModel,
+  getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
 import type { ColumnFilter, Row } from "@tanstack/react-table";
 import { useState } from "react";
 import type { UseCase } from "~/models/domain/useCase";
+import FilterDropdown from "./FilterDropdown";
+import ColumnSortButton from "./ColumnSortButton";
 
 export default function UseCaseTable() {
+  const filterDropdownColumns = new Set([
+    "Status",
+    "Created By",
+    "Analysis Types",
+  ]);
+  const sortableColumns = new Set(["Date Created"]);
   const [queryExecuted, setQueryExecuted] = useState<boolean>(false);
+  const [globalFilter, setGlobalFilter] = useState<string>("");
   const [columnFilters, setColumnFilters] = useState<ColumnFilter[]>([]);
+  const {
+    data: analysisTypeOptionsData,
+    isLoading: analysisTypeOptionsIsLoading,
+  } = api.analysis.getAnalysisTypes.useQuery();
+  const analysisTypeOptions: string[] = analysisTypeOptionsIsLoading
+    ? []
+    : analysisTypeOptionsData?.types?.map(
+        (option: { name: string }) => option.name,
+      ) ?? [];
 
   const { data, isLoading } = api.useCase.getUseCases.useQuery(undefined, {
     enabled: !queryExecuted,
@@ -49,6 +69,17 @@ export default function UseCaseTable() {
       cell: (props: { getValue: () => string[] }) => (
         <p>{props.getValue().join(", ")}</p>
       ),
+      filterFn: (
+        row: Row<UseCase>,
+        columnId: string,
+        filterAnalysisTypes: string[],
+      ) => {
+        if (filterAnalysisTypes.length === 0) return true;
+        const analysisTypes: string[] = row.getValue(columnId);
+        return filterAnalysisTypes.every((analysisType) =>
+          analysisTypes.includes(analysisType),
+        );
+      },
     },
     {
       accessorKey: "useCaseStatus",
@@ -57,20 +88,39 @@ export default function UseCaseTable() {
       cell: (props: { getValue: () => string }) => (
         <StatusChip status={props.getValue()} />
       ),
+      filterFn: (
+        row: Row<UseCase>,
+        columnId: string,
+        filterStatuses: string[],
+      ) => {
+        if (filterStatuses.length === 0) return true;
+        const author: string = row.getValue(columnId);
+        return filterStatuses.includes(author);
+      },
     },
     {
       accessorKey: "date",
       header: "Date Created",
       size: (1920 / 10) * 1,
-      cell: (props: { getValue: () => Date }) => {
+      cell: (props: { getValue: () => Date}) => {
         return <p>{formatDate(props.getValue())}</p>;
       },
+      sortType: "datetime",
     },
     {
       accessorKey: "author",
       header: "Created By",
       size: (1920 / 10) * 1,
       cell: (props: { getValue: () => string }) => <p>{props.getValue()}</p>,
+      filterFn: (
+        row: Row<UseCase>,
+        columnId: string,
+        filterAuthorNames: string[],
+      ) => {
+        if (filterAuthorNames.length === 0) return true;
+        const status: string = row.getValue(columnId);
+        return filterAuthorNames.includes(status);
+      },
     },
     {
       accessorKey: "powerBILink",
@@ -82,6 +132,8 @@ export default function UseCaseTable() {
           status={props.row.original.useCaseStatus}
         />
       ),
+      enableGlobalFilter: false,
+      enableColumnFilter: false,
     },
   ];
 
@@ -89,11 +141,23 @@ export default function UseCaseTable() {
     data: data ?? [],
     columns,
     state: {
+      globalFilter: globalFilter,
       columnFilters,
+    },
+    initialState: {
+      sorting: [
+        {
+          id: 'date',
+          desc: true,
+        }
+      ]
     },
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    onGlobalFilterChange: setGlobalFilter,
+    getFacetedUniqueValues: getFacetedUniqueValues(),
     columnResizeMode: "onChange",
   });
 
@@ -107,7 +171,7 @@ export default function UseCaseTable() {
   }
   return (
     <div>
-      <SearchBar setColumnFilters={setColumnFilters} />
+      <SearchBar setGlobalFilter={setGlobalFilter} />
       <div className="font-nunito table w-full overflow-x-auto bg-lightIndigo">
         <table
           className="w-full"
@@ -123,6 +187,26 @@ export default function UseCaseTable() {
                     style={{ width: `${header.getSize()}px` }}
                   >
                     {String(header.column.columnDef.header)}
+                    {/* Filter Dropdowns */}
+                    {typeof header.column.columnDef.header === "string" &&
+                      filterDropdownColumns.has(
+                        header.column.columnDef.header,
+                      ) && (
+                        <FilterDropdown
+                          dropdownItems={Array.from(
+                            header.column.columnDef.header === "Analysis Types"
+                              ? analysisTypeOptions
+                              : header.column.getFacetedUniqueValues().keys(),
+                          )}
+                          filterId={header.id}
+                          setColumnFilters={setColumnFilters}
+                        />
+                      )}
+                    {/* Sorting Button */}
+                    {typeof header.column.columnDef.header === "string" &&
+                      sortableColumns.has(header.column.columnDef.header) && (
+                        <ColumnSortButton columnSortToggle={header.column.getToggleSortingHandler()}/>
+                      )}
                     <div
                       onMouseDown={header.getResizeHandler()}
                       onTouchStart={header.getResizeHandler()}

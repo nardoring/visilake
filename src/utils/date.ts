@@ -1,14 +1,19 @@
 export function formatDate(rawDate: Date) {
   const dateObject = new Date(rawDate);
-  const formattedTime = dateObject.toLocaleTimeString([], {
+
+  const optionsDate: Intl.DateTimeFormatOptions = {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  };
+
+  const optionsTime: Intl.DateTimeFormatOptions = {
     hour: "numeric",
     minute: "2-digit",
     hour12: true,
-  });
-  const formattedDate = `${dateObject.getFullYear()}/${(
-    dateObject.getMonth() + 1
-  )
-    .toString()
-    .padStart(2, "0")}/${dateObject.getDate().toString().padStart(2, "0")}`;
-  return `${formattedTime} ${formattedDate}`;
+  };
+
+  const formattedDate = dateObject.toLocaleString([], optionsDate) + " " + dateObject.toLocaleTimeString([], optionsTime);
+  
+  return formattedDate;
 }

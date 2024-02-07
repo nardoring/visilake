@@ -3,404 +3,988 @@
     {
       "PutRequest": {
         "Item": {
-          "requestID": { "S": "1" },
-          "id": { "S": "7c41a5dd-091d-4408-bf8c-4c96c4e5b699" },
-          "useCaseDescription": { "S": "This is a test" },
-          "useCaseName": { "S": "This is a test" },
-          "useCaseStatus": { "S": "Complete" },
-          "powerBILink": {
-            "S": "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'"
+          "requestID": {
+            "S": "1"
           },
-          "author": { "S": "James Smith" },
-          "analysisTypes": {
-            "L": [{ "S": "Trend Analysis" }, { "S": "Predictive Modeling" }]
+          "id": {
+            "S": "ls2bvs1dejdb5"
           },
-          "creationDate": { "N": "1642940401" }
-        }
-      }
-    },
-    {
-      "PutRequest": {
-        "Item": {
-          "requestID": { "S": "2" },
-          "id": { "S": "a1234567-8901-2345-6789-bcdef0123456" },
-          "useCaseDescription": { "S": "Another test" },
-          "useCaseName": { "S": "Another test" },
-          "useCaseStatus": { "S": "NotStarted" },
-          "powerBILink": {
-            "S": "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'"
+          "creationDate": {
+            "N": "1699036559595"
           },
-          "author": { "S": "Sarah Johnson" },
-          "analysisTypes": {
-            "L": [{ "S": "Data Mining" }, { "S": "Regression Analysis" }]
+          "useCaseStatus": {
+            "S": "InProgress"
           },
-          "creationDate": { "N": "1642940401" }
-        }
-      }
-    },
-    {
-      "PutRequest": {
-        "Item": {
-          "requestID": { "S": "3" },
-          "id": { "S": "b9876543-2109-8765-4321-fedcba098765" },
-          "useCaseDescription": { "S": "Third test" },
-          "useCaseName": { "S": "Third test" },
-          "useCaseStatus": { "S": "InProgress" },
-          "powerBILink": {
-            "S": "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'"
+          "useCaseName": {
+            "S": "Use case 1"
           },
-          "author": { "S": "John Doe" },
+          "useCaseDescription": {
+            "S": "This is a test for use case 1"
+          },
+          "author": {
+            "S": "Sophia Turner"
+          },
           "analysisTypes": {
             "L": [
-              { "S": "Descriptive Statistics" },
-              { "S": "Cluster Analysis" }
+              {
+                "S": "Rolling Mean"
+              },
+              {
+                "S": "Rolling Std Deviation"
+              },
+              {
+                "S": "Autocorrelation"
+              }
             ]
           },
-          "creationDate": { "N": "1642940401" }
+          "powerBILink": {
+            "S": "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'"
+          }
         }
       }
     },
     {
       "PutRequest": {
         "Item": {
-          "requestID": { "S": "4" },
-          "id": { "S": "c3456789-0123-4567-8901-fedcba987654" },
-          "useCaseDescription": { "S": "Fourth test" },
-          "useCaseName": { "S": "Fourth test" },
-          "useCaseStatus": { "S": "Failed" },
-          "powerBILink": {
-            "S": "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'"
+          "requestID": {
+            "S": "2"
           },
-          "author": { "S": "Emily Davis" },
+          "id": {
+            "S": "ls2bvs1dukx29"
+          },
+          "creationDate": {
+            "N": "1696540051410"
+          },
+          "useCaseStatus": {
+            "S": "Complete"
+          },
+          "useCaseName": {
+            "S": "Use case 2"
+          },
+          "useCaseDescription": {
+            "S": "This is a test for use case 2"
+          },
+          "author": {
+            "S": "Emily Johnson"
+          },
           "analysisTypes": {
             "L": [
-              { "S": "Hypothesis Testing" },
-              { "S": "Time Series Analysis" }
+              {
+                "S": "Rolling Mean"
+              }
             ]
           },
-          "creationDate": { "N": "1642940401" }
+          "powerBILink": {
+            "S": "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'"
+          }
         }
       }
     },
     {
       "PutRequest": {
         "Item": {
-          "requestID": { "S": "5" },
-          "id": { "S": "d2345678-9012-3456-7890-fedcba098765" },
-          "useCaseDescription": { "S": "Fifth test" },
-          "useCaseName": { "S": "Fifth test" },
-          "useCaseStatus": { "S": "Complete" },
-          "powerBILink": {
-            "S": "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'"
+          "requestID": {
+            "S": "3"
           },
-          "author": { "S": "Michael Wilson" },
+          "id": {
+            "S": "ls2bvs1dx2qp4"
+          },
+          "creationDate": {
+            "N": "1701189510170"
+          },
+          "useCaseStatus": {
+            "S": "NotStarted"
+          },
+          "useCaseName": {
+            "S": "Use case 3"
+          },
+          "useCaseDescription": {
+            "S": "This is a test for use case 3"
+          },
+          "author": {
+            "S": "Emily Johnson"
+          },
           "analysisTypes": {
             "L": [
-              { "S": "Correlation Analysis" },
-              { "S": "Logistic Regression" }
+              {
+                "S": "Rolling Std Deviation"
+              }
             ]
           },
-          "creationDate": { "N": "1642940401" }
+          "powerBILink": {
+            "S": "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'"
+          }
         }
       }
     },
     {
       "PutRequest": {
         "Item": {
-          "requestID": { "S": "6" },
-          "id": { "S": "e4567890-1234-5678-9012-fedcba987654" },
-          "useCaseDescription": { "S": "Sixth test" },
-          "useCaseName": { "S": "Sixth test" },
-          "useCaseStatus": { "S": "InProgress" },
-          "powerBILink": {
-            "S": "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'"
+          "requestID": {
+            "S": "4"
           },
-          "author": { "S": "Mary Brown" },
-          "analysisTypes": {
-            "L": [{ "S": "ANOVA" }, { "S": "Principal Component Analysis" }]
+          "id": {
+            "S": "ls2bvs1dzne4o"
           },
-          "creationDate": { "N": "1642940401" }
-        }
-      }
-    },
-    {
-      "PutRequest": {
-        "Item": {
-          "requestID": { "S": "7" },
-          "id": { "S": "f5678901-2345-6789-0123-fedcba098765" },
-          "useCaseDescription": { "S": "Seventh test" },
-          "useCaseName": { "S": "Seventh test" },
-          "useCaseStatus": { "S": "NotStarted" },
-          "powerBILink": {
-            "S": "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'"
+          "creationDate": {
+            "N": "1704725805239"
           },
-          "author": { "S": "David Lee" },
-          "analysisTypes": {
-            "L": [{ "S": "Chi-Square Test" }, { "S": "Factor Analysis" }]
+          "useCaseStatus": {
+            "S": "InProgress"
           },
-          "creationDate": { "N": "1642940401" }
-        }
-      }
-    },
-    {
-      "PutRequest": {
-        "Item": {
-          "requestID": { "S": "8" },
-          "id": { "S": "g6789012-3456-7890-1234-fedcba987654" },
-          "useCaseDescription": { "S": "Eighth test" },
-          "useCaseName": { "S": "Eighth test" },
-          "useCaseStatus": { "S": "Complete" },
-          "powerBILink": {
-            "S": "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'"
+          "useCaseName": {
+            "S": "Use case 4"
           },
-          "author": { "S": "Linda Garcia" },
-          "analysisTypes": {
-            "L": [{ "S": "Regression Analysis" }, { "S": "Data Mining" }]
+          "useCaseDescription": {
+            "S": "This is a test for use case 4"
           },
-          "creationDate": { "N": "1642940401" }
-        }
-      }
-    },
-    {
-      "PutRequest": {
-        "Item": {
-          "requestID": { "S": "9" },
-          "id": { "S": "h7890123-4567-8901-2345-fedcba098765" },
-          "useCaseDescription": { "S": "Ninth test" },
-          "useCaseName": { "S": "Ninth test" },
-          "useCaseStatus": { "S": "InProgress" },
-          "powerBILink": {
-            "S": "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'"
+          "author": {
+            "S": "James Mitchell"
           },
-          "author": { "S": "Robert Johnson" },
           "analysisTypes": {
             "L": [
-              { "S": "Cluster Analysis" },
-              { "S": "Descriptive Statistics" }
+              {
+                "S": "Rolling Mean"
+              }
             ]
           },
-          "creationDate": { "N": "1642940401" }
+          "powerBILink": {
+            "S": "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'"
+          }
         }
       }
     },
     {
       "PutRequest": {
         "Item": {
-          "requestID": { "S": "10" },
-          "id": { "S": "i8901234-5678-9012-3456-fedcba987654" },
-          "useCaseDescription": { "S": "Tenth test" },
-          "useCaseName": { "S": "Tenth test" },
-          "useCaseStatus": { "S": "Failed" },
-          "powerBILink": {
-            "S": "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'"
+          "requestID": {
+            "S": "5"
           },
-          "author": { "S": "Susan Williams" },
+          "id": {
+            "S": "ls2bvs1dwldvr"
+          },
+          "creationDate": {
+            "N": "1696643003142"
+          },
+          "useCaseStatus": {
+            "S": "InProgress"
+          },
+          "useCaseName": {
+            "S": "Use case 5"
+          },
+          "useCaseDescription": {
+            "S": "This is a test for use case 5"
+          },
+          "author": {
+            "S": "Benjamin Hayes"
+          },
           "analysisTypes": {
             "L": [
-              { "S": "Time Series Analysis" },
-              { "S": "Hypothesis Testing" }
+              {
+                "S": "Autocorrelation"
+              },
+              {
+                "S": "Rolling Mean"
+              }
             ]
           },
-          "creationDate": { "N": "1642940401" }
+          "powerBILink": {
+            "S": "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'"
+          }
         }
       }
     },
     {
       "PutRequest": {
         "Item": {
-          "requestID": { "S": "11" },
-          "id": { "S": "j1234567-8901-2345-6789-bcdef0123456" },
-          "useCaseDescription": { "S": "Eleventh test" },
-          "useCaseName": { "S": "Eleventh test" },
-          "useCaseStatus": { "S": "InProgress" },
-          "powerBILink": {
-            "S": "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'"
+          "requestID": {
+            "S": "6"
           },
-          "author": { "S": "Mark Taylor" },
-          "analysisTypes": {
-            "L": [{ "S": "Regression Analysis" }, { "S": "Data Mining" }]
+          "id": {
+            "S": "ls2bvs1df191o"
           },
-          "creationDate": { "N": "1642940401" }
-        }
-      }
-    },
-    {
-      "PutRequest": {
-        "Item": {
-          "requestID": { "S": "12" },
-          "id": { "S": "k9876543-2109-8765-4321-fedcba098765" },
-          "useCaseDescription": { "S": "Twelfth test" },
-          "useCaseName": { "S": "Twelfth test" },
-          "useCaseStatus": { "S": "Failed" },
-          "powerBILink": {
-            "S": "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'"
+          "creationDate": {
+            "N": "1695493840524"
           },
-          "author": { "S": "Laura Adams" },
-          "analysisTypes": {
-            "L": [{ "S": "ANOVA" }, { "S": "Principal Component Analysis" }]
+          "useCaseStatus": {
+            "S": "InProgress"
           },
-          "creationDate": { "N": "1642940401" }
-        }
-      }
-    },
-    {
-      "PutRequest": {
-        "Item": {
-          "requestID": { "S": "13" },
-          "id": { "S": "l3456789-0123-4567-8901-fedcba987654" },
-          "useCaseDescription": { "S": "Thirteenth test" },
-          "useCaseName": { "S": "Thirteenth test" },
-          "useCaseStatus": { "S": "Complete" },
-          "powerBILink": {
-            "S": "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'"
+          "useCaseName": {
+            "S": "Use case 6"
           },
-          "author": { "S": "Alex Turner" },
-          "analysisTypes": {
-            "L": [{ "S": "Chi-Square Test" }, { "S": "Factor Analysis" }]
+          "useCaseDescription": {
+            "S": "This is a test for use case 6"
           },
-          "creationDate": { "N": "1642940401" }
-        }
-      }
-    },
-    {
-      "PutRequest": {
-        "Item": {
-          "requestID": { "S": "14" },
-          "id": { "S": "m2345678-9012-3456-7890-fedcba098765" },
-          "useCaseDescription": { "S": "Fourteenth test" },
-          "useCaseName": { "S": "Fourteenth test" },
-          "useCaseStatus": { "S": "NotStarted" },
-          "powerBILink": {
-            "S": "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'"
+          "author": {
+            "S": "Olivia Bennett"
           },
-          "author": { "S": "Rachel Brown" },
           "analysisTypes": {
             "L": [
-              { "S": "Correlation Analysis" },
-              { "S": "Logistic Regression" }
+              {
+                "S": "Rolling Mean"
+              }
             ]
           },
-          "creationDate": { "N": "1642940401" }
+          "powerBILink": {
+            "S": "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'"
+          }
         }
       }
     },
     {
       "PutRequest": {
         "Item": {
-          "requestID": { "S": "15" },
-          "id": { "S": "n4567890-1234-5678-9012-fedcba987654" },
-          "useCaseDescription": { "S": "Fifteenth test" },
-          "useCaseName": { "S": "Fifteenth test" },
-          "useCaseStatus": { "S": "InProgress" },
-          "powerBILink": {
-            "S": "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'"
+          "requestID": {
+            "S": "7"
           },
-          "author": { "S": "Daniel Martin" },
-          "analysisTypes": {
-            "L": [{ "S": "ANOVA" }, { "S": "Principal Component Analysis" }]
+          "id": {
+            "S": "ls2bvs1dq25nl"
           },
-          "creationDate": { "N": "1642940401" }
-        }
-      }
-    },
-    {
-      "PutRequest": {
-        "Item": {
-          "requestID": { "S": "16" },
-          "id": { "S": "o5678901-2345-6789-0123-fedcba098765" },
-          "useCaseDescription": { "S": "Sixteenth test" },
-          "useCaseName": { "S": "Sixteenth test" },
-          "useCaseStatus": { "S": "Complete" },
-          "powerBILink": {
-            "S": "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'"
+          "creationDate": {
+            "N": "1694688284891"
           },
-          "author": { "S": "Emma Lee" },
-          "analysisTypes": {
-            "L": [{ "S": "Chi-Square Test" }, { "S": "Factor Analysis" }]
+          "useCaseStatus": {
+            "S": "InProgress"
           },
-          "creationDate": { "N": "1642940401" }
-        }
-      }
-    },
-    {
-      "PutRequest": {
-        "Item": {
-          "requestID": { "S": "17" },
-          "id": { "S": "p6789012-3456-7890-1234-fedcba987654" },
-          "useCaseDescription": { "S": "Seventeenth test" },
-          "useCaseName": { "S": "Seventeenth test" },
-          "useCaseStatus": { "S": "NotStarted" },
-          "powerBILink": {
-            "S": "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'"
+          "useCaseName": {
+            "S": "Use case 7"
           },
-          "author": { "S": "Sophia Johnson" },
+          "useCaseDescription": {
+            "S": "This is a test for use case 7"
+          },
+          "author": {
+            "S": "Sophia Turner"
+          },
           "analysisTypes": {
             "L": [
-              { "S": "Hypothesis Testing" },
-              { "S": "Time Series Analysis" }
+              {
+                "S": "Rolling Mean"
+              }
             ]
           },
-          "creationDate": { "N": "1642940401" }
+          "powerBILink": {
+            "S": "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'"
+          }
         }
       }
     },
     {
       "PutRequest": {
         "Item": {
-          "requestID": { "S": "18" },
-          "id": { "S": "q7890123-4567-8901-2345-fedcba098765" },
-          "useCaseDescription": { "S": "Eighteenth test" },
-          "useCaseName": { "S": "Eighteenth test" },
-          "useCaseStatus": { "S": "Failed" },
-          "powerBILink": {
-            "S": "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'"
+          "requestID": {
+            "S": "8"
           },
-          "author": { "S": "Aiden Smith" },
+          "id": {
+            "S": "ls2bvs1d1tf8h"
+          },
+          "creationDate": {
+            "N": "1694644539114"
+          },
+          "useCaseStatus": {
+            "S": "Failed"
+          },
+          "useCaseName": {
+            "S": "Use case 8"
+          },
+          "useCaseDescription": {
+            "S": "This is a test for use case 8"
+          },
+          "author": {
+            "S": "Olivia Bennett"
+          },
           "analysisTypes": {
             "L": [
-              { "S": "Correlation Analysis" },
-              { "S": "Logistic Regression" }
+              {
+                "S": "Autocorrelation"
+              }
             ]
           },
-          "creationDate": { "N": "1642940401" }
+          "powerBILink": {
+            "S": "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'"
+          }
         }
       }
     },
     {
       "PutRequest": {
         "Item": {
-          "requestID": { "S": "19" },
-          "id": { "S": "r8901234-5678-9012-3456-fedcba987654" },
-          "useCaseDescription": { "S": "Nineteenth test" },
-          "useCaseName": { "S": "Nineteenth test" },
-          "useCaseStatus": { "S": "InProgress" },
+          "requestID": {
+            "S": "9"
+          },
+          "id": {
+            "S": "ls2bvs1disis5"
+          },
+          "creationDate": {
+            "N": "1702400766466"
+          },
+          "useCaseStatus": {
+            "S": "Complete"
+          },
+          "useCaseName": {
+            "S": "Use case 9"
+          },
+          "useCaseDescription": {
+            "S": "This is a test for use case 9"
+          },
+          "author": {
+            "S": "Benjamin Hayes"
+          },
+          "analysisTypes": {
+            "L": [
+              {
+                "S": "Autocorrelation"
+              }
+            ]
+          },
           "powerBILink": {
             "S": "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'"
-          },
-          "author": { "S": "Olivia Davis" },
-          "analysisTypes": {
-            "L": [{ "S": "ANOVA" }, { "S": "Principal Component Analysis" }]
-          },
-          "creationDate": { "N": "1642940401" }
+          }
         }
       }
     },
     {
       "PutRequest": {
         "Item": {
-          "requestID": { "S": "20" },
-          "id": { "S": "s2345678-9012-3456-7890-fedcba098765" },
-          "useCaseDescription": { "S": "Twentieth test" },
-          "useCaseName": { "S": "Twentieth test" },
-          "useCaseStatus": { "S": "Complete" },
+          "requestID": {
+            "S": "10"
+          },
+          "id": {
+            "S": "ls2bvs1dce9vl"
+          },
+          "creationDate": {
+            "N": "1694236967263"
+          },
+          "useCaseStatus": {
+            "S": "Failed"
+          },
+          "useCaseName": {
+            "S": "Use case 10"
+          },
+          "useCaseDescription": {
+            "S": "This is a test for use case 10"
+          },
+          "author": {
+            "S": "Emily Johnson"
+          },
+          "analysisTypes": {
+            "L": [
+              {
+                "S": "Rolling Mean"
+              }
+            ]
+          },
           "powerBILink": {
             "S": "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "requestID": {
+            "S": "11"
           },
-          "author": { "S": "Lucas Wilson" },
+          "id": {
+            "S": "ls2bvs1darpx4"
+          },
+          "creationDate": {
+            "N": "1698823038050"
+          },
+          "useCaseStatus": {
+            "S": "Complete"
+          },
+          "useCaseName": {
+            "S": "Use case 11"
+          },
+          "useCaseDescription": {
+            "S": "This is a test for use case 11"
+          },
+          "author": {
+            "S": "James Mitchell"
+          },
           "analysisTypes": {
-            "L": [{ "S": "Chi-Square Test" }, { "S": "Factor Analysis" }]
+            "L": [
+              {
+                "S": "Rolling Mean"
+              },
+              {
+                "S": "Autocorrelation"
+              },
+              {
+                "S": "Rolling Std Deviation"
+              }
+            ]
           },
-          "creationDate": { "N": "1642940401" }
+          "powerBILink": {
+            "S": "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "requestID": {
+            "S": "12"
+          },
+          "id": {
+            "S": "ls2bvs1dcikk1"
+          },
+          "creationDate": {
+            "N": "1700355666114"
+          },
+          "useCaseStatus": {
+            "S": "InProgress"
+          },
+          "useCaseName": {
+            "S": "Use case 12"
+          },
+          "useCaseDescription": {
+            "S": "This is a test for use case 12"
+          },
+          "author": {
+            "S": "Benjamin Hayes"
+          },
+          "analysisTypes": {
+            "L": [
+              {
+                "S": "Rolling Std Deviation"
+              }
+            ]
+          },
+          "powerBILink": {
+            "S": "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "requestID": {
+            "S": "13"
+          },
+          "id": {
+            "S": "ls2bvs1dhifgv"
+          },
+          "creationDate": {
+            "N": "1696288209564"
+          },
+          "useCaseStatus": {
+            "S": "NotStarted"
+          },
+          "useCaseName": {
+            "S": "Use case 13"
+          },
+          "useCaseDescription": {
+            "S": "This is a test for use case 13"
+          },
+          "author": {
+            "S": "Olivia Bennett"
+          },
+          "analysisTypes": {
+            "L": [
+              {
+                "S": "Rolling Mean"
+              },
+              {
+                "S": "Autocorrelation"
+              },
+              {
+                "S": "Rolling Std Deviation"
+              }
+            ]
+          },
+          "powerBILink": {
+            "S": "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "requestID": {
+            "S": "14"
+          },
+          "id": {
+            "S": "ls2bvs1dttzk6"
+          },
+          "creationDate": {
+            "N": "1695508984925"
+          },
+          "useCaseStatus": {
+            "S": "InProgress"
+          },
+          "useCaseName": {
+            "S": "Use case 14"
+          },
+          "useCaseDescription": {
+            "S": "This is a test for use case 14"
+          },
+          "author": {
+            "S": "Olivia Bennett"
+          },
+          "analysisTypes": {
+            "L": [
+              {
+                "S": "Rolling Mean"
+              }
+            ]
+          },
+          "powerBILink": {
+            "S": "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "requestID": {
+            "S": "15"
+          },
+          "id": {
+            "S": "ls2bvs1dm5v1m"
+          },
+          "creationDate": {
+            "N": "1702042444395"
+          },
+          "useCaseStatus": {
+            "S": "NotStarted"
+          },
+          "useCaseName": {
+            "S": "Use case 15"
+          },
+          "useCaseDescription": {
+            "S": "This is a test for use case 15"
+          },
+          "author": {
+            "S": "Olivia Bennett"
+          },
+          "analysisTypes": {
+            "L": [
+              {
+                "S": "Autocorrelation"
+              },
+              {
+                "S": "Rolling Mean"
+              }
+            ]
+          },
+          "powerBILink": {
+            "S": "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "requestID": {
+            "S": "16"
+          },
+          "id": {
+            "S": "ls2bvs1dwjdql"
+          },
+          "creationDate": {
+            "N": "1703350347258"
+          },
+          "useCaseStatus": {
+            "S": "Failed"
+          },
+          "useCaseName": {
+            "S": "Use case 16"
+          },
+          "useCaseDescription": {
+            "S": "This is a test for use case 16"
+          },
+          "author": {
+            "S": "Olivia Bennett"
+          },
+          "analysisTypes": {
+            "L": [
+              {
+                "S": "Rolling Std Deviation"
+              },
+              {
+                "S": "Rolling Mean"
+              },
+              {
+                "S": "Autocorrelation"
+              }
+            ]
+          },
+          "powerBILink": {
+            "S": "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "requestID": {
+            "S": "17"
+          },
+          "id": {
+            "S": "ls2bvs1dg4maj"
+          },
+          "creationDate": {
+            "N": "1705993702398"
+          },
+          "useCaseStatus": {
+            "S": "NotStarted"
+          },
+          "useCaseName": {
+            "S": "Use case 17"
+          },
+          "useCaseDescription": {
+            "S": "This is a test for use case 17"
+          },
+          "author": {
+            "S": "Benjamin Hayes"
+          },
+          "analysisTypes": {
+            "L": [
+              {
+                "S": "Autocorrelation"
+              }
+            ]
+          },
+          "powerBILink": {
+            "S": "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "requestID": {
+            "S": "18"
+          },
+          "id": {
+            "S": "ls2bvs1do8n44"
+          },
+          "creationDate": {
+            "N": "1705355877550"
+          },
+          "useCaseStatus": {
+            "S": "Failed"
+          },
+          "useCaseName": {
+            "S": "Use case 18"
+          },
+          "useCaseDescription": {
+            "S": "This is a test for use case 18"
+          },
+          "author": {
+            "S": "Olivia Bennett"
+          },
+          "analysisTypes": {
+            "L": [
+              {
+                "S": "Autocorrelation"
+              },
+              {
+                "S": "Rolling Std Deviation"
+              },
+              {
+                "S": "Rolling Mean"
+              }
+            ]
+          },
+          "powerBILink": {
+            "S": "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "requestID": {
+            "S": "19"
+          },
+          "id": {
+            "S": "ls2bvs1d8yocb"
+          },
+          "creationDate": {
+            "N": "1693716860901"
+          },
+          "useCaseStatus": {
+            "S": "Complete"
+          },
+          "useCaseName": {
+            "S": "Use case 19"
+          },
+          "useCaseDescription": {
+            "S": "This is a test for use case 19"
+          },
+          "author": {
+            "S": "Olivia Bennett"
+          },
+          "analysisTypes": {
+            "L": [
+              {
+                "S": "Rolling Mean"
+              },
+              {
+                "S": "Rolling Std Deviation"
+              },
+              {
+                "S": "Autocorrelation"
+              }
+            ]
+          },
+          "powerBILink": {
+            "S": "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "requestID": {
+            "S": "20"
+          },
+          "id": {
+            "S": "ls2bvs1dzj7t3"
+          },
+          "creationDate": {
+            "N": "1704482751084"
+          },
+          "useCaseStatus": {
+            "S": "InProgress"
+          },
+          "useCaseName": {
+            "S": "Use case 20"
+          },
+          "useCaseDescription": {
+            "S": "This is a test for use case 20"
+          },
+          "author": {
+            "S": "Benjamin Hayes"
+          },
+          "analysisTypes": {
+            "L": [
+              {
+                "S": "Rolling Mean"
+              },
+              {
+                "S": "Rolling Std Deviation"
+              }
+            ]
+          },
+          "powerBILink": {
+            "S": "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "requestID": {
+            "S": "21"
+          },
+          "id": {
+            "S": "ls2bvs1ddfv6j"
+          },
+          "creationDate": {
+            "N": "1704837176703"
+          },
+          "useCaseStatus": {
+            "S": "InProgress"
+          },
+          "useCaseName": {
+            "S": "Use case 21"
+          },
+          "useCaseDescription": {
+            "S": "This is a test for use case 21"
+          },
+          "author": {
+            "S": "James Mitchell"
+          },
+          "analysisTypes": {
+            "L": [
+              {
+                "S": "Rolling Std Deviation"
+              },
+              {
+                "S": "Rolling Mean"
+              }
+            ]
+          },
+          "powerBILink": {
+            "S": "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "requestID": {
+            "S": "22"
+          },
+          "id": {
+            "S": "ls2bvs1dh9twk"
+          },
+          "creationDate": {
+            "N": "1705687915618"
+          },
+          "useCaseStatus": {
+            "S": "Failed"
+          },
+          "useCaseName": {
+            "S": "Use case 22"
+          },
+          "useCaseDescription": {
+            "S": "This is a test for use case 22"
+          },
+          "author": {
+            "S": "James Mitchell"
+          },
+          "analysisTypes": {
+            "L": [
+              {
+                "S": "Autocorrelation"
+              },
+              {
+                "S": "Rolling Mean"
+              },
+              {
+                "S": "Rolling Std Deviation"
+              }
+            ]
+          },
+          "powerBILink": {
+            "S": "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "requestID": {
+            "S": "23"
+          },
+          "id": {
+            "S": "ls2bvs1dtnj3r"
+          },
+          "creationDate": {
+            "N": "1698500908279"
+          },
+          "useCaseStatus": {
+            "S": "InProgress"
+          },
+          "useCaseName": {
+            "S": "Use case 23"
+          },
+          "useCaseDescription": {
+            "S": "This is a test for use case 23"
+          },
+          "author": {
+            "S": "Benjamin Hayes"
+          },
+          "analysisTypes": {
+            "L": [
+              {
+                "S": "Autocorrelation"
+              },
+              {
+                "S": "Rolling Mean"
+              }
+            ]
+          },
+          "powerBILink": {
+            "S": "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "requestID": {
+            "S": "24"
+          },
+          "id": {
+            "S": "ls2bvs1d2laos"
+          },
+          "creationDate": {
+            "N": "1700764615246"
+          },
+          "useCaseStatus": {
+            "S": "Failed"
+          },
+          "useCaseName": {
+            "S": "Use case 24"
+          },
+          "useCaseDescription": {
+            "S": "This is a test for use case 24"
+          },
+          "author": {
+            "S": "James Mitchell"
+          },
+          "analysisTypes": {
+            "L": [
+              {
+                "S": "Rolling Std Deviation"
+              },
+              {
+                "S": "Rolling Mean"
+              },
+              {
+                "S": "Autocorrelation"
+              }
+            ]
+          },
+          "powerBILink": {
+            "S": "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "requestID": {
+            "S": "25"
+          },
+          "id": {
+            "S": "ls2bvs1ddqthw"
+          },
+          "creationDate": {
+            "N": "1693569873723"
+          },
+          "useCaseStatus": {
+            "S": "NotStarted"
+          },
+          "useCaseName": {
+            "S": "Use case 25"
+          },
+          "useCaseDescription": {
+            "S": "This is a test for use case 25"
+          },
+          "author": {
+            "S": "Sophia Turner"
+          },
+          "analysisTypes": {
+            "L": [
+              {
+                "S": "Rolling Std Deviation"
+              }
+            ]
+          },
+          "powerBILink": {
+            "S": "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'"
+          }
         }
       }
     }

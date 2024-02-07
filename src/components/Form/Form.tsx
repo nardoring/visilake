@@ -58,13 +58,13 @@ export default function Form() {
       getValidTags().length !== 0 &&
       useCaseDescription.trim() !== ""
     ) {
-      const analysisTypeIDs: number[] = analysisTypes.map((type) => type.value);
+      const analysisTypeNames: string[] = analysisTypes.map((type) => type.label);
       try {
         await useCaseSubmission.mutateAsync({
           tags: getValidTags(),
           useCaseDescription: useCaseDescription,
           useCaseName: useCaseTitle,
-          analysisTypeIds: analysisTypeIDs,
+          analysisTypes: analysisTypeNames,
         });
         setFormSuccess(true);
       } catch (error) {

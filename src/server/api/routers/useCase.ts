@@ -59,12 +59,12 @@ export const useCaseRouter = createTRPCRouter({
         tags: z.array(z.string()).refine((data) => data.length > 0, {
           message: "tags should not be empty",
         }),
-        analysisTypeIds: z
-          .array(z.number().positive())
+        analysisTypes: z
+          .array(z.string())
           .refine((data) => data.length > 0, {
             message:
-              "analysisTypeIds should not be empty and should only contain positive numbers",
-          }),
+              "analysisTypes should not be empty",
+        }),
       }),
     )
     .mutation(async ({ input }) => {
@@ -114,26 +114,34 @@ export const useCaseRouter = createTRPCRouter({
             S: requestID,
           },
           creationDate: {
-            N: "" + Date.now(),
+            N: Date.now().toString(),
           },
-          status: {
+          useCaseStatus: {
             S: status,
           },
-          name: {
+          useCaseName: {
             S: input.useCaseName,
           },
-          description: {
+          useCaseDescription: {
             S: input.useCaseDescription,
           },
+          author: {
+            // S: input.author, // TODO do we have author name yet?
+            S: "Test Author",
+          },
           analysisTypes: {
-            L: input.analysisTypeIds.map((id) => ({
-              N: id.toString(),
+            L: input.analysisTypes.map((type) => ({
+              S: type, // TODO check
             })),
           },
           tags: {
             L: input.tags.map((tag) => ({
               S: tag,
             })),
+          },
+          powerBILink: {
+            // S: input.powerBILink, // TODO fix later
+            S: "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'",
           },
         },
       };

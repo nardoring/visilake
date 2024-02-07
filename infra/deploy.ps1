@@ -137,9 +137,4 @@ Write-Output "Tables: $tables\n"
 $queues = awslocal sqs list-queues
 Write-Output "Queues: $queues\n"
 
-# Add mock records
-Write-Output "Adding Mock Records"
-awslocal dynamodb put-item --table-name analysisTypes --item file://./infra/analysisTypes/autocorrection.json
-awslocal dynamodb put-item --table-name analysisTypes --item file://./infra/analysisTypes/rollingMean.json
-awslocal dynamodb put-item --table-name analysisTypes --item file://./infra/analysisTypes/rollingStdDeviation.json
 awslocal dynamodb batch-write-item --request-items file://./infra/useCases/mockUseCasesBatchCommand.json

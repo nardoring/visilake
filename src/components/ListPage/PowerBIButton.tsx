@@ -18,6 +18,7 @@ export default function PowerBIButton({ link, status }: PowerBIButtonProps) {
     };
 
   const isDisabled = status !== "Complete";
+  const powerBiIconFilePath = isDisabled ? "/Power-BI-Gray.png" : "/Power-BI.png";
 
   return (
     <button
@@ -27,7 +28,7 @@ export default function PowerBIButton({ link, status }: PowerBIButtonProps) {
       onClick={handleCopyClick}
       disabled={isDisabled}
     >
-      <Image src="/Power-BI.png" width={24} height={24} alt="" className="mr-2" />
+      <Image src={powerBiIconFilePath} width={24} height={24} alt="" className="mr-2" />
       Copy PowerBI Link
     </button>
   );

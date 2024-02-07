@@ -1,5 +1,5 @@
 export interface DynamoScan<T> {
   Items: T[];
-  Count: Number;
-  ScannedCount: Number;
+  Count: number;
+  ScannedCount: number;
 }

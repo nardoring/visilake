@@ -2,7 +2,7 @@ import AWS from "aws-sdk";
 import { createTRPCRouter, publicProcedure } from "../trpc";
 import mapAnalysisTypes from "~/mappers/analysisTypeMapper";
 import type { AnalysisType } from "~/models/db/analysisType";
-import { DynamoScan } from "~/models/db/dynamoScan";
+import type { DynamoScan } from "~/models/db/dynamoScan";
 
 const DYNAMODB_TABLE = "analysisTypes";
 

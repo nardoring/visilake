@@ -226,6 +226,22 @@ Resources:
         - AttributeName: requestID
           KeyType: RANGE
 
+  analysisTypes:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: analysisTypes
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: id
+          AttributeType: S
+        - AttributeName: name
+          AttributeType: S
+      KeySchema:
+        - AttributeName: id
+          KeyType: HASH
+        - AttributeName: name
+          KeyType: RANGE
+
   # SQS Queue
   requestQueue:
     Type: AWS::SQS::Queue

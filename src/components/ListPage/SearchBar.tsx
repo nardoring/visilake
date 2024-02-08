@@ -26,7 +26,7 @@ export default function SearchBar({ setGlobalFilter }: SearchBarProps) {
         />
       </div>
       <button
-        className="ml-4 rounded bg-blue-600 px-4 py-2 text-white shadow-md"
+        className="ml-4 rounded bg-blue-600 px-4 py-2 text-white shadow-md hover:bg-blue-700"
         type="submit"
         onClick={() => {
           void router.push("/");

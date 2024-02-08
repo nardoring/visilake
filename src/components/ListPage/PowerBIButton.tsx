@@ -44,7 +44,7 @@ export default function PowerBIButton({ link, status }: PowerBIButtonProps) {
         className={`ml flex items-center rounded px-4 py-2 font-medium shadow-md ${
           isDisabled
             ? "text-gray cursor-not-allowed bg-gray-300"
-            : "bg-[#f2c811] text-black"
+            : "bg-[#f6d955] text-black hover:bg-[#f4ce25]"
         }`}
         onClick={handleCopyClick}
         disabled={isDisabled}

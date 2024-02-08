@@ -136,7 +136,7 @@ export default function Form() {
         </div>
         <div className="col-span-2 flex justify-center">
           <button
-            className="rounded bg-darkBlue px-4 py-2 text-white shadow-md"
+            className="rounded bg-veryDarkBlue px-4 py-2 text-white shadow-md hover:bg-darkBlue"
             type="submit"
           >
             Submit Use Case

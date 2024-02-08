@@ -7,29 +7,39 @@ interface PowerBIButtonProps {
   status: string;
 }
 
+const toastProperties = {
+  osition: "bottom-right",
+  autoClose: 3000,
+  hideProgressBar: false,
+  closeOnClick: true,
+  pauseOnHover: true,
+  draggable: true,
+  progress: undefined,
+  theme: "light",
+  transition: Bounce,
+};
+
 export default function PowerBIButton({ link, status }: PowerBIButtonProps) {
-  const notifyLinkCopied = () => {
-    toast.success("PowerBI Link Copied", {
-      position: "bottom-right",
-      autoClose: 3000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "light",
-      transition: Bounce,
-    });
+  const notifyLinkCopied = (success: boolean) => {
+    if (success) {
+      toast.success("PowerBI Link Copied", {
+        ...toastProperties,
+      });
+    } else {
+      toast.error("Unable to Copy PowerBI Link", {
+        ...toastProperties,
+      });
+    }
   };
 
   const handleCopyClick = () => {
     navigator.clipboard
       .writeText(link)
       .then(() => {
-        notifyLinkCopied();
+        notifyLinkCopied(true);
       })
       .catch(() => {
-        //console.error('Unable to copy link to clipboard', error);
+        notifyLinkCopied(false);
       });
   };
 

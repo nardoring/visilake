@@ -82,15 +82,6 @@ export default function UseCaseTable() {
       },
     },
     {
-      accessorKey: "date",
-      header: "Date Created",
-      size: (1920 / 10) * 1,
-      cell: (props: { getValue: () => Date }) => {
-        return <p>{formatDate(props.getValue())}</p>;
-      },
-      sortType: "datetime",
-    },
-    {
       accessorKey: "author",
       header: "Created By",
       size: (1920 / 10) * 1,
@@ -106,9 +97,18 @@ export default function UseCaseTable() {
       },
     },
     {
+      accessorKey: "date",
+      header: "Date Created",
+      size: (1920 / 10) * 1.1,
+      cell: (props: { getValue: () => Date }) => {
+        return <p>{formatDate(props.getValue())}</p>;
+      },
+      sortType: "datetime",
+    },
+    {
       accessorKey: "useCaseStatus",
       header: "Status",
-      size: (1920 / 10) * 0.75,
+      size: (1920 / 10) * 0.5,
       cell: (props: { getValue: () => string }) => (
         <StatusChip status={props.getValue()} />
       ),

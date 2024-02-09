@@ -11,8 +11,8 @@
     self,
     nixpkgs,
     localstack,
-    ...
     # rust-overlay,
+    ...
   }: let
     system = "x86_64-linux";
     pkgs = import nixpkgs {
@@ -21,8 +21,32 @@
       # overlays = [rust-overlay.overlays.default];
     };
 
-    # Pull Localstack Docker Image
-    localstackImage = pkgs.dockerTools.pullImage {
+    nardo = pkgs.buildNpmPackage {
+      # https://create.t3.gg/en/deployment/docker
+      pname = "nardo-web";
+      version = "0.1.0";
+      src = ./.;
+      # npmDepsHash = "sha256-wLnTg1BLf1AKN+G/lmZ9/Mf3ZeIsm7zcE4+SsH5dwwU=";
+      npmDepsHash = "sha256-9x2s2mD5SMTmBfzdTEP9CcC7tUnc4Jm2Rz8bLGs6rrs=";
+
+      npmBuild = "SKIP_ENV_VALIDATION=1 npm run build";
+
+      npmPackFlags = ["--ignore-scripts"];
+
+      installPhase = ''
+        mkdir -p $out/app
+
+        cp -r .next $out/app/.next
+        cp -r .next/standalone/* $out/app/
+        cp -r .next/static $out/app/.next/static
+        cp -r public $out/app/public
+
+        cp package.json $out/app/
+        cp next.config.mjs $out/app/
+      '';
+    };
+
+    localstackpro-image = pkgs.dockerTools.pullImage {
       imageName = "localstack/localstack-pro";
       imageDigest = "sha256:b6bb4d7b1209b47daccd2d58e669b0fb19ace3ecd98572ec6e3e75921768f6f6";
       sha256 = "sha256-oJlIFsIRtvZSLtABjapc+ZJeJUcDi+xhct/H3o/5pck=";
@@ -30,40 +54,41 @@
       finalImageTag = "latest";
     };
 
-    # Load Localstack Docker Image
-    load-image = pkgs.writeShellApplication {
-      name = "load-image";
-      text = ''
-        echo "Loading the Localstack Docker image..."
-        docker load < "$(nix path-info .#localstackImage)"
-      '';
-    };
+    nardo-image = pkgs.dockerTools.buildImage {
+      name = "nardo";
+      tag = "latest";
 
-    nardo = pkgs.buildNpmPackage {
-      pname = "nardo-web";
-      version = "0.1.0";
-      src = ./.;
-      npmDepsHash = "sha256-bDtTlun5Oq2hW/Qny2XSDooVx5KMeNEA5qhfHmTKkcg=";
-      npmPackFlags = ["--ignore-scripts"];
+      copyToRoot = pkgs.buildEnv {
+        name = "nardo";
+        paths = [
+          nardo
+          pkgs.nodejs
+        ];
+        pathsToLink = ["/bin /app"];
+      };
+
+      runAsRoot = ''
+        #!${pkgs.runtimeShell}
+        ${pkgs.dockerTools.shadowSetup}
+        groupadd --system --gid 1001 nodejs
+        useradd --system --uid 1001 --gid nodejs nextjs
+      '';
+
+      config = {
+        Cmd = ["${pkgs.nodejs}/bin/node" "server.js"];
+        ExposedPorts = {
+          "3000/tcp" = {};
+        };
+        Env = [
+          # add other environment variables
+          "NODE_ENV=production"
+          "NEXT_TELEMETRY_DISABLED=1"
+        ];
+        WorkingDir = "/app";
+        User = "nextjs";
+      };
     };
-    # TODO get this working
-    # nardoImage = pkgs.dockerTools.buildImage {
-    #   name = "nardo-web-app";
-    #   tag = "latest";
-    #   created = "now";
-    #   copyToRoot = pkgs.buildEnv {
-    #     name = "image-root";
-    #     paths = [pkgs.nodejs nardo];
-    #     pathsToLink = ["/"];
-    #   };
-    #   config = {
-    #     WorkingDir = "/app";
-    #     ExposedPorts = {
-    #       "3000/tcp" = {};
-    #     };
-    #     Cmd = ["node" "server.js"];
-    #   };
-    # };
+    #
     #
   in {
     devShells.${system}.default = pkgs.mkShell {
@@ -97,10 +122,9 @@
     };
 
     packages.${system} = {
-      localstackImage = localstackImage;
-      load-image = load-image;
       nardo = nardo;
-      # nardoImage = nardoImage;
+      nardo-image = nardo-image;
+      localstackpro-image = localstackpro-image;
     };
   };
 }

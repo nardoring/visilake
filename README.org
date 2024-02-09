@@ -1,36 +1,48 @@
 * Nardo Web
 
-** Localstack Usage
+The easiest way to deploy the nardo-web application is by using the =nix= package manager along with our deploy script.
+
+[[file:flake.nix][flake.nix]] provides the necessary dependencies, builds the nodejs application, packages the nodejs application in a docker container, pulls the [[https://www.localstack.cloud/][Localstack]]-pro docker image, and sets the necessary environment variables to deploy the test environment.
+
+    We provide comprehensive instructions for a windows deployment through =WSL2= in our [[https://github.com/nardoring/devenv][devenv]] repository.
+
+
+** Deployment
+
+From the project root on a linux machine:
 
 #+begin_src shell
-# Check dependencies
-make install
-
-# Start LocalStack in detached (preferred) mode
-# Build and deploy the app locally
-make run
-
-# Stop and remove created containers
-make clean
-
-# Output LocalStack logs to logs.txt
-make logs
+chmod +x ./infra/deploy
+./infra/deploy
 #+end_src
 
-The app will be deployed to [[http://localhost:45139]]
+The web app will be deployed to [[http://localhost:45139]]
 
-*** Prerequisites
-Docker
-Localstack
-[[https://docs.aws.amazon.com/cli/v1/userguide/cli-chap-install.html][awscli v1]] (do not use v2)
-[[https://github.com/localstack/awscli-local][awscli-local]]
+For an outline of the current AWS services used see the [[file:./infra/README.org][infrastructure readme]].
 
-*** AWS Networking
 
-- Private VPC subnet without direct internet access
+** Stopping the deployed services
 
-- AWS Fargate for hands-off container execution without managing EC2 instances
+To stop the localstack docker containers and any additional containers it has spawned we have a stop script:
 
-- A private, internal load balancer that only accepts traffic from other containers in the cluster
+#+begin_src shell
+./infra/stop
+#+end_src
 
-[[file:./infra/res/private-task-private-loadbalancer.svg]]
+It is wise to prune any unneeded images afterwards. If you do not have other docker containers you'd like to maintain you can simply run the following commands:
+
+#+begin_src shell
+localstack stop && docker system prune -af
+#+end_src
+
+
+** Prerequisites
+This section is only for non-=nix= based deployments.
+
+Note that we not longer provide a =Dockerfile= or =docker-compose.yml= for this project, but one can be found on an older branch. We do not currently support this method.
+
+- [[https://www.docker.com/][Docker]]
+- [[https://docs.docker.com/get-started/08_using_compose/][Docker Compose]]
+- [[https://localstack.cloud][Localstack]]
+- [[https://docs.aws.amazon.com/cli/v1/userguide/cli-chap-install.html][awscli v1]] (do not use v2)
+- [[https://github.com/localstack/awscli-local][awscli-local]]

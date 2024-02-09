@@ -1,33 +1,42 @@
 #!/usr/bin/env bash
 set -e  # Exit immediately if a command exits with a non-zero status
 
+echo "Loading the Localstack Pro Docker image..."
+docker load < "$(nix build --print-out-paths .#localstackpro-image)"
+
+echo "Building and loading the nardo Docker image..."
+docker load < "$(nix build --print-out-paths .#nardo-image)"
+
 echo "Starting Localstack daemon"
 localstack start -d
-echo "Waiting for LocalStack startup..."
-localstack wait -t 30 || exit 1
-echo "Startup complete"
+
+echo "Removing the localstack non-pro Docker image"
+docker rmi localstack/localstack:latest
 
 echo "Creating a new ECR repository locally"
 repoUri=$(awslocal ecr create-repository --repository-name repo1 | jq -r '.repository.repositoryUri')
 
-if [ "$repoUri" != "" ]; then
-    echo -e "Repo URI: $repoUri"
-
-    echo "Building the Docker image, pushing it to local ECR URL: $repoUri"
-    sleep 3
-    export REPO_URI="$repoUri"
-    docker compose build nardo || exit 1 # Exit if Docker Compose build fails.
-    docker ps
-    sleep 5
-    docker compose push nardo
-    docker rmi "$REPO_URI"
-else
+if [ "$repoUri" == "" ]; then
     echo -e "\033[1;33mFailed to create a new ECR repository locally \033[0m\n"
     exit 1
+else
+    echo -e "Repo URI: $repoUri"
+
+    echo "Tagging the Docker image: $repoUri"
+    localImageName="nardo:latest"
+    docker tag $localImageName "$repoUri"
+
+    echo "Pushing the Docker image to local ECR URL: $repoUri"
+    docker push "$repoUri"
+
+    echo "Removing the local nardo Docker image"
+    # docker rmi "$localImageName"
+    docker rmi nardo:latest
 fi
 
 echo "Creating ECS infrastructure locally"
-awslocal cloudformation create-stack --stack-name infra --template-body file://infra/private.vpc.yml
+awslocal cloudformation create-stack --stack-name infra \
+    --template-body file://infra/private.vpc.yml
 awslocal cloudformation wait stack-create-complete --stack-name infra
 
 echo "Deploying ECS app to local environment"

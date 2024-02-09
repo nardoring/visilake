@@ -14,11 +14,10 @@ export function formatDate(rawDate: Date) {
     hour12: false,
   };
 
-  // 'en-US' to ensure consistent formatting with leading zeros
   const formattedDate =
-    dateObject.toLocaleDateString("en-US", optionsDate) +
+    dateObject.toLocaleDateString("en-CA", optionsDate) +
     " " +
-    dateObject.toLocaleTimeString("en-US", optionsTime);
+    dateObject.toLocaleTimeString("en-CA", optionsTime);
 
   return formattedDate;
 }

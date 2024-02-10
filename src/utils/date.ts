@@ -13,7 +13,10 @@ export function formatDate(rawDate: Date) {
     hour12: true,
   };
 
-  const formattedDate = dateObject.toLocaleString([], optionsDate) + " " + dateObject.toLocaleTimeString([], optionsTime);
-  
+  const formattedDate =
+    dateObject.toLocaleString([], optionsDate) +
+    " " +
+    dateObject.toLocaleTimeString([], optionsTime);
+
   return formattedDate;
 }

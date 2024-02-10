@@ -102,7 +102,7 @@ export default function UseCaseTable() {
       accessorKey: "date",
       header: "Date Created",
       size: (1920 / 10) * 1,
-      cell: (props: { getValue: () => Date}) => {
+      cell: (props: { getValue: () => Date }) => {
         return <p>{formatDate(props.getValue())}</p>;
       },
       sortType: "datetime",
@@ -147,10 +147,10 @@ export default function UseCaseTable() {
     initialState: {
       sorting: [
         {
-          id: 'date',
+          id: "date",
           desc: true,
-        }
-      ]
+        },
+      ],
     },
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
@@ -205,7 +205,9 @@ export default function UseCaseTable() {
                     {/* Sorting Button */}
                     {typeof header.column.columnDef.header === "string" &&
                       sortableColumns.has(header.column.columnDef.header) && (
-                        <ColumnSortButton columnSortToggle={header.column.getToggleSortingHandler()}/>
+                        <ColumnSortButton
+                          columnSortToggle={header.column.getToggleSortingHandler()}
+                        />
                       )}
                     <div
                       onMouseDown={header.getResizeHandler()}
@@ -224,7 +226,9 @@ export default function UseCaseTable() {
               <tr
                 key={row.id}
                 className={`${
-                  table.getRowModel().rows.indexOf(row) % 2 === 0 ? "bg-white" : "bg-lightIndigo"
+                  table.getRowModel().rows.indexOf(row) % 2 === 0
+                    ? "bg-white"
+                    : "bg-lightIndigo"
                 } h-[4.28rem]`}
               >
                 {row.getVisibleCells().map((cell) => (

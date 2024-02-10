@@ -59,11 +59,8 @@ export const useCaseRouter = createTRPCRouter({
         tags: z.array(z.string()).refine((data) => data.length > 0, {
           message: "tags should not be empty",
         }),
-        analysisTypes: z
-          .array(z.string())
-          .refine((data) => data.length > 0, {
-            message:
-              "analysisTypes should not be empty",
+        analysisTypes: z.array(z.string()).refine((data) => data.length > 0, {
+          message: "analysisTypes should not be empty",
         }),
       }),
     )

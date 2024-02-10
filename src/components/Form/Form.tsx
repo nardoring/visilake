@@ -4,6 +4,7 @@ import FormPopup from "./FormPopup";
 import { MultiSelect } from "react-multi-select-component";
 import { api } from "~/utils/api";
 import type { AnalysisTypeOption, Tag } from "~/utils/types";
+import LoadingIcon from "./LoadingIcon";
 
 export default function Form() {
   const inputStyles =
@@ -21,7 +22,6 @@ export default function Form() {
   const [showPopup, setShowPopup] = useState(false);
   const [formSuccess, setFormSuccess] = useState(false);
 
-
   const analysisTypeOptions: AnalysisTypeOption[] = analysisTypeOptionsIsLoading
     ? []
     : analysisTypeOptionsData?.types?.map(
@@ -36,7 +36,9 @@ export default function Form() {
   };
 
   const getValidTags = (): string[] => {
-    return tags.filter((tag) => tag.isValid === true).map((tag) => tag.name) || [];
+    return (
+      tags.filter((tag) => tag.isValid === true).map((tag) => tag.name) || []
+    );
   };
 
   // Prevent Enter key from submitting the form
@@ -58,7 +60,9 @@ export default function Form() {
       getValidTags().length !== 0 &&
       useCaseDescription.trim() !== ""
     ) {
-      const analysisTypeNames: string[] = analysisTypes.map((type) => type.label);
+      const analysisTypeNames: string[] = analysisTypes.map(
+        (type) => type.label,
+      );
       try {
         await useCaseSubmission.mutateAsync({
           tags: getValidTags(),
@@ -76,7 +80,11 @@ export default function Form() {
   }
 
   return (
-    <form className="mx-auto max-w-screen-md p-4 " onSubmit={handleSubmit} id="useSubmissionCaseForm">
+    <form
+      className="mx-auto max-w-screen-md p-4 "
+      onSubmit={handleSubmit}
+      id="useSubmissionCaseForm"
+    >
       <div className="font-nunito mt-10 grid grid-cols-2 gap-x-6 gap-y-4 rounded border border-slate-400 bg-lightBlue p-4 font-medium shadow-md">
         <div>
           <label htmlFor="useCaseTitle">Use Case Title</label>
@@ -134,15 +142,20 @@ export default function Form() {
             onChange={(e) => setUseCaseDescription(e.target.value)}
           />
         </div>
-        <div className="col-span-2 flex justify-center">
+        <div className="col-span-2 flex justify-center ">
           <button
-            className="rounded bg-darkBlue px-4 py-2 text-white shadow-md"
+            className="flex w-40 items-center justify-center rounded bg-veryDarkBlue px-4 py-2 text-white shadow-md hover:bg-darkBlue"
             type="submit"
+            disabled={useCaseSubmission.isLoading}
           >
-            Submit Use Case
+            {useCaseSubmission.isLoading ? <LoadingIcon /> : "Submit Use Case"}
           </button>
         </div>
-        <FormPopup formSuccess={formSuccess} showPopup={showPopup} setShowPopup={setShowPopup}/>
+        <FormPopup
+          formSuccess={formSuccess}
+          showPopup={showPopup}
+          setShowPopup={setShowPopup}
+        />
       </div>
     </form>
   );

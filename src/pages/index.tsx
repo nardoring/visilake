@@ -1,11 +1,12 @@
 import Background from "../components/Background";
-import Navbar from "../components/Navbar";
 import Form from "../components/Form/Form";
+import Navbar from "../components/Navbar";
+
 
 export default function FormPage() {
   return (
     <>
-      <main className="min-h-screen ">
+      <main className="min-h-screen grid-container">
         <Background />
         <Navbar />
         <Form />

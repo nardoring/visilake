@@ -12,13 +12,13 @@ export default function SearchBar({ setGlobalFilter }: SearchBarProps) {
   const router = useRouter();
 
   return (
-    <div className="flex items-center justify-between bg-lightIndigo p-5 ">
-      <div className="relative">
+    <div className="z-40 flex items-center pl-5 w-full justify-left p-5 ">
+      <div className="relative shadow-xl">
         <span className="absolute inset-y-0 left-0 flex items-center pl-1.5">
           <FontAwesomeIcon icon={faMagnifyingGlass} />
         </span>
         <input
-          className="block min-w-[20vw] rounded-md border border-black bg-darkIndigo py-1.5 pl-7 text-gray-900 shadow-sm focus:ring-2 focus:ring-inset focus:ring-indigo-300"
+          className="block min-w-[10vw] rounded-md border border-black bg-veryLightBlue py-1.5 pl-7 text-gray-900 shadow-sm focus:ring-offset-2 focus:ring-4 focus:ring-boldBlue-300"
           type="text"
           onChange={(e) => {
             setGlobalFilter(e.target.value);
@@ -26,7 +26,7 @@ export default function SearchBar({ setGlobalFilter }: SearchBarProps) {
         />
       </div>
       <button
-        className="ml-4 rounded bg-blue-600 px-4 py-2 text-white shadow-md hover:bg-blue-700"
+        className="block min-w-[10vw] ml-4 rounded bg-blue-600 px-4 py-2 text-white shadow-md hover:bg-blue-700"
         type="submit"
         onClick={() => {
           void router.push("/");

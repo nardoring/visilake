@@ -5,10 +5,11 @@ import { MultiSelect } from "react-multi-select-component";
 import { api } from "~/utils/api";
 import type { AnalysisTypeOption, Tag } from "~/utils/types";
 import LoadingIcon from "./LoadingIcon";
+import { Tooltip } from 'react-tooltip'
 
 export default function Form() {
   const inputStyles =
-    "block w-full rounded-md border-0 py-1.5 pl-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-300";
+    "sticky top-0 col-start-2 col-end-9 block w-full rounded-md border-0 py-1.5 pl-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-300";
 
   const [useCaseTitle, setUseCaseTitle] = useState("");
   const [tags, setTags] = useState<Tag[]>([]);
@@ -81,11 +82,11 @@ export default function Form() {
 
   return (
     <form
-      className="mx-auto max-w-screen-md p-4 "
+      className="z-40 col-start-2 col-end-9 row-start-3 row-span-6 p-4 "
       onSubmit={handleSubmit}
       id="useSubmissionCaseForm"
     >
-      <div className="font-nunito mt-10 grid grid-cols-2 gap-x-6 gap-y-4 rounded border border-slate-400 bg-lightBlue p-4 font-medium shadow-md">
+      <div className="font-nunito mt-12 grid grid-cols-2 gap-x-6 gap-y-4 rounded border border-slate-400 bg-veryLightGrey p-4 font-medium shadow-md">
         <div>
           <label htmlFor="useCaseTitle">Use Case Title</label>
           <input
@@ -101,7 +102,11 @@ export default function Form() {
           />
         </div>
         <div>
-          <label htmlFor="analysisType">Analysis Type(s)</label>
+          <label
+            data-tooltip-id="types"
+            data-tooltip-content="TODO"
+            htmlFor="analysisType">Analysis Type(s)</label>
+          <Tooltip id="types" />
           <MultiSelect
             options={analysisTypeOptions}
             value={analysisTypes}
@@ -148,7 +153,7 @@ export default function Form() {
             type="submit"
             disabled={useCaseSubmission.isLoading}
           >
-            {useCaseSubmission.isLoading ? <LoadingIcon /> : "Submit Use Case"}
+            {useCaseSubmission.isLoading ? <LoadingIcon /> : "Submit"}
           </button>
         </div>
         <FormPopup

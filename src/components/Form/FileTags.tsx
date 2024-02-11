@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import FileTag from "./FileTag";
 import type { Tag } from "~/utils/types";
 import { isKeyboardEvent } from "~/utils/keyboardEvent";
+import { Tooltip } from 'react-tooltip'
 
 interface FileTagsProps {
   getTags: () => Tag[];
@@ -50,7 +51,11 @@ const FileTags  = ({ getTags, setTags, inputStyles }: FileTagsProps) => {
 
   return (
     <>
-      <label htmlFor="fileTags">File Tags</label>
+      <label
+        data-tooltip-id="tags"
+        data-tooltip-content="TODO"
+        htmlFor="fileTags">Tags</label>
+      <Tooltip id="tags" />
       <input
         className={inputStyles}
         type="text"

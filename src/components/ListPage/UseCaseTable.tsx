@@ -1,4 +1,5 @@
-import { api } from "~/utils/api";
+import React, { useState } from 'react';
+import { api } from "~/utils/api"
 import StatusChip from "./StatusChip";
 import { formatDate } from "~/utils/date";
 import SearchBar from "./SearchBar";
@@ -15,7 +16,6 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import type { ColumnFilter, Row } from "@tanstack/react-table";
-import { useState } from "react";
 import type { UseCase } from "~/models/domain/useCase";
 import FilterDropdown from "./FilterDropdown";
 import ColumnSortButton from "./ColumnSortButton";
@@ -26,7 +26,7 @@ export default function UseCaseTable() {
     "Created By",
     "Analysis Types",
   ]);
-  const sortableColumns = new Set(["Date Created"]);
+  const sortableColumns = new Set(["Created"]);
   const [queryExecuted, setQueryExecuted] = useState<boolean>(false);
   const [globalFilter, setGlobalFilter] = useState<string>("");
   const [columnFilters, setColumnFilters] = useState<ColumnFilter[]>([]);
@@ -37,8 +37,8 @@ export default function UseCaseTable() {
   const analysisTypeOptions: string[] = analysisTypeOptionsIsLoading
     ? []
     : analysisTypeOptionsData?.types?.map(
-        (option: { name: string }) => option.name,
-      ) ?? [];
+      (option: { name: string }) => option.name,
+    ) ?? [];
 
   const { data, isLoading } = api.useCase.getUseCases.useQuery(undefined, {
     enabled: !queryExecuted,
@@ -50,16 +50,16 @@ export default function UseCaseTable() {
   const columns = [
     {
       accessorKey: "useCaseName",
-      header: "Use Case Name",
-      size: (1920 / 10) * 1,
+      header: "Job Name",
+      size: (1920 / 10) * 1.1,
       cell: (props: { getValue: () => string }) => (
-        <p className="font-medium">{props.getValue()}</p>
+        <p>{props.getValue()}</p>
       ),
     },
     {
       accessorKey: "useCaseDescription",
       header: "Description",
-      size: (1920 / 10) * 2,
+      size: (1920 / 10) * 4,
       cell: (props: { getValue: () => string }) => <p>{props.getValue()}</p>,
     },
     {
@@ -84,7 +84,7 @@ export default function UseCaseTable() {
     {
       accessorKey: "useCaseStatus",
       header: "Status",
-      size: (1920 / 10) * 0.75,
+      size: (1920 / 10) * 1,
       cell: (props: { getValue: () => string }) => (
         <StatusChip status={props.getValue()} />
       ),
@@ -100,16 +100,16 @@ export default function UseCaseTable() {
     },
     {
       accessorKey: "date",
-      header: "Date Created",
-      size: (1920 / 10) * 1,
-      cell: (props: { getValue: () => Date}) => {
+      header: "Created",
+      size: (1920 / 10) * 2,
+      cell: (props: { getValue: () => Date }) => {
         return <p>{formatDate(props.getValue())}</p>;
       },
       sortType: "datetime",
     },
     {
       accessorKey: "author",
-      header: "Created By",
+      header: "Author",
       size: (1920 / 10) * 1,
       cell: (props: { getValue: () => string }) => <p>{props.getValue()}</p>,
       filterFn: (
@@ -124,8 +124,8 @@ export default function UseCaseTable() {
     },
     {
       accessorKey: "powerBILink",
-      header: "Power BI Data Link",
-      size: (1920 / 10) * 4.5,
+      header: "Power BI",
+      size: (1920 / 10) * 0.7,
       cell: (props: { getValue: () => string; row: Row<UseCase> }) => (
         <PowerBIButton
           link={props.getValue()}
@@ -164,19 +164,24 @@ export default function UseCaseTable() {
   if (isLoading) {
     // Render a loading indicator or message
     return (
-      <div className="fixed flex h-full w-full items-center justify-center bg-lightIndigo">
-        <p className="pb-80 text-black">Loading Data...</p>
+      <div className="z-40 fixed flex h-full w-full items-center justify-center bg-lightIndigo/70">
+        <p className="z-40 pb-80 text-black">Loading Data...</p>
       </div>
     );
   }
+
+  {/* <div className="absolute sticky top-100 z-40" > */ }
   return (
-    <div>
-      <SearchBar setGlobalFilter={setGlobalFilter} />
-      <div className="font-nunito table w-full overflow-x-auto bg-lightIndigo">
-        <table
-          className="w-full"
-          style={{ width: `${table.getTotalSize()}px` }}
-        >
+    <div className="col-start-2 col-end-9 row-start-2 row-end-4 pt-2" >
+      <div className="fixed z-40 mb-8" >
+        <SearchBar setGlobalFilter={setGlobalFilter} />
+      </div>
+
+      <div className="flex-container sticky top-0 items-center rounded-md shadow-xl overflow-x-auto z-20 mt-40 row-start-3 row-end-4 bg-veryLightBlue/75 col-start-2 col-end-9"
+        style={{ width: `max(0, ${table.getTotalSize()})px` }}
+      >
+
+        <table className="table bg-veryLightBlue" >
           <thead>
             {table.getHeaderGroups().map((headerGroup) => (
               <tr key={headerGroup.id}>
@@ -205,14 +210,13 @@ export default function UseCaseTable() {
                     {/* Sorting Button */}
                     {typeof header.column.columnDef.header === "string" &&
                       sortableColumns.has(header.column.columnDef.header) && (
-                        <ColumnSortButton columnSortToggle={header.column.getToggleSortingHandler()}/>
+                        <ColumnSortButton columnSortToggle={header.column.getToggleSortingHandler()} />
                       )}
                     <div
                       onMouseDown={header.getResizeHandler()}
                       onTouchStart={header.getResizeHandler()}
-                      className={`resizer ${
-                        header.column.getIsResizing() ? "isResizing" : ""
-                      }`}
+                      className={`resizer ${header.column.getIsResizing() ? "isResizing" : ""
+                        }`}
                     />
                   </th>
                 ))}
@@ -223,9 +227,8 @@ export default function UseCaseTable() {
             {table.getRowModel().rows.map((row) => (
               <tr
                 key={row.id}
-                className={`${
-                  table.getRowModel().rows.indexOf(row) % 2 === 0 ? "bg-white" : "bg-lightIndigo"
-                } h-[4.28rem]`}
+                className={`${table.getRowModel().rows.indexOf(row) % 2 === 0 ? "bg-white" : "bg-lightIndigo"
+                  } h-[4.28rem]`}
               >
                 {row.getVisibleCells().map((cell) => (
                   <td
@@ -240,9 +243,7 @@ export default function UseCaseTable() {
             ))}
           </tbody>
         </table>
-        <div className="fixed bottom-0 left-0 w-full bg-white">
-          <TablePaginationBar table={table} />
-        </div>
+        <TablePaginationBar table={table} />
       </div>
     </div>
   );

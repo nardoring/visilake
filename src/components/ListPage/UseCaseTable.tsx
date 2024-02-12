@@ -24,7 +24,7 @@ import ColumnSortButton from "./ColumnSortButton";
 export default function UseCaseTable() {
   const filterDropdownColumns = new Set([
     "Status",
-    "Created By",
+    "Author",
     "Analysis Types",
   ]);
   const sortableColumns = new Set(["Created"]);
@@ -62,7 +62,7 @@ export default function UseCaseTable() {
     {
       accessorKey: "useCaseDescription",
       header: "Description",
-      size: (1920 / 10) * 4,
+      size: (1920 / 10) * 3.5,
       cell: (props: { getValue: () => string }) => <p>{props.getValue()}</p>,
     },
     {
@@ -174,17 +174,16 @@ export default function UseCaseTable() {
   }
 
   return (
-    <div className="col-start-2 col-end-9 row-start-2 row-end-4 pt-2">
+    <div className="col-start-2 col-end-9 row-start-2 pt-2 ">
       <div className="fixed z-40 mb-8">
         <SearchBar setGlobalFilter={setGlobalFilter} />
       </div>
 
-      <div
-        className="flex-container sticky top-0 z-20 col-start-2 col-end-9 row-start-3 row-end-4 mt-40 items-center overflow-x-auto rounded-md bg-veryLightBlue/75 shadow-xl"
-        style={{ width: `max(0, ${table.getTotalSize()})px` }}
-      >
-        <table className="table bg-veryLightBlue">
-          <thead>
+      <div className="relative h-[64rem] z-20 col-start-2 col-end-9
+                    row-start-3 row-end-4 mt-40 overflow-x-auto rounded-md
+                    bg-veryLightBlue/70 shadow-xl flex flex-col">
+        <table className="table bg-veryLightBlue/70 w-full">
+          <thead className="sticky top-0 z-20 bg-veryLightBlue">
             {table.getHeaderGroups().map((headerGroup) => (
               <tr key={headerGroup.id}>
                 {headerGroup.headers.map((header) => (
@@ -223,30 +222,36 @@ export default function UseCaseTable() {
                   </th>
                 ))}
               </tr>
-            ))}
-          </thead>
-          <tbody>
-            {table.getRowModel().rows.map((row) => (
-              <tr
-                key={row.id}
-                className={`${table.getRowModel().rows.indexOf(row) % 2 === 0 ? "bg-white" : "bg-lightIndigo"
-                  } h-[4.28rem]`}
-              >
-                {row.getVisibleCells().map((cell) => (
-                  <td
-                    key={cell.id}
-                    className="pl-4 text-base font-[400] text-[#595C64]"
-                    style={{ width: `${cell.column.getSize()}px` }}
-                  >
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </td>
-                ))}
-              </tr>
-            ))}
-          </tbody>
+            ))}        </thead>
         </table>
-        <TablePaginationBar table={table} />
+        <div className="overflow-y-auto flex-grow">
+          <table className="table w-full">
+            <tbody>
+              {table.getRowModel().rows.map((row) => (
+                <tr
+                  key={row.id}
+                  className={`${table.getRowModel().rows.indexOf(row) % 2 === 0 ? "bg-white" : "bg-lightIndigo"} h-[4.28rem]`}
+                >
+                  {row.getVisibleCells().map((cell) => (
+                    <td
+                      key={cell.id}
+                      className="pl-4 text-base font-[400] text-[#595C64]"
+                      style={{ width: `${cell.column.getSize()}px` }}
+                    >
+                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <div className="mt-auto">
+          <TablePaginationBar table={table} />
+        </div>
       </div>
     </div>
   );
+
+
 }

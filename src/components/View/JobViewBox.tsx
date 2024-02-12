@@ -1,8 +1,8 @@
 export default function JobViewBox() {
   return (
-    <div className="row-end-9 z-40 col-start-2 col-end-9 row-start-3 p-4">
+    <div className="min-h-fit row-end-9 z-40 col-start-2 col-end-9 row-start-3 p-4">
       <div
-        className="h-[64rem] relative z-40 mt-12 rounded border
+        className="min-h-fit relative z-40 mt-12 rounded border
                       border-slate-400 bg-veryLightGrey p-4 font-medium shadow-md"
       >
         <div className="grid grid-cols-2">
@@ -61,7 +61,7 @@ export default function JobViewBox() {
         <iframe
           src="/data.html"
           title="HTML Content"
-          className="h-full w-full"
+          className="w-full min-h-screen"
           style={{ pointerEvents: "auto" }}
         ></iframe>
       </div>

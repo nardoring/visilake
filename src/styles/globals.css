@@ -10,10 +10,6 @@
   --rmsc-h: 34px !important;
 }
 
-th {
-  position: relative;
-}
-
 .resizer {
   position: absolute;
   opacity: 0;
@@ -42,12 +38,4 @@ th {
   grid-template-columns: repeat(9, 1fr);
   grid-template-rows: 108px 80px auto 80px;
   gap: 10px;
-}
-
-.flex-container {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  height: 90%;
-  margin-bottom: 80px;
 }

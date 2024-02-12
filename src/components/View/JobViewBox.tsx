@@ -2,7 +2,7 @@ export default function JobViewBox() {
   return (
     <div className="row-end-9 z-40 col-start-2 col-end-9 row-start-3 p-4">
       <div
-        className="flex-container relative z-40 mt-12 rounded border
+        className="h-[64rem] relative z-40 mt-12 rounded border
                       border-slate-400 bg-veryLightGrey p-4 font-medium shadow-md"
       >
         <div className="grid grid-cols-2">

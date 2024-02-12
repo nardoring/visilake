@@ -82,32 +82,6 @@ export default function UseCaseTable() {
       },
     },
     {
-      accessorKey: "useCaseStatus",
-      header: "Status",
-      size: (1920 / 10) * 0.75,
-      cell: (props: { getValue: () => string }) => (
-        <StatusChip status={props.getValue()} />
-      ),
-      filterFn: (
-        row: Row<UseCase>,
-        columnId: string,
-        filterStatuses: string[],
-      ) => {
-        if (filterStatuses.length === 0) return true;
-        const author: string = row.getValue(columnId);
-        return filterStatuses.includes(author);
-      },
-    },
-    {
-      accessorKey: "date",
-      header: "Date Created",
-      size: (1920 / 10) * 1,
-      cell: (props: { getValue: () => Date }) => {
-        return <p>{formatDate(props.getValue())}</p>;
-      },
-      sortType: "datetime",
-    },
-    {
       accessorKey: "author",
       header: "Created By",
       size: (1920 / 10) * 1,
@@ -120,6 +94,32 @@ export default function UseCaseTable() {
         if (filterAuthorNames.length === 0) return true;
         const status: string = row.getValue(columnId);
         return filterAuthorNames.includes(status);
+      },
+    },
+    {
+      accessorKey: "date",
+      header: "Date Created",
+      size: (1920 / 10) * 1,
+      cell: (props: { getValue: () => Date }) => {
+        return <p>{formatDate(props.getValue())}</p>;
+      },
+      sortType: "datetime",
+    },
+    {
+      accessorKey: "useCaseStatus",
+      header: "Status",
+      size: (1920 / 10) * 0.5,
+      cell: (props: { getValue: () => string }) => (
+        <StatusChip status={props.getValue()} />
+      ),
+      filterFn: (
+        row: Row<UseCase>,
+        columnId: string,
+        filterStatuses: string[],
+      ) => {
+        if (filterStatuses.length === 0) return true;
+        const author: string = row.getValue(columnId);
+        return filterStatuses.includes(author);
       },
     },
     {

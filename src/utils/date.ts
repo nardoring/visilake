@@ -3,20 +3,21 @@ export function formatDate(rawDate: Date) {
 
   const optionsDate: Intl.DateTimeFormatOptions = {
     year: "numeric",
-    month: "short",
-    day: "numeric",
+    month: "2-digit",
+    day: "2-digit",
   };
 
   const optionsTime: Intl.DateTimeFormatOptions = {
-    hour: "numeric",
+    hour: "2-digit",
     minute: "2-digit",
-    hour12: true,
+    second: "2-digit",
+    hour12: false,
   };
 
   const formattedDate =
-    dateObject.toLocaleString([], optionsDate) +
+    dateObject.toLocaleDateString("en-CA", optionsDate) +
     " " +
-    dateObject.toLocaleTimeString([], optionsTime);
+    dateObject.toLocaleTimeString("en-CA", optionsTime);
 
   return formattedDate;
 }

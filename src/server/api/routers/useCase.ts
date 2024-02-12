@@ -8,8 +8,9 @@ import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "../trpc";
 import type { UseCase } from "~/models/db/useCase";
 import { v4 as uuidv4 } from "uuid";
-import AWS from "aws-sdk";
 import mapUseCases from "~/mappers/useCaseMappers";
+import getDynamoDBClient from "~/clients/dynamodb";
+import getSQSClient from "~/clients/sqs";
 
 const QUEUE_NAME = "requestQueue";
 const DYNAMODB_TABLE = "mockRequests";
@@ -17,11 +18,7 @@ const shortUid = () => uuidv4().substring(0, 8);
 
 export const useCaseRouter = createTRPCRouter({
   getUseCases: publicProcedure.query(async () => {
-    // TODO fix endpoint
-    const dynamodb = new AWS.DynamoDB({
-      endpoint: "http://dynamodb.us-east-1.localhost.localstack.cloud:4566/",
-      region: "us-east-1",
-    });
+    const dynamodb = getDynamoDBClient();
 
     const useCaseQueryParams = {
       TableName: DYNAMODB_TABLE,
@@ -65,12 +62,7 @@ export const useCaseRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ input }) => {
-      // TODO fix endpoint
-      const sqs = new AWS.SQS({
-        endpoint: "http://sqs.us-east-1.localhost.localstack.cloud:4566/",
-        region: "us-east-1",
-      });
-      console.log("\nSQS Config:\n", sqs);
+      const sqs = getSQSClient();
 
       const requestID = shortUid();
       console.log("\nRequestID:\n", requestID);
@@ -92,12 +84,7 @@ export const useCaseRouter = createTRPCRouter({
 
       await sqs.sendMessage(sqsParams).promise();
 
-      // TODO fix endpoint
-      const dynamodb = new AWS.DynamoDB({
-        endpoint: "http://dynamodb.us-east-1.localhost.localstack.cloud:4566/",
-        region: "us-east-1",
-      });
-      console.log("\nDynamoDB Config:\n", dynamodb);
+      const dynamodb = getDynamoDBClient();
 
       // set status in DynamoDB to QUEUED
       const status = "QUEUED";

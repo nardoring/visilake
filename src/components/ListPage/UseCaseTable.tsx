@@ -5,6 +5,7 @@ import { formatDate } from "~/utils/date";
 import SearchBar from "./SearchBar";
 import PowerBIButton from "./PowerBIButton";
 import TablePaginationBar from "./TablePaginationBar";
+import Link from 'next/link';
 
 import {
   flexRender,
@@ -53,7 +54,9 @@ export default function UseCaseTable() {
       header: "Job Name",
       size: (1920 / 10) * 1.1,
       cell: (props: { getValue: () => string }) => (
-        <p>{props.getValue()}</p>
+        <Link href="/ViewPage" passHref className="hover:font-bold">
+          <p>{props.getValue()}</p>
+        </Link>
       ),
     },
     {
@@ -147,10 +150,10 @@ export default function UseCaseTable() {
     initialState: {
       sorting: [
         {
-          id: 'date',
+          id: "date",
           desc: true,
-        }
-      ]
+        },
+      ],
     },
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
@@ -164,24 +167,23 @@ export default function UseCaseTable() {
   if (isLoading) {
     // Render a loading indicator or message
     return (
-      <div className="z-40 fixed flex h-full w-full items-center justify-center bg-lightIndigo/70">
-        <p className="z-40 pb-80 text-black">Loading Data...</p>
+      <div className="fixed z-40 flex h-full w-full items-center justify-center bg-lightIndigo/70">
+        <p className="z-40 pb-80 text-6xl text-black">Connecting...</p>
       </div>
     );
   }
 
-  {/* <div className="absolute sticky top-100 z-40" > */ }
   return (
-    <div className="col-start-2 col-end-9 row-start-2 row-end-4 pt-2" >
-      <div className="fixed z-40 mb-8" >
+    <div className="col-start-2 col-end-9 row-start-2 row-end-4 pt-2">
+      <div className="fixed z-40 mb-8">
         <SearchBar setGlobalFilter={setGlobalFilter} />
       </div>
 
-      <div className="flex-container sticky top-0 items-center rounded-md shadow-xl overflow-x-auto z-20 mt-40 row-start-3 row-end-4 bg-veryLightBlue/75 col-start-2 col-end-9"
+      <div
+        className="flex-container sticky top-0 z-20 col-start-2 col-end-9 row-start-3 row-end-4 mt-40 items-center overflow-x-auto rounded-md bg-veryLightBlue/75 shadow-xl"
         style={{ width: `max(0, ${table.getTotalSize()})px` }}
       >
-
-        <table className="table bg-veryLightBlue" >
+        <table className="table bg-veryLightBlue">
           <thead>
             {table.getHeaderGroups().map((headerGroup) => (
               <tr key={headerGroup.id}>

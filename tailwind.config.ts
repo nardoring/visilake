@@ -5,7 +5,7 @@ export default {
   theme: {
     extend: {
       colors: {
-        tableColumnFont: '#464F60',
+        tableColumnFont: "#464F60",
         lightIndigo: "#F7F9FD",
         darkIndigo: "#EBF0FA",
         veryDarkBlue: "#1C3E76",
@@ -41,28 +41,33 @@ export default {
         lightYellow: "003A78",
         veryLightYellow: "FFE699",
         veryVeryLightYellow: "FFF2CC",
-
       },
       fontFamily: {
-        'Nunito': ['Nunito', 'sans'],
+        Nunito: ["Nunito", "sans"],
       },
     },
     fontSize: {
-      sm: '0.8rem',
-      base: '1rem',
-      xl: '1.25rem',
-      '2xl': '1.563rem',
-      '3xl': '1.953rem',
-      '4xl': '2.441rem',
-      '5xl': '3.052rem',
+      sm: "0.8rem",
+      base: "1rem",
+      xl: "1.25rem",
+      "2xl": "1.563rem",
+      "3xl": "1.953rem",
+      "4xl": "2.441rem",
+      "5xl": "3.052rem",
+      "6xl": "3.75rem",
+      "7xl": "4.5rem",
+      "8xl": "6rem",
+      "9xl": "8rem",
+      "10xl": "10rem",
+      "18xl": "16rem",
     },
     screens: {
-      'sm': '640px',
-      'md': '768px',
-      'lg': '1024px',
-      'xl': '1280px',
-      '2xl': '1536px',
-    }
+      sm: "640px",
+      md: "768px",
+      lg: "1024px",
+      xl: "1280px",
+      "2xl": "1536px",
+    },
   },
   plugins: [],
 } satisfies Config;

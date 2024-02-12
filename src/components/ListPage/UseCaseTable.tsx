@@ -82,32 +82,6 @@ export default function UseCaseTable() {
       },
     },
     {
-      accessorKey: "useCaseStatus",
-      header: "Status",
-      size: (1920 / 10) * 0.75,
-      cell: (props: { getValue: () => string }) => (
-        <StatusChip status={props.getValue()} />
-      ),
-      filterFn: (
-        row: Row<UseCase>,
-        columnId: string,
-        filterStatuses: string[],
-      ) => {
-        if (filterStatuses.length === 0) return true;
-        const author: string = row.getValue(columnId);
-        return filterStatuses.includes(author);
-      },
-    },
-    {
-      accessorKey: "date",
-      header: "Date Created",
-      size: (1920 / 10) * 1,
-      cell: (props: { getValue: () => Date}) => {
-        return <p>{formatDate(props.getValue())}</p>;
-      },
-      sortType: "datetime",
-    },
-    {
       accessorKey: "author",
       header: "Created By",
       size: (1920 / 10) * 1,
@@ -120,6 +94,32 @@ export default function UseCaseTable() {
         if (filterAuthorNames.length === 0) return true;
         const status: string = row.getValue(columnId);
         return filterAuthorNames.includes(status);
+      },
+    },
+    {
+      accessorKey: "date",
+      header: "Date Created",
+      size: (1920 / 10) * 1.1,
+      cell: (props: { getValue: () => Date }) => {
+        return <p>{formatDate(props.getValue())}</p>;
+      },
+      sortType: "datetime",
+    },
+    {
+      accessorKey: "useCaseStatus",
+      header: "Status",
+      size: (1920 / 10) * 0.5,
+      cell: (props: { getValue: () => string }) => (
+        <StatusChip status={props.getValue()} />
+      ),
+      filterFn: (
+        row: Row<UseCase>,
+        columnId: string,
+        filterStatuses: string[],
+      ) => {
+        if (filterStatuses.length === 0) return true;
+        const author: string = row.getValue(columnId);
+        return filterStatuses.includes(author);
       },
     },
     {
@@ -147,10 +147,10 @@ export default function UseCaseTable() {
     initialState: {
       sorting: [
         {
-          id: 'date',
+          id: "date",
           desc: true,
-        }
-      ]
+        },
+      ],
     },
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
@@ -205,7 +205,9 @@ export default function UseCaseTable() {
                     {/* Sorting Button */}
                     {typeof header.column.columnDef.header === "string" &&
                       sortableColumns.has(header.column.columnDef.header) && (
-                        <ColumnSortButton columnSortToggle={header.column.getToggleSortingHandler()}/>
+                        <ColumnSortButton
+                          columnSortToggle={header.column.getToggleSortingHandler()}
+                        />
                       )}
                     <div
                       onMouseDown={header.getResizeHandler()}
@@ -224,7 +226,9 @@ export default function UseCaseTable() {
               <tr
                 key={row.id}
                 className={`${
-                  table.getRowModel().rows.indexOf(row) % 2 === 0 ? "bg-white" : "bg-lightIndigo"
+                  table.getRowModel().rows.indexOf(row) % 2 === 0
+                    ? "bg-white"
+                    : "bg-lightIndigo"
                 } h-[4.28rem]`}
               >
                 {row.getVisibleCells().map((cell) => (

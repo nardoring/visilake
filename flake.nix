@@ -3,7 +3,14 @@
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-    localstack.url = "github:nardoring/localstack-nix";
+    localstack = {
+      url = "github:nardoring/localstack-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    treefmt-nix = {
+      url = "github:numtide/treefmt-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     # rust-overlay.url = "github:oxalica/rust-overlay";
   };
 
@@ -11,6 +18,8 @@
     self,
     nixpkgs,
     localstack,
+    systems,
+    treefmt-nix,
     # rust-overlay,
     ...
   }: let
@@ -26,7 +35,6 @@
       pname = "nardo-web";
       version = "0.1.0";
       src = ./.;
-      # npmDepsHash = "sha256-wLnTg1BLf1AKN+G/lmZ9/Mf3ZeIsm7zcE4+SsH5dwwU=";
       npmDepsHash = "sha256-wieBHLvqt2BD/e1C086OI1IxAQA99gwZ08G6p80am+U=";
 
       npmBuild = "SKIP_ENV_VALIDATION=1 npm run build";
@@ -88,8 +96,9 @@
         User = "nextjs";
       };
     };
-    #
-    #
+
+    eachSystem = f: nixpkgs.lib.genAttrs (import systems) (system: f nixpkgs.legacyPackages.${system});
+    treefmtEval = eachSystem (pkgs: treefmt-nix.lib.evalModule pkgs ./treefmt.nix);
   in {
     devShells.${system}.default = pkgs.mkShell {
       buildInputs =
@@ -129,5 +138,8 @@
       nardo-image = nardo-image;
       localstackpro-image = localstackpro-image;
     };
+
+    # for `nix fmt`
+    formatter = eachSystem (pkgs: treefmtEval.${pkgs.system}.config.build.wrapper);
   };
 }

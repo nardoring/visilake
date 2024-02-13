@@ -99,7 +99,7 @@ export default function UseCaseTable() {
     {
       accessorKey: "date",
       header: "Date Created",
-      size: (1920 / 10) * 1.1,
+      size: (1920 / 10) * 1,
       cell: (props: { getValue: () => Date }) => {
         return <p>{formatDate(props.getValue())}</p>;
       },

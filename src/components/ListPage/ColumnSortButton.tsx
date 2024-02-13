@@ -23,8 +23,8 @@ export default function ColumnSortButton({
         prevSortIcon === faSortDown
           ? faSortUp
           : prevSortIcon === faSortUp
-          ? faSort
-          : faSortDown,
+            ? faSort
+            : faSortDown,
       );
     }
   }

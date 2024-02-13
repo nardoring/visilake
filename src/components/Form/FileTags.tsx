@@ -9,7 +9,7 @@ interface FileTagsProps {
   inputStyles: string;
 }
 
-const FileTags  = ({ getTags, setTags, inputStyles }: FileTagsProps) => {
+const FileTags = ({ getTags, setTags, inputStyles }: FileTagsProps) => {
   const [currentTag, setCurrentTag] = useState<string>("");
 
   const checkTagEntry = () => {
@@ -28,12 +28,10 @@ const FileTags  = ({ getTags, setTags, inputStyles }: FileTagsProps) => {
 
   const updateTag = (tag: Tag, isValid: boolean) => {
     const updatedTags = getTags().map((t) =>
-        t.name === tag.name
-          ? { ...t, isValid: isValid }
-          : t,
+      t.name === tag.name ? { ...t, isValid: isValid } : t,
     );
     setTags(updatedTags);
-  }
+  };
 
   const handleTagEntry = (
     e:

@@ -23,16 +23,14 @@ export default function Navbar() {
       </svg>
       {!isCurrentPage("/ListPage") ? (
         <button
-          className="ml-4 px-4 py-2 text-darkBlue font-medium"
+          className="ml-4 px-4 py-2 font-medium text-darkBlue"
           onClick={() => {
             void router.push("/ListPage");
           }}
         >
           View Use Cases
         </button>
-      ) : (
-        null
-      )}
+      ) : null}
     </nav>
   );
 }

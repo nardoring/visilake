@@ -5,6 +5,7 @@ function getDynamoDBClient() {
     endpoint: process.env.DYNAMO_URL,
     region: process.env.AWS_REGION,
   });
+  console.log('\nDynamoDB Conf:\n', dynamodb)
 
   return dynamodb;
 }

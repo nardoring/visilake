@@ -7,6 +7,11 @@
       url = "github:nardoring/localstack-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    treefmt-nix = {
+      url = "github:numtide/treefmt-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     # rust-overlay.url = "github:oxalica/rust-overlay";
   };
 
@@ -14,6 +19,8 @@
     self,
     nixpkgs,
     localstack,
+    systems,
+    treefmt-nix,
     # rust-overlay,
     ...
   }: let
@@ -91,6 +98,8 @@
       };
     };
 
+    eachSystem = f: nixpkgs.lib.genAttrs (import systems) (system: f nixpkgs.legacyPackages.${system});
+    treefmtEval = eachSystem (pkgs: treefmt-nix.lib.evalModule pkgs ./treefmt.nix);
   in {
     devShells.${system}.default = pkgs.mkShell {
       buildInputs =
@@ -120,6 +129,9 @@
       AWS_ACCESS_KEY_ID = "test";
       AWS_SECRET_ACCESS_KEY = "test";
       AWS_DEFAULT_REGION = "us-east-1";
+      AWS_REGION = "us-east-1";
+      DYNAMO_URL = "http://dynamodb.us-east-1.localhost.localstack.cloud:4566/";
+      SQS_URL = "http://sqs.us-east-1.localhost.localstack.cloud:4566/";
     };
 
     packages.${system} = {
@@ -127,5 +139,8 @@
       nardo-image = nardo-image;
       localstackpro-image = localstackpro-image;
     };
+
+    # for `nix fmt`
+    formatter = eachSystem (pkgs: treefmtEval.${pkgs.system}.config.build.wrapper);
   };
 }

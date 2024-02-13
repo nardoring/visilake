@@ -36,9 +36,7 @@ export default function Navbar() {
           </span>
           View Use Cases
         </button>
-      ) : (
-        null
-      )}
+      ) : null}
     </nav>
   );
 }

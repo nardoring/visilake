@@ -6,14 +6,18 @@ const mockAuthorNames = [
   "James Mitchell",
   "Sophia Turner",
   "Benjamin Hayes",
-  "Olivia Bennett"
+  "Olivia Bennett",
 ];
 
 function generateMockUseCases(count: number): UseCase[] {
   const mockResponse: UseCase[] = [];
 
   for (let i = 1; i <= count; i++) {
-    const analysisTypes = ["Rolling Mean", "Autocorrelation", "Rolling Std Deviation"];
+    const analysisTypes = [
+      "Rolling Mean",
+      "Autocorrelation",
+      "Rolling Std Deviation",
+    ];
     const useCase: UseCase = {
       useCaseName: `Use case ${i}`,
       date: getRandomDate(new Date(2023, 8, 1), new Date(2024, 1, 15)),
@@ -21,7 +25,10 @@ function generateMockUseCases(count: number): UseCase[] {
       useCaseStatus: getRandomStatus(),
       powerBILink: `https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value${i}'`,
       author: mockAuthorNames[Math.floor(Math.random() * 5)] ?? "Jane Doe",
-      analysisTypes: analysisTypes.slice(0, Math.floor(Math.random() * 3 - 0.001) + 1),
+      analysisTypes: analysisTypes.slice(
+        0,
+        Math.floor(Math.random() * 3 - 0.001) + 1,
+      ),
     };
 
     mockResponse.push(useCase);
@@ -38,9 +45,9 @@ function getRandomDate(startDate: Date, endDate: Date): Date {
 }
 
 function getRandomStatus(): UseCaseStatus {
-    const statusOptions = ["Complete", "InProgress", "NotStarted", "Failed"];
-    const randomIndex = Math.floor(Math.random() * statusOptions.length);
-    return statusOptions[randomIndex] as UseCaseStatus;
+  const statusOptions = ["Complete", "InProgress", "NotStarted", "Failed"];
+  const randomIndex = Math.floor(Math.random() * statusOptions.length);
+  return statusOptions[randomIndex] as UseCaseStatus;
 }
 
 export default generateMockUseCases;

@@ -29,8 +29,8 @@ const FileTag = ({ tag, updateTag, onRemove }: FileTagProps) => {
         loading
           ? "border-gray-300 bg-gray-100 text-gray-700"
           : tagValidationData?.isValid
-          ? "border-green-300 bg-green-100 text-green-700"
-          : "border-red-300 bg-red-100 text-red-700"
+            ? "border-green-300 bg-green-100 text-green-700"
+            : "border-red-300 bg-red-100 text-red-700"
       } px-2 py-1 font-medium`}
     >
       <div className="max-w-full flex-initial text-xs font-normal leading-none">

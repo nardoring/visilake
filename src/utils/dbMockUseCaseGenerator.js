@@ -1,18 +1,22 @@
-const fs = require('fs');
-const path = require('path');
+const fs = require("fs");
+const path = require("path");
 
 const NUM_OF_ITEMS = 25;
 
 function generateMockUseCases(count, outputFilePath) {
   const mockRequests = [];
 
-  const availableAnalysisTypes = ["Rolling Mean", "Rolling Std Deviation", "Autocorrelation"];
+  const availableAnalysisTypes = [
+    "Rolling Mean",
+    "Rolling Std Deviation",
+    "Autocorrelation",
+  ];
 
   for (let i = 1; i <= count; i++) {
     const input = {
       useCaseName: `Use case ${i}`,
       useCaseDescription: `This is a test for use case ${i}`,
-      analysisTypeNames: getRandomAnalysisTypes(availableAnalysisTypes)
+      analysisTypeNames: getRandomAnalysisTypes(availableAnalysisTypes),
     };
 
     const dynamodbParams = {
@@ -48,7 +52,7 @@ function generateMockUseCases(count, outputFilePath) {
   const jsonString = JSON.stringify(outputData, null, 2);
 
   // Write the JSON string to a file
-  fs.writeFileSync(outputFilePath, jsonString, 'utf-8');
+  fs.writeFileSync(outputFilePath, jsonString, "utf-8");
 }
 
 function getRandomId() {
@@ -58,9 +62,9 @@ function getRandomId() {
 }
 
 function getRandomAnalysisTypes(availableTypes) {
-    const numberOfTypes = Math.floor(Math.random() * availableTypes.length) + 1;
-    const shuffledTypes = availableTypes.sort(() => Math.random() - 0.5);
-    return shuffledTypes.slice(0, numberOfTypes);
+  const numberOfTypes = Math.floor(Math.random() * availableTypes.length) + 1;
+  const shuffledTypes = availableTypes.sort(() => Math.random() - 0.5);
+  return shuffledTypes.slice(0, numberOfTypes);
 }
 
 function getRandomStatus() {
@@ -81,11 +85,17 @@ function getRandomAuthor() {
     "James Mitchell",
     "Sophia Turner",
     "Benjamin Hayes",
-    "Olivia Bennett"
+    "Olivia Bennett",
   ];
-  return mockAuthorNames[Math.floor(Math.random() * mockAuthorNames.length)] ?? "Jane Doe";
+  return (
+    mockAuthorNames[Math.floor(Math.random() * mockAuthorNames.length)] ??
+    "Jane Doe"
+  );
 }
 
-const mockDataDirectory = path.resolve(__dirname, '../../infra/useCases/');
-const outputFilePath = path.join(mockDataDirectory, 'mockUseCasesBatchCommand.json');
+const mockDataDirectory = path.resolve(__dirname, "../../infra/useCases/");
+const outputFilePath = path.join(
+  mockDataDirectory,
+  "mockUseCasesBatchCommand.json",
+);
 generateMockUseCases(NUM_OF_ITEMS, outputFilePath);

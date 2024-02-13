@@ -85,20 +85,18 @@ export default function UseCaseTable() {
       },
     },
     {
-      accessorKey: "useCaseStatus",
-      header: "Status",
+      accessorKey: "author",
+      header: "Created By",
       size: (1920 / 10) * 1,
-      cell: (props: { getValue: () => string }) => (
-        <StatusChip status={props.getValue()} />
-      ),
+      cell: (props: { getValue: () => string }) => <p>{props.getValue()}</p>,
       filterFn: (
         row: Row<UseCase>,
         columnId: string,
-        filterStatuses: string[],
+        filterAuthorNames: string[],
       ) => {
-        if (filterStatuses.length === 0) return true;
-        const author: string = row.getValue(columnId);
-        return filterStatuses.includes(author);
+        if (filterAuthorNames.length === 0) return true;
+        const status: string = row.getValue(columnId);
+        return filterAuthorNames.includes(status);
       },
     },
     {
@@ -111,18 +109,20 @@ export default function UseCaseTable() {
       sortType: "datetime",
     },
     {
-      accessorKey: "author",
-      header: "Author",
-      size: (1920 / 10) * 1,
-      cell: (props: { getValue: () => string }) => <p>{props.getValue()}</p>,
+      accessorKey: "useCaseStatus",
+      header: "Status",
+      size: (1920 / 10) * 0.5,
+      cell: (props: { getValue: () => string }) => (
+        <StatusChip status={props.getValue()} />
+      ),
       filterFn: (
         row: Row<UseCase>,
         columnId: string,
-        filterAuthorNames: string[],
+        filterStatuses: string[],
       ) => {
-        if (filterAuthorNames.length === 0) return true;
-        const status: string = row.getValue(columnId);
-        return filterAuthorNames.includes(status);
+        if (filterStatuses.length === 0) return true;
+        const author: string = row.getValue(columnId);
+        return filterStatuses.includes(author);
       },
     },
     {
@@ -211,7 +211,9 @@ export default function UseCaseTable() {
                     {/* Sorting Button */}
                     {typeof header.column.columnDef.header === "string" &&
                       sortableColumns.has(header.column.columnDef.header) && (
-                        <ColumnSortButton columnSortToggle={header.column.getToggleSortingHandler()} />
+                        <ColumnSortButton
+                          columnSortToggle={header.column.getToggleSortingHandler()}
+                        />
                       )}
                     <div
                       onMouseDown={header.getResizeHandler()}
@@ -222,6 +224,7 @@ export default function UseCaseTable() {
                   </th>
                 ))}
               </tr>
+
             ))}        </thead>
         </table>
         <div className="overflow-y-auto flex-grow">

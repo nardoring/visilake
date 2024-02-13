@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
-import { api } from "~/utils/api"
+import React, { useState } from "react";
+import { api } from "~/utils/api";
 import StatusChip from "./StatusChip";
 import { formatDate } from "~/utils/date";
 import SearchBar from "./SearchBar";
 import PowerBIButton from "./PowerBIButton";
 import TablePaginationBar from "./TablePaginationBar";
-import Link from 'next/link';
+import Link from "next/link";
 
 import {
   flexRender,
@@ -22,11 +22,7 @@ import FilterDropdown from "./FilterDropdown";
 import ColumnSortButton from "./ColumnSortButton";
 
 export default function UseCaseTable() {
-  const filterDropdownColumns = new Set([
-    "Status",
-    "Author",
-    "Analysis Types",
-  ]);
+  const filterDropdownColumns = new Set(["Status", "Author", "Analysis Types"]);
   const sortableColumns = new Set(["Created"]);
   const [queryExecuted, setQueryExecuted] = useState<boolean>(false);
   const [globalFilter, setGlobalFilter] = useState<string>("");
@@ -38,8 +34,8 @@ export default function UseCaseTable() {
   const analysisTypeOptions: string[] = analysisTypeOptionsIsLoading
     ? []
     : analysisTypeOptionsData?.types?.map(
-      (option: { name: string }) => option.name,
-    ) ?? [];
+        (option: { name: string }) => option.name,
+      ) ?? [];
 
   const { data, isLoading } = api.useCase.getUseCases.useQuery(undefined, {
     enabled: !queryExecuted,
@@ -179,17 +175,19 @@ export default function UseCaseTable() {
         <SearchBar setGlobalFilter={setGlobalFilter} />
       </div>
 
-      <div className="relative h-[64rem] z-20 col-start-2 col-end-9
-                    row-start-3 row-end-4 mt-40 overflow-x-auto rounded-md
-                    bg-veryLightBlue/70 shadow-xl flex flex-col">
-        <table className="table bg-veryLightBlue/70 w-full">
+      <div
+        className="relative z-20 col-start-2 col-end-9 row-start-3
+                    row-end-4 mt-40 flex h-[64rem] flex-col
+                    overflow-x-auto rounded-md bg-veryLightBlue/70 shadow-xl"
+      >
+        <table className="table w-full bg-veryLightBlue/70">
           <thead className="sticky top-0 z-20 bg-veryLightBlue">
             {table.getHeaderGroups().map((headerGroup) => (
               <tr key={headerGroup.id}>
                 {headerGroup.headers.map((header) => (
                   <th
                     key={header.id}
-                    className="pb-2 pl-4 text-left font-bold text-[#595C64]"
+                    className="relative pb-2 pl-4 text-left font-bold text-[#595C64]"
                     style={{ width: `${header.getSize()}px` }}
                   >
                     {String(header.column.columnDef.header)}
@@ -218,22 +216,27 @@ export default function UseCaseTable() {
                     <div
                       onMouseDown={header.getResizeHandler()}
                       onTouchStart={header.getResizeHandler()}
-                      className={`resizer ${header.column.getIsResizing() ? "isResizing" : ""
-                        }`}
+                      className={`resizer ${
+                        header.column.getIsResizing() ? "isResizing" : ""
+                      }`}
                     />
                   </th>
                 ))}
               </tr>
-
-            ))}        </thead>
+            ))}{" "}
+          </thead>
         </table>
-        <div className="overflow-y-auto flex-grow">
+        <div className="flex-grow overflow-y-auto">
           <table className="table w-full">
             <tbody>
               {table.getRowModel().rows.map((row) => (
                 <tr
                   key={row.id}
-                  className={`${table.getRowModel().rows.indexOf(row) % 2 === 0 ? "bg-white" : "bg-lightIndigo"} h-[4.28rem]`}
+                  className={`${
+                    table.getRowModel().rows.indexOf(row) % 2 === 0
+                      ? "bg-white"
+                      : "bg-lightIndigo"
+                  } h-[4.28rem]`}
                 >
                   {row.getVisibleCells().map((cell) => (
                     <td
@@ -241,7 +244,10 @@ export default function UseCaseTable() {
                       className="pl-4 text-base font-[400] text-[#595C64]"
                       style={{ width: `${cell.column.getSize()}px` }}
                     >
-                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext(),
+                      )}
                     </td>
                   ))}
                 </tr>
@@ -255,6 +261,4 @@ export default function UseCaseTable() {
       </div>
     </div>
   );
-
-
 }

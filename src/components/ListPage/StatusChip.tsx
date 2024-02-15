@@ -2,6 +2,7 @@ interface StatusChipProps {
   status: string;
 }
 
+/* TODO use tailwind for this eventually */
 const statusStyles = {
   complete: {
     backgroundColor: "#CEEEDD",

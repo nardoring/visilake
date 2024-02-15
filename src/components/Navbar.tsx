@@ -31,12 +31,15 @@ export default function Navbar() {
             void router.push("/ListPage");
           }}
         >
-          <span className="absolute inset-y-0 left-0 flex items-center">
-            <FontAwesomeIcon icon={faMagnifyingGlass} />
+          <span className="min-w-[10vw] ml-4 rounded bg-transparent px-4 py-2 text-white hover:bg-blue hover:shadow-lg" >
+            <FontAwesomeIcon icon={faMagnifyingGlass}
+              className="px-2"
+            />
+            View Use Cases
           </span>
-          View Use Cases
         </button>
       ) : null}
     </nav>
   );
 }
+

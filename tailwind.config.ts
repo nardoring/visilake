@@ -3,26 +3,30 @@ import { type Config } from "tailwindcss";
 export default {
   content: ["./src/**/*.tsx"],
   theme: {
+    // https://tailwindcss.com/docs/theme
     extend: {
       colors: {
-        tableColumnFont: "#464F60",
+        transparent: "transparent",
+        current: "currentColor",
+        indigo: "#1790D0",
         lightIndigo: "#F7F9FD",
         darkIndigo: "#EBF0FA",
         veryDarkBlue: "#1C3E76",
 
         // Custom colours from Dashboard doc
         // https://github.com/nardoring/project-docs/tree/main/client-docs
-        red: "#C9024A", // negative comment
-        green: "#00A13A", //positive comment
+        red: "#C9024A",
+        green: "#00A13A",
         blue: "#006CD8",
         darkBlue: "#003A78",
         boldBlue: "#005EA1",
         highlightBlue: "#1790D0",
         positiveGreen: "#00A131A",
 
+        lightRed: "#F4CCDB",
+        lightGreen: "#CEEEDD",
+
         // for dark mode
-        lightRed: "#CEEEDD", // negative comment
-        lightGreen: "#CEEEDD", // positive comment
         lightBlue: "#5CACE0",
         lightBlue2: "#9FD2F3",
         veryLightBlue: "#C9E8FB",

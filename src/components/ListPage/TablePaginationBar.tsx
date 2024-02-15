@@ -59,7 +59,7 @@ export default function TablePaginationBar({ table }: TablePaginationBarProps) {
       onClick={() => table.setPageIndex(pageNumber - 1)}
       key={"paginationButton" + pageNumber}
       className={`relative inline-flex items-center ${buttonSize} px-4 py-2 text-sm font-semibold ${pageNumber === pageIndex
-          ? "bg-indigo-600 text-white focus:z-20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+          ? "bg-indigo/70 text-white focus:z-20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo"
           : "text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
         }`}
     >

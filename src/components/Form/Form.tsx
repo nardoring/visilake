@@ -9,7 +9,7 @@ import { Tooltip } from 'react-tooltip'
 
 export default function Form() {
   const inputStyles =
-    "sticky top-0 col-start-2 col-end-9 block w-full rounded-md border-0 py-1.5 pl-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-300";
+    "sticky top-0 col-start-2 col-end-9 block w-full rounded-md border-0 py-1.5 pl-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo";
 
   const [useCaseTitle, setUseCaseTitle] = useState("");
   const [tags, setTags] = useState<Tag[]>([]);
@@ -92,7 +92,7 @@ export default function Form() {
           <input
             className={`${inputStyles} ${
               submitAttempted && useCaseTitle.trim() === ""
-                ? "ring-2 ring-red-500"
+                ? "ring-1 ring-red"
                 : ""
             }`}
             type="text"
@@ -117,7 +117,7 @@ export default function Form() {
             disableSearch={true}
             className={`${"rounded shadow-sm"} ${
               submitAttempted && analysisTypes.length === 0
-                ? "ring-2 ring-red-500"
+                ? "ring-1 ring-red"
                 : ""
             }`}
           />
@@ -128,7 +128,7 @@ export default function Form() {
             setTags={setTags}
             inputStyles={`${inputStyles} ${
               submitAttempted && getValidTags().length === 0
-                ? "ring-red-500 ring-2"
+                ? "ring-red ring-1"
                 : ""
             }`}
           />
@@ -138,7 +138,7 @@ export default function Form() {
           <textarea
             className={`${inputStyles} ${
               submitAttempted && useCaseDescription.trim() === ""
-                ? "ring-2 ring-red-500"
+                ? "ring-1 ring-red"
                 : ""
             }`}
             rows={4}
@@ -149,7 +149,7 @@ export default function Form() {
         </div>
         <div className="col-span-2 flex justify-center ">
           <button
-            className="flex w-40 items-center justify-center rounded bg-veryDarkBlue px-4 py-2 text-white shadow-md hover:bg-darkBlue"
+            className="flex w-40 items-center justify-center rounded bg-veryDarkBlue px-4 py-2 text-white shadow-md hover:bg-highlightBlue"
             type="submit"
             disabled={useCaseSubmission.isLoading}
           >

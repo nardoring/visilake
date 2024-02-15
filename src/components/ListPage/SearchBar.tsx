@@ -18,7 +18,7 @@ export default function SearchBar({ setGlobalFilter }: SearchBarProps) {
           <FontAwesomeIcon icon={faMagnifyingGlass} />
         </span>
         <input
-          className="block min-w-[10vw] rounded-md border border-black bg-veryLightBlue py-1.5 pl-7 text-gray-900 shadow-sm focus:ring-offset-2 focus:ring-4 focus:ring-boldBlue-300"
+          className="block min-w-[10vw] rounded-md border border-black bg-veryLightBlue py-1.5 pl-7 text-gray-900 shadow-sm focus:ring-offset-2 focus:ring-4 focus:ring-boldBlue"
           type="text"
           onChange={(e) => {
             setGlobalFilter(e.target.value);
@@ -26,7 +26,7 @@ export default function SearchBar({ setGlobalFilter }: SearchBarProps) {
         />
       </div>
       <button
-        className="block min-w-[10vw] ml-4 rounded bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
+        className="block min-w-[10vw] ml-4 rounded bg-transparent px-4 py-2 text-white hover:bg-blue hover:shadow-lg"
         type="submit"
         onClick={() => {
           void router.push("/");

@@ -6,20 +6,7 @@ export const env = createEnv({
    * Specify your server-side environment variables schema here. This way you can ensure the app
    * isn't built with invalid env vars.
    */
-  server: {
-    NODE_ENV: z
-      .enum(["development", "test", "production"])
-      .default("development"),
-    NEXTAUTH_SECRET: z.string().optional(),
-    NEXTAUTH_URL: z.string().default("http://localhost:3000"),
-    DYNAMO_URL: z
-      .string()
-      .default("http://dynamodb.us-east-1.localhost.localstack.cloud:4566/"),
-    AWS_REGION: z.string().default("us-east-1"),
-    SQS_URL: z
-      .string()
-      .default("http://sqs.us-east-1.localhost.localstack.cloud:4566/"),
-  },
+  server: {},
 
   /**
    * Specify your client-side environment variables schema here. This way you can ensure the app
@@ -34,14 +21,7 @@ export const env = createEnv({
    * You can't destruct `process.env` as a regular object in the Next.js edge runtimes (e.g.
    * middlewares) or client-side so we need to destruct manually.
    */
-  runtimeEnv: {
-    NODE_ENV: process.env.NODE_ENV,
-    NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET,
-    NEXTAUTH_URL: process.env.NEXTAUTH_URL,
-    DYNAMO_URL: process.env.DYNAMO_URL,
-    AWS_REGION: process.env.AWS_REGION,
-    SQS_URL: process.env.SQS_URL,
-  },
+  runtimeEnv: {},
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation.
    * This is especially useful for Docker builds.

@@ -1,8 +1,8 @@
-import React, { useState } from "react";
-import FileTag from "./FileTag";
-import type { Tag } from "~/utils/types";
-import { isKeyboardEvent } from "~/utils/keyboardEvent";
-import { Tooltip } from 'react-tooltip'
+import React, { useState } from 'react';
+import FileTag from './FileTag';
+import type { Tag } from '~/utils/types';
+import { isKeyboardEvent } from '~/utils/keyboardEvent';
+import { Tooltip } from 'react-tooltip';
 
 interface FileTagsProps {
   getTags: () => Tag[];
@@ -11,15 +11,15 @@ interface FileTagsProps {
 }
 
 const FileTags = ({ getTags, setTags, inputStyles }: FileTagsProps) => {
-  const [currentTag, setCurrentTag] = useState<string>("");
+  const [currentTag, setCurrentTag] = useState<string>('');
 
   const checkTagEntry = () => {
     if (
-      currentTag.trim() !== "" &&
+      currentTag.trim() !== '' &&
       !getTags().some((tag) => tag.name === currentTag)
     ) {
       setTags([...getTags(), { name: currentTag, isValid: false }]);
-      setCurrentTag("");
+      setCurrentTag('');
     }
   };
 
@@ -29,7 +29,7 @@ const FileTags = ({ getTags, setTags, inputStyles }: FileTagsProps) => {
 
   const updateTag = (tag: Tag, isValid: boolean) => {
     const updatedTags = getTags().map((t) =>
-      t.name === tag.name ? { ...t, isValid: isValid } : t,
+      t.name === tag.name ? { ...t, isValid: isValid } : t
     );
     setTags(updatedTags);
   };
@@ -37,12 +37,12 @@ const FileTags = ({ getTags, setTags, inputStyles }: FileTagsProps) => {
   const handleTagEntry = (
     e:
       | React.KeyboardEvent<HTMLInputElement>
-      | React.FocusEvent<HTMLInputElement>,
+      | React.FocusEvent<HTMLInputElement>
   ) => {
-    if (isKeyboardEvent(e) && e.key === "Enter") {
+    if (isKeyboardEvent(e) && e.key === 'Enter') {
       e.preventDefault(); // Prevent form submission
       checkTagEntry();
-    } else if (e.type === "blur") {
+    } else if (e.type === 'blur') {
       checkTagEntry();
     }
   };
@@ -50,20 +50,23 @@ const FileTags = ({ getTags, setTags, inputStyles }: FileTagsProps) => {
   return (
     <>
       <label
-        data-tooltip-id="tags"
-        data-tooltip-content="TODO"
-        htmlFor="fileTags">Tags</label>
-      <Tooltip id="tags" />
+        data-tooltip-id='tags'
+        data-tooltip-html='Select tags from Data Lake'
+        htmlFor='fileTags'
+      >
+    Tag(s)
+      </label>
+      <Tooltip id='tags' />
       <input
         className={inputStyles}
-        type="text"
-        id="fileTags"
+        type='text'
+        id='fileTags'
         value={currentTag}
         onChange={(e) => setCurrentTag(e.target.value)}
         onBlur={handleTagEntry}
         onKeyDown={handleTagEntry}
       />
-      <div className="flex flex-wrap gap-0">
+      <div className='flex flex-wrap gap-0'>
         {getTags().map((tag) => (
           <FileTag
             key={`file-tag-${tag.name}`}

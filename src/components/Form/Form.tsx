@@ -1,19 +1,19 @@
-import React, { useState } from "react";
-import FileTags from "./FileTags";
-import FormPopup from "./FormPopup";
-import { MultiSelect } from "react-multi-select-component";
-import { api } from "~/utils/api";
-import type { AnalysisTypeOption, Tag } from "~/utils/types";
-import LoadingIcon from "./LoadingIcon";
-import { Tooltip } from 'react-tooltip'
+import React, { useState } from 'react';
+import FileTags from './FileTags';
+import FormPopup from './FormPopup';
+import { MultiSelect } from 'react-multi-select-component';
+import { api } from '~/utils/api';
+import type { AnalysisTypeOption, Tag } from '~/utils/types';
+import LoadingIcon from './LoadingIcon';
+import { Tooltip } from 'react-tooltip';
 
 export default function Form() {
   const inputStyles =
     "sticky top-0 col-start-2 col-end-9 block w-full rounded-md border-0 py-1.5 pl-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo";
 
-  const [useCaseTitle, setUseCaseTitle] = useState("");
+  const [useCaseTitle, setUseCaseTitle] = useState('');
   const [tags, setTags] = useState<Tag[]>([]);
-  const [useCaseDescription, setUseCaseDescription] = useState("");
+  const [useCaseDescription, setUseCaseDescription] = useState('');
   const [submitAttempted, setSubmitAttempted] = useState(false);
   const [analysisTypes, setAnalysisTypes] = useState<AnalysisTypeOption[]>([]);
   const {
@@ -29,7 +29,7 @@ export default function Form() {
         (option: { name: string; id: number }) => ({
           label: option.name,
           value: option.id,
-        }),
+        })
       ) ?? [];
 
   const getTags = (): Tag[] => {
@@ -44,7 +44,7 @@ export default function Form() {
 
   // Prevent Enter key from submitting the form
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter") {
+    if (e.key === 'Enter') {
       e.preventDefault();
     }
   };
@@ -56,13 +56,13 @@ export default function Form() {
     e.preventDefault();
     setSubmitAttempted(true);
     if (
-      useCaseTitle.trim() !== "" &&
+      useCaseTitle.trim() !== '' &&
       analysisTypes.length !== 0 &&
       getValidTags().length !== 0 &&
-      useCaseDescription.trim() !== ""
+      useCaseDescription.trim() !== ''
     ) {
       const analysisTypeNames: string[] = analysisTypes.map(
-        (type) => type.label,
+        (type) => type.label
       );
       try {
         await useCaseSubmission.mutateAsync({
@@ -82,47 +82,50 @@ export default function Form() {
 
   return (
     <form
-      className="z-40 col-start-2 col-end-9 row-start-3 row-span-6 p-4 "
+      className='z-40 col-start-2 col-end-9 row-span-6 row-start-3 p-4 '
       onSubmit={handleSubmit}
-      id="useSubmissionCaseForm"
+      id='useSubmissionCaseForm'
     >
-      <div className="font-nunito mt-12 grid grid-cols-2 gap-x-6 gap-y-4 rounded border border-slate-400 bg-veryLightGrey p-4 font-medium shadow-md">
+      <div className='font-nunito mt-12 grid grid-cols-2 gap-x-6 gap-y-4 rounded border border-slate-400 bg-veryLightGrey p-4 font-medium shadow-md'>
         <div>
-          <label htmlFor="useCaseTitle">Use Case Title</label>
+          <label htmlFor='useCaseTitle'>Title</label>
           <input
             className={`${inputStyles} ${
               submitAttempted && useCaseTitle.trim() === ""
                 ? "ring-1 ring-red"
                 : ""
             }`}
-            type="text"
-            id="useCaseTitle"
+            type='text'
+            id='useCaseTitle'
             onKeyDown={handleKeyDown}
             onChange={(e) => setUseCaseTitle(e.target.value)}
           />
         </div>
         <div>
           <label
-            data-tooltip-id="types"
-            data-tooltip-content="TODO"
-            htmlFor="analysisType">Analysis Type(s)</label>
-          <Tooltip id="types" />
+            data-tooltip-id='types'
+            data-tooltip-html='Analysis to be ran on selected tags <br> Multiple types may be selected'
+            htmlFor='analysisType'
+          >
+            Analysis Type(s)
+          </label>
+          <Tooltip id='types' />
           <MultiSelect
             options={analysisTypeOptions}
             value={analysisTypes}
             onChange={setAnalysisTypes}
-            labelledBy="AnalysisTypeSelect"
+            labelledBy='AnalysisTypeSelect'
             isLoading={analysisTypeOptionsIsLoading}
             hasSelectAll={false}
             disableSearch={true}
-            className={`${"rounded shadow-sm"} ${
+            className={`${'rounded shadow-sm'} ${
               submitAttempted && analysisTypes.length === 0
                 ? "ring-1 ring-red"
                 : ""
             }`}
           />
         </div>
-        <div className="col-span-2">
+        <div className='col-span-2'>
           <FileTags
             getTags={getTags}
             setTags={setTags}
@@ -133,8 +136,8 @@ export default function Form() {
             }`}
           />
         </div>
-        <div className="col-span-2">
-          <label htmlFor="useCaseDescription">Use Case Description</label>
+        <div className='col-span-2'>
+          <label htmlFor='useCaseDescription'>Description</label>
           <textarea
             className={`${inputStyles} ${
               submitAttempted && useCaseDescription.trim() === ""
@@ -142,18 +145,18 @@ export default function Form() {
                 : ""
             }`}
             rows={4}
-            id="useCaseDescription"
+            id='useCaseDescription'
             onKeyDown={handleKeyDown}
             onChange={(e) => setUseCaseDescription(e.target.value)}
           />
         </div>
-        <div className="col-span-2 flex justify-center ">
+        <div className='col-span-2 flex justify-center '>
           <button
             className="flex w-40 items-center justify-center rounded bg-veryDarkBlue px-4 py-2 text-white shadow-md hover:bg-highlightBlue"
             type="submit"
             disabled={useCaseSubmission.isLoading}
           >
-            {useCaseSubmission.isLoading ? <LoadingIcon /> : "Submit"}
+            {useCaseSubmission.isLoading ? <LoadingIcon /> : 'Submit'}
           </button>
         </div>
         <FormPopup

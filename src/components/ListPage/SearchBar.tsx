@@ -1,7 +1,8 @@
-import { useRouter } from "next/router";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
-import type { Dispatch, SetStateAction } from "react";
+import { useRouter } from 'next/router';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
+import type { Dispatch, SetStateAction } from 'react';
+import { Tooltip } from 'react-tooltip';
 
 interface SearchBarProps {
   // columnFilters: ColumnFilter[];
@@ -12,9 +13,15 @@ export default function SearchBar({ setGlobalFilter }: SearchBarProps) {
   const router = useRouter();
 
   return (
-    <div className="z-40 flex items-center pl-5 w-full justify-left p-5 ">
-      <div className="relative shadow-xl">
-        <span className="absolute inset-y-0 left-0 flex items-center pl-1.5">
+    <div className='justify-left z-40 flex w-full items-center p-5 pl-5 '>
+      <div
+        data-tooltip-id='search'
+        data-tooltip-content='Search for items in any column of the table'
+        className='relative shadow-xl'>
+
+        <Tooltip id='search' />
+
+        <span className='absolute inset-y-0 left-0 flex items-center pl-1.5'>
           <FontAwesomeIcon icon={faMagnifyingGlass} />
         </span>
         <input
@@ -29,10 +36,10 @@ export default function SearchBar({ setGlobalFilter }: SearchBarProps) {
         className="block min-w-[10vw] ml-5 rounded bg-transparent px-4 py-2 text-white hover:bg-blue hover:shadow-lg"
         type="submit"
         onClick={() => {
-          void router.push("/");
+          void router.push('/');
         }}
       >
-        + New Use Case
+        + New Job
       </button>
     </div>
   );

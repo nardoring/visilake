@@ -26,14 +26,14 @@ export default function Navbar() {
       <Logo style={{ width: '285px', height: '100px' }} />
       {!isCurrentPage("/ListPage") ? (
         <button
-          className="z-40 fixed ml-4 px-5 text-white"
+          className="z-40 fixed text-white min-w-[10vw] ml-5 rounded-md bg-transparent px-4 py-2 hover:bg-blue hover:shadow-lg"
           onClick={() => {
             void router.push("/ListPage");
           }}
         >
-          <span className="min-w-[10vw] ml-4 rounded bg-transparent px-4 py-2 text-white hover:bg-blue hover:shadow-lg" >
+          <span className="">
             <FontAwesomeIcon icon={faMagnifyingGlass}
-              className="px-2"
+              className="pr-2"
             />
             View Use Cases
           </span>

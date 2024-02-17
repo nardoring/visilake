@@ -164,42 +164,43 @@ resource "aws_ecs_service" "service" {
     assign_public_ip = true
   }
 
-  load_balancer {
-    target_group_arn = aws_lb_target_group.lb_target_group.arn
-    container_name   = var.service_name
-    container_port   = var.container_port
-  }
+  # load_balancer {
+  #   target_group_arn = aws_lb_target_group.lb_target_group.arn
+  #   container_name   = var.service_name
+  #   container_port   = var.container_port
+  # }
 }
 
-resource "aws_lb_target_group" "lb_target_group" {
-  name     = var.service_name
-  port     = var.container_port
-  protocol = "HTTP"
-  vpc_id   = var.vpc_id
-  health_check {
-    path                = "/"
-    protocol            = "HTTP"
-    healthy_threshold   = 2
-    unhealthy_threshold = 2
-    timeout             = 5
-    interval            = 6
-  }
-}
+# TODO revisit load balancer later
+# resource "aws_lb_target_group" "lb_target_group" {
+#   name     = var.service_name
+#   port     = var.container_port
+#   protocol = "HTTP"
+#   vpc_id   = var.vpc_id
+#   health_check {
+#     path                = "/"
+#     protocol            = "HTTP"
+#     healthy_threshold   = 2
+#     unhealthy_threshold = 2
+#     timeout             = 5
+#     interval            = 6
+#   }
+# }
 
-resource "aws_lb_listener_rule" "listener_rule" {
-  listener_arn = var.listener_arn
-  priority     = var.priority
+# resource "aws_lb_listener_rule" "listener_rule" {
+#   listener_arn = var.listener_arn
+#   priority     = var.priority
 
-  action {
-    type             = "forward"
-    target_group_arn = aws_lb_target_group.lb_target_group.arn
-  }
+#   action {
+#     type             = "forward"
+#     target_group_arn = aws_lb_target_group.lb_target_group.arn
+#   }
 
-  condition {
-    # field  = "path-pattern"
-    # values = [var.path]
-  }
-}
+#   condition {
+#     # field  = "path-pattern"
+#     # values = [var.path]
+#   }
+# }
 
 resource "aws_sqs_queue" "requestQueue" {
   name = "requestQueue"

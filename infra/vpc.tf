@@ -57,14 +57,14 @@ resource "aws_subnet" "public_two" {
 
 # Private Subnets
 resource "aws_subnet" "private_one" {
-  vpc_id            = aws_vpc.main.id
-  cidr_block        = "10.0.2.0/24"
+  vpc_id     = aws_vpc.main.id
+  cidr_block = "10.0.2.0/24"
   availability_zone = data.aws_availability_zones.available.names[0]
 }
 
 resource "aws_subnet" "private_two" {
-  vpc_id            = aws_vpc.main.id
-  cidr_block        = "10.0.3.0/24"
+  vpc_id     = aws_vpc.main.id
+  cidr_block = "10.0.3.0/24"
   availability_zone = data.aws_availability_zones.available.names[1]
 }
 
@@ -150,8 +150,8 @@ resource "aws_route_table_association" "private_two" {
 
 # DynamoDB VPC Endpoint (Gateway)
 resource "aws_vpc_endpoint" "dynamodb" {
-  vpc_id       = aws_vpc.main.id
-  service_name = "com.amazonaws.${var.aws_region}.dynamodb"
+  vpc_id            = aws_vpc.main.id
+  service_name      = "com.amazonaws.${var.aws_region}.dynamodb"
   vpc_endpoint_type = "Gateway"
 
   route_table_ids = [
@@ -163,8 +163,8 @@ resource "aws_vpc_endpoint" "dynamodb" {
 
 # SQS VPC Endpoint (Interface)
 resource "aws_vpc_endpoint" "sqs" {
-  vpc_id       = aws_vpc.main.id
-  service_name = "com.amazonaws.${var.aws_region}.sqs"
+  vpc_id            = aws_vpc.main.id
+  service_name      = "com.amazonaws.${var.aws_region}.sqs"
   vpc_endpoint_type = "Interface"
 
   subnet_ids = [

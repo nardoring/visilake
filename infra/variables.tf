@@ -1,6 +1,6 @@
 variable "aws_region" {
-  type        = string
-  default     = "us-east-1"
+  type    = string
+  default = "us-east-1"
 }
 
 variable "stack_name" {
@@ -35,13 +35,13 @@ variable "container_port" {
 
 variable "container_cpu" {
   type        = number
-  default     = 1024
+  default     = 256
   description = "How much CPU to give the container. 1024 is 1 CPU"
 }
 
 variable "container_memory" {
   type        = number
-  default     = 2048
+  default     = 512
   description = "How much memory in megabytes to give the container"
 }
 
@@ -67,16 +67,4 @@ variable "priority" {
   type        = number
   default     = 1
   description = "The priority for the routing rule on the load balancer"
-}
-
-variable "subnet_ids" {
-  type        = list(string)
-  default     = ["public_one", "private_one", "public_one", "private_two"]
-  description = "A list of subnet IDs to launch resources in"
-}
-
-variable "security_group_ids" {
-  type        = list(string)
-  default     = ["PrivateLoadBalancerSG", "PublicLoadBalancerSG", "FargateContainerSecurityGroup"]
-  description = "A list of security group IDs to associate with"
 }

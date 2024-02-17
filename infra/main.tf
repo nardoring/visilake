@@ -9,11 +9,11 @@ terraform {
 }
 
 provider "aws" {
-  region = "us-east-1"
+  region = var.aws_region
 }
 
-resource "aws_ecs_cluster" "cluster" {
-  name = "my-cluster"
+resource "aws_ecs_cluster" "infra" {
+  name = var.stack_name
 }
 
 resource "aws_ecs_task_definition" "task" {
@@ -23,7 +23,7 @@ resource "aws_ecs_task_definition" "task" {
   network_mode             = "awsvpc"
   requires_compatibilities = ["FARGATE"]
   execution_role_arn       = aws_iam_role.ecs_task_execution_role.arn
-  task_role_arn            = var.role != "" ? aws_iam_role.ecs_task_execution_role.arn : null
+  task_role_arn            = var.role != "" ? aws_iam_role.ecs_role.arn : null
 
   container_definitions = jsonencode([
     {
@@ -133,7 +133,7 @@ resource "aws_iam_role_policy" "ecs_task_execution_policy" {
   })
 }
 
-resource "aws_ecs_service" "service" {
+resource "aws_ecs_service" "nardo" {
   name            = var.service_name
   cluster         = var.stack_name
   task_definition = aws_ecs_task_definition.task.arn
@@ -141,48 +141,12 @@ resource "aws_ecs_service" "service" {
   launch_type     = "FARGATE"
 
   network_configuration {
-    subnets          = var.subnet_ids
-    security_groups  = var.security_group_ids
+    subnets          = [aws_subnet.public_one.id, aws_subnet.public_two.id, aws_subnet.private_one.id, aws_subnet.private_two.id]
+    # security_groups  = var.security_group_ids
     assign_public_ip = true
   }
-
-  # load_balancer {
-  #   target_group_arn = aws_lb_target_group.lb_target_group.arn
-  #   container_name   = var.service_name
-  #   container_port   = var.container_port
-  # }
 }
 
-# TODO revisit load balancer later
-# resource "aws_lb_target_group" "lb_target_group" {
-#   name     = var.service_name
-#   port     = var.container_port
-#   protocol = "HTTP"
-#   vpc_id   = var.vpc_id
-#   health_check {
-#     path                = "/"
-#     protocol            = "HTTP"
-#     healthy_threshold   = 2
-#     unhealthy_threshold = 2
-#     timeout             = 5
-#     interval            = 6
-#   }
-# }
-
-# resource "aws_lb_listener_rule" "listener_rule" {
-#   listener_arn = var.listener_arn
-#   priority     = var.priority
-
-#   action {
-#     type             = "forward"
-#     target_group_arn = aws_lb_target_group.lb_target_group.arn
-#   }
-
-#   condition {
-#     # field  = "path-pattern"
-#     # values = [var.path]
-#   }
-# }
 
 resource "aws_sqs_queue" "requestQueue" {
   name = "requestQueue"

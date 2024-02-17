@@ -121,27 +121,9 @@ resource "aws_iam_role_policy" "ecs_task_execution_policy" {
           "ecr:BatchCheckLayerAvailability",
           "ecr:GetDownloadUrlForLayer",
           "ecr:BatchGetImage",
-        ],
-        Effect   = "Allow",
-        Resource = "*"
-      },
-      {
-        Action = [
           "logs:CreateLogStream",
           "logs:PutLogEvents",
-        ],
-        Effect   = "Allow",
-        Resource = "*"
-      },
-      {
-        Action = [
           "dynamodb:*",
-        ],
-        Effect   = "Allow",
-        Resource = "*"
-      },
-      {
-        Action = [
           "sqs:*",
         ],
         Effect   = "Allow",

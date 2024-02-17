@@ -19,39 +19,22 @@ function generateMockUseCases(count, outputFilePath) {
       analysisTypeNames: getRandomAnalysisTypes(availableAnalysisTypes),
     };
 
-    const dynamodbParams = {
-      PutRequest: {
-        Item: {
-          requestID: { S: i.toString() },
-          id: { S: getRandomId() },
-          creationDate: { N: getRandomDate().toString() },
-          useCaseStatus: { S: getRandomStatus() },
-          useCaseName: { S: input.useCaseName },
-          useCaseDescription: { S: input.useCaseDescription },
-          author: { S: getRandomAuthor() },
-          analysisTypes: {
-            L: input.analysisTypeNames.map((id) => ({ S: id.toString() })),
-          },
-          powerBILink: {
-            S: "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'",
-          },
-        },
-      },
+    const item = {
+      requestID: i.toString(),
+      id: getRandomId(),
+      creationDate: getRandomDate().toString(),
+      useCaseStatus: getRandomStatus(),
+      useCaseName: input.useCaseName,
+      useCaseDescription: input.useCaseDescription,
+      author: getRandomAuthor(),
+      analysisTypes: input.analysisTypeNames,
+      powerBILink: "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'",
     };
 
-    const mockRequest = {
-      PutRequest: dynamodbParams.PutRequest,
-    };
-
-    mockRequests.push(mockRequest);
+    mockRequests.push(item);
   }
 
-  const outputData = { mockRequests };
-
-  // Convert the object to a JSON string
-  const jsonString = JSON.stringify(outputData, null, 2);
-
-  // Write the JSON string to a file
+  const jsonString = JSON.stringify(mockRequests, null, 2);
   fs.writeFileSync(outputFilePath, jsonString, "utf-8");
 }
 
@@ -93,9 +76,9 @@ function getRandomAuthor() {
   );
 }
 
-const mockDataDirectory = path.resolve(__dirname, "../../infra/useCases/");
+const mockDataDirectory = path.resolve(__dirname, "../../infra/mockdata/");
 const outputFilePath = path.join(
   mockDataDirectory,
-  "mockUseCasesBatchCommand.json",
+  "requests.json",
 );
 generateMockUseCases(NUM_OF_ITEMS, outputFilePath);

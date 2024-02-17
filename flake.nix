@@ -15,7 +15,6 @@
   };
 
   outputs = {
-    self,
     nixpkgs,
     localstack,
     systems,
@@ -115,6 +114,7 @@
           ## AWS
           pkgs.awscli
           pkgs.terraform
+          pkgs.terraformer
           # pkgs.localstack # broken on nixpkgs
         ]
         ++ localstack.devShells.${system}.default.buildInputs;
@@ -131,6 +131,9 @@
       AWS_REGION = "us-east-1";
       DYNAMO_URL = "http://dynamodb.us-east-1.localhost.localstack.cloud:4566/";
       SQS_URL = "http://sqs.us-east-1.localhost.localstack.cloud:4566/";
+
+      # terraform local
+      AWS_ENDPOINT_URL = "http://localhost:4566";
     };
 
     packages.${system} = {

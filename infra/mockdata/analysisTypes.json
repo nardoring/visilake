@@ -1,0 +1,14 @@
+[
+  {
+    "id": "1",
+    "name": "Rolling Mean"
+  },
+  {
+    "id": "2",
+    "name": "Rolling Std Deviation"
+  },
+  {
+    "id": "3",
+    "name": "Autocorrelation"
+  }
+]

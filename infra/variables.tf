@@ -80,6 +80,6 @@ variable "subnet_ids" {
 
 variable "security_group_ids" {
   type        = list(string)
-  default = ["PrivateLoadBalancerSG", "FargateContainerSecurityGroup"]
+  default     = ["PrivateLoadBalancerSG", "PublicLoadBalancerSG", "FargateContainerSecurityGroup"]
   description = "A list of security group IDs to associate with"
 }

@@ -1,4 +1,4 @@
-import type { UseCaseStatus } from "./useCaseStatus";
+import type { UseCaseStatus } from './useCaseStatus';
 
 export interface UseCase {
   useCaseName: string;

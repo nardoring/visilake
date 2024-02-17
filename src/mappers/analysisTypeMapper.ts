@@ -1,8 +1,8 @@
-import type { AnalysisType as DatabaseAnalysisType } from "~/models/db/analysisType";
-import type { AnalysisType } from "~/models/domain/analysisType";
+import type { AnalysisType as DatabaseAnalysisType } from '~/models/db/analysisType';
+import type { AnalysisType } from '~/models/domain/analysisType';
 
 function mapAnalysisTypes(
-  analysisTypes: DatabaseAnalysisType[],
+  analysisTypes: DatabaseAnalysisType[]
 ): AnalysisType[] {
   return analysisTypes.map((t) => mapAnalysisType(t));
 }

@@ -1,51 +1,51 @@
 [
   {
     "requestID": "1",
-    "id": "lspeyitba06g3",
-    "creationDate": "1696497568113",
-    "useCaseStatus": "Complete",
+    "id": "lsq4jzi8dc481",
+    "creationDate": "1703760814087",
+    "useCaseStatus": "InProgress",
     "useCaseName": "Use case 1",
     "useCaseDescription": "This is a test for use case 1",
     "author": "James Mitchell",
     "analysisTypes": [
-      "Autocorrelation",
-      "Rolling Std Deviation"
+      "Rolling Std Deviation",
+      "Rolling Mean",
+      "Autocorrelation"
     ],
     "powerBILink": "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'"
   },
   {
     "requestID": "2",
-    "id": "lspeyitbkgte0",
-    "creationDate": "1699948455779",
-    "useCaseStatus": "Failed",
+    "id": "lsq4jzi8xp8vx",
+    "creationDate": "1702761423800",
+    "useCaseStatus": "Complete",
     "useCaseName": "Use case 2",
     "useCaseDescription": "This is a test for use case 2",
-    "author": "Benjamin Hayes",
+    "author": "Sophia Turner",
     "analysisTypes": [
-      "Rolling Mean"
+      "Autocorrelation"
     ],
     "powerBILink": "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'"
   },
   {
     "requestID": "3",
-    "id": "lspeyitbtrmrl",
-    "creationDate": "1697061289331",
-    "useCaseStatus": "Failed",
+    "id": "lsq4jzi8yies7",
+    "creationDate": "1707435234938",
+    "useCaseStatus": "Complete",
     "useCaseName": "Use case 3",
     "useCaseDescription": "This is a test for use case 3",
-    "author": "Olivia Bennett",
+    "author": "Emily Johnson",
     "analysisTypes": [
-      "Rolling Mean",
-      "Autocorrelation",
-      "Rolling Std Deviation"
+      "Rolling Std Deviation",
+      "Autocorrelation"
     ],
     "powerBILink": "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'"
   },
   {
     "requestID": "4",
-    "id": "lspeyitbkf9dy",
-    "creationDate": "1695237829288",
-    "useCaseStatus": "InProgress",
+    "id": "lsq4jzi8qudpi",
+    "creationDate": "1705282030347",
+    "useCaseStatus": "Complete",
     "useCaseName": "Use case 4",
     "useCaseDescription": "This is a test for use case 4",
     "author": "James Mitchell",
@@ -58,293 +58,14 @@
   },
   {
     "requestID": "5",
-    "id": "lspeyitbyj8t6",
-    "creationDate": "1695565367118",
-    "useCaseStatus": "NotStarted",
+    "id": "lsq4jzi87r9vg",
+    "creationDate": "1694125403794",
+    "useCaseStatus": "Failed",
     "useCaseName": "Use case 5",
     "useCaseDescription": "This is a test for use case 5",
-    "author": "Sophia Turner",
-    "analysisTypes": [
-      "Rolling Std Deviation",
-      "Rolling Mean"
-    ],
-    "powerBILink": "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'"
-  },
-  {
-    "requestID": "6",
-    "id": "lspeyitbfcy6l",
-    "creationDate": "1707426411355",
-    "useCaseStatus": "Failed",
-    "useCaseName": "Use case 6",
-    "useCaseDescription": "This is a test for use case 6",
-    "author": "Emily Johnson",
-    "analysisTypes": [
-      "Rolling Std Deviation"
-    ],
-    "powerBILink": "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'"
-  },
-  {
-    "requestID": "7",
-    "id": "lspeyitbn02b7",
-    "creationDate": "1696633691972",
-    "useCaseStatus": "InProgress",
-    "useCaseName": "Use case 7",
-    "useCaseDescription": "This is a test for use case 7",
-    "author": "Sophia Turner",
-    "analysisTypes": [
-      "Autocorrelation",
-      "Rolling Mean",
-      "Rolling Std Deviation"
-    ],
-    "powerBILink": "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'"
-  },
-  {
-    "requestID": "8",
-    "id": "lspeyitblxfki",
-    "creationDate": "1702715654477",
-    "useCaseStatus": "InProgress",
-    "useCaseName": "Use case 8",
-    "useCaseDescription": "This is a test for use case 8",
-    "author": "Emily Johnson",
-    "analysisTypes": [
-      "Rolling Std Deviation",
-      "Autocorrelation",
-      "Rolling Mean"
-    ],
-    "powerBILink": "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'"
-  },
-  {
-    "requestID": "9",
-    "id": "lspeyitbpwuam",
-    "creationDate": "1704178054740",
-    "useCaseStatus": "Complete",
-    "useCaseName": "Use case 9",
-    "useCaseDescription": "This is a test for use case 9",
-    "author": "Emily Johnson",
-    "analysisTypes": [
-      "Rolling Std Deviation",
-      "Rolling Mean"
-    ],
-    "powerBILink": "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'"
-  },
-  {
-    "requestID": "10",
-    "id": "lspeyitbpl2wd",
-    "creationDate": "1703908064579",
-    "useCaseStatus": "Failed",
-    "useCaseName": "Use case 10",
-    "useCaseDescription": "This is a test for use case 10",
-    "author": "Emily Johnson",
-    "analysisTypes": [
-      "Rolling Std Deviation"
-    ],
-    "powerBILink": "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'"
-  },
-  {
-    "requestID": "11",
-    "id": "lspeyitb9k0bi",
-    "creationDate": "1696120092692",
-    "useCaseStatus": "InProgress",
-    "useCaseName": "Use case 11",
-    "useCaseDescription": "This is a test for use case 11",
     "author": "Olivia Bennett",
     "analysisTypes": [
       "Autocorrelation",
-      "Rolling Std Deviation"
-    ],
-    "powerBILink": "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'"
-  },
-  {
-    "requestID": "12",
-    "id": "lspeyitb6z975",
-    "creationDate": "1704841522951",
-    "useCaseStatus": "Failed",
-    "useCaseName": "Use case 12",
-    "useCaseDescription": "This is a test for use case 12",
-    "author": "Sophia Turner",
-    "analysisTypes": [
-      "Autocorrelation"
-    ],
-    "powerBILink": "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'"
-  },
-  {
-    "requestID": "13",
-    "id": "lspeyitbgqsp7",
-    "creationDate": "1702217383319",
-    "useCaseStatus": "Failed",
-    "useCaseName": "Use case 13",
-    "useCaseDescription": "This is a test for use case 13",
-    "author": "Benjamin Hayes",
-    "analysisTypes": [
-      "Rolling Std Deviation",
-      "Autocorrelation"
-    ],
-    "powerBILink": "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'"
-  },
-  {
-    "requestID": "14",
-    "id": "lspeyitbm3ode",
-    "creationDate": "1703164605223",
-    "useCaseStatus": "Complete",
-    "useCaseName": "Use case 14",
-    "useCaseDescription": "This is a test for use case 14",
-    "author": "Sophia Turner",
-    "analysisTypes": [
-      "Rolling Std Deviation",
-      "Autocorrelation",
-      "Rolling Mean"
-    ],
-    "powerBILink": "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'"
-  },
-  {
-    "requestID": "15",
-    "id": "lspeyitb7rgh3",
-    "creationDate": "1695590787267",
-    "useCaseStatus": "NotStarted",
-    "useCaseName": "Use case 15",
-    "useCaseDescription": "This is a test for use case 15",
-    "author": "Benjamin Hayes",
-    "analysisTypes": [
-      "Rolling Std Deviation"
-    ],
-    "powerBILink": "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'"
-  },
-  {
-    "requestID": "16",
-    "id": "lspeyitbputg6",
-    "creationDate": "1702000043496",
-    "useCaseStatus": "NotStarted",
-    "useCaseName": "Use case 16",
-    "useCaseDescription": "This is a test for use case 16",
-    "author": "Emily Johnson",
-    "analysisTypes": [
-      "Rolling Mean"
-    ],
-    "powerBILink": "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'"
-  },
-  {
-    "requestID": "17",
-    "id": "lspeyitbqxl69",
-    "creationDate": "1702427912045",
-    "useCaseStatus": "InProgress",
-    "useCaseName": "Use case 17",
-    "useCaseDescription": "This is a test for use case 17",
-    "author": "Benjamin Hayes",
-    "analysisTypes": [
-      "Autocorrelation"
-    ],
-    "powerBILink": "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'"
-  },
-  {
-    "requestID": "18",
-    "id": "lspeyitbcqvqh",
-    "creationDate": "1698667757169",
-    "useCaseStatus": "NotStarted",
-    "useCaseName": "Use case 18",
-    "useCaseDescription": "This is a test for use case 18",
-    "author": "Benjamin Hayes",
-    "analysisTypes": [
-      "Autocorrelation"
-    ],
-    "powerBILink": "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'"
-  },
-  {
-    "requestID": "19",
-    "id": "lspeyitb8fl5n",
-    "creationDate": "1701219303195",
-    "useCaseStatus": "NotStarted",
-    "useCaseName": "Use case 19",
-    "useCaseDescription": "This is a test for use case 19",
-    "author": "Emily Johnson",
-    "analysisTypes": [
-      "Autocorrelation",
-      "Rolling Mean",
-      "Rolling Std Deviation"
-    ],
-    "powerBILink": "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'"
-  },
-  {
-    "requestID": "20",
-    "id": "lspeyitbgnzy1",
-    "creationDate": "1707119482683",
-    "useCaseStatus": "InProgress",
-    "useCaseName": "Use case 20",
-    "useCaseDescription": "This is a test for use case 20",
-    "author": "James Mitchell",
-    "analysisTypes": [
-      "Autocorrelation",
-      "Rolling Mean"
-    ],
-    "powerBILink": "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'"
-  },
-  {
-    "requestID": "21",
-    "id": "lspeyitb74gdb",
-    "creationDate": "1706751629115",
-    "useCaseStatus": "NotStarted",
-    "useCaseName": "Use case 21",
-    "useCaseDescription": "This is a test for use case 21",
-    "author": "Sophia Turner",
-    "analysisTypes": [
-      "Rolling Std Deviation"
-    ],
-    "powerBILink": "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'"
-  },
-  {
-    "requestID": "22",
-    "id": "lspeyitbahg9f",
-    "creationDate": "1694632234814",
-    "useCaseStatus": "Complete",
-    "useCaseName": "Use case 22",
-    "useCaseDescription": "This is a test for use case 22",
-    "author": "Emily Johnson",
-    "analysisTypes": [
-      "Rolling Mean",
-      "Rolling Std Deviation",
-      "Autocorrelation"
-    ],
-    "powerBILink": "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'"
-  },
-  {
-    "requestID": "23",
-    "id": "lspeyitbs8xbq",
-    "creationDate": "1697331627511",
-    "useCaseStatus": "Failed",
-    "useCaseName": "Use case 23",
-    "useCaseDescription": "This is a test for use case 23",
-    "author": "Sophia Turner",
-    "analysisTypes": [
-      "Rolling Mean",
-      "Rolling Std Deviation"
-    ],
-    "powerBILink": "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'"
-  },
-  {
-    "requestID": "24",
-    "id": "lspeyitbqh1fy",
-    "creationDate": "1706338626495",
-    "useCaseStatus": "Complete",
-    "useCaseName": "Use case 24",
-    "useCaseDescription": "This is a test for use case 24",
-    "author": "James Mitchell",
-    "analysisTypes": [
-      "Rolling Mean",
-      "Rolling Std Deviation",
-      "Autocorrelation"
-    ],
-    "powerBILink": "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'"
-  },
-  {
-    "requestID": "25",
-    "id": "lspeyitbuwqa5",
-    "creationDate": "1700518835382",
-    "useCaseStatus": "InProgress",
-    "useCaseName": "Use case 25",
-    "useCaseDescription": "This is a test for use case 25",
-    "author": "Emily Johnson",
-    "analysisTypes": [
-      "Autocorrelation",
-      "Rolling Std Deviation",
       "Rolling Mean"
     ],
     "powerBILink": "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'"

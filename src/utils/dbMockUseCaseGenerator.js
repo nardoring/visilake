@@ -1,7 +1,7 @@
 const fs = require("fs");
 const path = require("path");
 
-const NUM_OF_ITEMS = 25;
+const NUM_OF_ITEMS = 5;
 
 function generateMockUseCases(count, outputFilePath) {
   const mockRequests = [];

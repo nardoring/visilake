@@ -25,7 +25,7 @@ resource "aws_dynamodb_table" "mockRequests" {
 
 # Populate the table with our types
 locals {
-  mock_types = jsondecode(file("${path.module}/mockdata/analysisTypes.json"))
+  mock_types    = jsondecode(file("${path.module}/mockdata/analysisTypes.json"))
   mock_requests = jsondecode(file("${path.module}/mockdata/requests.json"))
 }
 
@@ -41,19 +41,19 @@ resource "aws_dynamodb_table_item" "analysisType" {
 }
 
 resource "aws_dynamodb_table_item" "mockRequest" {
-  for_each   = { for req in local.mock_requests : req.id => req }
+  for_each   = { for req in local.mock_requests : req.requestID => req }
   table_name = aws_dynamodb_table.mockRequests.name
-  hash_key   = "id"
+  hash_key   = "requestID" # Corrected to match the table's hash key
 
   item = jsonencode({
-    requestID           = { "S" = each.value.requestID },
-    id                  = { "S" = each.value.id },
-    creationDate        = { "N" = each.value.creationDate },
-    useCaseStatus       = { "S" = each.value.useCaseStatus },
-    useCaseName         = { "S" = each.value.useCaseName },
-    useCaseDescription  = { "S" = each.value.useCaseDescription },
-    author              = { "S" = each.value.author },
-    analysisTypes       = { "SS" = each.value.analysisTypes },
-    powerBILink         = { "S" = each.value.powerBILink }
+    "requestID"          = { "S" = each.value.requestID },
+    "id"                 = { "S" = each.value.id },
+    "creationDate"       = { "N" = each.value.creationDate },
+    "useCaseStatus"      = { "S" = each.value.useCaseStatus },
+    "useCaseName"        = { "S" = each.value.useCaseName },
+    "useCaseDescription" = { "S" = each.value.useCaseDescription },
+    "author"             = { "S" = each.value.author },
+    "analysisTypes"      = { "SS" = each.value.analysisTypes },
+    "powerBILink"        = { "S" = each.value.powerBILink }
   })
 }

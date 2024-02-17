@@ -34,8 +34,8 @@ export default function UseCaseTable() {
   const analysisTypeOptions: string[] = analysisTypeOptionsIsLoading
     ? []
     : analysisTypeOptionsData?.types?.map(
-        (option: { name: string }) => option.name
-      ) ?? [];
+      (option: { name: string }) => option.name
+    ) ?? [];
 
   const { data, isLoading } = api.useCase.getUseCases.useQuery(undefined, {
     enabled: !queryExecuted,
@@ -86,7 +86,7 @@ export default function UseCaseTable() {
     },
     {
       accessorKey: 'author',
-      header: 'Created By',
+      header: 'Author',
       size: (1920 / 10) * 1,
       cell: (props: { getValue: () => string }) => <p>{props.getValue()}</p>,
       filterFn: (
@@ -220,9 +220,8 @@ export default function UseCaseTable() {
                     <div
                       onMouseDown={header.getResizeHandler()}
                       onTouchStart={header.getResizeHandler()}
-                      className={`resizer ${
-                        header.column.getIsResizing() ? 'isResizing' : ''
-                      }`}
+                      className={`resizer ${header.column.getIsResizing() ? 'isResizing' : ''
+                        }`}
                     />
                   </th>
                 ))}
@@ -236,11 +235,10 @@ export default function UseCaseTable() {
               {table.getRowModel().rows.map((row) => (
                 <tr
                   key={row.id}
-                  className={`${
-                    table.getRowModel().rows.indexOf(row) % 2 === 0
+                  className={`${table.getRowModel().rows.indexOf(row) % 2 === 0
                       ? 'bg-white'
                       : 'bg-lightIndigo'
-                  } h-[4.28rem]`}
+                    } h-[4.28rem]`}
                 >
                   {row.getVisibleCells().map((cell) => (
                     <td

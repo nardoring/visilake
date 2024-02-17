@@ -64,14 +64,6 @@ variable "priority" {
   description = "The priority for the routing rule on the load balancer"
 }
 
-variable "vpc_id" {
-  type        = string
-}
-
-variable "listener_arn" {
-  type        = string
-}
-
 variable "subnet_ids" {
   type        = list(string)
   default     = ["public_one", "private_one", "public_one", "private_two"]

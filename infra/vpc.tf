@@ -17,16 +17,14 @@
  * - NAT Gateways for each private subnet, allowing outbound internet access.
  * - Route tables and associations to correctly route traffic for each subnet type.
  * - VPC Endpoints for DynamoDB, SQS, and ECS services for private AWS service access.
+ * - Configured security groups for VPC Endpoints to restrict traffic
+ *   appropriately based on application needs.
  *
  * Design Decisions:
  * - Subnets are distributed across the first two available Availability Zones in
  *   the selected AWS region to ensure high availability.
  * - NAT Gateways are provisioned to enable outbound internet access for resources
  *   in the private subnets, ensuring they can still reach external services as needed.
- *
- * TODO:
- * - Finalize and configure security groups for VPC Endpoints to restrict traffic
- *   appropriately based on application needs.
  */
 
 data "aws_availability_zones" "available" {}
@@ -57,14 +55,14 @@ resource "aws_subnet" "public_two" {
 
 # Private Subnets
 resource "aws_subnet" "private_one" {
-  vpc_id     = aws_vpc.main.id
-  cidr_block = "10.0.2.0/24"
+  vpc_id            = aws_vpc.main.id
+  cidr_block        = "10.0.2.0/24"
   availability_zone = data.aws_availability_zones.available.names[0]
 }
 
 resource "aws_subnet" "private_two" {
-  vpc_id     = aws_vpc.main.id
-  cidr_block = "10.0.3.0/24"
+  vpc_id            = aws_vpc.main.id
+  cidr_block        = "10.0.3.0/24"
   availability_zone = data.aws_availability_zones.available.names[1]
 }
 
@@ -163,74 +161,131 @@ resource "aws_vpc_endpoint" "dynamodb" {
 
 # SQS VPC Endpoint (Interface)
 resource "aws_vpc_endpoint" "sqs" {
-  vpc_id            = aws_vpc.main.id
-  service_name      = "com.amazonaws.${var.aws_region}.sqs"
-  vpc_endpoint_type = "Interface"
-
-  subnet_ids = [
-    aws_subnet.private_one.id,
-    aws_subnet.private_two.id,
-  ]
-
-  security_group_ids = [
-    # TODO security group for VPC Endpoints
-    # aws_security_group.vpc_endpoints.id,
-  ]
-
+  vpc_id              = aws_vpc.main.id
+  service_name        = "com.amazonaws.${var.aws_region}.sqs"
+  vpc_endpoint_type   = "Interface"
+  subnet_ids          = [aws_subnet.private_one.id, aws_subnet.private_two.id]
+  security_group_ids  = [aws_security_group.vpc_endpoints_sg.id]
   private_dns_enabled = true
 }
 
 # ECS (ECS Agent, ECS Telemetry, ECS API) VPC Endpoints (Interface)
 resource "aws_vpc_endpoint" "ecs_agent" {
-  vpc_id            = aws_vpc.main.id
-  service_name      = "com.amazonaws.${var.aws_region}.ecs-agent"
-  vpc_endpoint_type = "Interface"
-
-  subnet_ids = [
-    aws_subnet.private_one.id,
-    aws_subnet.private_two.id,
-  ]
-
-  security_group_ids = [
-    # TODO security group for VPC Endpoints
-    # aws_security_group.vpc_endpoints.id,
-  ]
-
+  vpc_id              = aws_vpc.main.id
+  service_name        = "com.amazonaws.${var.aws_region}.ecs-agent"
+  vpc_endpoint_type   = "Interface"
+  subnet_ids          = [aws_subnet.private_one.id, aws_subnet.private_two.id]
+  security_group_ids  = [aws_security_group.vpc_endpoints_sg.id]
   private_dns_enabled = true
 }
 
 resource "aws_vpc_endpoint" "ecs_telemetry" {
-  vpc_id            = aws_vpc.main.id
-  service_name      = "com.amazonaws.${var.aws_region}.ecs-telemetry"
-  vpc_endpoint_type = "Interface"
-
-  subnet_ids = [
-    aws_subnet.private_one.id,
-    aws_subnet.private_two.id,
-  ]
-
-  security_group_ids = [
-    # TODO security group for VPC Endpoints
-    # aws_security_group.vpc_endpoints.id,
-  ]
-
+  vpc_id              = aws_vpc.main.id
+  service_name        = "com.amazonaws.${var.aws_region}.ecs-telemetry"
+  vpc_endpoint_type   = "Interface"
+  subnet_ids          = [aws_subnet.private_one.id, aws_subnet.private_two.id]
+  security_group_ids  = [aws_security_group.vpc_endpoints_sg.id]
   private_dns_enabled = true
 }
 
 resource "aws_vpc_endpoint" "ecs" {
-  vpc_id            = aws_vpc.main.id
-  service_name      = "com.amazonaws.${var.aws_region}.ecs"
-  vpc_endpoint_type = "Interface"
-
-  subnet_ids = [
-    aws_subnet.private_one.id,
-    aws_subnet.private_two.id,
-  ]
-
-  security_group_ids = [
-    # TODO security group for VPC Endpoints
-    # aws_security_group.vpc_endpoints.id,
-  ]
-
+  vpc_id              = aws_vpc.main.id
+  service_name        = "com.amazonaws.${var.aws_region}.ecs"
+  vpc_endpoint_type   = "Interface"
+  subnet_ids          = [aws_subnet.private_one.id, aws_subnet.private_two.id]
+  security_group_ids  = [aws_security_group.vpc_endpoints_sg.id]
   private_dns_enabled = true
+}
+
+### Security Groups ###
+resource "aws_security_group" "vpc_endpoints_sg" {
+  name        = "VpcEndpointsSG"
+  description = "Security group for VPC endpoints"
+  vpc_id      = aws_vpc.main.id
+
+  # Allow inbound traffic from the VPC CIDR
+  ingress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = [aws_vpc.main.cidr_block]
+    description = "Inbound traffic from VPC"
+  }
+
+  # Allow all outbound traffic
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+
+resource "aws_security_group" "fargate_container_sg" {
+  name        = "FargateContainerSG"
+  description = "Access to the Fargate containers"
+  vpc_id      = aws_vpc.main.id
+}
+
+# Ingress from the public ALB
+resource "aws_security_group_rule" "from_public_alb" {
+  type                     = "ingress"
+  from_port                = 0
+  to_port                  = 0
+  protocol                 = "-1"
+  security_group_id        = aws_security_group.fargate_container_sg.id
+  source_security_group_id = aws_security_group.public_load_balancer_sg.id
+  description              = "Ingress from the public ALB"
+}
+
+# Ingress from the private ALB
+resource "aws_security_group_rule" "from_private_alb" {
+  type                     = "ingress"
+  from_port                = 0
+  to_port                  = 0
+  protocol                 = "-1"
+  security_group_id        = aws_security_group.fargate_container_sg.id
+  source_security_group_id = aws_security_group.private_load_balancer_sg.id
+  description              = "Ingress from the private ALB"
+}
+
+# Ingress from other containers in the same security group
+resource "aws_security_group_rule" "from_self" {
+  type              = "ingress"
+  from_port         = 0
+  to_port           = 0
+  protocol          = "-1"
+  security_group_id = aws_security_group.fargate_container_sg.id
+  self              = true
+  description       = "Ingress from other containers in the same security group"
+}
+
+resource "aws_security_group" "public_load_balancer_sg" {
+  name        = "PublicLoadBalancerSG"
+  description = "Access to the public facing load balancer"
+  vpc_id      = aws_vpc.main.id
+
+  ingress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+    description = "Allow access to ALB from anywhere on the internet"
+  }
+}
+
+resource "aws_security_group" "private_load_balancer_sg" {
+  name        = "PrivateLoadBalancerSG"
+  description = "Access to the internal load balancer"
+  vpc_id      = aws_vpc.main.id
+}
+
+resource "aws_security_group_rule" "ingress_from_ecs" {
+  type                     = "ingress"
+  from_port                = 0
+  to_port                  = 0
+  protocol                 = "-1"
+  security_group_id        = aws_security_group.private_load_balancer_sg.id
+  source_security_group_id = aws_security_group.fargate_container_sg.id
+  description              = "Only accept traffic from a container in the Fargate container security group"
 }

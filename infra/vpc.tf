@@ -7,24 +7,30 @@
  * Internet Gateway, NAT Gateways, and route tables to support both public
  * and private subnet configurations. Configures VPC Endpoints for DynamoDB,
  * SQS, and ECS to enable private connections to these services.
+ * Security groups are configured to restrict traffic for application needs.
  *
  * Resources Created:
  * - VPC with CIDR block 10.0.0.0/16, enabling DNS support and hostnames.
  * - Two public subnets for exposing services to the internet, with auto-assignment
- *   of public IP addresses.
+ *     of public IP addresses.
  * - Two private subnets for running internal services, accessible only within the VPC.
  * - An Internet Gateway attached to the VPC to allow communication with the internet.
  * - NAT Gateways for each private subnet, allowing outbound internet access.
  * - Route tables and associations to correctly route traffic for each subnet type.
  * - VPC Endpoints for DynamoDB, SQS, and ECS services for private AWS service access.
  * - Configured security groups for VPC Endpoints to restrict traffic
- *   appropriately based on application needs.
+ *     appropriately based on application needs.
+ * - Application Load Balancers (one public and one private) for routing external
+ *     and internal traffic to services.
+ * - Target groups/listeners for the lbs to manage traffic routing and health checks.
  *
  * Design Decisions:
  * - Subnets are distributed across the first two available Availability Zones in
- *   the selected AWS region to ensure high availability.
+ *     the selected AWS region to ensure high availability.
  * - NAT Gateways are provisioned to enable outbound internet access for resources
- *   in the private subnets, ensuring they can still reach external services as needed.
+ *     in the private subnets, ensuring they can still reach external services as needed.
+ * - Load balancers are used to facilitate traffic management and service exposure both
+ *     internally and externally, enhancing the architecture's flexibility and resilience.
  */
 
 data "aws_availability_zones" "available" {}
@@ -198,6 +204,7 @@ resource "aws_vpc_endpoint" "ecs" {
 }
 
 ### Security Groups ###
+
 resource "aws_security_group" "vpc_endpoints_sg" {
   name        = "VpcEndpointsSG"
   description = "Security group for VPC endpoints"
@@ -288,4 +295,92 @@ resource "aws_security_group_rule" "ingress_from_ecs" {
   security_group_id        = aws_security_group.private_load_balancer_sg.id
   source_security_group_id = aws_security_group.fargate_container_sg.id
   description              = "Only accept traffic from a container in the Fargate container security group"
+}
+
+### Load Balancers ###
+
+resource "aws_lb" "public" {
+  name               = "public-lb"
+  internal           = false
+  load_balancer_type = "application"
+  security_groups    = [aws_security_group.public_load_balancer_sg.id]
+  subnets            = [aws_subnet.public_one.id, aws_subnet.public_two.id]
+
+  enable_deletion_protection = false
+
+  tags = {
+    Name = "PublicLoadBalancer"
+  }
+}
+
+resource "aws_lb" "private" {
+  name               = "private-lb"
+  internal           = true
+  load_balancer_type = "application"
+  security_groups    = [aws_security_group.private_load_balancer_sg.id]
+  subnets            = [aws_subnet.private_one.id, aws_subnet.private_two.id]
+
+  enable_deletion_protection = false
+
+  tags = {
+    Name = "PrivateLoadBalancer"
+  }
+}
+
+resource "aws_lb_listener" "public" {
+  load_balancer_arn = aws_lb.public.arn
+  port              = 80
+  protocol          = "HTTP"
+
+  default_action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.public.arn
+  }
+}
+
+resource "aws_lb_listener" "private" {
+  load_balancer_arn = aws_lb.private.arn
+  port              = 80
+  protocol          = "HTTP"
+
+  default_action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.private.arn
+  }
+}
+
+resource "aws_lb_target_group" "public" {
+  name     = "public-tg"
+  port     = 80
+  protocol = "HTTP"
+  vpc_id   = aws_vpc.main.id
+
+  health_check {
+    enabled             = true
+    path                = "/"
+    port                = "traffic-port"
+    protocol            = "HTTP"
+    healthy_threshold   = 2
+    unhealthy_threshold = 2
+    timeout             = 5
+    interval            = 6
+  }
+}
+
+resource "aws_lb_target_group" "private" {
+  name     = "private-tg"
+  port     = 80
+  protocol = "HTTP"
+  vpc_id   = aws_vpc.main.id
+
+  health_check {
+    enabled             = true
+    path                = "/"
+    port                = "traffic-port"
+    protocol            = "HTTP"
+    healthy_threshold   = 2
+    unhealthy_threshold = 2
+    timeout             = 5
+    interval            = 6
+  }
 }

@@ -1,5 +1,5 @@
-const fs = require("fs");
-const path = require("path");
+const fs = require('fs');
+const path = require('path');
 
 const NUM_OF_ITEMS = 5;
 
@@ -7,9 +7,9 @@ function generateMockUseCases(count, outputFilePath) {
   const mockRequests = [];
 
   const availableAnalysisTypes = [
-    "Rolling Mean",
-    "Rolling Std Deviation",
-    "Autocorrelation",
+    'Rolling Mean',
+    'Rolling Std Deviation',
+    'Autocorrelation',
   ];
 
   for (let i = 1; i <= count; i++) {
@@ -51,7 +51,7 @@ function getRandomAnalysisTypes(availableTypes) {
 }
 
 function getRandomStatus() {
-  const statusOptions = ["Complete", "InProgress", "NotStarted", "Failed"];
+  const statusOptions = ['Complete', 'InProgress', 'NotStarted', 'Failed'];
   const randomIndex = Math.floor(Math.random() * statusOptions.length);
   return statusOptions[randomIndex];
 }
@@ -64,15 +64,15 @@ function getRandomDate() {
 
 function getRandomAuthor() {
   const mockAuthorNames = [
-    "Emily Johnson",
-    "James Mitchell",
-    "Sophia Turner",
-    "Benjamin Hayes",
-    "Olivia Bennett",
+    'Emily Johnson',
+    'James Mitchell',
+    'Sophia Turner',
+    'Benjamin Hayes',
+    'Olivia Bennett',
   ];
   return (
     mockAuthorNames[Math.floor(Math.random() * mockAuthorNames.length)] ??
-    "Jane Doe"
+    'Jane Doe'
   );
 }
 

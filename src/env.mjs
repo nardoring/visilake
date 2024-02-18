@@ -1,5 +1,5 @@
-import { createEnv } from "@t3-oss/env-nextjs";
-import { z } from "zod";
+import { createEnv } from '@t3-oss/env-nextjs';
+import { z } from 'zod';
 
 export const env = createEnv({
   /**
@@ -8,17 +8,17 @@ export const env = createEnv({
    */
   server: {
     NODE_ENV: z
-      .enum(["development", "test", "production"])
-      .default("development"),
+      .enum(['development', 'test', 'production'])
+      .default('development'),
     NEXTAUTH_SECRET: z.string().optional(),
-    NEXTAUTH_URL: z.string().default("http://localhost:3000"),
+    NEXTAUTH_URL: z.string().default('http://localhost:3000'),
     DYNAMO_URL: z
       .string()
-      .default("http://dynamodb.us-east-1.localhost.localstack.cloud:4566/"),
-    AWS_REGION: z.string().default("us-east-1"),
+      .default('http://dynamodb.us-east-1.localhost.localstack.cloud:4566/'),
+    AWS_REGION: z.string().default('us-east-1'),
     SQS_URL: z
       .string()
-      .default("http://sqs.us-east-1.localhost.localstack.cloud:4566/"),
+      .default('http://sqs.us-east-1.localhost.localstack.cloud:4566/'),
   },
 
   /**

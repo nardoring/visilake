@@ -1,12 +1,12 @@
-import type { UseCase } from "~/models/domain/useCase";
-import type { UseCaseStatus } from "~/models/domain/useCaseStatus";
+import type { UseCase } from '~/models/domain/useCase';
+import type { UseCaseStatus } from '~/models/domain/useCaseStatus';
 
 const mockAuthorNames = [
-  "Emily Johnson",
-  "James Mitchell",
-  "Sophia Turner",
-  "Benjamin Hayes",
-  "Olivia Bennett",
+  'Emily Johnson',
+  'James Mitchell',
+  'Sophia Turner',
+  'Benjamin Hayes',
+  'Olivia Bennett',
 ];
 
 function generateMockUseCases(count: number): UseCase[] {
@@ -14,9 +14,9 @@ function generateMockUseCases(count: number): UseCase[] {
 
   for (let i = 1; i <= count; i++) {
     const analysisTypes = [
-      "Rolling Mean",
-      "Autocorrelation",
-      "Rolling Std Deviation",
+      'Rolling Mean',
+      'Autocorrelation',
+      'Rolling Std Deviation',
     ];
     const useCase: UseCase = {
       useCaseName: `Use case ${i}`,
@@ -24,10 +24,10 @@ function generateMockUseCases(count: number): UseCase[] {
       useCaseDescription: `This is a test for use case ${i}`,
       useCaseStatus: getRandomStatus(),
       powerBILink: `https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value${i}'`,
-      author: mockAuthorNames[Math.floor(Math.random() * 5)] ?? "Jane Doe",
+      author: mockAuthorNames[Math.floor(Math.random() * 5)] ?? 'Jane Doe',
       analysisTypes: analysisTypes.slice(
         0,
-        Math.floor(Math.random() * 3 - 0.001) + 1,
+        Math.floor(Math.random() * 3 - 0.001) + 1
       ),
     };
 
@@ -45,7 +45,7 @@ function getRandomDate(startDate: Date, endDate: Date): Date {
 }
 
 function getRandomStatus(): UseCaseStatus {
-  const statusOptions = ["Complete", "InProgress", "NotStarted", "Failed"];
+  const statusOptions = ['Complete', 'InProgress', 'NotStarted', 'Failed'];
   const randomIndex = Math.floor(Math.random() * statusOptions.length);
   return statusOptions[randomIndex] as UseCaseStatus;
 }

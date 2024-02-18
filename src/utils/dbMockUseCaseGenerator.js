@@ -1,5 +1,5 @@
-const fs = require("fs");
-const path = require("path");
+const fs = require('fs');
+const path = require('path');
 
 const NUM_OF_ITEMS = 25;
 
@@ -7,9 +7,9 @@ function generateMockUseCases(count, outputFilePath) {
   const mockRequests = [];
 
   const availableAnalysisTypes = [
-    "Rolling Mean",
-    "Rolling Std Deviation",
-    "Autocorrelation",
+    'Rolling Mean',
+    'Rolling Std Deviation',
+    'Autocorrelation',
   ];
 
   for (let i = 1; i <= count; i++) {
@@ -52,7 +52,7 @@ function generateMockUseCases(count, outputFilePath) {
   const jsonString = JSON.stringify(outputData, null, 2);
 
   // Write the JSON string to a file
-  fs.writeFileSync(outputFilePath, jsonString, "utf-8");
+  fs.writeFileSync(outputFilePath, jsonString, 'utf-8');
 }
 
 function getRandomId() {
@@ -68,7 +68,7 @@ function getRandomAnalysisTypes(availableTypes) {
 }
 
 function getRandomStatus() {
-  const statusOptions = ["Complete", "InProgress", "NotStarted", "Failed"];
+  const statusOptions = ['Complete', 'InProgress', 'NotStarted', 'Failed'];
   const randomIndex = Math.floor(Math.random() * statusOptions.length);
   return statusOptions[randomIndex];
 }
@@ -81,21 +81,21 @@ function getRandomDate() {
 
 function getRandomAuthor() {
   const mockAuthorNames = [
-    "Emily Johnson",
-    "James Mitchell",
-    "Sophia Turner",
-    "Benjamin Hayes",
-    "Olivia Bennett",
+    'Emily Johnson',
+    'James Mitchell',
+    'Sophia Turner',
+    'Benjamin Hayes',
+    'Olivia Bennett',
   ];
   return (
     mockAuthorNames[Math.floor(Math.random() * mockAuthorNames.length)] ??
-    "Jane Doe"
+    'Jane Doe'
   );
 }
 
-const mockDataDirectory = path.resolve(__dirname, "../../infra/useCases/");
+const mockDataDirectory = path.resolve(__dirname, '../../infra/useCases/');
 const outputFilePath = path.join(
   mockDataDirectory,
-  "mockUseCasesBatchCommand.json",
+  'mockUseCasesBatchCommand.json'
 );
 generateMockUseCases(NUM_OF_ITEMS, outputFilePath);

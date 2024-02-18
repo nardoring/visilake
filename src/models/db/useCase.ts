@@ -1,6 +1,6 @@
-import type { DynamoArray } from "./dynamoArray";
-import type { DynamoNumber } from "./dynamoNumber";
-import type { DynamoString } from "./dynamoString";
+import type { DynamoArray } from './dynamoArray';
+import type { DynamoNumber } from './dynamoNumber';
+import type { DynamoString } from './dynamoString';
 
 export interface UseCase {
   useCaseName: DynamoString;

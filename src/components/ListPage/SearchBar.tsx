@@ -5,7 +5,6 @@ import type { Dispatch, SetStateAction } from 'react';
 import { Tooltip } from 'react-tooltip';
 
 interface SearchBarProps {
-  // columnFilters: ColumnFilter[];
   setGlobalFilter: Dispatch<SetStateAction<string>>;
 }
 
@@ -13,7 +12,7 @@ export default function SearchBar({ setGlobalFilter }: SearchBarProps) {
   const router = useRouter();
 
   return (
-    <div className='justify-left z-40 flex w-full items-center p-5 pl-5 '>
+    <div className='justify-left z-40 flex w-full pl-5 pt-3'>
       <div
         data-tooltip-id='search'
         data-tooltip-content='Search for items in any column of the table'

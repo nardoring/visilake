@@ -50,3 +50,6 @@ yarn-error.log*
 */.terraform/
 terraform.**
 .terraform.**
+
+# deploy log
+deploy-tf.log

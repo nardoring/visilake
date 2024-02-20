@@ -111,11 +111,7 @@
           pkgs.nodePackages.prettier
           pkgs.nodePackages.eslint
 
-          ## AWS
-          pkgs.awscli
           pkgs.terraform
-          pkgs.terraformer
-          # pkgs.localstack # broken on nixpkgs
         ]
         ++ localstack.devShells.${system}.default.buildInputs;
 
@@ -133,7 +129,7 @@
       SQS_URL = "http://sqs.us-east-1.localhost.localstack.cloud:4566/";
 
       # terraform local
-      TF_LOG = "DEBUG";
+      # TF_LOG = "DEBUG";
       AWS_ENDPOINT_URL = "http://localhost:4566";
     };
 

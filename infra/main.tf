@@ -30,7 +30,7 @@ resource "aws_ecs_task_definition" "task" {
       name   = var.service_name
       cpu    = var.container_cpu
       memory = var.container_memory
-      image  = var.image_url
+      image  = "${aws_ecr_repository.repo1.repository_url}:latest"
       portMappings = [
         {
           containerPort = var.container_port
@@ -147,6 +147,15 @@ resource "aws_ecs_service" "nardo" {
   }
 }
 
+resource "aws_ecr_repository" "repo1" {
+  name                 = "repo1"
+  image_tag_mutability = "MUTABLE"
+}
+
+output "ecr_repository_url" {
+  value       = aws_ecr_repository.repo1.repository_url
+  description = "The URL of the ECR repository"
+}
 
 resource "aws_sqs_queue" "requestQueue" {
   name = "requestQueue"

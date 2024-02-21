@@ -17,4 +17,4 @@ jobs:
       - uses: DeterminateSystems/nix-installer-action@main
       - uses: DeterminateSystems/magic-nix-cache-action@main
       - name: Test deploy infrastructure
-        run: nix develop -c "./infra/deploy-tf.sh --verbose"
+        run: nix develop -c ./infra/deploy-tf.sh --verbose

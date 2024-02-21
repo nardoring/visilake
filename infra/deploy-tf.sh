@@ -1,5 +1,22 @@
 #!/usr/bin/env bash
 exec > >(tee -a deploy-tf.log) 2>&1
+cd infra || { echo -e "\033[1;33mFailed to change directory to 'infra', run this from the project root. \033[0m\n "; exit 1; }
+
+function usage() {
+    echo -e "Usage: $0 [options]"
+    echo -e "\nOptions:"
+    echo -e "  none                   Full Localstack and Terraform Deployment"
+    echo -e "  -v, --verbose          Enable debug for Terraform and Localstack"
+    echo -e "  -r, --redeploy         Re-deploy Terraform config to Localstack"
+    echo -e "  -d, --docker           Re-deploy the nardo docker image to Localstack"
+    echo -e "  -t, --teardown [mode]  Perform teardown."
+    echo -e "                         Modes: 'h' or 'hard' for hard teardown, no mode for standard teardown"
+    echo -e "                                 hard teardown will remove all docker images on your system"
+    echo -e "  -h, --help             Display this help message"
+    echo -e "\nNote:"
+    echo -e "  -r -d Localstack must already be running by running '$0' first"
+    exit 1
+}
 
 function stop() {
     echo "Current Docker Containers:"
@@ -15,119 +32,91 @@ function stop() {
     exit 1
 }
 
-function teardown() {
+function clean() {
     rm -rf .terraform/ .terraform.lock.hcl terraform.tfstate terraform.tfstate.backup
 }
 
 function hard_teardown() {
     localstack stop
     docker system prune -af
-    exit 1
 }
 
-cd infra # run from the project root
+function push_app() {
+    localImageName="nardo:latest"
+    docker tag $localImageName "localhost.localstack.cloud:4510/repo1"
+    docker push "localhost.localstack.cloud:4510/repo1"
+    docker rmi nardo:latest
+}
+
+function deploy() {
+    set -e  # Exit immediately if a command exits with a non-zero status
+    SECONDS=0
+    echo -e "\n# - $(date '+%Y-%m-%d %H:%M:%S') -------------------------------------------------------#\n"
+    clean # cleanup potential old state
+
+    # build docker images with nix and load them into docker
+    docker load < "$(nix build --print-out-paths .#localstackpro-image)"
+    docker load < "$(nix build --print-out-paths .#nardo-image)"
+
+    localstack start -d
+    docker rmi localstack/localstack:latest
+
+    echo -e "\n# - $(date '+%Y-%m-%d %H:%M:%S') -------------------------------------------------------#\n"
+    # create a new ECR repository locally, tag the Docker image, push to ECR
+    awslocal ecr create-repository --repository-name repo1
+    push_app
+
+    echo -e "\n# - $(date '+%Y-%m-%d %H:%M:%S') -------------------------------------------------------#\n"
+    # terraform
+    tflocal init
+    tflocal plan
+    tflocal apply --auto-approve
+
+    tflocal show
+
+    echo -e "\n# - $(date '+%Y-%m-%d %H:%M:%S') -------------------------------------------------------#\n"
+    echo "Executed in $SECONDS seconds."
+}
 
 while [[ $# -gt 0 ]]; do
     case $1 in
-        --debug)
-        export TF_LOG=DEBUG
-        shift
-        ;;
-        --teardown)
-        if [[ $2 == "hard" ]]; then
-            teardown
-            hard_teardown
-            shift 2 # Consume both --teardown and hard
-        else
-            teardown
-            stop
-            shift # Consume --teardown
-        fi
-        ;;
+        -v|--verbose)
+            echo "Debug statements enabled"
+            export DEBUG=1
+            export TF_LOG=DEBUG
+            shift
+            ;;
+        -r|--redeploy)
+            tflocal refresh
+            tflocal apply
+            shift
+            exit 1
+            ;;
+        -d|--docker)
+            docker load < "$(nix build --print-out-paths .#nardo-image)"
+            push_app
+            shift
+            exit 1
+            ;;
+        -t|--teardown)
+            clean
+            if [[ $2 == "hard" || $2 == "h" ]]; then
+                hard_teardown
+                shift
+            else
+                stop
+            fi
+            shift
+            exit 1
+            ;;
+        -h|--help)
+            usage
+            ;;
         *)
-        echo "Unknown option: $1"
-        shift
-        ;;
+            echo "Unknown option: $1"
+            usage
+            ;;
     esac
 done
 
-set -e  # Exit immediately if a command exits with a non-zero status
-
-echo -e "\n# - $(date '+%Y-%m-%d %H:%M:%S') -------------------------------------------------------#\n"
-teardown
-# build docker images with nix and load them into docker
-docker load < "$(nix build --print-out-paths .#localstackpro-image)"
-docker load < "$(nix build --print-out-paths .#nardo-image)"
-
-localstack start -d
-docker rmi localstack/localstack:latest
-
-echo -e "\n# - $(date '+%Y-%m-%d %H:%M:%S') -------------------------------------------------------#\n"
-# create a new ECR repository locally, tag the Docker image, push to ECR
-awslocal ecr create-repository --repository-name repo1
-
-localImageName="nardo:latest"
-docker tag $localImageName "localhost.localstack.cloud:4510/repo1"
-docker push "localhost.localstack.cloud:4510/repo1"
-docker rmi nardo:latest
-
-echo -e "\n# - $(date '+%Y-%m-%d %H:%M:%S') -------------------------------------------------------#\n"
-# terraform
-tflocal init
-tflocal plan
-tflocal apply --auto-approve
-
-echo -e "\n# - $(date '+%Y-%m-%d %H:%M:%S') -------------------------------------------------------#\n"
-# checks
-echo "Clusters:"
-clusters=$(awslocal ecs list-clusters)
-echo "$clusters"
-
-cluster_arn=$(echo $clusters | jq -r '.clusterArns[0]')
-# echo -e "Cluster arn: $cluster_arn\n"
-
-## Get cluster tasks
-for i in {1..5}; do
-    tasks=$(awslocal ecs list-tasks --cluster $cluster_arn)
-    echo -e "Tasks: $tasks\n"
-    task_arn=$(echo $tasks | jq -r '.taskArns[0]')
-    if [ "$task_arn" == "null" ]; then
-        echo -e "\033[1;33mNo task found \033[0m\n"
-        exit 1
-    fi
-    if [ "$task_arn" != "null" ]; then
-        break
-    fi
-    sleep 2
-done
-# echo -e "Task arn: $task_arn\n"
-
-echo -e "\n# - $(date '+%Y-%m-%d %H:%M:%S') -------------------------------------------------------#\n"
-## Get task ports
-for i in {1..5}; do
-    app=$(awslocal ecs describe-tasks --cluster $cluster_arn --tasks $task_arn)
-    echo -e "App: $app\n"
-    app_port=$(echo $app | jq -r '.tasks[0].containers[0].networkBindings[0].hostPort')
-    if [ "$app_port" == "" ]; then
-        echo -e "\033[1;33mNo application found \033[0m\n"
-        exit 1
-    fi
-    if [ "$app_port" != "null" ]; then
-        break
-    fi
-    sleep 2
-done
-
-# Get tables
-tables=$(awslocal dynamodb list-tables)
-echo -e "Tables: $tables\n"
-
-# Get queues
-queues=$(awslocal sqs list-queues)
-echo -e "Queues: $queues\n"
-
-echo -e "Curling localhost:$app_port\n"
-curl localhost:$app_port
-
-
-echo "################################################################################"
+deploy

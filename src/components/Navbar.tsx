@@ -35,7 +35,7 @@ export default function Navbar() {
             <FontAwesomeIcon icon={faMagnifyingGlass}
               className="pr-2"
             />
-            View Use Cases
+            View Jobs
           </span>
         </button>
       ) : null}

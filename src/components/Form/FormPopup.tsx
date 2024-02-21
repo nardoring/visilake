@@ -96,7 +96,7 @@ export default function FormPopup({
                       void router.push("/ListPage");
                     }}
                   >
-                    View Use Cases
+                    View Jobs
                   </button>
                 </div>
               </div>

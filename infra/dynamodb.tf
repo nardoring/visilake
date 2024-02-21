@@ -43,7 +43,7 @@ resource "aws_dynamodb_table_item" "analysisType" {
 resource "aws_dynamodb_table_item" "mockRequest" {
   for_each   = { for req in local.mock_requests : req.requestID => req }
   table_name = aws_dynamodb_table.mockRequests.name
-  hash_key   = "requestID" # Corrected to match the table's hash key
+  hash_key   = "requestID"
 
   item = jsonencode({
     "requestID"          = { "S" = each.value.requestID },
@@ -53,7 +53,7 @@ resource "aws_dynamodb_table_item" "mockRequest" {
     "useCaseName"        = { "S" = each.value.useCaseName },
     "useCaseDescription" = { "S" = each.value.useCaseDescription },
     "author"             = { "S" = each.value.author },
-    "analysisTypes"      = { "SS" = each.value.analysisTypes },
+    "analysisTypes"      = each.value.analysisTypes,
     "powerBILink"        = { "S" = each.value.powerBILink }
   })
 }

@@ -1,73 +1,99 @@
 [
   {
     "requestID": "1",
-    "id": "lsq4jzi8dc481",
-    "creationDate": "1703760814087",
-    "useCaseStatus": "InProgress",
+    "id": "lsv43uxej737h",
+    "creationDate": "1703895395751",
+    "useCaseStatus": "Failed",
     "useCaseName": "Use case 1",
     "useCaseDescription": "This is a test for use case 1",
-    "author": "James Mitchell",
-    "analysisTypes": [
-      "Rolling Std Deviation",
-      "Rolling Mean",
-      "Autocorrelation"
-    ],
+    "author": "Sophia Turner",
+    "analysisTypes": {
+      "L": [
+        {
+          "S": "Autocorrelation"
+        },
+        {
+          "S": "Rolling Std Deviation"
+        },
+        {
+          "S": "Rolling Mean"
+        }
+      ]
+    },
     "powerBILink": "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'"
   },
   {
     "requestID": "2",
-    "id": "lsq4jzi8xp8vx",
-    "creationDate": "1702761423800",
-    "useCaseStatus": "Complete",
+    "id": "lsv43uxe4kb38",
+    "creationDate": "1695487986720",
+    "useCaseStatus": "Failed",
     "useCaseName": "Use case 2",
     "useCaseDescription": "This is a test for use case 2",
-    "author": "Sophia Turner",
-    "analysisTypes": [
-      "Autocorrelation"
-    ],
+    "author": "Olivia Bennett",
+    "analysisTypes": {
+      "L": [
+        {
+          "S": "Rolling Mean"
+        },
+        {
+          "S": "Rolling Std Deviation"
+        }
+      ]
+    },
     "powerBILink": "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'"
   },
   {
     "requestID": "3",
-    "id": "lsq4jzi8yies7",
-    "creationDate": "1707435234938",
+    "id": "lsv43uxek2qfz",
+    "creationDate": "1703035726183",
     "useCaseStatus": "Complete",
     "useCaseName": "Use case 3",
     "useCaseDescription": "This is a test for use case 3",
-    "author": "Emily Johnson",
-    "analysisTypes": [
-      "Rolling Std Deviation",
-      "Autocorrelation"
-    ],
+    "author": "Benjamin Hayes",
+    "analysisTypes": {
+      "L": [
+        {
+          "S": "Autocorrelation"
+        }
+      ]
+    },
     "powerBILink": "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'"
   },
   {
     "requestID": "4",
-    "id": "lsq4jzi8qudpi",
-    "creationDate": "1705282030347",
-    "useCaseStatus": "Complete",
+    "id": "lsv43uxetqfp7",
+    "creationDate": "1693608986401",
+    "useCaseStatus": "NotStarted",
     "useCaseName": "Use case 4",
     "useCaseDescription": "This is a test for use case 4",
-    "author": "James Mitchell",
-    "analysisTypes": [
-      "Rolling Mean",
-      "Autocorrelation",
-      "Rolling Std Deviation"
-    ],
+    "author": "Benjamin Hayes",
+    "analysisTypes": {
+      "L": [
+        {
+          "S": "Rolling Std Deviation"
+        }
+      ]
+    },
     "powerBILink": "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'"
   },
   {
     "requestID": "5",
-    "id": "lsq4jzi87r9vg",
-    "creationDate": "1694125403794",
-    "useCaseStatus": "Failed",
+    "id": "lsv43uxerefu7",
+    "creationDate": "1693746185290",
+    "useCaseStatus": "NotStarted",
     "useCaseName": "Use case 5",
     "useCaseDescription": "This is a test for use case 5",
-    "author": "Olivia Bennett",
-    "analysisTypes": [
-      "Autocorrelation",
-      "Rolling Mean"
-    ],
+    "author": "Emily Johnson",
+    "analysisTypes": {
+      "L": [
+        {
+          "S": "Rolling Mean"
+        },
+        {
+          "S": "Autocorrelation"
+        }
+      ]
+    },
     "powerBILink": "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'"
   }
 ]

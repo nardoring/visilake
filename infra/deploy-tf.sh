@@ -25,6 +25,8 @@ function hard_teardown() {
     exit 1
 }
 
+cd infra # run from the project root
+
 while [[ $# -gt 0 ]]; do
     case $1 in
         --debug)
@@ -50,6 +52,7 @@ while [[ $# -gt 0 ]]; do
 done
 
 set -e  # Exit immediately if a command exits with a non-zero status
+
 echo -e "\n# - $(date '+%Y-%m-%d %H:%M:%S') -------------------------------------------------------#\n"
 teardown
 # build docker images with nix and load them into docker

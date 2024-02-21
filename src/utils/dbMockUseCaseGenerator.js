@@ -27,7 +27,9 @@ function generateMockUseCases(count, outputFilePath) {
       useCaseName: input.useCaseName,
       useCaseDescription: input.useCaseDescription,
       author: getRandomAuthor(),
-      analysisTypes: input.analysisTypeNames,
+      analysisTypes: {
+        L: input.analysisTypeNames.map((id) => ({ S: id.toString() })),
+      },
       powerBILink: "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'",
     };
 

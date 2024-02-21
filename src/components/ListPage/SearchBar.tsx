@@ -12,7 +12,7 @@ export default function SearchBar({ setGlobalFilter }: SearchBarProps) {
   const router = useRouter();
 
   return (
-    <div className='justify-left z-40 flex w-full pl-5 pt-3'>
+    <div className='absolute justify-left z-50 flex'>
       <div
         data-tooltip-id='search'
         data-tooltip-content='Search for items in any column of the table'
@@ -20,11 +20,11 @@ export default function SearchBar({ setGlobalFilter }: SearchBarProps) {
 
         <Tooltip id='search' />
 
-        <span className='absolute inset-y-0 left-0 flex items-center pl-1.5'>
+        <span className='absolute inset-y-0 left-4 flex items-center'>
           <FontAwesomeIcon icon={faMagnifyingGlass} />
         </span>
         <input
-          className="block min-w-[10vw] rounded-md border border-black bg-veryLightBlue py-2 text-gray-900 shadow-lg focus:ring-offset-2 focus:ring-4 focus:ring-boldBlue"
+          className="block min-w-[20vw] rounded-md border border-black bg-veryLightBlue py-2 text-gray-900 shadow-lg focus:ring-offset-2 focus:ring-4 focus:ring-boldBlue"
           type="text"
           onChange={(e) => {
             setGlobalFilter(e.target.value);

@@ -174,9 +174,9 @@ export default function UseCaseTable() {
   }
 
   return (
-    <div className='col-start-2 col-end-9 row-start-2 pt-2 '>
-      <div className='fixed z-40 mb-8'>
-        <SearchBar setGlobalFilter={setGlobalFilter} />
+    <div className='col-start-2 col-end-9 row-start-2 flex'>
+      <div className='flex items-center'>
+          <SearchBar setGlobalFilter={setGlobalFilter} />
       </div>
 
       <div
@@ -236,8 +236,8 @@ export default function UseCaseTable() {
                 <tr
                   key={row.id}
                   className={`${table.getRowModel().rows.indexOf(row) % 2 === 0
-                      ? 'bg-white'
-                      : 'bg-lightIndigo'
+                    ? 'bg-white'
+                    : 'bg-lightIndigo'
                     } h-[4.28rem]`}
                 >
                   {row.getVisibleCells().map((cell) => (

@@ -69,7 +69,7 @@ function deploy() {
     echo -e "\n# - $(date '+%Y-%m-%d %H:%M:%S') -------------------------------------------------------#\n"
     # terraform
     tflocal init
-    tflocal plan
+    # tflocal plan
     tflocal apply --auto-approve
 
     tflocal show
@@ -88,7 +88,7 @@ while [[ $# -gt 0 ]]; do
             ;;
         -r|--redeploy)
             tflocal refresh
-            tflocal apply
+            tflocal apply --auto-approve
             shift
             exit 1
             ;;

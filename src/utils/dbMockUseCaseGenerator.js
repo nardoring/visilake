@@ -30,14 +30,15 @@ function generateMockUseCases(count, outputFilePath) {
       analysisTypes: {
         L: input.analysisTypeNames.map((id) => ({ S: id.toString() })),
       },
-      powerBILink: "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'",
+      powerBILink:
+        "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'",
     };
 
     mockRequests.push(item);
   }
 
   const jsonString = JSON.stringify(mockRequests, null, 2);
-  fs.writeFileSync(outputFilePath, jsonString, "utf-8");
+  fs.writeFileSync(outputFilePath, jsonString, 'utf-8');
 }
 
 function getRandomId() {
@@ -78,9 +79,6 @@ function getRandomAuthor() {
   );
 }
 
-const mockDataDirectory = path.resolve(__dirname, "../../infra/mockdata/");
-const outputFilePath = path.join(
-  mockDataDirectory,
-  "requests.json",
-);
+const mockDataDirectory = path.resolve(__dirname, '../../infra/mockdata/');
+const outputFilePath = path.join(mockDataDirectory, 'requests.json');
 generateMockUseCases(NUM_OF_ITEMS, outputFilePath);

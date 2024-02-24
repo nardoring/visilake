@@ -91,77 +91,7 @@ resource "aws_s3_bucket_logging" "data_lake_bucket" {
 
 resource "aws_glue_catalog_table" "aws_glue_catalog_table" {
   name          = "job-catalog-table"
-  database_name = "job-catalog-database"
-
-  table_type = "EXTERNAL_TABLE"
-
-  parameters = {
-    EXTERNAL              = "TRUE"
-    "parquet.compression" = "SNAPPY"
-  }
-
-  storage_descriptor {
-    location      = aws_s3_bucket.data_lake_bucket.arn
-    input_format  = "org.apache.hadoop.hive.ql.io.parquet.MapredParquetInputFormat"
-    output_format = "org.apache.hadoop.hive.ql.io.parquet.MapredParquetOutputFormat"
-
-    ser_de_info {
-      name                  = "my-stream"
-      serialization_library = "org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe"
-
-      parameters = {
-        "serialization.format" = 1
-      }
-    }
-
-    columns {
-      name    = "requestID"
-      type    = "string"
-      comment = ""
-    }
-    columns {
-      name    = "id"
-      type    = "string"
-      comment = ""
-    }
-
-    columns {
-      name    = "creationDate"
-      type    = "number"
-      comment = ""
-    }
-    columns {
-      name    = "useCaseStatus"
-      type    = "string"
-      comment = ""
-    }
-    columns {
-      name    = "useCaseName"
-      type    = "string"
-      comment = ""
-    }
-    columns {
-      name    = "useCaseDescription"
-      type    = "string"
-      comment = ""
-    }
-    columns {
-      name    = "author"
-      type    = "string"
-      comment = ""
-    }
-    columns {
-      name = "analysisTypes"
-      type = "string" ## ????
-      # type    = "struct<my_nested_string:string>" ## ????
-      comment = ""
-    }
-    columns {
-      name    = "powerBILink"
-      type    = "string"
-      comment = ""
-    }
-  }
+  database_name = aws_glue_catalog_database.job.name
 }
 
 resource "aws_glue_catalog_database" "job" {
@@ -177,46 +107,87 @@ resource "aws_glue_catalog_database" "job" {
   }
 }
 
-resource "aws_glue_crawler" "nardo_crawler" {
+# resource "aws_glue_catalog_table" "aws_glue_catalog_table" {
+#   name          = "data-catalog-table"
+#   database_name = aws_glue_catalog_database.data.name
+
+#   table_type = "EXTERNAL_TABLE"
+
+#   parameters = {
+#     EXTERNAL              = "TRUE"
+#     "parquet.compression" = "SNAPPY"
+#   }
+
+#   storage_descriptor {
+#     location      = aws_s3_bucket.data_lake_bucket.arn
+#     input_format  = "org.apache.hadoop.hive.ql.io.parquet.MapredParquetInputFormat"
+#     output_format = "org.apache.hadoop.hive.ql.io.parquet.MapredParquetOutputFormat"
+
+#     ser_de_info {
+#       name                  = "my-stream"
+#       serialization_library = "org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe"
+
+#       parameters = {
+#         "serialization.format" = 1
+#       }
+#     }
+
+#     columns {
+#       name    = "requestID"
+#       type    = "string"
+#       comment = ""
+#     }
+#     ...
+#   }
+# }
+
+
+### Glue Crawler ###
+### TODO This doesn't seem work work right now, needs to be debugged
+### localstack glue API docs:
+### https://docs.localstack.cloud/references/coverage/coverage_glue/
+###
+### ref: https://docs.aws.amazon.com/glue/latest/dg/add-crawler.html#crawler-s3-folder-table-partition
+### ref: https://docs.aws.amazon.com/athena/latest/ug/glue-best-practices.html#schema-crawlers-data-sources
+
+resource "aws_glue_crawler" "mock_requests_crawler" {
   database_name = aws_glue_catalog_database.job.name
-  name          = "nardo_crawler"
+  name          = "mock_requests_crawler"
   role          = aws_iam_role.glue_crawler_role.arn
 
   dynamodb_target {
-    path = "mockRequests"
+    path = aws_dynamodb_table.mockRequests.name
   }
 }
 
-### Glue Crawler ###
+# resource "aws_glue_crawler" "data_lake_crawler" {
+#   name          = "data-lake-crawler"
+#   database_name = aws_glue_catalog_database.job.name
+#   schedule      = "cron(0 1 * * ? *)"
+#   role          = aws_iam_role.glue_crawler_role.arn
+#   # tags          = var.tags # TODO
 
-resource "aws_glue_crawler" "data_lake_crawler" {
-  name          = "data-lake-crawler"
-  database_name = aws_glue_catalog_database.job.name
-  schedule      = "cron(0 1 * * ? *)"
-  role          = aws_iam_role.glue_crawler_role.arn
-  # tags          = var.tags # TODO
+#   schema_change_policy {
+#     delete_behavior = "LOG"
+#     update_behavior = "UPDATE_IN_DATABASE"
+#   }
 
-  schema_change_policy {
-    delete_behavior = "LOG"
-    update_behavior = "UPDATE_IN_DATABASE"
-  }
+#   configuration = jsonencode(
+#     {
+#       Grouping = {
+#         TableGroupingPolicy = "CombineCompatibleSchemas"
+#       }
+#       CrawlerOutput = {
+#         Partitions = { AddOrUpdateBehavior = "InheritFromTable" }
+#       }
+#       Version = 1
+#     }
+#   )
 
-  configuration = jsonencode(
-    {
-      Grouping = {
-        TableGroupingPolicy = "CombineCompatibleSchemas"
-      }
-      CrawlerOutput = {
-        Partitions = { AddOrUpdateBehavior = "InheritFromTable" }
-      }
-      Version = 1
-    }
-  )
-
-  s3_target {
-    path = "s3://${aws_s3_bucket.data_lake_bucket.bucket}"
-  }
-}
+#   s3_target {
+#     path = "s3://${aws_s3_bucket.data_lake_bucket.bucket}"
+#   }
+# }
 
 resource "aws_iam_role" "glue_crawler_role" {
   name = "data_lake_glue_crawler_role"

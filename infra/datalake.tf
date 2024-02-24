@@ -72,7 +72,7 @@ resource "aws_s3_bucket_versioning" "versioning_data_lake" {
 ### Logging ###
 
 resource "aws_s3_bucket" "data_lake_log_bucket" {
-  bucket = "data-lake-log-bucket"
+  bucket = "data-lake-log-bucket-${random_string.bucket_suffix.result}"
 }
 
 resource "aws_s3_bucket_acl" "data_lake_log_bucket_acl" {
@@ -101,7 +101,7 @@ resource "aws_glue_catalog_table" "aws_glue_catalog_table" {
   }
 
   storage_descriptor {
-    location      = "s3://my-bucket/event-streams/my-stream" # TODO
+    location      = aws_s3_bucket.data_lake_bucket.arn
     input_format  = "org.apache.hadoop.hive.ql.io.parquet.MapredParquetInputFormat"
     output_format = "org.apache.hadoop.hive.ql.io.parquet.MapredParquetOutputFormat"
 
@@ -175,4 +175,93 @@ resource "aws_glue_catalog_database" "job" {
       data_lake_principal_identifier = "IAM_ALLOWED_PRINCIPALS"
     }
   }
+}
+
+resource "aws_glue_crawler" "nardo_crawler" {
+  database_name = aws_glue_catalog_database.job.name
+  name          = "nardo_crawler"
+  role          = aws_iam_role.glue_crawler_role.arn
+
+  dynamodb_target {
+    path = "mockRequests"
+  }
+}
+
+### Glue Crawler ###
+
+resource "aws_glue_crawler" "data_lake_crawler" {
+  name          = "data-lake-crawler"
+  database_name = aws_glue_catalog_database.job.name
+  schedule      = "cron(0 1 * * ? *)"
+  role          = aws_iam_role.glue_crawler_role.arn
+  # tags          = var.tags # TODO
+
+  schema_change_policy {
+    delete_behavior = "LOG"
+    update_behavior = "UPDATE_IN_DATABASE"
+  }
+
+  configuration = jsonencode(
+    {
+      Grouping = {
+        TableGroupingPolicy = "CombineCompatibleSchemas"
+      }
+      CrawlerOutput = {
+        Partitions = { AddOrUpdateBehavior = "InheritFromTable" }
+      }
+      Version = 1
+    }
+  )
+
+  s3_target {
+    path = "s3://${aws_s3_bucket.data_lake_bucket.bucket}"
+  }
+}
+
+resource "aws_iam_role" "glue_crawler_role" {
+  name = "data_lake_glue_crawler_role"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action = "sts:AssumeRole"
+        Effect = "Allow"
+        Principal = {
+          Service = "glue.amazonaws.com"
+        }
+      },
+    ]
+  })
+}
+
+resource "aws_iam_policy" "glue_crawler_policy" {
+  name = "data_lake_glue_crawler_policy"
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Action = [
+          "dynamodb:*",
+          "glue:GetDatabase",
+          "glue:GetDatabases",
+          "glue:GetTable",
+          "glue:GetTables",
+          "glue:UpdateTable",
+          "glue:CreateTable",
+          "glue:DeleteTable",
+          "s3:GetObject",
+          "s3:PutObject",
+          "s3:ListBucket",
+        ]
+        Resource = "*"
+      },
+    ]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "glue_crawler_policy_attachment" {
+  role       = aws_iam_role.glue_crawler_role.name
+  policy_arn = aws_iam_policy.glue_crawler_policy.arn
 }

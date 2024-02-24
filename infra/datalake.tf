@@ -265,3 +265,97 @@ resource "aws_iam_role_policy_attachment" "glue_crawler_policy_attachment" {
   role       = aws_iam_role.glue_crawler_role.name
   policy_arn = aws_iam_policy.glue_crawler_policy.arn
 }
+
+### Athena ###
+### TODO cant currently create a db for the query results, is this a need or a want?
+### localstack athena API docs:
+### https://docs.localstack.cloud/references/coverage/coverage_athena/
+
+resource "aws_athena_workgroup" "data_lake_workgroup" {
+  name = "data-lake-workgroup"
+
+  description = "Workgroup for data lake queries"
+
+  state = "ENABLED"
+
+  configuration {
+    enforce_workgroup_configuration    = true
+    publish_cloudwatch_metrics_enabled = true
+
+    result_configuration {
+      # for location info: https://docs.aws.amazon.com/athena/latest/ug/querying.html
+      # output_location = "s3://${aws_s3_bucket.athena_query_results.bucket}/"
+      encryption_configuration {
+        encryption_option = "SSE_KMS"
+        kms_key_arn       = aws_kms_key.data_lake_key.arn
+      }
+    }
+  }
+
+  tags = {
+    Environment = "DataLake"
+  }
+}
+
+# Workgroup seems to automatically create this
+# resource "aws_s3_bucket" "athena_query_results" {
+#   bucket = "athena-query-results-${random_string.bucket_suffix.result}"
+
+#   tags = {
+#     Purpose = "AthenaQueryResults"
+#   }
+# }
+
+# Workgroup seems to automatically create this
+# resource "aws_athena_data_catalog" "athena_data_catalog" {
+#   name        = "athena-glue-data-catalog"
+#   description = "Glue based Data Catalog"
+#   type        = "GLUE"
+
+#   parameters = {
+#     "catalog-id" = "123456789012"
+#   }
+# }
+
+
+# resource "aws_athena_database" "query_results_db" {
+#   name          = "athena_query_db"
+#   bucket        = aws_s3_bucket.athena_query_results.id
+#   force_destroy = true
+
+#   encryption_configuration {
+#     encryption_option = "SSE_KMS"
+#     kms_key           = aws_kms_key.data_lake_key.arn
+#   }
+# }
+
+resource "aws_iam_policy" "athena_access_policy" {
+  name = "athena_access_policy"
+  policy = jsonencode({
+    Version = "2012-10-17",
+    Statement = [
+      {
+        Effect = "Allow",
+        Action = [
+          "s3:*",
+          "glue:*",
+          "athena:*",
+          "glue:GetDatabase",
+          "glue:GetDatabases",
+          "glue:GetTable",
+          "glue:GetTables",
+          "s3:GetObject",
+          "s3:ListBucket",
+          "s3:PutObject",
+          "s3:PutObjectAcl"
+        ],
+        Resource = "*"
+      },
+    ]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "athena_access_policy_attachment" {
+  role       = aws_iam_role.glue_crawler_role.name
+  policy_arn = aws_iam_policy.athena_access_policy.arn
+}

@@ -89,11 +89,7 @@ resource "aws_s3_bucket_logging" "data_lake_bucket" {
 
 ### GLUE ###
 
-resource "aws_glue_catalog_table" "aws_glue_catalog_table" {
-  name          = "job-catalog-table"
-  database_name = aws_glue_catalog_database.job.name
-}
-
+# This will currently replicate what we have in dynamoDB into a GLUE db
 resource "aws_glue_catalog_database" "job" {
   name        = "job-catalog-database"
   description = "A placeholder example catalog db for testing"
@@ -107,43 +103,66 @@ resource "aws_glue_catalog_database" "job" {
   }
 }
 
-# resource "aws_glue_catalog_table" "aws_glue_catalog_table" {
-#   name          = "data-catalog-table"
-#   database_name = aws_glue_catalog_database.data.name
+resource "aws_glue_catalog_table" "job_catalog_table" {
+  name          = "job-catalog-table"
+  description   = "Catalog table for the job's metadata"
+  database_name = aws_glue_catalog_database.job.name
+}
 
-#   table_type = "EXTERNAL_TABLE"
 
-#   parameters = {
-#     EXTERNAL              = "TRUE"
-#     "parquet.compression" = "SNAPPY"
-#   }
+resource "aws_glue_catalog_database" "data" {
+  name        = "data-catalog-database"
+  description = "A testing catalog db"
 
-#   storage_descriptor {
-#     location      = aws_s3_bucket.data_lake_bucket.arn
-#     input_format  = "org.apache.hadoop.hive.ql.io.parquet.MapredParquetInputFormat"
-#     output_format = "org.apache.hadoop.hive.ql.io.parquet.MapredParquetOutputFormat"
+  create_table_default_permission {
+    permissions = ["SELECT"]
 
-#     ser_de_info {
-#       name                  = "my-stream"
-#       serialization_library = "org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe"
+    principal {
+      data_lake_principal_identifier = "IAM_ALLOWED_PRINCIPALS"
+    }
+  }
+}
 
-#       parameters = {
-#         "serialization.format" = 1
-#       }
-#     }
+resource "aws_glue_catalog_table" "data_catalog_table" {
+  name          = "data-catalog-table"
+  description   = "Catalog table for the data which we process' metadata"
+  database_name = aws_glue_catalog_database.data.name
 
-#     columns {
-#       name    = "requestID"
-#       type    = "string"
-#       comment = ""
-#     }
-#     ...
-#   }
-# }
+  table_type = "EXTERNAL_TABLE"
+
+  parameters = {
+    EXTERNAL              = "TRUE"
+    "parquet.compression" = "SNAPPY"
+  }
+
+  storage_descriptor {
+    location      = "s3://${aws_s3_bucket.data_lake_bucket.bucket}"
+    input_format  = "org.apache.hadoop.hive.ql.io.parquet.MapredParquetInputFormat"
+    output_format = "org.apache.hadoop.hive.ql.io.parquet.MapredParquetOutputFormat"
+
+    ser_de_info {
+      name                  = "my-stream"
+      serialization_library = "org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe"
+
+      parameters = {
+        "serialization.format" = 1
+      }
+    }
+
+    # TODO Define schema if needed, otherwise, Glue can infer schema during a crawl
+    # We should validate this though, have seen issues with Glue determining the correct data types
+    # columns {
+    #   name    = "requestID"
+    #   type    = "string"
+    #   comment = ""
+    # }
+  }
+}
 
 
 ### Glue Crawler ###
-### TODO This doesn't seem work work right now, needs to be debugged
+### TODO This doesn't seem to work on Localstack, I image because my actual AWS account is not connected
+### for Glue Services
 ### localstack glue API docs:
 ### https://docs.localstack.cloud/references/coverage/coverage_glue/
 ###
@@ -152,45 +171,53 @@ resource "aws_glue_catalog_database" "job" {
 
 resource "aws_glue_crawler" "mock_requests_crawler" {
   database_name = aws_glue_catalog_database.job.name
-  name          = "mock_requests_crawler"
+  description   = "Crawler for the metadata(App produced data: requests table, intermediary tables, etc.)"
+  name          = "mock-requests-crawler"
   role          = aws_iam_role.glue_crawler_role.arn
+
+  tags = {
+    Environment = "DataLake-dev"
+  }
 
   dynamodb_target {
     path = aws_dynamodb_table.mockRequests.name
   }
 }
 
-# resource "aws_glue_crawler" "data_lake_crawler" {
-#   name          = "data-lake-crawler"
-#   database_name = aws_glue_catalog_database.job.name
-#   schedule      = "cron(0 1 * * ? *)"
-#   role          = aws_iam_role.glue_crawler_role.arn
-#   # tags          = var.tags # TODO
+resource "aws_glue_crawler" "data_lake_crawler" {
+  name          = "data-lake-crawler"
+  description   = "Crawler for the non-metadata(Production data, etc.)"
+  database_name = aws_glue_catalog_database.data.name
+  schedule      = "cron(0 1 * * ? *)"
+  role          = aws_iam_role.glue_crawler_role.arn
+  tags = {
+    Environment = "DataLake-dev"
+  }
 
-#   schema_change_policy {
-#     delete_behavior = "LOG"
-#     update_behavior = "UPDATE_IN_DATABASE"
-#   }
+  schema_change_policy {
+    delete_behavior = "LOG"
+    update_behavior = "UPDATE_IN_DATABASE"
+  }
 
-#   configuration = jsonencode(
-#     {
-#       Grouping = {
-#         TableGroupingPolicy = "CombineCompatibleSchemas"
-#       }
-#       CrawlerOutput = {
-#         Partitions = { AddOrUpdateBehavior = "InheritFromTable" }
-#       }
-#       Version = 1
-#     }
-#   )
+  configuration = jsonencode(
+    {
+      Grouping = {
+        TableGroupingPolicy = "CombineCompatibleSchemas"
+      }
+      CrawlerOutput = {
+        Partitions = { AddOrUpdateBehavior = "InheritFromTable" }
+      }
+      Version = 1
+    }
+  )
 
-#   s3_target {
-#     path = "s3://${aws_s3_bucket.data_lake_bucket.bucket}"
-#   }
-# }
+  s3_target {
+    path = "s3://${aws_s3_bucket.data_lake_bucket.bucket}"
+  }
+}
 
 resource "aws_iam_role" "glue_crawler_role" {
-  name = "data_lake_glue_crawler_role"
+  name = "data-lake-glue-crawler-role"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
@@ -207,29 +234,73 @@ resource "aws_iam_role" "glue_crawler_role" {
 }
 
 resource "aws_iam_policy" "glue_crawler_policy" {
-  name = "data_lake_glue_crawler_policy"
+  name = "data-lake-glue-crawler-policy"
   policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
       {
         Effect = "Allow"
-        Action = [
+        Action = [ # TODO IAM Policy EVAL, wide open for now
+          "athena:*",
           "dynamodb:*",
-          "glue:GetDatabase",
-          "glue:GetDatabases",
-          "glue:GetTable",
-          "glue:GetTables",
-          "glue:UpdateTable",
-          "glue:CreateTable",
-          "glue:DeleteTable",
-          "s3:GetObject",
-          "s3:PutObject",
-          "s3:ListBucket",
+          "glue:*",
+          "s3:*",
+          # "glue:GetDatabase",
+          # "glue:GetDatabases",
+          # "glue:GetTable",
+          # "glue:GetTables",
+          # "glue:UpdateTable",
+          # "glue:CreateTable",
+          # "glue:DeleteTable",
+          # "s3:GetObject",
+          # "s3:PutObject",
+          # "s3:ListBucket",
         ]
         Resource = "*"
       },
     ]
   })
+}
+
+
+# # FUTURE Localstack does not support Glue encryption
+# resource "aws_kms_key" "glue_key" {
+#   description             = "This key is used to encrypt bucket objects"
+#   deletion_window_in_days = 30
+# }
+
+# resource "aws_glue_data_catalog_encryption_settings" "glue_encryption" {
+#   data_catalog_encryption_settings {
+#     connection_password_encryption {
+#       aws_kms_key_id                       = aws_kms_key.glue_key.arn
+#       return_connection_password_encrypted = true
+#     }
+
+#     encryption_at_rest {
+#       catalog_encryption_mode = "SSE-KMS"
+#       sse_aws_kms_key_id      = aws_kms_key.glue_key.arn
+#     }
+#   }
+# }
+
+resource "aws_glue_security_configuration" "data_lake_glue_security" {
+  name = "data-lake-glue-security"
+
+  encryption_configuration {
+    cloudwatch_encryption {
+      cloudwatch_encryption_mode = "DISABLED"
+    }
+
+    job_bookmarks_encryption {
+      job_bookmarks_encryption_mode = "DISABLED"
+    }
+
+    s3_encryption {
+      s3_encryption_mode = "DISABLED"
+      # s3_encryption_mode = "SSE-KMS"
+      # kms_key_arn        = aws_kms_key.data_lake_key.arn
+    }
+  }
 }
 
 resource "aws_iam_role_policy_attachment" "glue_crawler_policy_attachment" {
@@ -238,9 +309,6 @@ resource "aws_iam_role_policy_attachment" "glue_crawler_policy_attachment" {
 }
 
 ### Athena ###
-### TODO cant currently create a db for the query results, is this a need or a want?
-### localstack athena API docs:
-### https://docs.localstack.cloud/references/coverage/coverage_athena/
 
 resource "aws_athena_workgroup" "data_lake_workgroup" {
   name = "data-lake-workgroup"

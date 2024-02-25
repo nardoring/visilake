@@ -147,6 +147,12 @@ resource "aws_ecs_service" "nardo" {
   }
 }
 
+resource "aws_sqs_queue" "requestQueue" {
+  name = "requestQueue"
+}
+
+# # We create this in deploy-tf.sh for now as the order matters, so we make the repo,
+# # push the docker image, then start the remainder of the terraform deployment
 # resource "aws_ecr_repository" "repo1" {
 #   name                 = "repo1"
 #   image_tag_mutability = "MUTABLE"
@@ -157,6 +163,3 @@ resource "aws_ecs_service" "nardo" {
 #   description = "The URL of the ECR repository"
 # }
 
-resource "aws_sqs_queue" "requestQueue" {
-  name = "requestQueue"
-}

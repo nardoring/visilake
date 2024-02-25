@@ -25,12 +25,11 @@
  */
 
 ### S3 ###
-# TODO Create more buckets for datalake, job info, etc.
 resource "aws_s3_bucket" "data_lake_bucket" {
   bucket = "data-lake-bucket-${random_string.bucket_suffix.result}"
 
   tags = {
-    Environment = "DataLake"
+    Environment = "DataLake-dev"
   }
 }
 

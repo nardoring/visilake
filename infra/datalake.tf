@@ -7,7 +7,7 @@
  * AWS Glue for data cataloging, and Amazon Athena for querying the data.
  *
  * Resources Created:
- * - TODO AWS S3 Buckets: For storing datasets in Parquet format.
+ * - AWS S3 Buckets: For storing datasets in Parquet format.
  * - TODO AWS Glue Data Catalog: For cataloging datasets and facilitating schema discovery.
  * - TODO AWS Glue Crawler: To automatically discover and catalog data stored in S3.
  * - TODO Amazon Athena: For SQL-based querying of datasets directly from S3.
@@ -54,7 +54,6 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "data_lake" {
     }
   }
 }
-
 
 resource "aws_s3_bucket_acl" "data_lake" {
   bucket = aws_s3_bucket.data_lake_bucket.id

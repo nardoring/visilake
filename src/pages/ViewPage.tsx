@@ -4,7 +4,7 @@ import Navbar from "../components/Navbar";
 
 export default function ListPage() {
   return (
-    <main className="min-h-screen p-20">
+    <main className="min-h-screen">
       <Background>
         <JobViewBox />
       </Background>

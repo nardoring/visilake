@@ -5,7 +5,7 @@ interface LogoProps {
 const Logo: React.FC<LogoProps> = ({ style }) => {
   const wrapperStyle: React.CSSProperties = {
     ...style,
-    transformOrigin: 'top left',
+    transformOrigin: "top left",
   };
 
   const svgLogo = (
@@ -25,15 +25,7 @@ const Logo: React.FC<LogoProps> = ({ style }) => {
     </svg>
   );
 
-  return (
-    <div className="z-40" style={{
-      position: 'fixed',
-      right: '75px',
-      top: '110px',
-    }}>
-      {svgLogo}
-    </div>
-  );
+  return <div className="z-40">{svgLogo}</div>;
 };
 
 export default Logo;

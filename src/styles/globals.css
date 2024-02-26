@@ -32,10 +32,3 @@
   opacity: 1;
   width: 5px;
 }
-
-.grid-container {
-  display: grid;
-  grid-template-columns: repeat(9, 1fr);
-  grid-template-rows: 108px 80px auto 80px;
-  gap: 10px;
-}

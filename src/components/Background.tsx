@@ -1,5 +1,6 @@
 import React, { useState, useEffect, ReactNode } from "react";
 import Parallelogram from "./Parallelogram";
+import Navbar from "./Navbar";
 
 type BackgroundProps = {
   children: ReactNode;
@@ -13,39 +14,41 @@ const Background = ({ children }: BackgroundProps) => {
         minHeight: "100vh",
         width: "100vw",
         maxWidth: "100vw",
-        overflowX: "hidden",
         position: "relative",
       }}
     >
-      <div
-        style={{
-          minHeight: "100vh",
-          width: "100vw",
-          maxWidth: "100vw",
-          overflowY: "hidden",
-        }}
-      >
+      <div className="">
         <Parallelogram
           angle={-22.4}
-          width={"4000px"}
+          width={"80vw"}
           height="215px"
           style={{
-            position: "absolute",
-            right: `255px`,
+            position: "relative",
             marginTop: "-100px",
           }}
         />
-        <Parallelogram
-          angle={-22.4}
-          width={"1000px"}
-          height="2400px"
-          style={{
-            position: "absolute",
-            right: "-388px",
-            top: "200px",
-          }}
-        />
-        <div className="pb-40 pl-40 pr-40">{children}</div>
+        <div>
+          <div
+            style={{
+              paddingLeft: "10vw",
+              paddingRight: "10vw",
+              overflow: "hidden",
+              position: "relative",
+            }}
+          >
+            <Navbar />
+            <Parallelogram
+              angle={-22.4}
+              width={"1000px"}
+              height="2400px"
+              style={{
+                position: "absolute",
+                right: "-388px",
+              }}
+            />
+            {children}
+          </div>
+        </div>
       </div>
     </div>
   );

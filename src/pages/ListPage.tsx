@@ -4,9 +4,8 @@ import Navbar from "../components/Navbar";
 
 export default function ListPage() {
   return (
-    <main className="grid-container min-h-screen">
+    <main className="min-h-screen">
       <Background>
-        <Navbar />
         <UseCaseTable />
       </Background>
     </main>

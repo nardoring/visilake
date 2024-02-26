@@ -1,41 +1,52 @@
-import React, { useState, useEffect } from 'react';
-import Parallelogram from './Parallelogram';
+import React, { useState, useEffect, ReactNode } from "react";
+import Parallelogram from "./Parallelogram";
 
-const Background = () => {
-  const [width, setWidth] = useState('66vw');
+type BackgroundProps = {
+  children: ReactNode;
+};
 
-  useEffect(() => {
-    const handleResize = () => {
-      setWidth(`${window.innerWidth * 0.66}px`);
-    };
-
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
-
+const Background = ({ children }: BackgroundProps) => {
   return (
-    <div className="bg-blue" style={{ position: 'fixed', height: '100vh', width: '100vw' }}>
-      <Parallelogram
-        angle={-22.4}
-        width={'4000px'}
-        height="215px"
+    <div
+      className="bg-blue"
+      style={{
+        minHeight: "100vh",
+        width: "100vw",
+        maxWidth: "100vw",
+        overflowX: "hidden",
+        position: "relative",
+      }}
+    >
+      <div
         style={{
-          position: 'absolute',
-          right: `255px`,
-          marginTop: '-100px'
+          minHeight: "100vh",
+          width: "100vw",
+          maxWidth: "100vw",
+          overflowY: "hidden",
         }}
-      />
-      <Parallelogram
-        angle={-22.4}
-        width={'1000px'}
-        height="2400px"
-        style={{
-          position: 'absolute',
-          right: '-388px',
-          top: '200px',
-        }}
-      />
-
+      >
+        <Parallelogram
+          angle={-22.4}
+          width={"4000px"}
+          height="215px"
+          style={{
+            position: "absolute",
+            right: `255px`,
+            marginTop: "-100px",
+          }}
+        />
+        <Parallelogram
+          angle={-22.4}
+          width={"1000px"}
+          height="2400px"
+          style={{
+            position: "absolute",
+            right: "-388px",
+            top: "200px",
+          }}
+        />
+        <div className="pb-40 pl-40 pr-40">{children}</div>
+      </div>
     </div>
   );
 };

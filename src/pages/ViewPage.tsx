@@ -4,12 +4,11 @@ import Navbar from "../components/Navbar";
 
 export default function ListPage() {
   return (
-    <>
-      <Background />
-      <main className="grid-container min-h-screen">
+    <main className="grid-container min-h-screen p-20">
+      <Background>
         <Navbar />
         <JobViewBox />
-      </main>
-    </>
+      </Background>
+    </main>
   );
 }

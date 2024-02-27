@@ -4,7 +4,6 @@ import { Menu, Transition } from "@headlessui/react";
 import { faFilter } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import StatusChip from "./StatusChip";
-import type { ColumnFilter } from "@tanstack/react-table";
 
 interface FilterDropdownProps {
   dropdownItems: string[];

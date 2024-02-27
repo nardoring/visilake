@@ -3,7 +3,6 @@ import {
   faChevronLeft,
   faChevronRight,
 } from "@fortawesome/free-solid-svg-icons";
-import type { Table } from "@tanstack/react-table";
 import type { UseCase } from "~/models/domain/useCase";
 
 interface TablePaginationBarProps {

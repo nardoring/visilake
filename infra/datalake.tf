@@ -8,11 +8,10 @@
  *
  * Resources Created:
  * - AWS S3 Buckets: For storing datasets in Parquet format.
- * - TODO AWS Glue Data Catalog: For cataloging datasets and facilitating schema discovery.
+ * - AWS Glue Data Catalog: For cataloging datasets and facilitating schema discovery.
  * - TODO AWS Glue Crawler: To automatically discover and catalog data stored in S3.
- * - TODO Amazon Athena: For SQL-based querying of datasets directly from S3.
- * - TODO ? IAM Roles and Policies: For secure access management across services.
- * - TODO ? Encryption Keys: For data encryption at rest within S3 buckets.
+ *   - Crawling to be done with awswrangler for dev environment
+ * - Amazon Athena: For SQL-based querying of datasets directly from S3.
  *
  * Design Decisions:
  * - Parquet Format: Chosen for storage due to its columnar compression,

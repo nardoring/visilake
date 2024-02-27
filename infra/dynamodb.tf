@@ -1,3 +1,25 @@
+/*
+ * dynamodb.tf
+ * AWS DynamoDB Configuration for Analysis and Request Tracking
+ *
+ * This Terraform configuration establishes two DynamoDB tables to support
+ * analysis types and mock request tracking within AWS environment. It
+ * is designed to facilitate the storage and retrieval of analysis types and
+ * request data efficiently, with predefined read and write capacities.
+ *
+ * Resources Created:
+ * - AWS DynamoDB Table: `analysisTypes` for storing different types of analyses.
+ *   - Attributes: `id` (String) as the primary key.
+ * - AWS DynamoDB Table: `mockRequests` for tracking mock requests.
+ *   - Attributes: `requestID` (String) as the primary key.
+ * - DynamoDB Table Items: Pre-populated data for `analysisTypes` and `mockRequests`
+ *   from local JSON files, ensuring initial data setup for application use.
+ *
+ * Design Decisions:
+ * - Data Pre-population: Utilizes local JSON files for initial data seeding,
+ *   to initialize DynamoDB tables with necessary data for development env
+ */
+
 resource "aws_dynamodb_table" "analysisTypes" {
   name           = "analysisTypes"
   read_capacity  = 10

@@ -12,16 +12,17 @@ export default function Navbar() {
   const isCurrentPage = (path: string) => router.pathname === path;
 
   return (
-    <nav className="relative z-30 col-start-2 col-end-9 flex items-center justify-between pl-5">
+    <nav className="relative z-30 col-start-2 col-end-9 row-span-2 flex items-center">
       <Bar
         angle={-22.4}
+        //angle={0}
         width={"100%"}
         height="100%"
         style={{
-          right: `10px`,
           position: "absolute",
         }}
       />
+      <div className="ml-10"></div>
 
       {!isCurrentPage("/ListPage") ? (
         <button
@@ -41,7 +42,15 @@ export default function Navbar() {
         </div>
       )}
 
-      <Logo style={{ width: "285px", height: "100px", marginRight: "0px" }} />
+      <Logo
+        // This is here so that the Navbar gets the correct length for the logo. For allignment the actual displayed logo needs to be out of the bar
+        style={{
+          width: "285px",
+          height: "100px",
+          marginRight: "0px",
+          opacity: "0",
+        }}
+      />
     </nav>
   );
 }

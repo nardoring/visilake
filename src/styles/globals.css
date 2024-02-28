@@ -32,3 +32,9 @@
   opacity: 1;
   width: 5px;
 }
+
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(10, minmax(0, 1fr));
+  grid-auto-rows: auto;
+}

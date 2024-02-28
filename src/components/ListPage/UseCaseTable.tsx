@@ -5,6 +5,7 @@ import { AgGridReact } from "ag-grid-react";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-quartz.css";
 import PowerBIButton from "./PowerBIButton";
+import StatusChip from "./StatusChip";
 
 export default function UseCaseTable() {
   const [queryExecuted, setQueryExecuted] = useState<boolean>(false);
@@ -22,7 +23,7 @@ export default function UseCaseTable() {
     { field: "analysisTypes" },
     { field: "date" },
     { field: "author" },
-    { field: "useCaseStatus" },
+    { field: "useCaseStatus", cellRenderer: StatusChip},
     {
       field: "powerBILink",
       cellRenderer: PowerBIButton,

@@ -1,8 +1,5 @@
 import { Tooltip } from 'react-tooltip';
-
-interface StatusChipProps {
-  status: string;
-}
+import { CustomCellRendererProps } from 'ag-grid-react';
 
 /* TODO use tailwind for this eventually */
 const statusStyles = {
@@ -33,7 +30,7 @@ const statusStyles = {
   },
 };
 
-export default function StatusChip({ status }: StatusChipProps) {
+export default function StatusChip(props: CustomCellRendererProps) {
   const statusMap: Record<string, string> = {
     complete: "Completed",
     inprogress: "In Progress",
@@ -41,7 +38,7 @@ export default function StatusChip({ status }: StatusChipProps) {
     failed: "Failed",
   };
 
-  const statusKey = status.toLowerCase().replace(/\s+/g, "");
+  const statusKey = props.value.toLowerCase().replace(/\s+/g, "");
   const statusValue = statusMap[statusKey] ?? "INVALID";
   const style =
     statusStyles[statusKey as keyof typeof statusStyles] ||

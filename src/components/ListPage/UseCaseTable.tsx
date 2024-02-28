@@ -42,7 +42,10 @@ export default function UseCaseTable() {
   );
 
   const gridOptions = {
+    pagination: true,
     rowHeight: 75,
+    paginationPageSize: 5,
+    paginationPageSizeSelector: [5, 10],
   };
 
   if (isLoading) {
@@ -61,11 +64,12 @@ export default function UseCaseTable() {
                      flex h-[64rem] flex-col
                     overflow-x-auto rounded-md"
       >
-        <div className={"ag-theme-quartz"} style={{ height: "500px" }}>
+        <div className={"ag-theme-quartz"}>
           <AgGridReact
             rowData={data}
             columnDefs={colDefs}
             gridOptions={gridOptions}
+            domLayout={'autoHeight'}
             defaultColDef={defaultColDef}
           />
         </div>

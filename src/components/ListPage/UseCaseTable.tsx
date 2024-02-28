@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { api } from "~/utils/api";
 import { AgGridReact } from "ag-grid-react";
 
@@ -21,18 +21,28 @@ export default function UseCaseTable() {
     { field: "useCaseName", headerName: "Job Title" },
     { field: "useCaseDescription", headerName: "Job Description" },
     { field: "analysisTypes" },
-    { field: "date" },
+    { field: "date", filter: "agDateColumnFilter" },
     { field: "author" },
-    { field: "useCaseStatus", cellRenderer: StatusChip},
+    { field: "useCaseStatus", cellRenderer: StatusChip },
     {
       field: "powerBILink",
       cellRenderer: PowerBIButton,
     },
   ]);
 
+  const defaultColDef = useMemo(
+    () => ({
+      flex: 1,
+      filterParams: {
+        buttons: ["clear"],
+      },
+    }),
+    [],
+  );
+
   const gridOptions = {
     rowHeight: 75,
-  }
+  };
 
   if (isLoading) {
     // Render a loading indicator or message
@@ -51,7 +61,12 @@ export default function UseCaseTable() {
                     overflow-x-auto rounded-md"
       >
         <div className={"ag-theme-quartz"} style={{ height: "500px" }}>
-          <AgGridReact rowData={data} columnDefs={colDefs} gridOptions={gridOptions}/>
+          <AgGridReact
+            rowData={data}
+            columnDefs={colDefs}
+            gridOptions={gridOptions}
+            defaultColDef={defaultColDef}
+          />
         </div>
       </div>
     </div>

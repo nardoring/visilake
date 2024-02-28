@@ -1,10 +1,10 @@
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faChevronLeft,
   faChevronRight,
-} from '@fortawesome/free-solid-svg-icons';
-import type { Table } from '@tanstack/react-table';
-import type { UseCase } from '~/models/domain/useCase';
+} from "@fortawesome/free-solid-svg-icons";
+import type { Table } from "@tanstack/react-table";
+import type { UseCase } from "~/models/domain/useCase";
 
 interface TablePaginationBarProps {
   table: Table<UseCase>;
@@ -59,8 +59,8 @@ export default function TablePaginationBar({ table }: TablePaginationBarProps) {
       onClick={() => table.setPageIndex(pageNumber - 1)}
       key={"paginationButton" + pageNumber}
       className={`relative inline-flex items-center ${buttonSize} px-4 py-2 text-sm font-semibold ${pageNumber === pageIndex
-          ? "bg-indigo/70 text-white focus:z-20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo"
-          : "text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
+        ? "bg-indigo/70 text-white focus:z-20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo"
+        : "text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
         }`}
     >
       {pageNumber}
@@ -69,95 +69,62 @@ export default function TablePaginationBar({ table }: TablePaginationBarProps) {
 
   const renderEllipsis = (pageIndex: number) => (
     <button
-      className='${buttonSize} relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-700 ring-1 ring-inset ring-gray-300 focus:outline-offset-0'
+      className="${buttonSize} relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-700 ring-1 ring-inset ring-gray-300 focus:outline-offset-0"
       onClick={() => table.setPageIndex(pageIndex)}
-      key={'paginationEllipsesButton' + pageIndex}
+      key={"paginationEllipsesButton" + pageIndex}
     >
       ...
     </button>
   );
 
   return (
-    <div className='flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6'>
-      <div className='hidden sm:flex sm:flex-1 sm:items-center sm:justify-between'>
+
+    <div className="items-center w-full justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6">
+      <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
         <div>
-          <p className='text-sm text-gray-700'>
-            Showing{' '}
-            <span className='font-medium'>{(pageIndex - 1) * 10 + 1}</span> to{' '}
-            <span className='font-medium'>
+          <p className="text-sm text-gray-700">
+            Showing{" "}
+            <span className="font-medium">{(pageIndex - 1) * 10 + 1}</span> to{" "}
+            <span className="font-medium">
               {Math.min(
                 pageIndex * 10,
-                table.getFilteredRowModel().rows.length
+                table.getFilteredRowModel().rows.length,
               )}
-            </span>{' '}
-            of{' '}
-            <span className='font-medium'>
+            </span>{" "}
+            of{" "}
+            <span className="font-medium">
               {table.getFilteredRowModel().rows.length}
-            </span>{' '}
+            </span>{" "}
             results
           </p>
         </div>
         <div>
-          <nav className='isolate inline-flex -space-x-px rounded-md shadow-sm'>
+          <nav className="isolate inline-flex space-x-px rounded-md shadow-sm">
             {/* Previous Button */}
             <button
               onClick={() => table.previousPage()}
               disabled={!table.getCanPreviousPage()}
-              className='relative inline-flex items-center rounded-l-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0'
+              className="relative inline-flex items-center rounded-l-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
             >
-              <span className='sr-only'>Previous</span>
-              <FontAwesomeIcon
-                icon={faChevronLeft}
-                className='h-5 w-5'
-              />
+              <span className="sr-only">Previous</span>
+              <FontAwesomeIcon icon={faChevronLeft} className="h-5 w-5" />
             </button>
 
-      <div className="items-center w-full justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6">
-        <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
-          <div>
-            <p className="text-sm text-gray-700">
-              Showing{" "}
-              <span className="font-medium">{(pageIndex - 1) * 10 + 1}</span> to{" "}
-              <span className="font-medium">
-                {Math.min(
-                  pageIndex * 10,
-                  table.getFilteredRowModel().rows.length,
-                )}
-              </span>{" "}
-              of{" "}
-              <span className="font-medium">
-                {table.getFilteredRowModel().rows.length}
-              </span>{" "}
-              results
-            </p>
-          </div>
-          <div>
-            <nav className="isolate inline-flex space-x-px rounded-md shadow-sm">
-              {/* Previous Button */}
-              <button
-                onClick={() => table.previousPage()}
-                disabled={!table.getCanPreviousPage()}
-                className="relative inline-flex items-center rounded-l-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
-              >
-                <span className="sr-only">Previous</span>
-                <FontAwesomeIcon icon={faChevronLeft} className="h-5 w-5" />
-              </button>
+            {/* Dynamically generated Pagination Buttons */}
+            {renderPaginationButtons()}
 
-              {/* Dynamically generated Pagination Buttons */}
-              {renderPaginationButtons()}
-
-              {/* Next Button */}
-              <button
-                onClick={() => table.nextPage()}
-                disabled={!table.getCanNextPage()}
-                className="relative inline-flex items-center rounded-r-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
-              >
-                <span className="sr-only">Next</span>
-                <FontAwesomeIcon icon={faChevronRight} className="h-5 w-5" />
-              </button>
-            </nav>
-          </div>
+            {/* Next Button */}
+            <button
+              onClick={() => table.nextPage()}
+              disabled={!table.getCanNextPage()}
+              className="relative inline-flex items-center rounded-r-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
+            >
+              <span className="sr-only">Next</span>
+              <FontAwesomeIcon icon={faChevronRight} className="h-5 w-5" />
+            </button>
+          </nav>
         </div>
       </div>
+    </div>
   );
 }

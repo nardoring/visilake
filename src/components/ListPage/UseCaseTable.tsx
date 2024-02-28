@@ -1,17 +1,21 @@
 import React, { useState } from "react";
 import { api } from "~/utils/api";
+import { AgGridReact } from "ag-grid-react";
+
+import "ag-grid-community/styles/ag-grid.css";
+import "ag-grid-community/styles/ag-theme-quartz.css";
 
 export default function UseCaseTable() {
   const [queryExecuted, setQueryExecuted] = useState<boolean>(false);
-  const {
-    data: analysisTypeOptionsData,
-    isLoading: analysisTypeOptionsIsLoading,
-  } = api.analysis.getAnalysisTypes.useQuery();
-  const analysisTypeOptions: string[] = analysisTypeOptionsIsLoading
-    ? []
-    : analysisTypeOptionsData?.types?.map(
-        (option: { name: string }) => option.name,
-      ) ?? [];
+  // const {
+  //   data: analysisTypeOptionsData,
+  //   isLoading: analysisTypeOptionsIsLoading,
+  // } = api.analysis.getAnalysisTypes.useQuery();
+  // const analysisTypeOptions: string[] = analysisTypeOptionsIsLoading
+  //   ? []
+  //   : analysisTypeOptionsData?.types?.map(
+  //       (option: { name: string }) => option.name,
+  //     ) ?? [];
 
   const { data, isLoading } = api.useCase.getUseCases.useQuery(undefined, {
     enabled: !queryExecuted,
@@ -19,6 +23,15 @@ export default function UseCaseTable() {
       setQueryExecuted(true);
     },
   });
+
+  const [colDefs, setColDefs] = useState([
+    { field: "useCaseName", headerName: "Job Title"},
+    { field: "useCaseDescription", headerName: "Job Description"},
+    { field: "analysisTypes" },
+    { field: "date" },
+    { field: "author" },
+    { field: "useCaseStatus" },
+  ]);
 
   if (isLoading) {
     // Render a loading indicator or message
@@ -30,13 +43,17 @@ export default function UseCaseTable() {
   }
 
   return (
-    <div className="col-start-2 col-end-9 row-start-2 mb-5 mt-5 flex">
+    <div 
+    className="col-start-2 col-end-9 row-start-2 mb-5 mt-5"
+    >
       <div
         className="relative z-20 col-start-2 col-end-9 row-start-3 row-end-4
                      flex h-[64rem] flex-col
-                    overflow-x-auto rounded-md bg-veryLightBlue/70 shadow-xl"
+                    overflow-x-auto rounded-md"
       >
-
+        <div className={"ag-theme-quartz"} style={{ height: "500px" }}>
+          <AgGridReact rowData={data} columnDefs={colDefs} />
+        </div>
       </div>
     </div>
   );

@@ -1,7 +1,7 @@
-import { type Config } from "tailwindcss";
+import { type Config } from 'tailwindcss';
 
 export default {
-  content: ["./src/**/*.tsx"],
+  content: ['./src/**/*.tsx'],
   theme: {
     // https://tailwindcss.com/docs/theme
     extend: {
@@ -47,7 +47,7 @@ export default {
         veryVeryLightYellow: "FFF2CC",
       },
       fontFamily: {
-        Nunito: ["Nunito", "sans"],
+        Nunito: ['Nunito', 'sans'],
       },
     },
     fontSize: {

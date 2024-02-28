@@ -1,3 +1,4 @@
+
 import Image from "next/image";
 import { Bounce, ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -9,25 +10,25 @@ interface PowerBIButtonProps {
 }
 
 const toastProperties = {
-  osition: "bottom-right",
+  osition: 'bottom-right',
   autoClose: 3000,
   hideProgressBar: false,
   closeOnClick: true,
   pauseOnHover: true,
   draggable: true,
   progress: undefined,
-  theme: "light",
+  theme: 'light',
   transition: Bounce,
 };
 
 export default function PowerBIButton({ link, status }: PowerBIButtonProps) {
   const notifyLinkCopied = (success: boolean) => {
     if (success) {
-      toast.success("PowerBI Link Copied", {
+      toast.success('PowerBI Link Copied', {
         ...toastProperties,
       });
     } else {
-      toast.error("Unable to Copy PowerBI Link", {
+      toast.error('Unable to Copy PowerBI Link', {
         ...toastProperties,
       });
     }
@@ -44,8 +45,9 @@ export default function PowerBIButton({ link, status }: PowerBIButtonProps) {
       });
   };
 
-  const isDisabled = status !== "Complete";
+  const isDisabled = status !== 'Complete';
   const powerBiIconFilePath = isDisabled
+
     ? "/Power-BI-Gray.png"
     : "/Power-BI.png";
   const powerBiToolTip = isDisabled
@@ -69,14 +71,14 @@ export default function PowerBIButton({ link, status }: PowerBIButtonProps) {
           src={powerBiIconFilePath}
           width={24}
           height={24}
-          alt=""
-          className="mr-2"
+          alt=''
+          className='mr-2'
         />
 
       </button>
       <Tooltip id="link-na" />
       <ToastContainer
-        position="bottom-right"
+        position='bottom-right'
         autoClose={3000}
         hideProgressBar={false}
         newestOnTop={false}
@@ -85,7 +87,7 @@ export default function PowerBIButton({ link, status }: PowerBIButtonProps) {
         pauseOnFocusLoss
         draggable
         pauseOnHover
-        theme="light"
+        theme='light'
       />
     </>
   );

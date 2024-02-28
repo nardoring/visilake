@@ -1,6 +1,6 @@
-import React, { useState } from "react";
-import { api } from "~/utils/api";
-import type { Tag } from "~/utils/types";
+import React, { useState } from 'react';
+import { api } from '~/utils/api';
+import type { Tag } from '~/utils/types';
 
 interface FileTagProps {
   tag: Tag;
@@ -18,7 +18,7 @@ const FileTag = ({ tag, updateTag, onRemove }: FileTagProps) => {
         updateTag(tag, data.isValid);
         setQueryExecuted(true);
       },
-    },
+    }
   );
 
   const loading = isLoading && !tagValidationData;
@@ -37,7 +37,7 @@ const FileTag = ({ tag, updateTag, onRemove }: FileTagProps) => {
         {tag.name}
       </div>
       <div
-        className="flex flex-auto flex-row-reverse"
+        className='flex flex-auto flex-row-reverse'
         onClick={() => onRemove(tag)}
       >
         <div>
@@ -53,8 +53,18 @@ const FileTag = ({ tag, updateTag, onRemove }: FileTagProps) => {
             strokeLinejoin="round"
             className="feather feather-x hover:text-indigo ml-2 h-4 w-4 cursor-pointer rounded-full"
           >
-            <line x1="18" y1="6" x2="6" y2="18"></line>
-            <line x1="6" y1="6" x2="18" y2="18"></line>
+            <line
+              x1='18'
+              y1='6'
+              x2='6'
+              y2='18'
+            ></line>
+            <line
+              x1='6'
+              y1='6'
+              x2='18'
+              y2='18'
+            ></line>
           </svg>
         </div>
       </div>

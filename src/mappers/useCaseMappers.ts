@@ -1,6 +1,6 @@
-import type { UseCase } from "~/models/domain/useCase";
-import type { UseCaseStatus } from "~/models/domain/useCaseStatus";
-import type { UseCase as DatabaseUseCase } from "~/models/db/useCase";
+import type { UseCase } from '~/models/domain/useCase';
+import type { UseCaseStatus } from '~/models/domain/useCaseStatus';
+import type { UseCase as DatabaseUseCase } from '~/models/db/useCase';
 
 function mapUseCases(output: DatabaseUseCase[]): UseCase[] {
   return output.map((o) => mapUseCase(o));

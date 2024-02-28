@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { api } from "~/utils/api";
 import StatusChip from "./StatusChip";
@@ -25,7 +26,7 @@ export default function UseCaseTable() {
   const filterDropdownColumns = new Set(["Status", "Author", "Analysis Types"]);
   const sortableColumns = new Set(["Created"]);
   const [queryExecuted, setQueryExecuted] = useState<boolean>(false);
-  const [globalFilter, setGlobalFilter] = useState<string>("");
+  const [globalFilter, setGlobalFilter] = useState<string>('');
   const [columnFilters, setColumnFilters] = useState<ColumnFilter[]>([]);
   const {
     data: analysisTypeOptionsData,
@@ -34,7 +35,7 @@ export default function UseCaseTable() {
   const analysisTypeOptions: string[] = analysisTypeOptionsIsLoading
     ? []
     : analysisTypeOptionsData?.types?.map(
-        (option: { name: string }) => option.name,
+        (option: { name: string }) => option.name
       ) ?? [];
 
   const { data, isLoading } = api.useCase.getUseCases.useQuery(undefined, {
@@ -62,21 +63,21 @@ export default function UseCaseTable() {
       cell: (props: { getValue: () => string }) => <p>{props.getValue()}</p>,
     },
     {
-      accessorKey: "analysisTypes",
-      header: "Analysis Types",
+      accessorKey: 'analysisTypes',
+      header: 'Analysis Types',
       size: (1920 / 10) * 1.5,
       cell: (props: { getValue: () => string[] }) => (
-        <p>{props.getValue().join(", ")}</p>
+        <p>{props.getValue().join(', ')}</p>
       ),
       filterFn: (
         row: Row<UseCase>,
         columnId: string,
-        filterAnalysisTypes: string[],
+        filterAnalysisTypes: string[]
       ) => {
         if (filterAnalysisTypes.length === 0) return true;
         const analysisTypes: string[] = row.getValue(columnId);
         return filterAnalysisTypes.every((analysisType) =>
-          analysisTypes.includes(analysisType),
+          analysisTypes.includes(analysisType)
         );
       },
     },
@@ -88,7 +89,7 @@ export default function UseCaseTable() {
       filterFn: (
         row: Row<UseCase>,
         columnId: string,
-        filterAuthorNames: string[],
+        filterAuthorNames: string[]
       ) => {
         if (filterAuthorNames.length === 0) return true;
         const status: string = row.getValue(columnId);
@@ -102,7 +103,7 @@ export default function UseCaseTable() {
       cell: (props: { getValue: () => Date }) => {
         return <p>{formatDate(props.getValue())}</p>;
       },
-      sortType: "datetime",
+      sortType: 'datetime',
     },
     {
       accessorKey: "useCaseStatus",
@@ -114,7 +115,7 @@ export default function UseCaseTable() {
       filterFn: (
         row: Row<UseCase>,
         columnId: string,
-        filterStatuses: string[],
+        filterStatuses: string[]
       ) => {
         if (filterStatuses.length === 0) return true;
         const author: string = row.getValue(columnId);
@@ -146,7 +147,7 @@ export default function UseCaseTable() {
     initialState: {
       sorting: [
         {
-          id: "date",
+          id: 'date',
           desc: true,
         },
       ],
@@ -157,7 +158,7 @@ export default function UseCaseTable() {
     getSortedRowModel: getSortedRowModel(),
     onGlobalFilterChange: setGlobalFilter,
     getFacetedUniqueValues: getFacetedUniqueValues(),
-    columnResizeMode: "onChange",
+    columnResizeMode: 'onChange',
   });
 
   if (isLoading) {
@@ -188,22 +189,22 @@ export default function UseCaseTable() {
                   >
                     {String(header.column.columnDef.header)}
                     {/* Filter Dropdowns */}
-                    {typeof header.column.columnDef.header === "string" &&
+                    {typeof header.column.columnDef.header === 'string' &&
                       filterDropdownColumns.has(
-                        header.column.columnDef.header,
+                        header.column.columnDef.header
                       ) && (
                         <FilterDropdown
                           dropdownItems={Array.from(
-                            header.column.columnDef.header === "Analysis Types"
+                            header.column.columnDef.header === 'Analysis Types'
                               ? analysisTypeOptions
-                              : header.column.getFacetedUniqueValues().keys(),
+                              : header.column.getFacetedUniqueValues().keys()
                           )}
                           filterId={header.id}
                           setColumnFilters={setColumnFilters}
                         />
                       )}
                     {/* Sorting Button */}
-                    {typeof header.column.columnDef.header === "string" &&
+                    {typeof header.column.columnDef.header === 'string' &&
                       sortableColumns.has(header.column.columnDef.header) && (
                         <ColumnSortButton
                           columnSortToggle={header.column.getToggleSortingHandler()}
@@ -213,7 +214,7 @@ export default function UseCaseTable() {
                       onMouseDown={header.getResizeHandler()}
                       onTouchStart={header.getResizeHandler()}
                       className={`resizer ${
-                        header.column.getIsResizing() ? "isResizing" : ""
+                        header.column.getIsResizing() ? 'isResizing' : ''
                       }`}
                     />
                   </th>

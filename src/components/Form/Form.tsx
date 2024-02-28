@@ -82,6 +82,7 @@ export default function Form() {
 
   return (
     <form
+
       className='z-40 col-start-2 col-end-9 row-span-6 row-start-3 p-4 '
       onSubmit={handleSubmit}
       id='useSubmissionCaseForm'
@@ -102,6 +103,7 @@ export default function Form() {
           />
         </div>
         <div>
+
           <label
             data-tooltip-id='types'
             data-tooltip-html='Analysis to be ran on selected tags <br> Multiple types may be selected'
@@ -120,6 +122,7 @@ export default function Form() {
             disableSearch={true}
             className={`${'rounded shadow-sm'} ${
               submitAttempted && analysisTypes.length === 0
+
                 ? "ring-1 ring-red"
                 : ""
             }`}
@@ -131,6 +134,7 @@ export default function Form() {
             setTags={setTags}
             inputStyles={`${inputStyles} ${
               submitAttempted && getValidTags().length === 0
+
                 ? "ring-red ring-1"
                 : ""
             }`}

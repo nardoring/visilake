@@ -1,11 +1,11 @@
-import AWS from "aws-sdk";
+import AWS from 'aws-sdk';
 
 function getDynamoDBClient() {
   const dynamodb = new AWS.DynamoDB({
     endpoint: process.env.DYNAMO_URL,
     region: process.env.AWS_REGION,
   });
-  console.log('\nDynamoDB Conf:\n', dynamodb)
+  console.log('\nDynamoDB Conf:\n', dynamodb);
 
   return dynamodb;
 }

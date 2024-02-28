@@ -4,6 +4,7 @@ import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 import type { Dispatch, SetStateAction } from 'react';
 import { Tooltip } from 'react-tooltip';
 
+
 interface SearchBarProps {
   setGlobalFilter: Dispatch<SetStateAction<string>>;
 }

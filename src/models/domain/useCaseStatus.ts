@@ -1,1 +1,1 @@
-export type UseCaseStatus = "Complete" | "InProgress" | "NotStarted" | "Failed";
+export type UseCaseStatus = 'Complete' | 'InProgress' | 'NotStarted' | 'Failed';

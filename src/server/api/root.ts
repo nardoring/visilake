@@ -1,8 +1,8 @@
-import { postRouter } from "~/server/api/routers/post";
-import { createTRPCRouter } from "~/server/api/trpc";
-import { analysisRouter } from "./routers/analysis";
-import { useCaseRouter } from "./routers/useCase";
-import { tagRouter } from "./routers/tag";
+import { postRouter } from '~/server/api/routers/post';
+import { createTRPCRouter } from '~/server/api/trpc';
+import { analysisRouter } from './routers/analysis';
+import { useCaseRouter } from './routers/useCase';
+import { tagRouter } from './routers/tag';
 
 /**
  * This is the primary router for your server.

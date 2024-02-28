@@ -4,16 +4,16 @@
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 
-import { z } from "zod";
-import { createTRPCRouter, publicProcedure } from "../trpc";
-import type { UseCase } from "~/models/db/useCase";
-import { v4 as uuidv4 } from "uuid";
-import mapUseCases from "~/mappers/useCaseMappers";
-import getDynamoDBClient from "~/clients/dynamodb";
-import getSQSClient from "~/clients/sqs";
+import { z } from 'zod';
+import { createTRPCRouter, publicProcedure } from '../trpc';
+import type { UseCase } from '~/models/db/useCase';
+import { v4 as uuidv4 } from 'uuid';
+import mapUseCases from '~/mappers/useCaseMappers';
+import getDynamoDBClient from '~/clients/dynamodb';
+import getSQSClient from '~/clients/sqs';
 
-const QUEUE_NAME = "requestQueue";
-const DYNAMODB_TABLE = "mockRequests";
+const QUEUE_NAME = 'requestQueue';
+const DYNAMODB_TABLE = 'mockRequests';
 const shortUid = () => uuidv4().substring(0, 8);
 
 export const useCaseRouter = createTRPCRouter({
@@ -23,7 +23,7 @@ export const useCaseRouter = createTRPCRouter({
     const useCaseQueryParams = {
       TableName: DYNAMODB_TABLE,
       ProjectionExpression:
-        "useCaseName, useCaseDescription, useCaseStatus, powerBILink, author, analysisTypes, creationDate",
+        'useCaseName, useCaseDescription, useCaseStatus, powerBILink, author, analysisTypes, creationDate',
     };
 
     return mapUseCases(
@@ -31,13 +31,13 @@ export const useCaseRouter = createTRPCRouter({
         dynamodb.scan(useCaseQueryParams, (err, data) => {
           if (err || !data.Items) {
             console.log(data, err);
-            reject(err ?? (!data.Items ? "No Items" : "Unknown error"));
+            reject(err ?? (!data.Items ? 'No Items' : 'Unknown error'));
           } else {
             console.log(data.Items);
             resolve(data.Items as unknown as UseCase[]);
           }
-        }),
-      ),
+        })
+      )
     );
   }),
 
@@ -48,24 +48,24 @@ export const useCaseRouter = createTRPCRouter({
           .string()
           .min(1)
           .refine((data) => data.length > 0, {
-            message: "useCaseName should have at least 1 character",
+            message: 'useCaseName should have at least 1 character',
           }),
         useCaseDescription: z.string().refine((data) => data.length > 0, {
-          message: "useCaseDescription should not be empty",
+          message: 'useCaseDescription should not be empty',
         }),
         tags: z.array(z.string()).refine((data) => data.length > 0, {
-          message: "tags should not be empty",
+          message: 'tags should not be empty',
         }),
         analysisTypes: z.array(z.string()).refine((data) => data.length > 0, {
-          message: "analysisTypes should not be empty",
+          message: 'analysisTypes should not be empty',
         }),
-      }),
+      })
     )
     .mutation(async ({ input }) => {
       const sqs = getSQSClient();
 
       const requestID = shortUid();
-      console.log("\nRequestID:\n", requestID);
+      console.log('\nRequestID:\n', requestID);
       const message = { requestID: requestID, ...input };
 
       const queueUrlResponse = await sqs
@@ -74,7 +74,7 @@ export const useCaseRouter = createTRPCRouter({
       const queueUrl = queueUrlResponse.QueueUrl;
 
       if (!queueUrl) {
-        throw new Error("Failed to get the SQS queue URL");
+        throw new Error('Failed to get the SQS queue URL');
       }
 
       let sqsParams = {
@@ -87,7 +87,7 @@ export const useCaseRouter = createTRPCRouter({
       const dynamodb = getDynamoDBClient();
 
       // set status in DynamoDB to QUEUED
-      const status = "QUEUED";
+      const status = 'QUEUED';
       let dynamodbParams = {
         TableName: DYNAMODB_TABLE,
         Item: {
@@ -111,7 +111,7 @@ export const useCaseRouter = createTRPCRouter({
           },
           author: {
             // S: input.author, // TODO do we have author name yet?
-            S: "Test Author",
+            S: 'Test Author',
           },
           analysisTypes: {
             L: input.analysisTypes.map((type) => ({

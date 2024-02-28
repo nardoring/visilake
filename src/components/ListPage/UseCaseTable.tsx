@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from "react";
 import { api } from "~/utils/api";
 import { AgGridReact } from "ag-grid-react";
-
+import 'ag-grid-enterprise';
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-quartz.css";
 import PowerBIButton from "./PowerBIButton";
@@ -18,12 +18,12 @@ export default function UseCaseTable() {
   });
 
   const [colDefs, setColDefs] = useState([
-    { field: "useCaseName", headerName: "Job Title" },
-    { field: "useCaseDescription", headerName: "Job Description" },
-    { field: "analysisTypes" },
+    { field: "useCaseName", headerName: "Job Title", filter: "agTextColumnFilter"},
+    { field: "useCaseDescription", headerName: "Job Description", filter: "agTextColumnFilter"},
+    { field: "analysisTypes", filter: "agSetColumnFilter"},
     { field: "date", filter: "agDateColumnFilter" },
-    { field: "author" },
-    { field: "useCaseStatus", cellRenderer: StatusChip },
+    { field: "author", filter: "agSetColumnFilter"},
+    { field: "useCaseStatus", cellRenderer: StatusChip, filter: "agSetColumnFilter"},
     {
       field: "powerBILink",
       cellRenderer: PowerBIButton,
@@ -33,6 +33,7 @@ export default function UseCaseTable() {
   const defaultColDef = useMemo(
     () => ({
       flex: 1,
+      floatingFilter: true,
       filterParams: {
         buttons: ["clear"],
       },

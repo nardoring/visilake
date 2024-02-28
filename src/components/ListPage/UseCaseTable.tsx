@@ -7,15 +7,6 @@ import "ag-grid-community/styles/ag-theme-quartz.css";
 
 export default function UseCaseTable() {
   const [queryExecuted, setQueryExecuted] = useState<boolean>(false);
-  // const {
-  //   data: analysisTypeOptionsData,
-  //   isLoading: analysisTypeOptionsIsLoading,
-  // } = api.analysis.getAnalysisTypes.useQuery();
-  // const analysisTypeOptions: string[] = analysisTypeOptionsIsLoading
-  //   ? []
-  //   : analysisTypeOptionsData?.types?.map(
-  //       (option: { name: string }) => option.name,
-  //     ) ?? [];
 
   const { data, isLoading } = api.useCase.getUseCases.useQuery(undefined, {
     enabled: !queryExecuted,

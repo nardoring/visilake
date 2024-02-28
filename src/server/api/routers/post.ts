@@ -1,14 +1,14 @@
-import { z } from "zod";
+import { z } from 'zod';
 
 import {
   createTRPCRouter,
   protectedProcedure,
   publicProcedure,
-} from "~/server/api/trpc";
+} from '~/server/api/trpc';
 
 let post = {
   id: 1,
-  name: "Hello World",
+  name: 'Hello World',
 };
 
 export const postRouter = createTRPCRouter({
@@ -35,6 +35,6 @@ export const postRouter = createTRPCRouter({
   }),
 
   getSecretMessage: protectedProcedure.query(() => {
-    return "you can now see this secret message!";
+    return 'you can now see this secret message!';
   }),
 });

@@ -2,10 +2,10 @@ import {
   faSort,
   faSortUp,
   faSortDown,
-} from "@fortawesome/free-solid-svg-icons";
-import type { IconDefinition } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useState } from "react";
+} from '@fortawesome/free-solid-svg-icons';
+import type { IconDefinition } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { useState } from 'react';
 
 interface ColumnSortButtonProps {
   columnSortToggle: ((event: unknown) => void) | undefined;
@@ -24,7 +24,7 @@ export default function ColumnSortButton({
           ? faSortUp
           : prevSortIcon === faSortUp
             ? faSort
-            : faSortDown,
+            : faSortDown
       );
     }
   }
@@ -32,7 +32,7 @@ export default function ColumnSortButton({
   return (
     <FontAwesomeIcon
       icon={sortIcon}
-      className="ml-3 mr-1 h-5 w-5 text-darkBlue"
+      className='ml-3 mr-1 h-5 w-5 text-darkBlue'
       onClick={updateSortIcon}
     />
   );

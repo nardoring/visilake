@@ -8,17 +8,8 @@ export const env = createEnv({
    */
   server: {
     NODE_ENV: z
-      .enum(['development', 'test', 'production'])
-      .default('development'),
-    NEXTAUTH_SECRET: z.string().optional(),
-    NEXTAUTH_URL: z.string().default('http://localhost:3000'),
-    DYNAMO_URL: z
-      .string()
-      .default('http://dynamodb.us-east-1.localhost.localstack.cloud:4566/'),
-    AWS_REGION: z.string().default('us-east-1'),
-    SQS_URL: z
-      .string()
-      .default('http://sqs.us-east-1.localhost.localstack.cloud:4566/'),
+      .enum(["development", "test", "production"])
+      .default("development"),
   },
 
   /**
@@ -36,11 +27,6 @@ export const env = createEnv({
    */
   runtimeEnv: {
     NODE_ENV: process.env.NODE_ENV,
-    NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET,
-    NEXTAUTH_URL: process.env.NEXTAUTH_URL,
-    DYNAMO_URL: process.env.DYNAMO_URL,
-    AWS_REGION: process.env.AWS_REGION,
-    SQS_URL: process.env.SQS_URL,
   },
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation.

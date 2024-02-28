@@ -1,12 +1,8 @@
+import { CustomCellRendererProps } from "ag-grid-react";
 import Image from "next/image";
 import { Bounce, ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Tooltip } from 'react-tooltip'
-
-interface PowerBIButtonProps {
-  link: string;
-  status: string;
-}
 
 const toastProperties = {
   osition: "bottom-right",
@@ -20,7 +16,7 @@ const toastProperties = {
   transition: Bounce,
 };
 
-export default function PowerBIButton({ link, status }: PowerBIButtonProps) {
+export default function PowerBIButton(props: CustomCellRendererProps) {
   const notifyLinkCopied = (success: boolean) => {
     if (success) {
       toast.success("PowerBI Link Copied", {
@@ -35,7 +31,7 @@ export default function PowerBIButton({ link, status }: PowerBIButtonProps) {
 
   const handleCopyClick = () => {
     navigator.clipboard
-      .writeText(link)
+      .writeText(props.value)
       .then(() => {
         notifyLinkCopied(true);
       })
@@ -44,7 +40,7 @@ export default function PowerBIButton({ link, status }: PowerBIButtonProps) {
       });
   };
 
-  const isDisabled = status !== "Complete";
+  const isDisabled = props.value === "";
   const powerBiIconFilePath = isDisabled
     ? "/Power-BI-Gray.png"
     : "/Power-BI.png";

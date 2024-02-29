@@ -34,18 +34,23 @@ export default function UseCaseTable() {
     { field: "author", filter: "agSetColumnFilter" },
     {
       field: "useCaseStatus",
+      headerName: "Status",
       cellRenderer: StatusChip,
       filter: "agSetColumnFilter",
+      filterParams: {
+        cellRenderer: StatusChip,
+        suppressSelectAll: true,
+      },
       tooltipValueGetter: (params: ITooltipParams) => {
         const tooltipMessages: { [key: string]: string } = {
           Complete: "Processing job has been completed",
           InProgress: "Data is currently being processed",
           NotStarted: "Processing job will soon be started",
-          Failed: "An error has occurred"
+          Failed: "An error has occurred",
         };
-      
+
         return tooltipMessages[params.value] || "INVALID";
-      }
+      },
     },
     {
       field: "powerBILink",
@@ -54,7 +59,7 @@ export default function UseCaseTable() {
       tooltipValueGetter: (params: ITooltipParams) => {
         if (params.value === "") return "Link is unavailable";
         return "Copy link to clipboard";
-      }
+      },
     },
   ]);
 

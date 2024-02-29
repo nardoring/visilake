@@ -40,7 +40,7 @@ export default function PowerBIButton(props: CustomCellRendererProps) {
       });
   };
 
-  const isDisabled = props.value === "";
+  const isDisabled = props.data.useCaseStatus !== "Complete";
   const powerBiIconFilePath = isDisabled
     ? "/Power-BI-Gray.png"
     : "/Power-BI.png";

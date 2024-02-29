@@ -11,16 +11,12 @@ on:
 
 jobs:
   Build:
-    runs-on: builder
+    runs-on: build
     steps:
       - uses: actions/checkout@v3
       - uses: DeterminateSystems/nix-installer-action@main
       - uses: DeterminateSystems/magic-nix-cache-action@main
-      # - name: Run `nix flake check # run locally instead`
-      #   run: nix flake check
-      # - name: Build Localstack docker image
-      #   run: nix build -L .#localstackpro-image
-      # - name: Build Nardo docker image
-      #   run: nix run .#nardo-image
+      - name: Run `nix flake check`
+        run: nix flake check
       - name: Test deploy infrastructure
         run: nix develop -c ./infra/deploy

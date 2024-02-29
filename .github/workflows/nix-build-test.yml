@@ -19,4 +19,4 @@ jobs:
       - name: Run `nix flake check`
         run: nix flake check
       - name: Test deploy infrastructure
-        run: nix develop -c ./infra/deploy
+        run: nix develop -c ./infra/deploy-tf.sh --verbose

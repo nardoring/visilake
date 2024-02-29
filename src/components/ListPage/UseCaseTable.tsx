@@ -29,7 +29,7 @@ export default function UseCaseTable() {
       filter: "agTextColumnFilter",
     },
     { field: "analysisTypes", filter: "agSetColumnFilter" },
-    { field: "date", filter: "agDateColumnFilter" },
+    { field: "date", filter: "agDateColumnFilter", sort: "desc" },
     { field: "author", filter: "agSetColumnFilter" },
     {
       field: "useCaseStatus",

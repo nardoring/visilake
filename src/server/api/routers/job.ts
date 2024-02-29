@@ -53,8 +53,8 @@ export const jobRouter = createTRPCRouter({
         jobDescription: z.string().refine((data) => data.length > 0, {
           message: 'jobDescription should not be empty',
         }),
-        tags: z.array(z.string()).refine((data) => data.length > 0, {
-          message: 'tags should not be empty',
+        sources: z.array(z.string()).refine((data) => data.length > 0, {
+          message: 'sources should not be empty',
         }),
         analysisTypes: z.array(z.string()).refine((data) => data.length > 0, {
           message: 'analysisTypes should not be empty',
@@ -118,9 +118,9 @@ export const jobRouter = createTRPCRouter({
               S: type, // TODO check
             })),
           },
-          tags: {
-            L: input.tags.map((tag) => ({
-              S: tag,
+          sources: {
+            L: input.sources.map((source) => ({
+              S: source,
             })),
           },
           powerBILink: {

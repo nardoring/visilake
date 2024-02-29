@@ -1,44 +1,45 @@
 import React, { useState } from 'react';
 import { api } from '~/utils/api';
-import type { Tag } from '~/utils/types';
+import type { Source } from '~/utils/types';
 
-interface FileTagProps {
-  tag: Tag;
-  updateTag: (tag: Tag, isValid: boolean) => void;
-  onRemove: (tag: Tag) => void;
+interface SourceProps {
+  source: Source;
+  updateSource: (source: Source, isValid: boolean) => void;
+  onRemove: (source: Source) => void;
 }
 
-const FileTag = ({ tag, updateTag, onRemove }: FileTagProps) => {
+const Source = ({ source, updateSource, onRemove }: SourceProps) => {
   const [queryExecuted, setQueryExecuted] = useState<boolean>(false);
-  const { data: tagValidationData, isLoading } = api.tag.validateTag.useQuery(
-    { tag: tag.name },
-    {
-      enabled: !queryExecuted,
-      onSuccess: (data) => {
-        updateTag(tag, data.isValid);
-        setQueryExecuted(true);
-      },
-    }
-  );
+  const { data: sourceValidationData, isLoading } =
+    api.source.validateSource.useQuery(
+      { source: source.name },
+      {
+        enabled: !queryExecuted,
+        onSuccess: (data) => {
+          updateSource(source, data.isValid);
+          setQueryExecuted(true);
+        },
+      }
+    );
 
-  const loading = isLoading && !tagValidationData;
+  const loading = isLoading && !sourceValidationData;
 
   return (
     <div
       className={`m-1 flex items-center justify-center rounded-full border ${
         loading
           ? 'border-gray-300 bg-gray-100 text-gray-700'
-          : tagValidationData?.isValid
+          : sourceValidationData?.isValid
             ? 'border-green-300 bg-green-100 text-green-700'
             : 'border-red-300 bg-red-100 text-red-700'
       } px-2 py-1 font-medium`}
     >
       <div className='max-w-full flex-initial text-xs font-normal leading-none'>
-        {tag.name}
+        {source.name}
       </div>
       <div
         className='flex flex-auto flex-row-reverse'
-        onClick={() => onRemove(tag)}
+        onClick={() => onRemove(source)}
       >
         <div>
           <svg
@@ -72,4 +73,4 @@ const FileTag = ({ tag, updateTag, onRemove }: FileTagProps) => {
   );
 };
 
-export default FileTag;
+export default Source;

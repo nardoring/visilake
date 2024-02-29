@@ -3,7 +3,7 @@ export type AnalysisTypeOption = {
   value: number;
 };
 
-export type Tag = {
+export type Source = {
   name: string;
   isValid: boolean;
 };

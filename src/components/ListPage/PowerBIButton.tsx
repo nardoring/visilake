@@ -1,11 +1,11 @@
 import { CustomCellRendererProps } from "ag-grid-react";
 import Image from "next/image";
-import { Bounce, ToastContainer, toast } from "react-toastify";
+import { Bounce, ToastPosition, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Tooltip } from 'react-tooltip'
 
 const toastProperties = {
-  osition: "bottom-right",
+  position: "bottom-right" as ToastPosition,
   autoClose: 3000,
   hideProgressBar: false,
   closeOnClick: true,
@@ -71,18 +71,6 @@ export default function PowerBIButton(props: CustomCellRendererProps) {
 
       </button>
       <Tooltip id="link-na" />
-      <ToastContainer
-        position="bottom-right"
-        autoClose={3000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="light"
-      />
     </>
   );
 }

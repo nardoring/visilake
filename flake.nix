@@ -20,7 +20,10 @@
     nixpkgs,
     localstack-nix,
     ...
-  }:
+  }: let
+    dynamoUrl = "http://dynamodb.us-east-1.localhost.localstack.cloud:4566/";
+    sqsUrl = "http://sqs.us-east-1.localhost.localstack.cloud:4566/";
+  in
     flake-parts.lib.mkFlake {inherit self inputs;} ({...}: {
       systems = ["x86_64-linux"];
       imports = [inputs.treefmt-nix.flakeModule];
@@ -97,8 +100,8 @@
               "NODE_ENV=production"
               "NEXT_TELEMETRY_DISABLED=1"
               "AWS_REGION=us-east-1"
-              "DYNAMO_URL=http://dynamodb.us-east-1.localhost.localstack.cloud:4566/"
-              "SQS_URL=http://sqs.us-east-1.localhost.localstack.cloud:4566/"
+              "DYNAMO_URL=${dynamoUrl}"
+              "SQS_URL=${sqsUrl}"
             ];
             WorkingDir = "/app";
             User = "nextjs";
@@ -161,8 +164,8 @@
           AWS_SECRET_ACCESS_KEY = "test";
           AWS_DEFAULT_REGION = "us-east-1";
           AWS_REGION = "us-east-1";
-          DYNAMO_URL = "http://dynamodb.us-east-1.localhost.localstack.cloud:4566/";
-          SQS_URL = "http://sqs.us-east-1.localhost.localstack.cloud:4566/";
+          DYNAMO_URL = "${dynamoUrl}";
+          SQS_URL = "${sqsUrl}";
         };
 
         packages = {

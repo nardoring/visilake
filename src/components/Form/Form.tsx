@@ -3,7 +3,7 @@ import Sources from './Sources';
 import FormPopup from './FormPopup';
 import { MultiSelect } from 'react-multi-select-component';
 import { api } from '~/utils/api';
-import type { AnalysisTypeOption, Source as Source } from '~/utils/types';
+import type { AnalysisTypeOption, Source } from '~/utils/types';
 import LoadingIcon from './LoadingIcon';
 
 export default function Form() {

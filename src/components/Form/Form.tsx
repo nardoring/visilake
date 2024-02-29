@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import FileTags from './FileTags';
+import Sources from './Sources';
 import FormPopup from './FormPopup';
 import { MultiSelect } from 'react-multi-select-component';
 import { api } from '~/utils/api';
-import type { AnalysisTypeOption, Tag } from '~/utils/types';
+import type { AnalysisTypeOption, Source as Source } from '~/utils/types';
 import LoadingIcon from './LoadingIcon';
 
 export default function Form() {
@@ -11,7 +11,7 @@ export default function Form() {
     'block w-full rounded-md border-0 py-1.5 pl-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-300';
 
   const [jobName, setJobName] = useState('');
-  const [tags, setTags] = useState<Tag[]>([]);
+  const [sources, setSources] = useState<Source[]>([]);
   const [jobDescription, setJobDescription] = useState('');
   const [submitAttempted, setSubmitAttempted] = useState(false);
   const [analysisTypes, setAnalysisTypes] = useState<AnalysisTypeOption[]>([]);
@@ -31,13 +31,15 @@ export default function Form() {
         })
       ) ?? [];
 
-  const getTags = (): Tag[] => {
-    return tags;
+  const getSources = (): Source[] => {
+    return sources;
   };
 
-  const getValidTags = (): string[] => {
+  const getValidSources = (): string[] => {
     return (
-      tags.filter((tag) => tag.isValid === true).map((tag) => tag.name) || []
+      sources
+        .filter((source) => source.isValid === true)
+        .map((source) => source.name) || []
     );
   };
 
@@ -57,7 +59,7 @@ export default function Form() {
     if (
       jobName.trim() !== '' &&
       analysisTypes.length !== 0 &&
-      getValidTags().length !== 0 &&
+      getValidSources().length !== 0 &&
       jobDescription.trim() !== ''
     ) {
       const analysisTypeNames: string[] = analysisTypes.map(
@@ -65,7 +67,7 @@ export default function Form() {
       );
       try {
         await jobSubmission.mutateAsync({
-          tags: getValidTags(),
+          sources: getValidSources(),
           jobDescription: jobDescription,
           jobName: jobName,
           analysisTypes: analysisTypeNames,
@@ -118,11 +120,11 @@ export default function Form() {
           />
         </div>
         <div className='col-span-2'>
-          <FileTags
-            getTags={getTags}
-            setTags={setTags}
+          <Sources
+            getSources={getSources}
+            setSources={setSources}
             inputStyles={`${inputStyles} ${
-              submitAttempted && getValidTags().length === 0
+              submitAttempted && getValidSources().length === 0
                 ? 'ring-red-500 ring-2'
                 : ''
             }`}

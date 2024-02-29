@@ -32,7 +32,7 @@ export default function SearchBar({ setGlobalFilter }: SearchBarProps) {
           void router.push('/');
         }}
       >
-        + New Use Case
+        + New Job
       </button>
     </div>
   );

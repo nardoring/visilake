@@ -16,11 +16,11 @@ import {
 } from '@tanstack/react-table';
 import type { ColumnFilter, Row } from '@tanstack/react-table';
 import { useState } from 'react';
-import type { UseCase } from '~/models/domain/useCase';
+import type { Job } from '~/models/domain/job';
 import FilterDropdown from './FilterDropdown';
 import ColumnSortButton from './ColumnSortButton';
 
-export default function UseCaseTable() {
+export default function JobTable() {
   const filterDropdownColumns = new Set([
     'Status',
     'Created By',
@@ -40,7 +40,7 @@ export default function UseCaseTable() {
         (option: { name: string }) => option.name
       ) ?? [];
 
-  const { data, isLoading } = api.useCase.getUseCases.useQuery(undefined, {
+  const { data, isLoading } = api.job.getJobs.useQuery(undefined, {
     enabled: !queryExecuted,
     onSuccess: () => {
       setQueryExecuted(true);
@@ -49,15 +49,15 @@ export default function UseCaseTable() {
 
   const columns = [
     {
-      accessorKey: 'useCaseName',
-      header: 'Use Case Name',
+      accessorKey: 'jobName',
+      header: 'Job Name',
       size: (1920 / 10) * 1,
       cell: (props: { getValue: () => string }) => (
         <p className='font-medium'>{props.getValue()}</p>
       ),
     },
     {
-      accessorKey: 'useCaseDescription',
+      accessorKey: 'jobDescription',
       header: 'Description',
       size: (1920 / 10) * 2,
       cell: (props: { getValue: () => string }) => <p>{props.getValue()}</p>,
@@ -70,7 +70,7 @@ export default function UseCaseTable() {
         <p>{props.getValue().join(', ')}</p>
       ),
       filterFn: (
-        row: Row<UseCase>,
+        row: Row<Job>,
         columnId: string,
         filterAnalysisTypes: string[]
       ) => {
@@ -87,7 +87,7 @@ export default function UseCaseTable() {
       size: (1920 / 10) * 1,
       cell: (props: { getValue: () => string }) => <p>{props.getValue()}</p>,
       filterFn: (
-        row: Row<UseCase>,
+        row: Row<Job>,
         columnId: string,
         filterAuthorNames: string[]
       ) => {
@@ -106,14 +106,14 @@ export default function UseCaseTable() {
       sortType: 'datetime',
     },
     {
-      accessorKey: 'useCaseStatus',
+      accessorKey: 'jobStatus',
       header: 'Status',
       size: (1920 / 10) * 0.5,
       cell: (props: { getValue: () => string }) => (
         <StatusChip status={props.getValue()} />
       ),
       filterFn: (
-        row: Row<UseCase>,
+        row: Row<Job>,
         columnId: string,
         filterStatuses: string[]
       ) => {
@@ -126,10 +126,10 @@ export default function UseCaseTable() {
       accessorKey: 'powerBILink',
       header: 'Power BI Data Link',
       size: (1920 / 10) * 4.5,
-      cell: (props: { getValue: () => string; row: Row<UseCase> }) => (
+      cell: (props: { getValue: () => string; row: Row<Job> }) => (
         <PowerBIButton
           link={props.getValue()}
-          status={props.row.original.useCaseStatus}
+          status={props.row.original.jobStatus}
         />
       ),
       enableGlobalFilter: false,

@@ -1,7 +1,7 @@
 import { postRouter } from '~/server/api/routers/post';
 import { createTRPCRouter } from '~/server/api/trpc';
 import { analysisRouter } from './routers/analysis';
-import { useCaseRouter } from './routers/useCase';
+import { jobRouter } from './routers/job';
 import { tagRouter } from './routers/tag';
 
 /**
@@ -12,7 +12,7 @@ import { tagRouter } from './routers/tag';
 export const appRouter = createTRPCRouter({
   post: postRouter,
   analysis: analysisRouter,
-  useCase: useCaseRouter,
+  job: jobRouter,
   tag: tagRouter,
 });
 

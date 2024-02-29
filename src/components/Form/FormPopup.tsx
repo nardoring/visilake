@@ -58,15 +58,15 @@ export default function FormPopup({
                 <div className='flex rounded-t pt-5'>
                   <h3 className='text-2xl font-semibold'>
                     {formSuccess
-                      ? 'Use Case Successfully Submitted'
-                      : 'Use Case Submission Failed'}
+                      ? 'Job Successfully Submitted'
+                      : 'Job Submission Failed'}
                   </h3>
                 </div>
                 {/*body*/}
                 <div className='relative flex-auto pl-5 pr-5'>
                   <p className='text-blueGray-500 my-4 text-lg leading-relaxed'>
                     {formSuccess
-                      ? 'Use Case has successfully been submitted. Processing will begin shortly.'
+                      ? 'Job has successfully been submitted. Processing will begin shortly.'
                       : 'Error has occured. Please contact an administrator.'}
                   </p>
                 </div>
@@ -79,7 +79,7 @@ export default function FormPopup({
                       setShowPopup(false);
                       // For successful form submissions, clear the form once the user has closed the popup.
                       const form = document.getElementById(
-                        'useSubmissionCaseForm'
+                        'jobSubmissionForm'
                       ) as HTMLFormElement;
                       if (formSuccess && form) {
                         form.submit();
@@ -96,7 +96,7 @@ export default function FormPopup({
                       void router.push('/ListPage');
                     }}
                   >
-                    View Use Cases
+                    View Job
                   </button>
                 </div>
               </div>

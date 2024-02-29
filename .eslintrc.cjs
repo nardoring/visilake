@@ -33,7 +33,7 @@ const config = {
       },
     ],
   },
-  ignorePatterns: ["src/utils/dbMockUseCaseGenerator.js"],
+  ignorePatterns: ["src/utils/dbMockJobGenerator.js"],
 };
 
 module.exports = config;

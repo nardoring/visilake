@@ -52,7 +52,7 @@ export default function FilterDropdown({
                 {() => (
                   <div className='flex py-1'>
                     <div className='mr-3'>
-                      {filterId === 'useCaseStatus' ? (
+                      {filterId === 'jobStatus' ? (
                         <StatusChip status={item} />
                       ) : (
                         <p className='mr-3 whitespace-nowrap text-darkBlue'>

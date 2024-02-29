@@ -1,11 +1,236 @@
 [
   {
     "requestID": "1",
-    "id": "lsv43uxej737h",
-    "creationDate": "1703895395751",
-    "useCaseStatus": "Failed",
-    "useCaseName": "Use case 1",
-    "useCaseDescription": "This is a test for use case 1",
+    "id": "lt7ugrmi14xlh",
+    "creationDate": "1706823420974",
+    "jobStatus": "Failed",
+    "jobName": "Job 1",
+    "jobDescription": "This is a test for job 1",
+    "author": "Olivia Bennett",
+    "analysisTypes": {
+      "L": [
+        {
+          "S": "Rolling Std Deviation"
+        }
+      ]
+    },
+    "powerBILink": "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'"
+  },
+  {
+    "requestID": "2",
+    "id": "lt7ugrmikmp7a",
+    "creationDate": "1694994817918",
+    "jobStatus": "NotStarted",
+    "jobName": "Job 2",
+    "jobDescription": "This is a test for job 2",
+    "author": "Benjamin Hayes",
+    "analysisTypes": {
+      "L": [
+        {
+          "S": "Rolling Mean"
+        }
+      ]
+    },
+    "powerBILink": "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'"
+  },
+  {
+    "requestID": "3",
+    "id": "lt7ugrmitl8va",
+    "creationDate": "1694542512617",
+    "jobStatus": "InProgress",
+    "jobName": "Job 3",
+    "jobDescription": "This is a test for job 3",
+    "author": "Emily Johnson",
+    "analysisTypes": {
+      "L": [
+        {
+          "S": "Autocorrelation"
+        }
+      ]
+    },
+    "powerBILink": "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'"
+  },
+  {
+    "requestID": "4",
+    "id": "lt7ugrmi10z8j",
+    "creationDate": "1697309075902",
+    "jobStatus": "NotStarted",
+    "jobName": "Job 4",
+    "jobDescription": "This is a test for job 4",
+    "author": "James Mitchell",
+    "analysisTypes": {
+      "L": [
+        {
+          "S": "Rolling Std Deviation"
+        }
+      ]
+    },
+    "powerBILink": "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'"
+  },
+  {
+    "requestID": "5",
+    "id": "lt7ugrmije7oq",
+    "creationDate": "1697645454199",
+    "jobStatus": "NotStarted",
+    "jobName": "Job 5",
+    "jobDescription": "This is a test for job 5",
+    "author": "Sophia Turner",
+    "analysisTypes": {
+      "L": [
+        {
+          "S": "Autocorrelation"
+        },
+        {
+          "S": "Rolling Mean"
+        }
+      ]
+    },
+    "powerBILink": "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'"
+  },
+  {
+    "requestID": "6",
+    "id": "lt7ugrmidzky9",
+    "creationDate": "1706109276186",
+    "jobStatus": "Failed",
+    "jobName": "Job 6",
+    "jobDescription": "This is a test for job 6",
+    "author": "Sophia Turner",
+    "analysisTypes": {
+      "L": [
+        {
+          "S": "Rolling Mean"
+        }
+      ]
+    },
+    "powerBILink": "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'"
+  },
+  {
+    "requestID": "7",
+    "id": "lt7ugrmi4m4ei",
+    "creationDate": "1706891787391",
+    "jobStatus": "NotStarted",
+    "jobName": "Job 7",
+    "jobDescription": "This is a test for job 7",
+    "author": "Emily Johnson",
+    "analysisTypes": {
+      "L": [
+        {
+          "S": "Autocorrelation"
+        },
+        {
+          "S": "Rolling Std Deviation"
+        },
+        {
+          "S": "Rolling Mean"
+        }
+      ]
+    },
+    "powerBILink": "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'"
+  },
+  {
+    "requestID": "8",
+    "id": "lt7ugrmigfhx4",
+    "creationDate": "1703596191844",
+    "jobStatus": "Failed",
+    "jobName": "Job 8",
+    "jobDescription": "This is a test for job 8",
+    "author": "Olivia Bennett",
+    "analysisTypes": {
+      "L": [
+        {
+          "S": "Autocorrelation"
+        },
+        {
+          "S": "Rolling Mean"
+        }
+      ]
+    },
+    "powerBILink": "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'"
+  },
+  {
+    "requestID": "9",
+    "id": "lt7ugrmihnlpw",
+    "creationDate": "1698335183753",
+    "jobStatus": "InProgress",
+    "jobName": "Job 9",
+    "jobDescription": "This is a test for job 9",
+    "author": "Olivia Bennett",
+    "analysisTypes": {
+      "L": [
+        {
+          "S": "Rolling Std Deviation"
+        },
+        {
+          "S": "Autocorrelation"
+        }
+      ]
+    },
+    "powerBILink": "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'"
+  },
+  {
+    "requestID": "10",
+    "id": "lt7ugrmiuewre",
+    "creationDate": "1697649948488",
+    "jobStatus": "InProgress",
+    "jobName": "Job 10",
+    "jobDescription": "This is a test for job 10",
+    "author": "Sophia Turner",
+    "analysisTypes": {
+      "L": [
+        {
+          "S": "Rolling Mean"
+        }
+      ]
+    },
+    "powerBILink": "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'"
+  },
+  {
+    "requestID": "11",
+    "id": "lt7ugrmi4ao34",
+    "creationDate": "1694391849222",
+    "jobStatus": "InProgress",
+    "jobName": "Job 11",
+    "jobDescription": "This is a test for job 11",
+    "author": "Sophia Turner",
+    "analysisTypes": {
+      "L": [
+        {
+          "S": "Rolling Mean"
+        },
+        {
+          "S": "Autocorrelation"
+        },
+        {
+          "S": "Rolling Std Deviation"
+        }
+      ]
+    },
+    "powerBILink": "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'"
+  },
+  {
+    "requestID": "12",
+    "id": "lt7ugrmi2irji",
+    "creationDate": "1707250494330",
+    "jobStatus": "InProgress",
+    "jobName": "Job 12",
+    "jobDescription": "This is a test for job 12",
+    "author": "Benjamin Hayes",
+    "analysisTypes": {
+      "L": [
+        {
+          "S": "Rolling Std Deviation"
+        }
+      ]
+    },
+    "powerBILink": "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'"
+  },
+  {
+    "requestID": "13",
+    "id": "lt7ugrmi2jftp",
+    "creationDate": "1698072992547",
+    "jobStatus": "Failed",
+    "jobName": "Job 13",
+    "jobDescription": "This is a test for job 13",
     "author": "Sophia Turner",
     "analysisTypes": {
       "L": [
@@ -23,17 +248,60 @@
     "powerBILink": "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'"
   },
   {
-    "requestID": "2",
-    "id": "lsv43uxe4kb38",
-    "creationDate": "1695487986720",
-    "useCaseStatus": "Failed",
-    "useCaseName": "Use case 2",
-    "useCaseDescription": "This is a test for use case 2",
-    "author": "Olivia Bennett",
+    "requestID": "14",
+    "id": "lt7ugrmia0trb",
+    "creationDate": "1695414979227",
+    "jobStatus": "Failed",
+    "jobName": "Job 14",
+    "jobDescription": "This is a test for job 14",
+    "author": "Emily Johnson",
     "analysisTypes": {
       "L": [
         {
           "S": "Rolling Mean"
+        },
+        {
+          "S": "Rolling Std Deviation"
+        },
+        {
+          "S": "Autocorrelation"
+        }
+      ]
+    },
+    "powerBILink": "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'"
+  },
+  {
+    "requestID": "15",
+    "id": "lt7ugrmiw188u",
+    "creationDate": "1706652940892",
+    "jobStatus": "InProgress",
+    "jobName": "Job 15",
+    "jobDescription": "This is a test for job 15",
+    "author": "James Mitchell",
+    "analysisTypes": {
+      "L": [
+        {
+          "S": "Rolling Std Deviation"
+        }
+      ]
+    },
+    "powerBILink": "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'"
+  },
+  {
+    "requestID": "16",
+    "id": "lt7ugrmi6sobf",
+    "creationDate": "1697686970910",
+    "jobStatus": "Failed",
+    "jobName": "Job 16",
+    "jobDescription": "This is a test for job 16",
+    "author": "Sophia Turner",
+    "analysisTypes": {
+      "L": [
+        {
+          "S": "Rolling Mean"
+        },
+        {
+          "S": "Autocorrelation"
         },
         {
           "S": "Rolling Std Deviation"
@@ -43,13 +311,136 @@
     "powerBILink": "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'"
   },
   {
-    "requestID": "3",
-    "id": "lsv43uxek2qfz",
-    "creationDate": "1703035726183",
-    "useCaseStatus": "Complete",
-    "useCaseName": "Use case 3",
-    "useCaseDescription": "This is a test for use case 3",
-    "author": "Benjamin Hayes",
+    "requestID": "17",
+    "id": "lt7ugrmir22lz",
+    "creationDate": "1695612498442",
+    "jobStatus": "Complete",
+    "jobName": "Job 17",
+    "jobDescription": "This is a test for job 17",
+    "author": "Olivia Bennett",
+    "analysisTypes": {
+      "L": [
+        {
+          "S": "Rolling Std Deviation"
+        },
+        {
+          "S": "Autocorrelation"
+        }
+      ]
+    },
+    "powerBILink": "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'"
+  },
+  {
+    "requestID": "18",
+    "id": "lt7ugrmizr1eo",
+    "creationDate": "1695589357996",
+    "jobStatus": "Complete",
+    "jobName": "Job 18",
+    "jobDescription": "This is a test for job 18",
+    "author": "Emily Johnson",
+    "analysisTypes": {
+      "L": [
+        {
+          "S": "Rolling Mean"
+        }
+      ]
+    },
+    "powerBILink": "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'"
+  },
+  {
+    "requestID": "19",
+    "id": "lt7ugrmiaemvi",
+    "creationDate": "1704207122521",
+    "jobStatus": "Complete",
+    "jobName": "Job 19",
+    "jobDescription": "This is a test for job 19",
+    "author": "James Mitchell",
+    "analysisTypes": {
+      "L": [
+        {
+          "S": "Rolling Std Deviation"
+        },
+        {
+          "S": "Autocorrelation"
+        },
+        {
+          "S": "Rolling Mean"
+        }
+      ]
+    },
+    "powerBILink": "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'"
+  },
+  {
+    "requestID": "20",
+    "id": "lt7ugrmid5iou",
+    "creationDate": "1698100906267",
+    "jobStatus": "NotStarted",
+    "jobName": "Job 20",
+    "jobDescription": "This is a test for job 20",
+    "author": "James Mitchell",
+    "analysisTypes": {
+      "L": [
+        {
+          "S": "Rolling Mean"
+        },
+        {
+          "S": "Autocorrelation"
+        }
+      ]
+    },
+    "powerBILink": "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'"
+  },
+  {
+    "requestID": "21",
+    "id": "lt7ugrmicyqlo",
+    "creationDate": "1706800505894",
+    "jobStatus": "Complete",
+    "jobName": "Job 21",
+    "jobDescription": "This is a test for job 21",
+    "author": "Sophia Turner",
+    "analysisTypes": {
+      "L": [
+        {
+          "S": "Rolling Std Deviation"
+        },
+        {
+          "S": "Autocorrelation"
+        }
+      ]
+    },
+    "powerBILink": "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'"
+  },
+  {
+    "requestID": "22",
+    "id": "lt7ugrmi1d0lb",
+    "creationDate": "1697886883432",
+    "jobStatus": "Failed",
+    "jobName": "Job 22",
+    "jobDescription": "This is a test for job 22",
+    "author": "Emily Johnson",
+    "analysisTypes": {
+      "L": [
+        {
+          "S": "Rolling Std Deviation"
+        },
+        {
+          "S": "Autocorrelation"
+        },
+        {
+          "S": "Rolling Mean"
+        }
+      ]
+    },
+    "powerBILink": "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'"
+  },
+  {
+    "requestID": "23",
+    "id": "lt7ugrmixpfo6",
+    "creationDate": "1707875122211",
+    "jobStatus": "NotStarted",
+    "jobName": "Job 23",
+    "jobDescription": "This is a test for job 23",
+    "author": "James Mitchell",
     "analysisTypes": {
       "L": [
         {
@@ -60,35 +451,32 @@
     "powerBILink": "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'"
   },
   {
-    "requestID": "4",
-    "id": "lsv43uxetqfp7",
-    "creationDate": "1693608986401",
-    "useCaseStatus": "NotStarted",
-    "useCaseName": "Use case 4",
-    "useCaseDescription": "This is a test for use case 4",
-    "author": "Benjamin Hayes",
+    "requestID": "24",
+    "id": "lt7ugrmi6zyyr",
+    "creationDate": "1695008637897",
+    "jobStatus": "NotStarted",
+    "jobName": "Job 24",
+    "jobDescription": "This is a test for job 24",
+    "author": "Sophia Turner",
     "analysisTypes": {
       "L": [
         {
-          "S": "Rolling Std Deviation"
+          "S": "Autocorrelation"
         }
       ]
     },
     "powerBILink": "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'"
   },
   {
-    "requestID": "5",
-    "id": "lsv43uxerefu7",
-    "creationDate": "1693746185290",
-    "useCaseStatus": "NotStarted",
-    "useCaseName": "Use case 5",
-    "useCaseDescription": "This is a test for use case 5",
-    "author": "Emily Johnson",
+    "requestID": "25",
+    "id": "lt7ugrmiepiwn",
+    "creationDate": "1697136984564",
+    "jobStatus": "Failed",
+    "jobName": "Job 25",
+    "jobDescription": "This is a test for job 25",
+    "author": "Olivia Bennett",
     "analysisTypes": {
       "L": [
-        {
-          "S": "Rolling Mean"
-        },
         {
           "S": "Autocorrelation"
         }

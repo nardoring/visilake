@@ -33,7 +33,7 @@ export default function Navbar() {
             void router.push('/ListPage');
           }}
         >
-          View Use Cases
+          View Jobs
         </button>
       ) : null}
     </nav>

@@ -141,7 +141,7 @@ resource "aws_ecs_service" "nardo" {
   launch_type     = "FARGATE"
 
   network_configuration {
-    subnets          = [aws_subnet.public_one.id, aws_subnet.public_two.id, aws_subnet.private_one.id, aws_subnet.private_two.id]
+    subnets = [aws_subnet.public_one.id, aws_subnet.public_two.id, aws_subnet.private_one.id, aws_subnet.private_two.id]
     # security_groups  = var.security_group_ids
     assign_public_ip = true
   }

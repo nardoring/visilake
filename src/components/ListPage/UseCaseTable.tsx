@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from "react";
 import { api } from "~/utils/api";
 import { AgGridReact } from "ag-grid-react";
-import 'ag-grid-enterprise';
+import "ag-grid-enterprise";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-quartz.css";
 import PowerBIButton from "./PowerBIButton";
@@ -18,15 +18,28 @@ export default function UseCaseTable() {
   });
 
   const [colDefs, setColDefs] = useState([
-    { field: "useCaseName", headerName: "Job Title", filter: "agTextColumnFilter"},
-    { field: "useCaseDescription", headerName: "Job Description", filter: "agTextColumnFilter"},
-    { field: "analysisTypes", filter: "agSetColumnFilter"},
+    {
+      field: "useCaseName",
+      headerName: "Job Title",
+      filter: "agTextColumnFilter",
+    },
+    {
+      field: "useCaseDescription",
+      headerName: "Job Description",
+      filter: "agTextColumnFilter",
+    },
+    { field: "analysisTypes", filter: "agSetColumnFilter" },
     { field: "date", filter: "agDateColumnFilter" },
-    { field: "author", filter: "agSetColumnFilter"},
-    { field: "useCaseStatus", cellRenderer: StatusChip, filter: "agSetColumnFilter"},
+    { field: "author", filter: "agSetColumnFilter" },
+    {
+      field: "useCaseStatus",
+      cellRenderer: StatusChip,
+      filter: "agSetColumnFilter",
+    },
     {
       field: "powerBILink",
       cellRenderer: PowerBIButton,
+      sortable: false,
     },
   ]);
 
@@ -69,7 +82,7 @@ export default function UseCaseTable() {
             rowData={data}
             columnDefs={colDefs}
             gridOptions={gridOptions}
-            domLayout={'autoHeight'}
+            domLayout={"autoHeight"}
             defaultColDef={defaultColDef}
           />
         </div>

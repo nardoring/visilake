@@ -6,6 +6,7 @@ import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-quartz.css";
 import PowerBIButton from "./PowerBIButton";
 import StatusChip from "./StatusChip";
+import { ITooltipParams } from "ag-grid-enterprise";
 
 export default function UseCaseTable() {
   const [queryExecuted, setQueryExecuted] = useState<boolean>(false);
@@ -35,11 +36,25 @@ export default function UseCaseTable() {
       field: "useCaseStatus",
       cellRenderer: StatusChip,
       filter: "agSetColumnFilter",
+      tooltipValueGetter: (params: ITooltipParams) => {
+        const tooltipMessages: { [key: string]: string } = {
+          Complete: "Processing job has been completed",
+          InProgress: "Data is currently being processed",
+          NotStarted: "Processing job will soon be started",
+          Failed: "An error has occurred"
+        };
+      
+        return tooltipMessages[params.value] || "INVALID";
+      }
     },
     {
       field: "powerBILink",
       cellRenderer: PowerBIButton,
       sortable: false,
+      tooltipValueGetter: (params: ITooltipParams) => {
+        if (params.value === "") return "Link is unavailable";
+        return "Copy link to clipboard";
+      }
     },
   ]);
 
@@ -59,6 +74,7 @@ export default function UseCaseTable() {
     rowHeight: 75,
     paginationPageSize: 5,
     paginationPageSizeSelector: [5, 10],
+    tooltipShowDelay: 250,
   };
 
   if (isLoading) {

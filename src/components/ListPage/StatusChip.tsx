@@ -1,4 +1,3 @@
-import { Tooltip } from 'react-tooltip';
 import { CustomCellRendererProps } from 'ag-grid-react';
 
 /* TODO use tailwind for this eventually */
@@ -50,10 +49,7 @@ export default function StatusChip(props: CustomCellRendererProps) {
         className={`m-1 flex min-w-[8rem] items-center justify-center rounded-full border px-2 py-1 text-xs font-medium`}
         style={style}
       >
-        <div className="max-w-full flex-initial leading-none"
-          data-tooltip-id='status'
-          data-tooltip-content='Placeholder of status explanation'>
-          <Tooltip id='status' className="z-50" />
+        <div className="max-w-full flex-initial leading-none">
           {statusValue}
         </div>
       </div>

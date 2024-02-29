@@ -1,8 +1,8 @@
 import { CustomCellRendererProps } from "ag-grid-react";
 import Image from "next/image";
+import { useState } from "react";
 import { Bounce, ToastPosition, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { Tooltip } from 'react-tooltip'
 
 const toastProperties = {
   position: "bottom-right" as ToastPosition,
@@ -44,9 +44,6 @@ export default function PowerBIButton(props: CustomCellRendererProps) {
   const powerBiIconFilePath = isDisabled
     ? "/Power-BI-Gray.png"
     : "/Power-BI.png";
-  const powerBiToolTip = isDisabled
-    ? "Link is unavailable"
-    : "Copy link to clipboard";
 
   return (
     <>
@@ -57,8 +54,6 @@ export default function PowerBIButton(props: CustomCellRendererProps) {
           }`}
         onClick={handleCopyClick}
         disabled={isDisabled}
-        data-tooltip-id="link-na"
-        data-tooltip-content= {powerBiToolTip}
       >
 
         <Image
@@ -70,7 +65,6 @@ export default function PowerBIButton(props: CustomCellRendererProps) {
         />
 
       </button>
-      <Tooltip id="link-na" />
     </>
   );
 }

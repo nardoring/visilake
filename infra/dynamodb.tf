@@ -68,14 +68,14 @@ resource "aws_dynamodb_table_item" "mockRequest" {
   hash_key   = "requestID"
 
   item = jsonencode({
-    "requestID"          = { "S" = each.value.requestID },
-    "id"                 = { "S" = each.value.id },
-    "creationDate"       = { "N" = each.value.creationDate },
+    "requestID"      = { "S" = each.value.requestID },
+    "id"             = { "S" = each.value.id },
+    "creationDate"   = { "N" = each.value.creationDate },
     "jobStatus"      = { "S" = each.value.jobStatus },
     "jobName"        = { "S" = each.value.jobName },
     "jobDescription" = { "S" = each.value.jobDescription },
-    "author"             = { "S" = each.value.author },
-    "analysisTypes"      = each.value.analysisTypes,
-    "powerBILink"        = { "S" = each.value.powerBILink }
+    "author"         = { "S" = each.value.author },
+    "analysisTypes"  = each.value.analysisTypes,
+    "powerBILink"    = { "S" = each.value.powerBILink }
   })
 }

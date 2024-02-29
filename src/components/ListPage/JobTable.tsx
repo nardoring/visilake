@@ -112,11 +112,7 @@ export default function JobTable() {
       cell: (props: { getValue: () => string }) => (
         <StatusChip status={props.getValue()} />
       ),
-      filterFn: (
-        row: Row<Job>,
-        columnId: string,
-        filterStatuses: string[]
-      ) => {
+      filterFn: (row: Row<Job>, columnId: string, filterStatuses: string[]) => {
         if (filterStatuses.length === 0) return true;
         const author: string = row.getValue(columnId);
         return filterStatuses.includes(author);

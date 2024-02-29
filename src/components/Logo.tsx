@@ -9,7 +9,7 @@ const Logo: React.FC<LogoProps> = ({ style }) => {
   };
 
   const svgLogo = (
-    <svg version="1.1" viewBox="0 0 352 120" width="19em" className="p-1">
+    <svg version="1.1" viewBox="0 0 352 120">
       <g>
         {/* <polygon
           id="_Pfad__2_"
@@ -26,7 +26,7 @@ const Logo: React.FC<LogoProps> = ({ style }) => {
   );
 
   return (
-    <div className="z-40" style={wrapperStyle}>
+    <div className="z-40 flex items-center justify-center" style={wrapperStyle}>
       {svgLogo}
     </div>
   );

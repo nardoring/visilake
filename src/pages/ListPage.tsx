@@ -1,4 +1,4 @@
-import UseCaseTable from '~/components/ListPage/UseCaseTable';
+import JobTable from '~/components/ListPage/JobTable';
 import Navbar from '../components/Navbar';
 
 export default function ListPage() {
@@ -6,7 +6,7 @@ export default function ListPage() {
     <>
       <main className='min-h-screen bg-lightGrey'>
         <Navbar />
-        <UseCaseTable />
+        <JobTable />
       </main>
     </>
   );

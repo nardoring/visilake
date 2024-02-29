@@ -71,9 +71,9 @@ resource "aws_dynamodb_table_item" "mockRequest" {
     "requestID"          = { "S" = each.value.requestID },
     "id"                 = { "S" = each.value.id },
     "creationDate"       = { "N" = each.value.creationDate },
-    "useCaseStatus"      = { "S" = each.value.useCaseStatus },
-    "useCaseName"        = { "S" = each.value.useCaseName },
-    "useCaseDescription" = { "S" = each.value.useCaseDescription },
+    "jobStatus"      = { "S" = each.value.jobStatus },
+    "jobName"        = { "S" = each.value.jobName },
+    "jobDescription" = { "S" = each.value.jobDescription },
     "author"             = { "S" = each.value.author },
     "analysisTypes"      = each.value.analysisTypes,
     "powerBILink"        = { "S" = each.value.powerBILink }

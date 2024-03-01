@@ -105,6 +105,7 @@ const Background = ({ children }: BackgroundProps) => {
             gridColumnStart: '2',
             gridColumnEnd: '10',
             gridRow: '3',
+            zIndex: 1,
           }}
         >
           {children}

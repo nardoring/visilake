@@ -44,7 +44,7 @@ export default function StatusChip(props: CustomCellRendererProps) {
     statusStyles.default;
 
   return (
-    <div className={`flex flex-wrap gap-2`}>
+    <div className={`flex flex-wrap gap-2 py-3`}>
       <div
         className={`m-1 flex min-w-[8rem] items-center justify-center rounded-full border px-2 py-1 text-xs font-medium`}
         style={style}

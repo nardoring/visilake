@@ -39,6 +39,8 @@ export default function UseCaseTable() {
     {
       field: "useCaseStatus",
       headerName: "Status",
+      maxWidth: 170,
+      minWidth: 170,
       cellRenderer: StatusChip,
       filter: "agSetColumnFilter",
       filterParams: {
@@ -58,8 +60,13 @@ export default function UseCaseTable() {
     },
     {
       field: "powerBILink",
+      headerName: "PowerBI",
       cellRenderer: PowerBIButton,
+      maxWidth: 100,
+      minWidth: 100,
+      resizable: false,
       sortable: false,
+      headerTooltip: "Provides a data source link to use within PowerBI",
       tooltipValueGetter: (params: ITooltipParams) => {
         if (params.data.useCaseStatus !== "Complete")
           return "Link is unavailable";

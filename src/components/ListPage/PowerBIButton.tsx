@@ -46,7 +46,7 @@ export default function PowerBIButton(props: CustomCellRendererProps) {
     : "/Power-BI.png";
 
   return (
-    <>
+    <div className="py-1">
       <button
         className={`ml flex items-center rounded px-4 py-2 font-medium shadow-md ${isDisabled
             ? "text-gray cursor-not-allowed bg-gray-300"
@@ -65,6 +65,6 @@ export default function PowerBIButton(props: CustomCellRendererProps) {
         />
 
       </button>
-    </>
+    </div>
   );
 }

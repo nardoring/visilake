@@ -1,8 +1,8 @@
-import React, { useState, useEffect, ReactNode } from "react";
-import Parallelogram from "./Parallelogram";
-import Navbar from "./Navbar";
-import Logo from "./Logo";
-import Bar from "./Bar";
+import React, { useState, useEffect, ReactNode } from 'react';
+import Parallelogram from './Parallelogram';
+import Navbar from './Navbar';
+import Logo from './Logo';
+import Bar from './Bar';
 
 type BackgroundProps = {
   children: ReactNode;
@@ -11,89 +11,96 @@ type BackgroundProps = {
 const Background = ({ children }: BackgroundProps) => {
   return (
     <div
-      className="bg-blue"
+      className='bg-blue'
       style={{
-        minHeight: "100vh",
-        width: "100vw",
-        maxWidth: "100vw",
-        position: "relative",
+        minHeight: '100vh',
+        width: '100vw',
+        maxWidth: '100vw',
+        position: 'relative',
       }}
     >
       <div
-        className="grid-container"
+        className='grid-container'
         style={{
-          overflow: "hidden",
+          overflow: 'hidden',
         }}
       >
         <div
           style={{
-            marginTop: "115px",
-            display: "flex",
-            gridRow: "1",
-            position: "relative",
-            gridColumnStart: "2",
-            gridColumnEnd: "10",
+            marginTop: '115px',
+            display: 'flex',
+            gridRow: '1',
+            position: 'relative',
+            gridColumnStart: '2',
+            gridColumnEnd: '10',
           }}
         >
-          {/* <div
-            className="bg-white"
+          <div
+            className='bg-white'
             style={{
-              position: "relative",
-              marginTop: "-100px",
+              position: 'absolute',
+              top: '-115px',
+              left: '-50em',
+              zIndex: '10',
+              transform: `skew(-22.4deg) `,
+              transformOrigin: 'bottom',
+              width: '50.5em',
+              height: '115px',
             }}
-          ></div> */}
+          ></div>
           <Parallelogram
             angle={-22.4}
             //angle={0}
-            width={"100%"}
-            height="115px"
+            width={'100%'}
+            height='115px'
             style={{
-              position: "relative",
-              top: "-115px",
-              zIndex: "10",
+              position: 'relative',
+              top: '-115px',
+              zIndex: '10',
             }}
-            transformOrigin="bottom"
+            transformOrigin='bottom'
+            className='top-bar'
           />
           <Bar
             angle={-22.4}
             //angle={0}
-            width={"100%"}
-            height="100%"
+            width={'100%'}
+            height='100%'
             style={{
-              position: "absolute",
-              display: "flex",
-              alignItems: "center",
+              position: 'absolute',
+              display: 'flex',
+              alignItems: 'center',
             }}
           >
             <Navbar />
           </Bar>
           <Logo
             style={{
-              width: "285px",
-              height: "100px",
-              marginRight: "0px",
-              gridRow: "2",
-              gridColumnEnd: "9",
+              width: '285px',
+              height: '100px',
+              marginRight: '0px',
+              gridRow: '2',
+              gridColumnEnd: '9',
             }}
           />
         </div>
         <Parallelogram
           angle={-22.4}
           //angle={0}
-          width={"1000px"}
-          height="2400px"
+          width={'1000px'}
+          height='2400px'
           style={{
-            position: "relative",
-            gridRow: "3",
-            gridColumn: "10",
+            position: 'relative',
+            gridRow: '3',
+            gridColumn: '10',
           }}
-          transformOrigin="top"
+          transformOrigin='top'
         />
         <div
           style={{
-            gridColumnStart: "2",
-            gridColumnEnd: "10",
-            gridRow: "3",
+            gridColumnStart: '2',
+            gridColumnEnd: '10',
+            gridRow: '3',
           }}
         >
           {children}

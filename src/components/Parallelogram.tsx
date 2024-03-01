@@ -4,6 +4,7 @@ interface ParallelogramProps {
   height: string;
   style?: React.CSSProperties;
   transformOrigin: string;
+  className?: string;
 }
 
 const Parallelogram: React.FC<ParallelogramProps> = ({
@@ -12,20 +13,26 @@ const Parallelogram: React.FC<ParallelogramProps> = ({
   height,
   style,
   transformOrigin,
+  className,
 }) => {
   const parallelogramStyle: React.CSSProperties = {
     ...style,
     width,
     height,
-    zIndex: "0",
+    zIndex: '0',
     transform: `skew(${angle}deg) `,
-    overflow: "hidden",
-    backgroundColor: "#ffffff",
-    backgroundBlendMode: "multiply",
+    overflow: 'hidden',
+    backgroundColor: '#ffffff',
+    backgroundBlendMode: 'multiply',
     transformOrigin: transformOrigin,
   };
 
-  return <div style={parallelogramStyle} />;
+  return (
+    <div
+      className={className}
+      style={parallelogramStyle}
+    />
+  );
 };
 
 export default Parallelogram;

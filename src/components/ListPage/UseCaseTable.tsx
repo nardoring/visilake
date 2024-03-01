@@ -142,9 +142,7 @@ export default function UseCaseTable() {
   };
 
   useEffect(() => {
-    if (gridRef.current !== null) {
-      gridRef.current.api.setGridOption("quickFilterText", searchBarText);
-    }
+    gridRef.current?.api?.setGridOption("quickFilterText", searchBarText);
   }, [searchBarText]);
 
   if (isLoading) {

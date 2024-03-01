@@ -105,17 +105,44 @@ export default function UseCaseTable() {
       filterParams: {
         buttons: ["clear"],
       },
-      wrapText: true, // <-- HERE
+      wrapText: true,
     }),
     [],
   );
 
   const gridOptions = {
-    pagination: true,
     rowHeight: 70,
+
+    pagination: true,
     paginationPageSize: 5,
     paginationPageSizeSelector: [5, 10],
+
     tooltipShowDelay: 250,
+
+    sideBar: {
+      toolPanels: [
+        {
+          id: "columns",
+          labelDefault: "Columns",
+          labelKey: "columns",
+          iconKey: "columns",
+          toolPanel: "agColumnsToolPanel",
+          toolPanelParams: {
+            suppressValues: true,
+            suppressPivots: true,
+            suppressPivotMode: true,
+            suppressRowGroups: true,
+          },
+        },
+        {
+          id: "filters",
+          labelDefault: "Filters",
+          labelKey: "filters",
+          iconKey: "filter",
+          toolPanel: "agFiltersToolPanel",
+        },
+      ],
+    },
   };
 
   useEffect(() => {

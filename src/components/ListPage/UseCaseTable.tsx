@@ -75,13 +75,14 @@ export default function UseCaseTable() {
       filterParams: {
         buttons: ["clear"],
       },
+      wrapText: true,     // <-- HERE
     }),
     [],
   );
 
   const gridOptions = {
     pagination: true,
-    rowHeight: 75,
+    rowHeight: 70,
     paginationPageSize: 5,
     paginationPageSizeSelector: [5, 10],
     tooltipShowDelay: 250,

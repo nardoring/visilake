@@ -3,32 +3,10 @@
 @tailwind utilities;
 @import url(https://fonts.googleapis.com/css2?family=Inter:wght@100;400;600;700&family=Nunito:wght@400;500;600&display=swap);
 
-.rmsc {
-  --rmsc-main: #101010 !important;
-  --rmsc-border: #d1d5db !important;
-  --rmsc-gray: #101010 !important;
-  --rmsc-h: 34px !important;
-}
-
-.resizer {
-  position: absolute;
-  opacity: 0;
-  top: 0;
-  right: 0;
-  height: 100%;
-  width: 1px;
-  background-color: #464f60;
-  cursor: col-resize;
-  border-radius: 6px;
-}
-
-.resizer.isResizing {
-  background-color: #0a3749;
-  width: 5px;
-  opacity: 1;
-}
-
-*:hover > .resizer {
-  opacity: 1;
-  width: 5px;
+.ag-theme-quartz .ag-cell-value {
+  line-height: 20px !important;
+  word-break: normal; /* prevent words from breaking */
+  padding-top: 5px; /* space top */
+  overflow: hidden;
+  text-overflow: ellipsis; /* Display ellipsis for overflow content */
 }

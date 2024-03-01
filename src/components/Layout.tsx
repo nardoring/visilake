@@ -4,11 +4,11 @@ import Navbar from './Navbar';
 import Logo from './Logo';
 import Bar from './Bar';
 
-type BackgroundProps = {
+type LayoutProps = {
   children: ReactNode;
 };
 
-const Background = ({ children }: BackgroundProps) => {
+const Layout = ({ children }: LayoutProps) => {
   const TOP_BAR_HEIGHT = '9.5em';
 
   return (
@@ -86,4 +86,4 @@ const Background = ({ children }: BackgroundProps) => {
   );
 };
 
-export default Background;
+export default Layout;

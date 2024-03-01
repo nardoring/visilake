@@ -1,13 +1,13 @@
 import JobViewBox from '~/components/View/JobViewBox';
-import Background from '../components/Background';
+import Layout from '../components/Layout';
 import Navbar from '../components/Navbar';
 
 export default function ListPage() {
   return (
     <main className='min-h-screen overflow-x-hidden'>
-      <Background>
+      <Layout>
         <JobViewBox />
-      </Background>
+      </Layout>
     </main>
   );
 }

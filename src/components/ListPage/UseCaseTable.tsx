@@ -1,19 +1,14 @@
-import React, {
-  useState,
-  useMemo,
-  useCallback,
-  useRef,
-  useEffect,
-} from "react";
+import React, { useState, useMemo, useRef, useEffect } from "react";
 import { api } from "~/utils/api";
 import { AgGridReact } from "ag-grid-react";
+import type { SortDirection } from "ag-grid-community";
+import type { ITooltipParams } from "ag-grid-enterprise";
+import { useSearchBar } from "~/pages/ListPage";
+import PowerBIButton from "./PowerBIButton";
+import StatusChip from "./StatusChip";
 import "ag-grid-enterprise";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-quartz.css";
-import PowerBIButton from "./PowerBIButton";
-import StatusChip from "./StatusChip";
-import { ITooltipParams } from "ag-grid-enterprise";
-import { useSearchBar } from "~/pages/ListPage";
 
 export default function UseCaseTable() {
   const { searchBarText } = useSearchBar();
@@ -27,7 +22,7 @@ export default function UseCaseTable() {
     },
   });
 
-  const [colDefs, setColDefs] = useState([
+  const [colDefs] = useState([
     {
       field: "useCaseName",
       headerName: "Job Title",
@@ -49,7 +44,8 @@ export default function UseCaseTable() {
     {
       field: "date",
       filter: "agDateColumnFilter",
-      sort: "desc", // Ignore global filter ()
+      sort: "desc" as SortDirection,
+      // Ignore global filter ()
       getQuickFilterText: () => {
         return "";
       },
@@ -67,14 +63,14 @@ export default function UseCaseTable() {
         suppressSelectAll: true,
       },
       tooltipValueGetter: (params: ITooltipParams) => {
-        const tooltipMessages: { [key: string]: string } = {
+        const tooltipMessages: Record<string, string> = {
           Complete: "Processing job has been completed",
           InProgress: "Data is currently being processed",
           NotStarted: "Processing job will soon be started",
           Failed: "An error has occurred",
         };
 
-        return tooltipMessages[params.value] || "INVALID";
+        return tooltipMessages[params.value as string] ?? "INVALID";
       },
     },
     {
@@ -87,7 +83,7 @@ export default function UseCaseTable() {
       sortable: false,
       headerTooltip: "Provides a data source link to use within PowerBI",
       tooltipValueGetter: (params: ITooltipParams) => {
-        if (params.data.useCaseStatus !== "Complete")
+        if ((params.data as { useCaseStatus: string }).useCaseStatus !== "Complete")
           return "Link is unavailable";
         return "Copy link to clipboard";
       },
@@ -147,7 +143,7 @@ export default function UseCaseTable() {
 
   useEffect(() => {
     if (gridRef.current !== null) {
-      gridRef.current!.api.setGridOption("quickFilterText", searchBarText);
+      gridRef.current.api.setGridOption("quickFilterText", searchBarText);
     }
   }, [searchBarText]);
 

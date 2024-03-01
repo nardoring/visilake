@@ -1,7 +1,7 @@
-import { CustomCellRendererProps } from "ag-grid-react";
+import type { CustomCellRendererProps } from "ag-grid-react";
 import Image from "next/image";
-import { useState } from "react";
-import { Bounce, ToastPosition, toast } from "react-toastify";
+import { Bounce, toast } from "react-toastify";
+import type { ToastPosition } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const toastProperties = {
@@ -31,7 +31,7 @@ export default function PowerBIButton(props: CustomCellRendererProps) {
 
   const handleCopyClick = () => {
     navigator.clipboard
-      .writeText(props.value)
+      .writeText(String(props.value))
       .then(() => {
         notifyLinkCopied(true);
       })
@@ -40,7 +40,8 @@ export default function PowerBIButton(props: CustomCellRendererProps) {
       });
   };
 
-  const isDisabled = props.data.useCaseStatus !== "Complete";
+  const isDisabled =
+    (props.data as { useCaseStatus: string }).useCaseStatus !== "Complete";
   const powerBiIconFilePath = isDisabled
     ? "/Power-BI-Gray.png"
     : "/Power-BI.png";
@@ -48,14 +49,14 @@ export default function PowerBIButton(props: CustomCellRendererProps) {
   return (
     <div className="py-1">
       <button
-        className={`ml flex items-center rounded px-4 py-2 font-medium shadow-md ${isDisabled
+        className={`ml flex items-center rounded px-4 py-2 font-medium shadow-md ${
+          isDisabled
             ? "text-gray cursor-not-allowed bg-gray-300"
             : "bg-[#f6d955] text-black hover:bg-[#f4ce25]"
-          }`}
+        }`}
         onClick={handleCopyClick}
         disabled={isDisabled}
       >
-
         <Image
           src={powerBiIconFilePath}
           width={24}
@@ -63,7 +64,6 @@ export default function PowerBIButton(props: CustomCellRendererProps) {
           alt=""
           className="mr-2"
         />
-
       </button>
     </div>
   );

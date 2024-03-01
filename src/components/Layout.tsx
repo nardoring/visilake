@@ -1,4 +1,5 @@
-import React, { useState, useEffect, ReactNode } from 'react';
+import React from 'react';
+import type { ReactNode } from 'react';
 import Parallelogram from './Parallelogram';
 import Navbar from './Navbar';
 import Logo from './Logo';
@@ -78,9 +79,7 @@ const Layout = ({ children }: LayoutProps) => {
           }}
           transformOrigin='top'
         />
-        <div className=' z-10 col-start-2 col-end-10 row-span-3'>
-          {children}
-        </div>
+        <div className='z-10 col-start-2 col-end-10 row-span-3'>{children}</div>
       </div>
     </div>
   );

@@ -29,7 +29,11 @@ export default function UseCaseTable() {
       headerName: "Job Description",
       filter: "agTextColumnFilter",
     },
-    { field: "analysisTypes", filter: "agSetColumnFilter" },
+    {
+      field: "analysisTypes",
+      filter: "agSetColumnFilter",
+      valueFormatter: (params: { value: string[] }) => params.value.join(", "),
+    },
     { field: "date", filter: "agDateColumnFilter", sort: "desc" },
     { field: "author", filter: "agSetColumnFilter" },
     {
@@ -57,7 +61,8 @@ export default function UseCaseTable() {
       cellRenderer: PowerBIButton,
       sortable: false,
       tooltipValueGetter: (params: ITooltipParams) => {
-        if (params.value === "") return "Link is unavailable";
+        if (params.data.useCaseStatus !== "Complete")
+          return "Link is unavailable";
         return "Copy link to clipboard";
       },
     },

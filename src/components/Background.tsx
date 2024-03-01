@@ -61,6 +61,9 @@ const Background = ({ children }: BackgroundProps) => {
             transformOrigin='bottom'
             className='top-bar'
           />
+          <div className='absolute flex h-full w-full items-center'>
+            <Navbar />
+          </div>
           <Bar
             angle={-22.4}
             //angle={0}
@@ -71,28 +74,29 @@ const Background = ({ children }: BackgroundProps) => {
               display: 'flex',
               alignItems: 'center',
             }}
-          >
-            <Navbar />
-          </Bar>
-          <Logo
-            style={{
-              width: '285px',
-              height: '100px',
-              marginRight: '0px',
-              gridRow: '2',
-              gridColumnEnd: '9',
-            }}
           />
+          <div className='flex h-full items-center'>
+            <Logo
+              style={{
+                width: '285px',
+                height: '100px',
+                marginRight: '0px',
+                gridRow: '2',
+                gridColumnEnd: '9',
+              }}
+            />
+          </div>
         </div>
         <Parallelogram
           angle={-22.4}
           //angle={0}
-          width={'1000px'}
-          height='2400px'
+          width={'10000px'}
+          height='1500px'
           style={{
             position: 'relative',
             gridRow: '3',
             gridColumn: '10',
+            zIndex: 0,
           }}
           transformOrigin='top'
         />

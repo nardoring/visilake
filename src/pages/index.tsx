@@ -1,11 +1,11 @@
-import Background from "../components/Background";
-import Form from "../components/Form/Form";
-import Navbar from "../components/Navbar";
+import Background from '../components/Background';
+import Form from '../components/Form/Form';
+import Navbar from '../components/Navbar';
 
 export default function FormPage() {
   return (
     <>
-      <main className="min-h-screen">
+      <main className='min-h-screen overflow-x-hidden'>
         <Background>
           <Form />
         </Background>

@@ -3,23 +3,23 @@ interface BarProps {
   width: string; // for responsive units like 'vw'
   height: string;
   style?: React.CSSProperties;
-  children: React.ReactNode;
 }
 
-const Bar: React.FC<BarProps> = ({ angle, width, height, style, children }) => {
+const Bar: React.FC<BarProps> = ({ angle, width, height, style }) => {
   const BarStyle: React.CSSProperties = {
     ...style,
     width,
     height,
-    zIndex: "0",
+    zIndex: '0',
     transform: `skewX(${angle}deg)`,
-    transformOrigin: "bottom",
+    transformOrigin: 'bottom',
   };
 
   return (
-    <div style={BarStyle} className="bg-darkBlue">
-      {children}
-    </div>
+    <div
+      style={BarStyle}
+      className='bg-darkBlue'
+    />
   );
 };
 

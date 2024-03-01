@@ -21,7 +21,7 @@ export default function SearchBar() {
           <FontAwesomeIcon icon={faMagnifyingGlass} />
         </span>
         <input
-          className="block min-w-[20vw] rounded-md border border-black bg-veryLightBlue py-2 text-gray-900 shadow-lg focus:ring-offset-2 focus:ring-4 focus:ring-boldBlue"
+          className="block min-w-[20vw] rounded-md border border-black bg-veryLightBlue py-2 pl-10 text-gray-900 shadow-lg focus:ring-offset-2 focus:ring-4 focus:ring-boldBlue"
           type="text"
           onChange={(event) => onSearchBarChanged(event.target.value)}
         />

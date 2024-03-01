@@ -41,7 +41,10 @@ export default function UseCaseTable() {
     {
       field: "analysisTypes",
       filter: "agSetColumnFilter",
-      valueFormatter: (params: { value: string[] }) => params.value.join(", "),
+      valueGetter: (params: { data: { analysisTypes: string[] } }) =>
+        params.data.analysisTypes.join(", "),
+      filterValueGetter: (params: { data: { analysisTypes: string[] } }) =>
+        params.data.analysisTypes,
     },
     {
       field: "date",

@@ -1,4 +1,10 @@
-import React, { useState, useMemo } from "react";
+import React, {
+  useState,
+  useMemo,
+  useCallback,
+  useRef,
+  useEffect,
+} from "react";
 import { api } from "~/utils/api";
 import { AgGridReact } from "ag-grid-react";
 import "ag-grid-enterprise";
@@ -7,8 +13,11 @@ import "ag-grid-community/styles/ag-theme-quartz.css";
 import PowerBIButton from "./PowerBIButton";
 import StatusChip from "./StatusChip";
 import { ITooltipParams } from "ag-grid-enterprise";
+import { useSearchBar } from "~/pages/ListPage";
 
 export default function UseCaseTable() {
+  const { searchBarText } = useSearchBar();
+  const gridRef = useRef<AgGridReact>(null);
   const [queryExecuted, setQueryExecuted] = useState<boolean>(false);
 
   const { data, isLoading } = api.useCase.getUseCases.useQuery(undefined, {
@@ -34,7 +43,14 @@ export default function UseCaseTable() {
       filter: "agSetColumnFilter",
       valueFormatter: (params: { value: string[] }) => params.value.join(", "),
     },
-    { field: "date", filter: "agDateColumnFilter", sort: "desc" },
+    {
+      field: "date",
+      filter: "agDateColumnFilter",
+      sort: "desc", // Ignore global filter ()
+      getQuickFilterText: () => {
+        return "";
+      },
+    },
     { field: "author", filter: "agSetColumnFilter" },
     {
       field: "useCaseStatus",
@@ -72,6 +88,10 @@ export default function UseCaseTable() {
           return "Link is unavailable";
         return "Copy link to clipboard";
       },
+      // Ignore global filter ()
+      getQuickFilterText: () => {
+        return "";
+      },
     },
   ]);
 
@@ -82,7 +102,7 @@ export default function UseCaseTable() {
       filterParams: {
         buttons: ["clear"],
       },
-      wrapText: true,     // <-- HERE
+      wrapText: true, // <-- HERE
     }),
     [],
   );
@@ -94,6 +114,12 @@ export default function UseCaseTable() {
     paginationPageSizeSelector: [5, 10],
     tooltipShowDelay: 250,
   };
+
+  useEffect(() => {
+    if (gridRef.current !== null) {
+      gridRef.current!.api.setGridOption("quickFilterText", searchBarText);
+    }
+  }, [searchBarText]);
 
   if (isLoading) {
     // Render a loading indicator or message
@@ -113,6 +139,7 @@ export default function UseCaseTable() {
       >
         <div className={"ag-theme-quartz"}>
           <AgGridReact
+            ref={gridRef}
             rowData={data}
             columnDefs={colDefs}
             gridOptions={gridOptions}

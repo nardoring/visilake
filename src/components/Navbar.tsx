@@ -8,7 +8,6 @@ import SearchBar from "./ListPage/SearchBar";
 
 export default function Navbar() {
   const router = useRouter();
-  const setGlobalFilter = () => {};
   const isCurrentPage = (path: string) => router.pathname === path;
 
   return (
@@ -37,7 +36,7 @@ export default function Navbar() {
         </button>
       ) : (
         <div className="flex items-center">
-          <SearchBar setGlobalFilter={setGlobalFilter} />
+          <SearchBar />
         </div>
       )}
 

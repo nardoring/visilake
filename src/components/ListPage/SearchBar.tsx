@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 import type { Dispatch, SetStateAction } from 'react';
 import { Tooltip } from 'react-tooltip';
+import { useSearchBar } from '~/pages/ListPage';
 
 interface SearchBarProps {
   setGlobalFilter: Dispatch<SetStateAction<string>>;
@@ -10,6 +11,7 @@ interface SearchBarProps {
 
 export default function SearchBar({ setGlobalFilter }: SearchBarProps) {
   const router = useRouter();
+  const { searchBarText, onSearchBarChanged } = useSearchBar();
 
   return (
     <div className='absolute justify-left z-50 flex'>
@@ -24,11 +26,10 @@ export default function SearchBar({ setGlobalFilter }: SearchBarProps) {
           <FontAwesomeIcon icon={faMagnifyingGlass} />
         </span>
         <input
+          id="filter-text-box"
           className="block min-w-[20vw] rounded-md border border-black bg-veryLightBlue py-2 text-gray-900 shadow-lg focus:ring-offset-2 focus:ring-4 focus:ring-boldBlue"
           type="text"
-          onChange={(e) => {
-            setGlobalFilter(e.target.value);
-          }}
+          onChange={(event) => onSearchBarChanged(event.target.value)}
         />
       </div>
       <button

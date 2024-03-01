@@ -9,65 +9,44 @@ type BackgroundProps = {
 };
 
 const Background = ({ children }: BackgroundProps) => {
+  const TOP_BAR_HEIGHT = '9.5em';
+
   return (
-    <div
-      className='bg-blue'
-      style={{
-        minHeight: '100vh',
-        width: '100vw',
-        maxWidth: '100vw',
-        position: 'relative',
-      }}
-    >
-      <div
-        className='grid-container'
-        style={{
-          overflow: 'hidden',
-        }}
-      >
+    <div className='max-w-screen relative min-h-screen w-screen bg-blue'>
+      <div className='grid-container overflow-hidden'>
         <div
-          style={{
-            marginTop: '115px',
-            display: 'flex',
-            gridRow: '1',
-            position: 'relative',
-            gridColumnStart: '2',
-            gridColumnEnd: '10',
-          }}
+          className='relative col-start-2 col-end-10 flex'
+          style={{ marginTop: TOP_BAR_HEIGHT }}
         >
-          <div
-            className='bg-white'
-            style={{
-              position: 'absolute',
-              top: '-115px',
-              left: '-50em',
-              zIndex: '10',
-              transform: `skew(-22.4deg) `,
-              transformOrigin: 'bottom',
-              width: '50.5em',
-              height: '115px',
-            }}
-          ></div>
           <Parallelogram
             angle={-22.4}
-            //angle={0}
-            width={'100%'}
-            height='115px'
+            width={'50.5em'}
+            height={TOP_BAR_HEIGHT}
             style={{
-              position: 'relative',
-              top: '-115px',
+              position: 'absolute',
+              top: `-${TOP_BAR_HEIGHT}`,
+              left: '-50em',
               zIndex: '10',
             }}
             transformOrigin='bottom'
-            className='top-bar'
+          />
+          <Parallelogram
+            angle={-22.4}
+            width={'100%'}
+            height={TOP_BAR_HEIGHT}
+            style={{
+              position: 'relative',
+              top: `-${TOP_BAR_HEIGHT}`,
+              zIndex: '10',
+            }}
+            transformOrigin='bottom'
           />
           <div className='absolute flex h-full w-full items-center'>
             <Navbar />
           </div>
           <Bar
             angle={-22.4}
-            //angle={0}
-            width={'100%'}
+            width='100%'
             height='100%'
             style={{
               position: 'absolute',
@@ -89,7 +68,6 @@ const Background = ({ children }: BackgroundProps) => {
         </div>
         <Parallelogram
           angle={-22.4}
-          //angle={0}
           width={'10000px'}
           height='1500px'
           style={{
@@ -100,14 +78,7 @@ const Background = ({ children }: BackgroundProps) => {
           }}
           transformOrigin='top'
         />
-        <div
-          style={{
-            gridColumnStart: '2',
-            gridColumnEnd: '10',
-            gridRow: '3',
-            zIndex: 1,
-          }}
-        >
+        <div className=' z-10 col-start-2 col-end-10 row-span-3'>
           {children}
         </div>
       </div>

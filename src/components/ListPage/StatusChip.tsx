@@ -53,10 +53,15 @@ export default function StatusChip({ status }: StatusChipProps) {
         className={`m-1 flex min-w-[8rem] items-center justify-center rounded-full border px-2 py-1 text-xs font-medium`}
         style={style}
       >
-        <div className="max-w-full flex-initial leading-none"
+        <div
+          className='max-w-full flex-initial leading-none'
           data-tooltip-id='status'
-          data-tooltip-content='Placeholder of status explanation'>
-          <Tooltip id='status' className="z-50" />
+          data-tooltip-content='Placeholder of status explanation'
+        >
+          <Tooltip
+            id='status'
+            className='z-50'
+          />
           {statusValue}
         </div>
       </div>

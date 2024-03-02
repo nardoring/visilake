@@ -5,7 +5,6 @@ import { isKeyboardEvent } from '~/utils/keyboardEvent';
 
 import { Tooltip } from 'react-tooltip';
 
-
 interface FileTagsProps {
   getTags: () => Tag[];
   setTags: React.Dispatch<React.SetStateAction<Tag[]>>;
@@ -51,13 +50,12 @@ const FileTags = ({ getTags, setTags, inputStyles }: FileTagsProps) => {
 
   return (
     <>
-
       <label
         data-tooltip-id='tags'
         data-tooltip-html='Select tags from Data Lake'
         htmlFor='fileTags'
       >
-    Tag(s)
+        Tag(s)
       </label>
       <Tooltip id='tags' />
       <input

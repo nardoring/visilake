@@ -1,8 +1,7 @@
-
-import Image from "next/image";
-import { Bounce, ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import { Tooltip } from 'react-tooltip'
+import Image from 'next/image';
+import { Bounce, ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { Tooltip } from 'react-tooltip';
 
 interface PowerBIButtonProps {
   link: string;
@@ -47,26 +46,25 @@ export default function PowerBIButton({ link, status }: PowerBIButtonProps) {
 
   const isDisabled = status !== 'Complete';
   const powerBiIconFilePath = isDisabled
-
-    ? "/Power-BI-Gray.png"
-    : "/Power-BI.png";
+    ? '/Power-BI-Gray.png'
+    : '/Power-BI.png';
   const powerBiToolTip = isDisabled
-    ? "Link is unavailable"
-    : "Copy link to clipboard";
+    ? 'Link is unavailable'
+    : 'Copy link to clipboard';
 
   return (
     <>
       <button
-        className={`ml flex items-center rounded px-4 py-2 font-medium shadow-md ${isDisabled
-            ? "text-gray cursor-not-allowed bg-gray-300"
-            : "bg-[#f6d955] text-black hover:bg-[#f4ce25]"
-          }`}
+        className={`ml flex items-center rounded px-4 py-2 font-medium shadow-md ${
+          isDisabled
+            ? 'text-gray cursor-not-allowed bg-gray-300'
+            : 'bg-[#f6d955] text-black hover:bg-[#f4ce25]'
+        }`}
         onClick={handleCopyClick}
         disabled={isDisabled}
-        data-tooltip-id="link-na"
-        data-tooltip-content= {powerBiToolTip}
+        data-tooltip-id='link-na'
+        data-tooltip-content={powerBiToolTip}
       >
-
         <Image
           src={powerBiIconFilePath}
           width={24}
@@ -74,9 +72,8 @@ export default function PowerBIButton({ link, status }: PowerBIButtonProps) {
           alt=''
           className='mr-2'
         />
-
       </button>
-      <Tooltip id="link-na" />
+      <Tooltip id='link-na' />
       <ToastContainer
         position='bottom-right'
         autoClose={3000}

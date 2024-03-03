@@ -18,6 +18,15 @@ function generateMockJobs(count: number): Job[] {
       'Autocorrelation',
       'Rolling Std Deviation',
     ];
+
+    const sourceNames = [
+      'TAG-12345',
+      'TAG-67891',
+      'TAG-23456',
+      'TAG-78912',
+      'TAG-34567',
+    ];
+
     const job: Job = {
       jobName: `Job ${i}`,
       date: getRandomDate(new Date(2023, 8, 1), new Date(2024, 3, 3)),
@@ -29,6 +38,7 @@ function generateMockJobs(count: number): Job[] {
         0,
         Math.floor(Math.random() * 3 - 0.001) + 1
       ),
+      sources: sourceNames.slice(0, Math.floor(Math.random() * 5 - 0.001) + 1),
     };
 
     mockResponse.push(job);

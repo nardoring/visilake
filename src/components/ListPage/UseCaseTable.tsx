@@ -10,9 +10,10 @@ import "ag-grid-enterprise";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-quartz.css";
 import useWindowDimensions from "~/utils/useWindowResolution";
+import Link from "next/link";
 
 const ROW_HEIGHT = 70;
-const PAGINATION_PAGE_SIZES = [5, 10, 15, 20]
+const PAGINATION_PAGE_SIZES = [5, 10, 15, 20];
 
 export default function UseCaseTable() {
   const { searchBarText } = useSearchBar();
@@ -32,6 +33,11 @@ export default function UseCaseTable() {
       field: "useCaseName",
       headerName: "Job Title",
       filter: "agTextColumnFilter",
+      cellRenderer: (params: { value: string }) => (
+        <Link href="/ViewPage" passHref className="hover:font-bold">
+          <p>{params.value}</p>
+        </Link>
+      ),
     },
     {
       field: "useCaseDescription",
@@ -88,7 +94,10 @@ export default function UseCaseTable() {
       sortable: false,
       headerTooltip: "Provides a data source link to use within PowerBI",
       tooltipValueGetter: (params: ITooltipParams) => {
-        if ((params.data as { useCaseStatus: string }).useCaseStatus !== "Complete")
+        if (
+          (params.data as { useCaseStatus: string }).useCaseStatus !==
+          "Complete"
+        )
           return "Link is unavailable";
         return "Copy link to clipboard";
       },
@@ -158,8 +167,7 @@ export default function UseCaseTable() {
 
   useEffect(() => {
     gridRef.current?.api?.setGridOption("quickFilterText", searchBarText);
-    console.log(windowHeight)
-  }, [searchBarText, windowHeight]);
+  }, [searchBarText]);
 
   if (isLoading) {
     // Render a loading indicator or message

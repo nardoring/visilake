@@ -35,7 +35,7 @@ export default function UseCaseTable() {
     },
     {
       field: "analysisTypes",
-      filter: "agSetColumnFilter",
+      filter: "agMultiColumnFilter",
       valueGetter: (params: { data: { analysisTypes: string[] } }) =>
         params.data.analysisTypes.join(", "),
       filterValueGetter: (params: { data: { analysisTypes: string[] } }) =>
@@ -50,7 +50,7 @@ export default function UseCaseTable() {
         return "";
       },
     },
-    { field: "author", filter: "agSetColumnFilter" },
+    { field: "author", filter: "agMultiColumnFilter" },
     {
       field: "useCaseStatus",
       headerName: "Status",

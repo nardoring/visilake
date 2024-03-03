@@ -3,6 +3,12 @@
 @tailwind utilities;
 @import url(https://fonts.googleapis.com/css2?family=Inter:wght@100;400;600;700&family=Nunito:wght@400;500;600&display=swap);
 
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(10, minmax(0, 1fr));
+  grid-auto-rows: auto;
+}
+
 .ag-theme-quartz .ag-cell-value {
   line-height: 20px !important;
   word-break: normal; /* prevent words from breaking */

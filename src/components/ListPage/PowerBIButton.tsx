@@ -1,11 +1,11 @@
-import type { CustomCellRendererProps } from "ag-grid-react";
-import Image from "next/image";
-import { Bounce, toast } from "react-toastify";
-import type { ToastPosition } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import type { CustomCellRendererProps } from 'ag-grid-react';
+import Image from 'next/image';
+import { Bounce, toast } from 'react-toastify';
+import type { ToastPosition } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const toastProperties = {
-  position: "bottom-right" as ToastPosition,
+  position: 'bottom-right' as ToastPosition,
   autoClose: 3000,
   hideProgressBar: false,
   closeOnClick: true,
@@ -41,7 +41,7 @@ export default function PowerBIButton(props: CustomCellRendererProps) {
   };
 
   const isDisabled =
-    (props.data as { jobStatus: string }).jobStatus !== "Complete";
+    (props.data as { jobStatus: string }).jobStatus !== 'Complete';
   const powerBiIconFilePath = isDisabled
     ? '/Power-BI-Gray.png'
     : '/Power-BI.png';
@@ -50,7 +50,7 @@ export default function PowerBIButton(props: CustomCellRendererProps) {
     : 'Copy link to clipboard';
 
   return (
-    <div className="py-1">
+    <div className='py-1'>
       <button
         className={`ml flex items-center rounded px-4 py-2 font-medium shadow-md ${
           isDisabled

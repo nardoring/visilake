@@ -28,7 +28,7 @@ export default function Navbar() {
           </span>
         </button>
       ) : (
-        <div className="flex items-center">
+        <div className='flex items-center'>
           <SearchBar />
         </div>
       )}

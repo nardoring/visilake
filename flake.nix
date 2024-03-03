@@ -39,12 +39,12 @@
           config.allowUnfree = true;
         };
 
-    nardo = pkgs.buildNpmPackage {
-      # https://create.t3.gg/en/deployment/docker
-      pname = "nardo-web";
-      version = "0.1.0";
-      src = ./.;
-      npmDepsHash = "sha256-VQxeKbvrS2JGmF0yNGDrye/Cny5wtIX2faXIr6sJcro=";
+        nardo = pkgs.buildNpmPackage {
+          # https://create.t3.gg/en/deployment/docker
+          pname = "nardo-web";
+          version = "0.1.0";
+          src = ./.;
+          npmDepsHash = "sha256-VQxeKbvrS2JGmF0yNGDrye/Cny5wtIX2faXIr6sJcro=";
 
           npmBuild = "SKIP_ENV_VALIDATION=1 npm run build";
 

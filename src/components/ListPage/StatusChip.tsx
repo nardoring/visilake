@@ -1,10 +1,10 @@
-import type { CustomCellRendererProps } from "ag-grid-react";
+import type { CustomCellRendererProps } from 'ag-grid-react';
 
 const statusMap: Record<string, string> = {
-  complete: "Completed",
-  inprogress: "In Progress",
-  notstarted: "Queued",
-  failed: "Failed",
+  complete: 'Completed',
+  inprogress: 'In Progress',
+  notstarted: 'Queued',
+  failed: 'Failed',
 };
 
 interface StatusStyle {
@@ -45,9 +45,10 @@ const statusStyles: Record<string, StatusStyle> = {
 export default function StatusChip(props: CustomCellRendererProps) {
   const statusKey: string = (props.value as string)
     .toLowerCase()
-    .replace(/\s+/g, "");
-  const statusValue: string = statusMap[statusKey] ?? "INVALID";
-  const style: StatusStyle | undefined = statusStyles[statusKey] ?? statusStyles.default;
+    .replace(/\s+/g, '');
+  const statusValue: string = statusMap[statusKey] ?? 'INVALID';
+  const style: StatusStyle | undefined =
+    statusStyles[statusKey] ?? statusStyles.default;
 
   return (
     <div className={`flex flex-wrap gap-2 py-3`}>
@@ -55,7 +56,7 @@ export default function StatusChip(props: CustomCellRendererProps) {
         className={`text-xs m-1 flex min-w-[8rem] items-center justify-center rounded-full border px-2 py-1 font-medium`}
         style={style}
       >
-        <div className="max-w-full flex-initial leading-none">
+        <div className='max-w-full flex-initial leading-none'>
           {statusValue}
         </div>
       </div>

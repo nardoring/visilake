@@ -10,4 +10,5 @@ export interface Job {
   powerBILink: DynamoString;
   author: DynamoString;
   analysisTypes: DynamoArray<DynamoString>;
+  sources: DynamoArray<DynamoString>;
 }

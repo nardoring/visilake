@@ -1,5 +1,5 @@
 import JobTable from "~/components/ListPage/JobTable";
-import Background from "../components/Background";
+import Layout from '../components/Layout';
 import { ToastContainer } from "react-toastify";
 import { createContext, useCallback, useContext, useState } from "react";
 
@@ -21,9 +21,9 @@ export default function ListPage() {
   return (
     <main className="min-h-screen">
       <SearchBarContext.Provider value={{ searchBarText, onSearchBarChanged }}>
-        <Background>
-          <UseCaseTable />
-        </Background>
+        <Layout>
+          <JobTable />
+        </Layout>
         <ToastContainer
           position="bottom-right"
           autoClose={3000}

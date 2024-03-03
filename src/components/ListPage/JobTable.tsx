@@ -21,7 +21,7 @@ export default function JobTable() {
   const gridRef = useRef<AgGridReact>(null);
   const [queryExecuted, setQueryExecuted] = useState<boolean>(false);
 
-  const { data, isLoading } = api.useCase.getUseCases.useQuery(undefined, {
+  const { data, isLoading } = api.job.getJobs.useQuery(undefined, {
     enabled: !queryExecuted,
     onSuccess: () => {
       setQueryExecuted(true);
@@ -30,8 +30,7 @@ export default function JobTable() {
 
   const [colDefs] = useState([
     {
-      field: "useCaseName",
-      headerName: "Job Title",
+      field: "jobName",
       filter: "agTextColumnFilter",
       cellRenderer: (params: { value: string }) => (
         <Link href="/ViewPage" passHref className="hover:font-bold">
@@ -40,8 +39,7 @@ export default function JobTable() {
       ),
     },
     {
-      field: "useCaseDescription",
-      headerName: "Job Description",
+      field: "jobDescription",
       filter: "agTextColumnFilter",
     },
     {
@@ -63,7 +61,7 @@ export default function JobTable() {
     },
     { field: "author", filter: "agMultiColumnFilter" },
     {
-      field: "useCaseStatus",
+      field: "jobStatus",
       headerName: "Status",
       maxWidth: 170,
       minWidth: 170,
@@ -95,7 +93,7 @@ export default function JobTable() {
       headerTooltip: "Provides a data source link to use within PowerBI",
       tooltipValueGetter: (params: ITooltipParams) => {
         if (
-          (params.data as { useCaseStatus: string }).useCaseStatus !==
+          (params.data as { jobStatus: string }).jobStatus !==
           "Complete"
         )
           return "Link is unavailable";

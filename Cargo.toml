@@ -11,11 +11,12 @@ path = "nardo-proc/main.rs"
 [dependencies]
 aws-config = { version= "1.1.7", features = ["behavior-version-latest"] }
 aws-sdk-s3 = { version = "1.17.0" }
+aws-sdk-sns = { version = "1.16.0" }
 aws-sdk-sqs = { version = "1.15.0" }
 aws-sdk-dynamodb = { version = "1.16.0" }
 chrono = "0.4.31"
 http = "0.2"
-# log = "0.4.21"
+log = "0.4.21"
 tokio = { version = "1.36.0", features = ["full"] }
 tracing-subscriber = { version = "0.3.15", features = ["env-filter"] }
 uuid = { version = "1.7.0", features = ["v4"] }

@@ -10,7 +10,7 @@ type LayoutProps = {
 };
 
 const Layout = ({ children }: LayoutProps) => {
-  const TOP_BAR_HEIGHT = '9.5em';
+  const TOP_BAR_HEIGHT = '7.5em';
 
   return (
     <div className='max-w-screen relative min-h-screen w-screen bg-blue'>
@@ -58,9 +58,10 @@ const Layout = ({ children }: LayoutProps) => {
           <div className='flex h-full items-center'>
             <Logo
               style={{
-                width: '285px',
+                width: '300px',
                 height: '100px',
-                marginRight: '0px',
+                marginRight: '-3em',
+                marginLeft: '-3em',
                 gridRow: '2',
                 gridColumnEnd: '9',
               }}
@@ -70,7 +71,7 @@ const Layout = ({ children }: LayoutProps) => {
         <Parallelogram
           angle={-22.4}
           width={'10000px'}
-          height='1500px'
+          height='2800px'
           style={{
             position: 'relative',
             gridRow: '3',

@@ -29,6 +29,9 @@ next-env.d.ts
 .direnv
 result
 
+# rust
+**/target/
+
 # debug
 npm-debug.log*
 yarn-debug.log*

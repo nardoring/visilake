@@ -13,6 +13,7 @@
       url = "github:numtide/treefmt-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    rust-overlay.url = "github:oxalica/rust-overlay";
   };
   outputs = inputs @ {
     self,
@@ -20,6 +21,7 @@
     systems,
     nixpkgs,
     localstack-nix,
+    rust-overlay,
     ...
   }: let
     dynamoUrl = "http://dynamodb.us-east-1.localhost.localstack.cloud:4566/";
@@ -37,7 +39,10 @@
         pkgs = import nixpkgs {
           inherit system;
           config.allowUnfree = true;
+          overlays = [rust-overlay.overlays.default];
         };
+
+        toolchain = pkgs.rust-bin.fromRustupToolchainFile ./nardo-proc/toolchain.toml;
 
         nardo = pkgs.buildNpmPackage {
           # https://create.t3.gg/en/deployment/docker
@@ -109,12 +114,14 @@
           };
         };
 
-        localstack = [
-          localstack-nix.packages.${system}.default
-          localstack-nix.packages.${system}.awscli-local
-          localstack-nix.packages.${system}.awscdk-local
-          localstack-nix.packages.${system}.terraform-local
-        ];
+        localstack = builtins.attrValues localstack-nix.packages.${system};
+        treefmtPrograms = builtins.attrValues config.treefmt.build.programs;
+        # pyEnv = pkgs.python3.withPackages (ps:
+        #   with ps; [
+        #     awswrangler
+        #     pandas
+        #     numpy
+        #   ]);
       in {
         treefmt.config = {
           projectRootFile = "flake.nix";
@@ -137,7 +144,11 @@
                 trailingComma = "es5";
               };
             };
-
+            rustfmt.enable = true;
+            # ruff = {
+            #   enable = true;
+            #   format = true;
+            # };
             shellcheck.enable = true;
             terraform = {
               enable = true;
@@ -147,16 +158,18 @@
         };
 
         devShells.default = pkgs.mkShell {
-          packages = with pkgs; [
-            localstack # our build
+          packages = with pkgs;
+            [
+              toolchain
+              pkgs.rust-analyzer-unwrapped
+              # pyEnv
+              nodejs
+              nodePackages.eslint
+            ]
+            ++ localstack
+            ++ treefmtPrograms;
 
-            nodejs
-            nodePackages.prettier
-            nodePackages.eslint
-
-            awscli
-            terraform
-          ];
+          RUST_SRC_PATH = "${toolchain}/lib/rustlib/src/rust/library";
 
           LOCALSTACK_API_KEY = "4CVxMCDrKZ";
           LOCALSTACK = "true";

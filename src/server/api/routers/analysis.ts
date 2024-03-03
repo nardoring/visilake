@@ -1,10 +1,10 @@
-import { createTRPCRouter, publicProcedure } from "../trpc";
-import mapAnalysisTypes from "~/mappers/analysisTypeMapper";
-import type { AnalysisType } from "~/models/db/analysisType";
-import type { DynamoScan } from "~/models/db/dynamoScan";
-import getDynamoDBClient from "~/clients/dynamodb";
+import { createTRPCRouter, publicProcedure } from '../trpc';
+import mapAnalysisTypes from '~/mappers/analysisTypeMapper';
+import type { AnalysisType } from '~/models/db/analysisType';
+import type { DynamoScan } from '~/models/db/dynamoScan';
+import getDynamoDBClient from '~/clients/dynamodb';
 
-const DYNAMODB_TABLE = "analysisTypes";
+const DYNAMODB_TABLE = 'analysisTypes';
 
 export const analysisRouter = createTRPCRouter({
   getAnalysisTypes: publicProcedure.query(async () => {

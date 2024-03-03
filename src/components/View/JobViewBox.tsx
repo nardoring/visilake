@@ -1,35 +1,47 @@
 export default function JobViewBox() {
   return (
-    <div className="min-h-fit row-end-9 z-40 col-start-2 col-end-9 row-start-3 p-4">
+    <div className='min-h-fit row-end-9 z-40 col-start-2 col-end-9 row-start-3 p-4'>
       <div
-        className="min-h-fit relative z-40 mt-12 rounded border
-                      border-slate-400 bg-veryLightGrey p-4 font-medium shadow-md"
+        className='min-h-fit relative z-40 mt-12 rounded border
+                      border-slate-400 bg-veryLightGrey p-4 font-medium shadow-md'
       >
-        <div className="grid grid-cols-2">
-          <div className="pl-4 pt-4">
-            <label htmlFor="jobName" className="pr-2 font-bold">
+        <div className='grid grid-cols-2'>
+          <div className='pl-4 pt-4'>
+            <label
+              htmlFor='jobName'
+              className='pr-2 font-bold'
+            >
               Name
             </label>
-            <span className="">NO2 Mean Explorative data analysis</span>
+            <span className=''>NO2 Mean Explorative data analysis</span>
           </div>
 
-          <div className="pl-4 pt-4">
-            <label htmlFor="authorName" className="pr-2 font-bold">
+          <div className='pl-4 pt-4'>
+            <label
+              htmlFor='authorName'
+              className='pr-2 font-bold'
+            >
               Author
             </label>
-            <span className="">James Mitchell</span>
+            <span className=''>James Mitchell</span>
           </div>
 
-          <div className="pl-4 pt-4">
-            <label htmlFor="dateCreated" className="pr-2 font-bold">
+          <div className='pl-4 pt-4'>
+            <label
+              htmlFor='dateCreated'
+              className='pr-2 font-bold'
+            >
               Date Created
             </label>
-            <span className="">2024/02/02</span>
+            <span className=''>2024/02/02</span>
           </div>
         </div>
 
-        <div className="py-4 pl-4">
-          <label htmlFor="useCaseDescription" className="pr-2 font-bold">
+        <div className='py-4 pl-4'>
+          <label
+            htmlFor='useCaseDescription'
+            className='pr-2 font-bold'
+          >
             Description
           </label>
           <p>
@@ -52,17 +64,17 @@ export default function JobViewBox() {
         </div>
 
         <div
-          className="pointer-events-none absolute inset-0 z-50 flex
-                        items-center justify-center"
+          className='pointer-events-none absolute inset-0 z-50 flex
+                        items-center justify-center'
         >
-          <div className="text-18xl font-bold text-gray-400/30">Mockup</div>
+          <div className='text-18xl font-bold text-gray-400/30'>Mockup</div>
         </div>
 
         <iframe
-          src="/data.html"
-          title="HTML Content"
-          className="w-full min-h-screen"
-          style={{ pointerEvents: "auto" }}
+          src='/data.html'
+          title='HTML Content'
+          className='w-full min-h-screen'
+          style={{ pointerEvents: 'auto' }}
         ></iframe>
       </div>
     </div>

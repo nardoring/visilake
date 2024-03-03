@@ -3,7 +3,7 @@ const path = require('path');
 
 const NUM_OF_ITEMS = 25;
 
-function generateMockUseCases(count, outputFilePath) {
+function generateMockJobs(count, outputFilePath) {
   const mockRequests = [];
 
   const availableAnalysisTypes = [
@@ -14,44 +14,30 @@ function generateMockUseCases(count, outputFilePath) {
 
   for (let i = 1; i <= count; i++) {
     const input = {
-      useCaseName: `Job ${i}`,
-      useCaseDescription: `Test for job ${i}. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.`,
+      jobName: `Job ${i}`,
+      jobDescription: `Test for job ${i}. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.`,
       analysisTypeNames: getRandomAnalysisTypes(availableAnalysisTypes),
     };
 
-    const dynamodbParams = {
-      PutRequest: {
-        Item: {
-          requestID: { S: i.toString() },
-          id: { S: getRandomId() },
-          creationDate: { N: getRandomDate().toString() },
-          useCaseStatus: { S: getRandomStatus() },
-          useCaseName: { S: input.useCaseName },
-          useCaseDescription: { S: input.useCaseDescription },
-          author: { S: getRandomAuthor() },
-          analysisTypes: {
-            L: input.analysisTypeNames.map((id) => ({ S: id.toString() })),
-          },
-          powerBILink: {
-            S: "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'",
-          },
-        },
+    const item = {
+      requestID: i.toString(),
+      id: getRandomId(),
+      creationDate: getRandomDate().toString(),
+      jobStatus: getRandomStatus(),
+      jobName: input.jobName,
+      jobDescription: input.jobDescription,
+      author: getRandomAuthor(),
+      analysisTypes: {
+        L: input.analysisTypeNames.map((id) => ({ S: id.toString() })),
       },
+      powerBILink:
+        "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'",
     };
 
-    const mockRequest = {
-      PutRequest: dynamodbParams.PutRequest,
-    };
-
-    mockRequests.push(mockRequest);
+    mockRequests.push(item);
   }
 
-  const outputData = { mockRequests };
-
-  // Convert the object to a JSON string
-  const jsonString = JSON.stringify(outputData, null, 2);
-
-  // Write the JSON string to a file
+  const jsonString = JSON.stringify(mockRequests, null, 2);
   fs.writeFileSync(outputFilePath, jsonString, 'utf-8');
 }
 
@@ -93,9 +79,6 @@ function getRandomAuthor() {
   );
 }
 
-const mockDataDirectory = path.resolve(__dirname, '../../infra/useCases/');
-const outputFilePath = path.join(
-  mockDataDirectory,
-  'mockUseCasesBatchCommand.json'
-);
-generateMockUseCases(NUM_OF_ITEMS, outputFilePath);
+const mockDataDirectory = path.resolve(__dirname, '../../infra/mockdata/');
+const outputFilePath = path.join(mockDataDirectory, 'requests.json');
+generateMockJobs(NUM_OF_ITEMS, outputFilePath);

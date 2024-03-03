@@ -11,10 +11,16 @@ const Bar: React.FC<BarProps> = ({ angle, width, height, style }) => {
     width,
     height,
     zIndex: '0',
-    transform: `skew(${angle}deg)`,
+    transform: `skewX(${angle}deg)`,
+    transformOrigin: 'bottom',
   };
 
-  return <div style={BarStyle} className="bg-darkBlue" />;
+  return (
+    <div
+      style={BarStyle}
+      className='bg-darkBlue'
+    />
+  );
 };
 
 export default Bar;

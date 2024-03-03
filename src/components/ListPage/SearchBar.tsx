@@ -13,8 +13,8 @@ export default function SearchBar() {
       <div
         data-tooltip-id='search'
         data-tooltip-content='Search for items in any column of the table'
-        className='relative shadow-xl'>
-
+        className='relative shadow-xl'
+      >
         <Tooltip id='search' />
 
         <span className='absolute inset-y-0 left-4 flex items-center'>
@@ -27,8 +27,8 @@ export default function SearchBar() {
         />
       </div>
       <button
-        className="block min-w-[10vw] ml-5 rounded bg-transparent px-4 py-2 text-white hover:bg-blue hover:shadow-lg"
-        type="submit"
+        className='block min-w-[10vw] ml-5 rounded bg-transparent px-4 py-2 text-white hover:bg-blue hover:shadow-lg'
+        type='submit'
         onClick={() => {
           void router.push('/');
         }}

@@ -1,8 +1,8 @@
-import { postRouter } from "~/server/api/routers/post";
-import { createTRPCRouter } from "~/server/api/trpc";
-import { analysisRouter } from "./routers/analysis";
-import { useCaseRouter } from "./routers/useCase";
-import { tagRouter } from "./routers/tag";
+import { postRouter } from '~/server/api/routers/post';
+import { createTRPCRouter } from '~/server/api/trpc';
+import { analysisRouter } from './routers/analysis';
+import { jobRouter } from './routers/job';
+import { sourceRouter } from './routers/source';
 
 /**
  * This is the primary router for your server.
@@ -12,8 +12,8 @@ import { tagRouter } from "./routers/tag";
 export const appRouter = createTRPCRouter({
   post: postRouter,
   analysis: analysisRouter,
-  useCase: useCaseRouter,
-  tag: tagRouter,
+  job: jobRouter,
+  source: sourceRouter,
 });
 
 // export type definition of API

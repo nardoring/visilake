@@ -16,29 +16,29 @@ interface StatusStyle {
 /* TODO use tailwind for this eventually */
 const statusStyles: Record<string, StatusStyle> = {
   complete: {
-    backgroundColor: "#CEEEDD",
-    borderColor: "#00A13A",
-    color: "#7E8285",
+    backgroundColor: '#CEEEDD',
+    borderColor: '#00A13A',
+    color: '#7E8285',
   },
   inprogress: {
-    backgroundColor: "#C9E8FB",
-    borderColor: "#1790D0",
-    color: "#7E8285",
+    backgroundColor: '#C9E8FB',
+    borderColor: '#1790D0',
+    color: '#7E8285',
   },
   notstarted: {
-    backgroundColor: "#FFF2CC",
-    borderColor: "#FFE699",
-    color: "#7E8285",
+    backgroundColor: '#FFF2CC',
+    borderColor: '#FFE699',
+    color: '#7E8285',
   },
   failed: {
-    backgroundColor: "#F4CCDB",
-    borderColor: "#C9024A",
-    color: "#7E8285",
+    backgroundColor: '#F4CCDB',
+    borderColor: '#C9024A',
+    color: '#7E8285',
   },
   default: {
-    backgroundColor: "#BFC3C6",
-    borderColor: "#7E8285",
-    color: "#7E8285",
+    backgroundColor: '#BFC3C6',
+    borderColor: '#7E8285',
+    color: '#7E8285',
   },
 };
 

@@ -15,7 +15,7 @@ import Link from "next/link";
 const ROW_HEIGHT = 70;
 const PAGINATION_PAGE_SIZES = [5, 10, 15, 20];
 
-export default function UseCaseTable() {
+export default function JobTable() {
   const { searchBarText } = useSearchBar();
   const { windowHeight, windowWidth } = useWindowDimensions();
   const gridRef = useRef<AgGridReact>(null);

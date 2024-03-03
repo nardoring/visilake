@@ -1,4 +1,4 @@
-import UseCaseTable from "~/components/ListPage/UseCaseTable";
+import JobTable from "~/components/ListPage/JobTable";
 import Background from "../components/Background";
 import { ToastContainer } from "react-toastify";
 import { createContext, useCallback, useContext, useState } from "react";

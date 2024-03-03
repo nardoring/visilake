@@ -1,19 +1,19 @@
 import React, { useState } from 'react';
-import FileTags from './FileTags';
+import Sources from './Sources';
 import FormPopup from './FormPopup';
 import { MultiSelect } from 'react-multi-select-component';
 import { api } from '~/utils/api';
-import type { AnalysisTypeOption, Tag } from '~/utils/types';
+import type { AnalysisTypeOption, Source } from '~/utils/types';
 import LoadingIcon from './LoadingIcon';
 import { Tooltip } from 'react-tooltip';
 
 export default function Form() {
   const inputStyles =
-    "sticky top-0 col-start-2 col-end-9 block w-full rounded-md border-0 py-1.5 pl-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo";
+    'sticky top-0 col-start-2 col-end-9 block w-full rounded-md border-0 py-1.5 pl-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo';
 
-  const [useCaseTitle, setUseCaseTitle] = useState('');
-  const [tags, setTags] = useState<Tag[]>([]);
-  const [useCaseDescription, setUseCaseDescription] = useState('');
+  const [jobName, setJobName] = useState('');
+  const [sources, setSources] = useState<Source[]>([]);
+  const [jobDescription, setJobDescription] = useState('');
   const [submitAttempted, setSubmitAttempted] = useState(false);
   const [analysisTypes, setAnalysisTypes] = useState<AnalysisTypeOption[]>([]);
   const {
@@ -32,13 +32,15 @@ export default function Form() {
         })
       ) ?? [];
 
-  const getTags = (): Tag[] => {
-    return tags;
+  const getSources = (): Source[] => {
+    return sources;
   };
 
-  const getValidTags = (): string[] => {
+  const getValidSources = (): string[] => {
     return (
-      tags.filter((tag) => tag.isValid === true).map((tag) => tag.name) || []
+      sources
+        .filter((source) => source.isValid === true)
+        .map((source) => source.name) || []
     );
   };
 
@@ -49,26 +51,26 @@ export default function Form() {
     }
   };
 
-  const useCaseSubmission = api.useCase.submitUseCase.useMutation();
+  const jobSubmission = api.job.submitJob.useMutation();
 
   // Check that all input fields have some value
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setSubmitAttempted(true);
     if (
-      useCaseTitle.trim() !== '' &&
+      jobName.trim() !== '' &&
       analysisTypes.length !== 0 &&
-      getValidTags().length !== 0 &&
-      useCaseDescription.trim() !== ''
+      getValidSources().length !== 0 &&
+      jobDescription.trim() !== ''
     ) {
       const analysisTypeNames: string[] = analysisTypes.map(
         (type) => type.label
       );
       try {
-        await useCaseSubmission.mutateAsync({
-          tags: getValidTags(),
-          useCaseDescription: useCaseDescription,
-          useCaseName: useCaseTitle,
+        await jobSubmission.mutateAsync({
+          sources: getValidSources(),
+          jobDescription: jobDescription,
+          jobName: jobName,
           analysisTypes: analysisTypeNames,
         });
         setFormSuccess(true);
@@ -84,27 +86,33 @@ export default function Form() {
     <form
       className='z-40 col-start-2 col-end-9 row-span-6 row-start-3 p-4 '
       onSubmit={handleSubmit}
-      id='useSubmissionCaseForm'
+      id='jobSubmissionForm'
     >
       <div className='font-nunito mt-12 grid grid-cols-2 gap-x-6 gap-y-4 rounded border border-slate-400 bg-veryLightGrey p-4 font-medium shadow-md'>
         <div>
-          <label htmlFor='useCaseTitle'>Title</label>
+          <label
+            data-tooltip-id='name'
+            data-tooltip-html='Short name of job or task'
+            htmlFor='jobName'
+          >
+            Job Name
+          </label>
+          <Tooltip id='name' />
+
           <input
             className={`${inputStyles} ${
-              submitAttempted && useCaseTitle.trim() === ""
-                ? "ring-1 ring-red"
-                : ""
+              submitAttempted && jobName.trim() === '' ? 'ring-2 ring-red' : ''
             }`}
             type='text'
-            id='useCaseTitle'
+            id='jobName'
             onKeyDown={handleKeyDown}
-            onChange={(e) => setUseCaseTitle(e.target.value)}
+            onChange={(e) => setJobName(e.target.value)}
           />
         </div>
         <div>
           <label
             data-tooltip-id='types'
-            data-tooltip-html='Analysis to be ran on selected tags <br> Multiple types may be selected'
+            data-tooltip-html='Analysis to be ran on selected source(s) <br> Multiple types may be selected'
             htmlFor='analysisType'
           >
             Analysis Type(s)
@@ -120,43 +128,50 @@ export default function Form() {
             disableSearch={true}
             className={`${'rounded shadow-sm'} ${
               submitAttempted && analysisTypes.length === 0
-                ? "ring-1 ring-red"
-                : ""
+                ? 'ring-1 ring-red'
+                : ''
             }`}
           />
         </div>
         <div className='col-span-2'>
-          <FileTags
-            getTags={getTags}
-            setTags={setTags}
+          <Sources
+            getSources={getSources}
+            setSources={setSources}
             inputStyles={`${inputStyles} ${
-              submitAttempted && getValidTags().length === 0
-                ? "ring-red ring-1"
-                : ""
+              submitAttempted && getValidSources().length === 0
+                ? 'ring-red ring-1'
+                : ''
             }`}
           />
         </div>
         <div className='col-span-2'>
-          <label htmlFor='useCaseDescription'>Description</label>
+          <label
+            data-tooltip-id='desc'
+            data-tooltip-html='Details about:<br>- sources<br>- analysis type<br>- hypothesis<br>- expectations<br>- additional notes'
+            htmlFor='jobDescription'
+          >
+            Description
+          </label>
+          <Tooltip id='desc' />
           <textarea
             className={`${inputStyles} ${
-              submitAttempted && useCaseDescription.trim() === ""
-                ? "ring-1 ring-red"
-                : ""
+              submitAttempted && jobDescription.trim() === ''
+                ? 'ring-1 ring-red'
+                : ''
             }`}
             rows={4}
-            id='useCaseDescription'
+            id='jobDescription'
             onKeyDown={handleKeyDown}
-            onChange={(e) => setUseCaseDescription(e.target.value)}
+            onChange={(e) => setJobDescription(e.target.value)}
           />
         </div>
         <div className='col-span-2 flex justify-center '>
           <button
-            className="flex w-40 items-center justify-center rounded bg-veryDarkBlue px-4 py-2 text-white shadow-md hover:bg-highlightBlue"
-            type="submit"
-            disabled={useCaseSubmission.isLoading}
+            className='flex w-40 items-center justify-center rounded bg-veryDarkBlue px-4 py-2 text-white shadow-md hover:bg-highlightBlue'
+            type='submit'
+            disabled={jobSubmission.isLoading}
           >
-            {useCaseSubmission.isLoading ? <LoadingIcon /> : 'Submit'}
+            {jobSubmission.isLoading ? <LoadingIcon /> : 'Submit Job'}
           </button>
         </div>
         <FormPopup

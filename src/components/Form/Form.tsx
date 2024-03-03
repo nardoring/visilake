@@ -88,7 +88,14 @@ export default function Form() {
     >
       <div className='font-nunito mt-12 grid grid-cols-2 gap-x-6 gap-y-4 rounded border border-slate-400 bg-veryLightGrey p-4 font-medium shadow-md'>
         <div>
-          <label htmlFor='useCaseTitle'>Title</label>
+          <label
+            data-tooltip-id='name'
+            data-tooltip-html='Short name of job or task'
+            htmlFor='useCaseTitle'
+          >
+            Job Name
+          </label>
+          <Tooltip id='name' />
           <input
             className={`${inputStyles} ${
               submitAttempted && useCaseTitle.trim() === ''
@@ -104,7 +111,7 @@ export default function Form() {
         <div>
           <label
             data-tooltip-id='types'
-            data-tooltip-html='Analysis to be ran on selected tags <br> Multiple types may be selected'
+            data-tooltip-html='Analysis to be ran on selected source(s) <br> Multiple types may be selected'
             htmlFor='analysisType'
           >
             Analysis Type(s)
@@ -137,7 +144,14 @@ export default function Form() {
           />
         </div>
         <div className='col-span-2'>
-          <label htmlFor='useCaseDescription'>Description</label>
+          <label
+            data-tooltip-id='desc'
+            data-tooltip-html='Details about:<br>- sources<br>- analysis type<br>- hypothesis<br>- expectations<br>- additional notes'
+            htmlFor='useCaseDescription'
+          >
+            Description
+          </label>
+          <Tooltip id='desc' />
           <textarea
             className={`${inputStyles} ${
               submitAttempted && useCaseDescription.trim() === ''

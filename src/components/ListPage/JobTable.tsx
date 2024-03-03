@@ -21,11 +21,7 @@ import FilterDropdown from './FilterDropdown';
 import ColumnSortButton from './ColumnSortButton';
 
 export default function JobTable() {
-  const filterDropdownColumns = new Set([
-    'Status',
-    'Author',
-    'Analysis Types'
-  ]);
+  const filterDropdownColumns = new Set(['Status', 'Author', 'Analysis Types']);
   const sortableColumns = new Set(['Created']);
   const [queryExecuted, setQueryExecuted] = useState<boolean>(false);
   const [globalFilter, setGlobalFilter] = useState<string>('');
@@ -37,8 +33,8 @@ export default function JobTable() {
   const analysisTypeOptions: string[] = analysisTypeOptionsIsLoading
     ? []
     : analysisTypeOptionsData?.types?.map(
-      (option: { name: string }) => option.name
-    ) ?? [];
+        (option: { name: string }) => option.name
+      ) ?? [];
 
   const { data, isLoading } = api.job.getJobs.useQuery(undefined, {
     enabled: !queryExecuted,
@@ -215,8 +211,9 @@ export default function JobTable() {
                     <div
                       onMouseDown={header.getResizeHandler()}
                       onTouchStart={header.getResizeHandler()}
-                      className={`resizer ${header.column.getIsResizing() ? 'isResizing' : ''
-                        }`}
+                      className={`resizer ${
+                        header.column.getIsResizing() ? 'isResizing' : ''
+                      }`}
                     />
                   </th>
                 ))}
@@ -230,10 +227,11 @@ export default function JobTable() {
               {table.getRowModel().rows.map((row) => (
                 <tr
                   key={row.id}
-                  className={`${table.getRowModel().rows.indexOf(row) % 2 === 0
+                  className={`${
+                    table.getRowModel().rows.indexOf(row) % 2 === 0
                       ? 'bg-white'
                       : 'bg-lightIndigo'
-                    } h-[4.28rem]`}
+                  } h-[4.28rem]`}
                 >
                   {row.getVisibleCells().map((cell) => (
                     <td

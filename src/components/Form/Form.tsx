@@ -93,9 +93,7 @@ export default function Form() {
           <label htmlFor='jobName'>Job Name</label>
           <input
             className={`${inputStyles} ${
-              submitAttempted && jobName.trim() === ''
-                ? 'ring-2 ring-red'
-                : ''
+              submitAttempted && jobName.trim() === '' ? 'ring-2 ring-red' : ''
             }`}
             type='text'
             id='jobName'

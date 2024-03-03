@@ -8,9 +8,7 @@ mod models;
 mod utils;
 
 pub(crate) use crate::{
-    aws::{
-        dynamodb::{dynamodb_client, list_items, list_tables},
-    },
+    aws::dynamodb::{dynamodb_client, list_items, list_tables},
     utils::init_logging,
 };
 use std::error::Error;

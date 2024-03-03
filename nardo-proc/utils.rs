@@ -1,5 +1,5 @@
-use uuid::Uuid;
 use log::{Level, LevelFilter, Metadata, Record};
+use uuid::Uuid;
 
 pub fn use_localstack() -> bool {
     std::env::var("LOCALSTACK").unwrap_or_default() == "true"

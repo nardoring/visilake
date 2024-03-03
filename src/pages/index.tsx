@@ -1,12 +1,13 @@
-import Navbar from '../components/Navbar';
+import Layout from '../components/Layout';
 import Form from '../components/Form/Form';
 
 export default function FormPage() {
   return (
     <>
-      <main className='min-h-screen bg-lightGrey'>
-        <Navbar />
-        <Form />
+      <main className='min-h-screen overflow-x-hidden'>
+        <Layout>
+          <Form />
+        </Layout>
       </main>
     </>
   );

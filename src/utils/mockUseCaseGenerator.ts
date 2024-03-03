@@ -19,9 +19,9 @@ function generateMockUseCases(count: number): UseCase[] {
       'Rolling Std Deviation',
     ];
     const useCase: UseCase = {
-      useCaseName: `Use case ${i}`,
+      useCaseName: `Job ${i}`,
       date: getRandomDate(new Date(2023, 8, 1), new Date(2024, 1, 15)),
-      useCaseDescription: `This is a test for use case ${i}`,
+      useCaseDescription: `Test for job ${i}. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.`,
       useCaseStatus: getRandomStatus(),
       powerBILink: `https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value${i}'`,
       author: mockAuthorNames[Math.floor(Math.random() * 5)] ?? 'Jane Doe',

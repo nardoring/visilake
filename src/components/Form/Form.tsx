@@ -5,10 +5,11 @@ import { MultiSelect } from 'react-multi-select-component';
 import { api } from '~/utils/api';
 import type { AnalysisTypeOption, Tag } from '~/utils/types';
 import LoadingIcon from './LoadingIcon';
+import { Tooltip } from 'react-tooltip';
 
 export default function Form() {
   const inputStyles =
-    'block w-full rounded-md border-0 py-1.5 pl-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-300';
+    'sticky top-0 col-start-2 col-end-9 block w-full rounded-md border-0 py-1.5 pl-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo';
 
   const [useCaseTitle, setUseCaseTitle] = useState('');
   const [tags, setTags] = useState<Tag[]>([]);
@@ -81,17 +82,17 @@ export default function Form() {
 
   return (
     <form
-      className='mx-auto max-w-screen-md p-4 '
+      className='z-40 col-start-2 col-end-9 row-span-6 row-start-3 p-4 '
       onSubmit={handleSubmit}
       id='useSubmissionCaseForm'
     >
-      <div className='font-nunito mt-10 grid grid-cols-2 gap-x-6 gap-y-4 rounded border border-slate-400 bg-lightBlue p-4 font-medium shadow-md'>
+      <div className='font-nunito mt-12 grid grid-cols-2 gap-x-6 gap-y-4 rounded border border-slate-400 bg-veryLightGrey p-4 font-medium shadow-md'>
         <div>
-          <label htmlFor='useCaseTitle'>Use Case Title</label>
+          <label htmlFor='useCaseTitle'>Title</label>
           <input
             className={`${inputStyles} ${
               submitAttempted && useCaseTitle.trim() === ''
-                ? 'ring-2 ring-red-500'
+                ? 'ring-1 ring-red'
                 : ''
             }`}
             type='text'
@@ -101,7 +102,14 @@ export default function Form() {
           />
         </div>
         <div>
-          <label htmlFor='analysisType'>Analysis Type(s)</label>
+          <label
+            data-tooltip-id='types'
+            data-tooltip-html='Analysis to be ran on selected tags <br> Multiple types may be selected'
+            htmlFor='analysisType'
+          >
+            Analysis Type(s)
+          </label>
+          <Tooltip id='types' />
           <MultiSelect
             options={analysisTypeOptions}
             value={analysisTypes}
@@ -112,7 +120,7 @@ export default function Form() {
             disableSearch={true}
             className={`${'rounded shadow-sm'} ${
               submitAttempted && analysisTypes.length === 0
-                ? 'ring-2 ring-red-500'
+                ? 'ring-1 ring-red'
                 : ''
             }`}
           />
@@ -123,17 +131,17 @@ export default function Form() {
             setTags={setTags}
             inputStyles={`${inputStyles} ${
               submitAttempted && getValidTags().length === 0
-                ? 'ring-red-500 ring-2'
+                ? 'ring-red ring-1'
                 : ''
             }`}
           />
         </div>
         <div className='col-span-2'>
-          <label htmlFor='useCaseDescription'>Use Case Description</label>
+          <label htmlFor='useCaseDescription'>Description</label>
           <textarea
             className={`${inputStyles} ${
               submitAttempted && useCaseDescription.trim() === ''
-                ? 'ring-2 ring-red-500'
+                ? 'ring-1 ring-red'
                 : ''
             }`}
             rows={4}
@@ -144,11 +152,11 @@ export default function Form() {
         </div>
         <div className='col-span-2 flex justify-center '>
           <button
-            className='flex w-40 items-center justify-center rounded bg-veryDarkBlue px-4 py-2 text-white shadow-md hover:bg-darkBlue'
+            className='flex w-40 items-center justify-center rounded bg-veryDarkBlue px-4 py-2 text-white shadow-md hover:bg-highlightBlue'
             type='submit'
             disabled={useCaseSubmission.isLoading}
           >
-            {useCaseSubmission.isLoading ? <LoadingIcon /> : 'Submit Use Case'}
+            {useCaseSubmission.isLoading ? <LoadingIcon /> : 'Submit'}
           </button>
         </div>
         <FormPopup

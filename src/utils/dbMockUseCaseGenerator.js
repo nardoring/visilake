@@ -14,8 +14,8 @@ function generateMockUseCases(count, outputFilePath) {
 
   for (let i = 1; i <= count; i++) {
     const input = {
-      useCaseName: `Use case ${i}`,
-      useCaseDescription: `This is a test for use case ${i}`,
+      useCaseName: `Job ${i}`,
+      useCaseDescription: `Test for job ${i}. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.`,
       analysisTypeNames: getRandomAnalysisTypes(availableAnalysisTypes),
     };
 

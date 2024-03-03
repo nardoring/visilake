@@ -3,6 +3,8 @@ import FileTag from './FileTag';
 import type { Tag } from '~/utils/types';
 import { isKeyboardEvent } from '~/utils/keyboardEvent';
 
+import { Tooltip } from 'react-tooltip';
+
 interface FileTagsProps {
   getTags: () => Tag[];
   setTags: React.Dispatch<React.SetStateAction<Tag[]>>;
@@ -48,7 +50,14 @@ const FileTags = ({ getTags, setTags, inputStyles }: FileTagsProps) => {
 
   return (
     <>
-      <label htmlFor='fileTags'>File Tags</label>
+      <label
+        data-tooltip-id='tags'
+        data-tooltip-html='Select tags from Data Lake'
+        htmlFor='fileTags'
+      >
+        Tag(s)
+      </label>
+      <Tooltip id='tags' />
       <input
         className={inputStyles}
         type='text'

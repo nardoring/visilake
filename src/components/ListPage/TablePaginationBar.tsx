@@ -14,7 +14,7 @@ export default function TablePaginationBar({ table }: TablePaginationBarProps) {
   const pageCount = table.getPageCount();
   const pageIndex = table.getState().pagination.pageIndex + 1;
   const maxVisibleButtons = 6;
-  const buttonSize = 'w-10 h-10';
+  const buttonSize = 'w-11 h-11';
 
   const renderPaginationButtons = () => {
     const buttons = [];
@@ -60,7 +60,7 @@ export default function TablePaginationBar({ table }: TablePaginationBarProps) {
       key={'paginationButton' + pageNumber}
       className={`relative inline-flex items-center ${buttonSize} px-4 py-2 text-sm font-semibold ${
         pageNumber === pageIndex
-          ? 'bg-indigo-600 text-white focus:z-20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600'
+          ? 'bg-indigo/70 text-white focus:z-20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo'
           : 'text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0'
       }`}
     >
@@ -79,7 +79,7 @@ export default function TablePaginationBar({ table }: TablePaginationBarProps) {
   );
 
   return (
-    <div className='flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6'>
+    <div className='items-center w-full justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6'>
       <div className='hidden sm:flex sm:flex-1 sm:items-center sm:justify-between'>
         <div>
           <p className='text-sm text-gray-700'>
@@ -99,7 +99,7 @@ export default function TablePaginationBar({ table }: TablePaginationBarProps) {
           </p>
         </div>
         <div>
-          <nav className='isolate inline-flex -space-x-px rounded-md shadow-sm'>
+          <nav className='isolate inline-flex space-x-px rounded-md shadow-sm'>
             {/* Previous Button */}
             <button
               onClick={() => table.previousPage()}

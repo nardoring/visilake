@@ -9,9 +9,14 @@ import StatusChip from "./StatusChip";
 import "ag-grid-enterprise";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-quartz.css";
+import useWindowDimensions from "~/utils/useWindowResolution";
+
+const ROW_HEIGHT = 70;
+const PAGINATION_PAGE_SIZES = [5, 10, 15, 20]
 
 export default function UseCaseTable() {
   const { searchBarText } = useSearchBar();
+  const { windowHeight, windowWidth } = useWindowDimensions();
   const gridRef = useRef<AgGridReact>(null);
   const [queryExecuted, setQueryExecuted] = useState<boolean>(false);
 
@@ -106,12 +111,22 @@ export default function UseCaseTable() {
     [],
   );
 
+  function getPaginationPageSizeDefault() {
+    if (windowHeight != null) {
+      const pageSize = Math.floor((windowHeight - 500) / ROW_HEIGHT);
+      return PAGINATION_PAGE_SIZES.reduce((prev, curr) => {
+        return curr <= pageSize ? curr : prev;
+      });
+    }
+    return PAGINATION_PAGE_SIZES[0];
+  }
+
   const gridOptions = {
-    rowHeight: 70,
+    rowHeight: ROW_HEIGHT,
 
     pagination: true,
-    paginationPageSize: 5,
-    paginationPageSizeSelector: [5, 10],
+    paginationPageSize: getPaginationPageSizeDefault(),
+    paginationPageSizeSelector: PAGINATION_PAGE_SIZES,
 
     tooltipShowDelay: 250,
 
@@ -143,7 +158,8 @@ export default function UseCaseTable() {
 
   useEffect(() => {
     gridRef.current?.api?.setGridOption("quickFilterText", searchBarText);
-  }, [searchBarText]);
+    console.log(windowHeight)
+  }, [searchBarText, windowHeight]);
 
   if (isLoading) {
     // Render a loading indicator or message
@@ -158,7 +174,7 @@ export default function UseCaseTable() {
     <div className="col-start-2 col-end-9 row-start-2 mb-5 mt-5">
       <div
         className="relative z-20 col-start-2 col-end-9 row-start-3 row-end-4
-                     flex h-[64rem] flex-col
+                     flex h-[128rem] flex-col
                     overflow-x-auto rounded-md"
       >
         <div className={"ag-theme-quartz"}>

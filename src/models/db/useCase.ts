@@ -10,4 +10,5 @@ export interface UseCase {
   powerBILink: DynamoString;
   author: DynamoString;
   analysisTypes: DynamoArray<DynamoString>;
+  tags: DynamoArray<DynamoString>;
 }

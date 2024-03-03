@@ -23,7 +23,7 @@ export const useCaseRouter = createTRPCRouter({
     const useCaseQueryParams = {
       TableName: DYNAMODB_TABLE,
       ProjectionExpression:
-        'useCaseName, useCaseDescription, useCaseStatus, powerBILink, author, analysisTypes, creationDate',
+        'useCaseName, useCaseDescription, useCaseStatus, powerBILink, author, analysisTypes, creationDate, tags',
     };
 
     return mapUseCases(

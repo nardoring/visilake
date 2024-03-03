@@ -76,6 +76,7 @@ resource "aws_dynamodb_table_item" "mockRequest" {
     "jobDescription" = { "S" = each.value.jobDescription },
     "author"         = { "S" = each.value.author },
     "analysisTypes"  = each.value.analysisTypes,
+    "sources"        = each.value.sources,
     "powerBILink"    = { "S" = each.value.powerBILink }
   })
 }

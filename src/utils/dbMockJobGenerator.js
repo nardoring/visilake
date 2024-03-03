@@ -12,11 +12,20 @@ function generateMockJobs(count, outputFilePath) {
     'Autocorrelation',
   ];
 
+  const availableSources = [
+    'TAG-12345',
+    'TAG-67891',
+    'TAG-23456',
+    'TAG-78912',
+    'TAG-34567',
+  ];
+
   for (let i = 1; i <= count; i++) {
     const input = {
       jobName: `Job ${i}`,
       jobDescription: `Test for job ${i}. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.`,
-      analysisTypeNames: getRandomAnalysisTypes(availableAnalysisTypes),
+      analysisTypeNames: getRandomListItem(availableAnalysisTypes),
+      sourceNames: getRandomListItem(availableSources),
     };
 
     const item = {
@@ -29,6 +38,9 @@ function generateMockJobs(count, outputFilePath) {
       author: getRandomAuthor(),
       analysisTypes: {
         L: input.analysisTypeNames.map((id) => ({ S: id.toString() })),
+      },
+      sources: {
+        L: input.sourceNames.map((id) => ({ S: id.toString() })),
       },
       powerBILink:
         "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'",
@@ -47,9 +59,9 @@ function getRandomId() {
   return timestamp + randomChars;
 }
 
-function getRandomAnalysisTypes(availableTypes) {
-  const numberOfTypes = Math.floor(Math.random() * availableTypes.length) + 1;
-  const shuffledTypes = availableTypes.sort(() => Math.random() - 0.5);
+function getRandomListItem(availableIndexes) {
+  const numberOfTypes = Math.floor(Math.random() * availableIndexes.length) + 1;
+  const shuffledTypes = availableIndexes.sort(() => Math.random() - 0.5);
   return shuffledTypes.slice(0, numberOfTypes);
 }
 

@@ -1,5 +1,5 @@
-import type { UseCase } from '~/models/domain/useCase';
-import type { UseCaseStatus } from '~/models/domain/useCaseStatus';
+import type { Job } from '~/models/domain/job';
+import type { JobStatus } from '~/models/domain/jobStatus';
 
 const mockAuthorNames = [
   'Emily Johnson',
@@ -9,8 +9,8 @@ const mockAuthorNames = [
   'Olivia Bennett',
 ];
 
-function generateMockUseCases(count: number): UseCase[] {
-  const mockResponse: UseCase[] = [];
+function generateMockJobs(count: number): Job[] {
+  const mockResponse: Job[] = [];
 
   for (let i = 1; i <= count; i++) {
     const analysisTypes = [
@@ -18,11 +18,11 @@ function generateMockUseCases(count: number): UseCase[] {
       'Autocorrelation',
       'Rolling Std Deviation',
     ];
-    const useCase: UseCase = {
-      useCaseName: `Job ${i}`,
-      date: getRandomDate(new Date(2023, 8, 1), new Date(2024, 1, 15)),
-      useCaseDescription: `Test for job ${i}. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.`,
-      useCaseStatus: getRandomStatus(),
+    const job: Job = {
+      jobName: `Job ${i}`,
+      date: getRandomDate(new Date(2023, 8, 1), new Date(2024, 3, 3)),
+      jobDescription: `This is a test for job ${i}. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.`,
+      jobStatus: getRandomStatus(),
       powerBILink: `https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value${i}'`,
       author: mockAuthorNames[Math.floor(Math.random() * 5)] ?? 'Jane Doe',
       analysisTypes: analysisTypes.slice(
@@ -31,7 +31,7 @@ function generateMockUseCases(count: number): UseCase[] {
       ),
     };
 
-    mockResponse.push(useCase);
+    mockResponse.push(job);
   }
 
   return mockResponse;
@@ -44,10 +44,10 @@ function getRandomDate(startDate: Date, endDate: Date): Date {
   return new Date(randomMillis);
 }
 
-function getRandomStatus(): UseCaseStatus {
+function getRandomStatus(): JobStatus {
   const statusOptions = ['Complete', 'InProgress', 'NotStarted', 'Failed'];
   const randomIndex = Math.floor(Math.random() * statusOptions.length);
-  return statusOptions[randomIndex] as UseCaseStatus;
+  return statusOptions[randomIndex] as JobStatus;
 }
 
-export default generateMockUseCases;
+export default generateMockJobs;

@@ -1,9 +1,9 @@
 const fs = require('fs');
 const path = require('path');
 
-const NUM_OF_ITEMS = 5;
+const NUM_OF_ITEMS = 25;
 
-function generateMockUseCases(count, outputFilePath) {
+function generateMockJobs(count, outputFilePath) {
   const mockRequests = [];
 
   const availableAnalysisTypes = [
@@ -14,8 +14,8 @@ function generateMockUseCases(count, outputFilePath) {
 
   for (let i = 1; i <= count; i++) {
     const input = {
-      useCaseName: `Job ${i}`,
-      useCaseDescription: `Test for job ${i}. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.`,
+      jobName: `Job ${i}`,
+      jobDescription: `Test for job ${i}. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.`,
       analysisTypeNames: getRandomAnalysisTypes(availableAnalysisTypes),
     };
 
@@ -23,9 +23,9 @@ function generateMockUseCases(count, outputFilePath) {
       requestID: i.toString(),
       id: getRandomId(),
       creationDate: getRandomDate().toString(),
-      useCaseStatus: getRandomStatus(),
-      useCaseName: input.useCaseName,
-      useCaseDescription: input.useCaseDescription,
+      jobStatus: getRandomStatus(),
+      jobName: input.jobName,
+      jobDescription: input.jobDescription,
       author: getRandomAuthor(),
       analysisTypes: {
         L: input.analysisTypeNames.map((id) => ({ S: id.toString() })),
@@ -81,4 +81,4 @@ function getRandomAuthor() {
 
 const mockDataDirectory = path.resolve(__dirname, '../../infra/mockdata/');
 const outputFilePath = path.join(mockDataDirectory, 'requests.json');
-generateMockUseCases(NUM_OF_ITEMS, outputFilePath);
+generateMockJobs(NUM_OF_ITEMS, outputFilePath);

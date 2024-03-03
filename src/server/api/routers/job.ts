@@ -6,9 +6,9 @@
 
 import { z } from 'zod';
 import { createTRPCRouter, publicProcedure } from '../trpc';
-import type { UseCase } from '~/models/db/useCase';
+import type { Job } from '~/models/db/job';
 import { v4 as uuidv4 } from 'uuid';
-import mapUseCases from '~/mappers/useCaseMappers';
+import mapJobs from '~/mappers/jobMappers';
 import getDynamoDBClient from '~/clients/dynamodb';
 import getSQSClient from '~/clients/sqs';
 
@@ -16,45 +16,45 @@ const QUEUE_NAME = 'requestQueue';
 const DYNAMODB_TABLE = 'mockRequests';
 const shortUid = () => uuidv4().substring(0, 8);
 
-export const useCaseRouter = createTRPCRouter({
-  getUseCases: publicProcedure.query(async () => {
+export const jobRouter = createTRPCRouter({
+  getJobs: publicProcedure.query(async () => {
     const dynamodb = getDynamoDBClient();
 
-    const useCaseQueryParams = {
+    const jobQueryParams = {
       TableName: DYNAMODB_TABLE,
       ProjectionExpression:
-        'useCaseName, useCaseDescription, useCaseStatus, powerBILink, author, analysisTypes, creationDate',
+        'jobName, jobDescription, jobStatus, powerBILink, author, analysisTypes, creationDate',
     };
 
-    return mapUseCases(
+    return mapJobs(
       await new Promise((resolve, reject) =>
-        dynamodb.scan(useCaseQueryParams, (err, data) => {
+        dynamodb.scan(jobQueryParams, (err, data) => {
           if (err || !data.Items) {
             console.log(data, err);
             reject(err ?? (!data.Items ? 'No Items' : 'Unknown error'));
           } else {
             console.log(data.Items);
-            resolve(data.Items as unknown as UseCase[]);
+            resolve(data.Items as unknown as Job[]);
           }
         })
       )
     );
   }),
 
-  submitUseCase: publicProcedure
+  submitJob: publicProcedure
     .input(
       z.object({
-        useCaseName: z
+        jobName: z
           .string()
           .min(1)
           .refine((data) => data.length > 0, {
-            message: 'useCaseName should have at least 1 character',
+            message: 'jobName should have at least 1 character',
           }),
-        useCaseDescription: z.string().refine((data) => data.length > 0, {
-          message: 'useCaseDescription should not be empty',
+        jobDescription: z.string().refine((data) => data.length > 0, {
+          message: 'jobDescription should not be empty',
         }),
-        tags: z.array(z.string()).refine((data) => data.length > 0, {
-          message: 'tags should not be empty',
+        sources: z.array(z.string()).refine((data) => data.length > 0, {
+          message: 'sources should not be empty',
         }),
         analysisTypes: z.array(z.string()).refine((data) => data.length > 0, {
           message: 'analysisTypes should not be empty',
@@ -100,14 +100,14 @@ export const useCaseRouter = createTRPCRouter({
           creationDate: {
             N: Date.now().toString(),
           },
-          useCaseStatus: {
+          jobStatus: {
             S: status,
           },
-          useCaseName: {
-            S: input.useCaseName,
+          jobName: {
+            S: input.jobName,
           },
-          useCaseDescription: {
-            S: input.useCaseDescription,
+          jobDescription: {
+            S: input.jobDescription,
           },
           author: {
             // S: input.author, // TODO do we have author name yet?
@@ -118,9 +118,9 @@ export const useCaseRouter = createTRPCRouter({
               S: type, // TODO check
             })),
           },
-          tags: {
-            L: input.tags.map((tag) => ({
-              S: tag,
+          sources: {
+            L: input.sources.map((source) => ({
+              S: source,
             })),
           },
           powerBILink: {

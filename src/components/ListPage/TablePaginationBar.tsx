@@ -4,10 +4,10 @@ import {
   faChevronRight,
 } from '@fortawesome/free-solid-svg-icons';
 import type { Table } from '@tanstack/react-table';
-import type { UseCase } from '~/models/domain/useCase';
+import type { Job } from '~/models/domain/job';
 
 interface TablePaginationBarProps {
-  table: Table<UseCase>;
+  table: Table<Job>;
 }
 
 export default function TablePaginationBar({ table }: TablePaginationBarProps) {

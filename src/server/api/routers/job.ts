@@ -23,7 +23,7 @@ export const jobRouter = createTRPCRouter({
     const jobQueryParams = {
       TableName: DYNAMODB_TABLE,
       ProjectionExpression:
-        'jobName, jobDescription, jobStatus, powerBILink, author, analysisTypes, creationDate',
+        'jobName, jobDescription, jobStatus, powerBILink, author, analysisTypes, creationDate, sources',
     };
 
     return mapJobs(

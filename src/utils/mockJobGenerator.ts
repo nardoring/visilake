@@ -20,8 +20,8 @@ function generateMockJobs(count: number): Job[] {
     ];
     const job: Job = {
       jobName: `Job ${i}`,
-      date: getRandomDate(new Date(2023, 8, 1), new Date(2024, 1, 15)),
-      jobDescription: `This is a test for job ${i}`,
+      date: getRandomDate(new Date(2023, 8, 1), new Date(2024, 3, 3)),
+      jobDescription: `This is a test for job ${i}. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.`,
       jobStatus: getRandomStatus(),
       powerBILink: `https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value${i}'`,
       author: mockAuthorNames[Math.floor(Math.random() * 5)] ?? 'Jane Doe',

@@ -28,13 +28,13 @@ const Source = ({ source, updateSource, onRemove }: SourceProps) => {
     <div
       className={`m-1 flex items-center justify-center rounded-full border ${
         loading
-          ? 'border-gray-300 bg-gray-100 text-gray-700'
+          ? 'border-black bg-veryLightGrey'
           : sourceValidationData?.isValid
-            ? 'border-green-300 bg-green-100 text-green-700'
-            : 'border-red-300 bg-red-100 text-red-700'
+            ? 'border-green bg-lightGreen text-green'
+            : 'border-red bg-lightRed text-red'
       } px-2 py-1 font-medium`}
     >
-      <div className='max-w-full flex-initial text-xs font-normal leading-none'>
+      <div className='text-xs max-w-full flex-initial font-normal leading-none'>
         {source.name}
       </div>
       <div
@@ -52,7 +52,7 @@ const Source = ({ source, updateSource, onRemove }: SourceProps) => {
             strokeWidth='2'
             strokeLinecap='round'
             strokeLinejoin='round'
-            className='feather feather-x ml-2 h-4 w-4 cursor-pointer rounded-full hover:text-indigo-400'
+            className='feather feather-x hover:text-indigo ml-2 h-4 w-4 cursor-pointer rounded-full'
           >
             <line
               x1='18'

@@ -28,6 +28,7 @@
     "react-fontawesome": "^1.7.1",
     "react-multi-select-component": "^4.3.4",
     "react-toastify": "^10.0.4",
+    "react-tooltip": "^5.26.1",
     "superjson": "^1.13.1",
     "uuid": "^3.4.0",
     "zod": "^3.22.4"

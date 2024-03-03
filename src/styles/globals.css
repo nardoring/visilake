@@ -10,10 +10,6 @@
   --rmsc-h: 34px !important;
 }
 
-th {
-  position: relative;
-}
-
 .resizer {
   position: absolute;
   opacity: 0;
@@ -25,12 +21,20 @@ th {
   cursor: col-resize;
   border-radius: 6px;
 }
+
 .resizer.isResizing {
   background-color: #0a3749;
   width: 5px;
   opacity: 1;
 }
+
 *:hover > .resizer {
   opacity: 1;
   width: 5px;
+}
+
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(10, minmax(0, 1fr));
+  grid-auto-rows: auto;
 }

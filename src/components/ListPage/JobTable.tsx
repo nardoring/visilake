@@ -1,9 +1,10 @@
+import React, { useState } from 'react';
 import { api } from '~/utils/api';
 import StatusChip from './StatusChip';
 import { formatDate } from '~/utils/date';
-import SearchBar from './SearchBar';
 import PowerBIButton from './PowerBIButton';
 import TablePaginationBar from './TablePaginationBar';
+import Link from 'next/link';
 
 import {
   flexRender,
@@ -15,7 +16,6 @@ import {
   useReactTable,
 } from '@tanstack/react-table';
 import type { ColumnFilter, Row } from '@tanstack/react-table';
-import { useState } from 'react';
 import type { Job } from '~/models/domain/job';
 import FilterDropdown from './FilterDropdown';
 import ColumnSortButton from './ColumnSortButton';
@@ -23,10 +23,10 @@ import ColumnSortButton from './ColumnSortButton';
 export default function JobTable() {
   const filterDropdownColumns = new Set([
     'Status',
-    'Created By',
-    'Analysis Types',
+    'Author',
+    'Analysis Types'
   ]);
-  const sortableColumns = new Set(['Date Created']);
+  const sortableColumns = new Set(['Created']);
   const [queryExecuted, setQueryExecuted] = useState<boolean>(false);
   const [globalFilter, setGlobalFilter] = useState<string>('');
   const [columnFilters, setColumnFilters] = useState<ColumnFilter[]>([]);
@@ -37,8 +37,8 @@ export default function JobTable() {
   const analysisTypeOptions: string[] = analysisTypeOptionsIsLoading
     ? []
     : analysisTypeOptionsData?.types?.map(
-        (option: { name: string }) => option.name
-      ) ?? [];
+      (option: { name: string }) => option.name
+    ) ?? [];
 
   const { data, isLoading } = api.job.getJobs.useQuery(undefined, {
     enabled: !queryExecuted,
@@ -50,16 +50,22 @@ export default function JobTable() {
   const columns = [
     {
       accessorKey: 'jobName',
-      header: 'Job Name',
-      size: (1920 / 10) * 1,
+      header: 'Title',
+      size: (1920 / 10) * 1.1,
       cell: (props: { getValue: () => string }) => (
-        <p className='font-medium'>{props.getValue()}</p>
+        <Link
+          href='/ViewPage'
+          passHref
+          className='hover:font-bold'
+        >
+          <p>{props.getValue()}</p>
+        </Link>
       ),
     },
     {
       accessorKey: 'jobDescription',
       header: 'Description',
-      size: (1920 / 10) * 2,
+      size: (1920 / 10) * 3.5,
       cell: (props: { getValue: () => string }) => <p>{props.getValue()}</p>,
     },
     {
@@ -83,7 +89,7 @@ export default function JobTable() {
     },
     {
       accessorKey: 'author',
-      header: 'Created By',
+      header: 'Author',
       size: (1920 / 10) * 1,
       cell: (props: { getValue: () => string }) => <p>{props.getValue()}</p>,
       filterFn: (
@@ -98,8 +104,8 @@ export default function JobTable() {
     },
     {
       accessorKey: 'date',
-      header: 'Date Created',
-      size: (1920 / 10) * 1,
+      header: 'Created',
+      size: (1920 / 10) * 2,
       cell: (props: { getValue: () => Date }) => {
         return <p>{formatDate(props.getValue())}</p>;
       },
@@ -108,7 +114,7 @@ export default function JobTable() {
     {
       accessorKey: 'jobStatus',
       header: 'Status',
-      size: (1920 / 10) * 0.5,
+      size: (1920 / 10) * 0.7,
       cell: (props: { getValue: () => string }) => (
         <StatusChip status={props.getValue()} />
       ),
@@ -120,8 +126,8 @@ export default function JobTable() {
     },
     {
       accessorKey: 'powerBILink',
-      header: 'Power BI Data Link',
-      size: (1920 / 10) * 4.5,
+      header: 'Power BI',
+      size: (1920 / 10) * 0.7,
       cell: (props: { getValue: () => string; row: Row<Job> }) => (
         <PowerBIButton
           link={props.getValue()}
@@ -160,26 +166,27 @@ export default function JobTable() {
   if (isLoading) {
     // Render a loading indicator or message
     return (
-      <div className='fixed flex h-full w-full items-center justify-center bg-lightIndigo'>
-        <p className='pb-80 text-black'>Loading Data...</p>
+      <div className='fixed z-40 flex h-full w-full items-center justify-center bg-lightIndigo/70'>
+        <p className='z-40 pb-80 text-6xl text-black'>Connecting...</p>
       </div>
     );
   }
+
   return (
-    <div>
-      <SearchBar setGlobalFilter={setGlobalFilter} />
-      <div className='font-nunito table w-full overflow-x-auto bg-lightIndigo'>
-        <table
-          className='w-full'
-          style={{ width: `${table.getTotalSize()}px` }}
-        >
-          <thead>
+    <div className='col-start-2 col-end-9 row-start-2 mb-5 mt-5 flex'>
+      <div
+        className='relative z-20 col-start-2 col-end-9 row-start-3 row-end-4
+                     flex h-[64rem] flex-col
+                    overflow-x-auto rounded-md bg-veryLightBlue/70 shadow-xl'
+      >
+        <table className='table w-full bg-veryLightBlue/70'>
+          <thead className='sticky top-0 z-20 bg-veryLightBlue'>
             {table.getHeaderGroups().map((headerGroup) => (
               <tr key={headerGroup.id}>
                 {headerGroup.headers.map((header) => (
                   <th
                     key={header.id}
-                    className='pb-2 pl-4 text-left font-bold text-[#595C64]'
+                    className='relative pb-2 pl-4 text-left font-bold text-[#595C64]'
                     style={{ width: `${header.getSize()}px` }}
                   >
                     {String(header.column.columnDef.header)}
@@ -208,39 +215,44 @@ export default function JobTable() {
                     <div
                       onMouseDown={header.getResizeHandler()}
                       onTouchStart={header.getResizeHandler()}
-                      className={`resizer ${
-                        header.column.getIsResizing() ? 'isResizing' : ''
-                      }`}
+                      className={`resizer ${header.column.getIsResizing() ? 'isResizing' : ''
+                        }`}
                     />
                   </th>
                 ))}
               </tr>
-            ))}
+            ))}{' '}
           </thead>
-          <tbody>
-            {table.getRowModel().rows.map((row) => (
-              <tr
-                key={row.id}
-                className={`${
-                  table.getRowModel().rows.indexOf(row) % 2 === 0
-                    ? 'bg-white'
-                    : 'bg-lightIndigo'
-                } h-[4.28rem]`}
-              >
-                {row.getVisibleCells().map((cell) => (
-                  <td
-                    key={cell.id}
-                    className='pl-4 text-base font-[400] text-[#595C64]'
-                    style={{ width: `${cell.column.getSize()}px` }}
-                  >
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </td>
-                ))}
-              </tr>
-            ))}
-          </tbody>
         </table>
-        <div className='fixed bottom-0 left-0 w-full bg-white'>
+        <div className='flex-grow overflow-y-auto'>
+          <table className='table w-full'>
+            <tbody>
+              {table.getRowModel().rows.map((row) => (
+                <tr
+                  key={row.id}
+                  className={`${table.getRowModel().rows.indexOf(row) % 2 === 0
+                      ? 'bg-white'
+                      : 'bg-lightIndigo'
+                    } h-[4.28rem]`}
+                >
+                  {row.getVisibleCells().map((cell) => (
+                    <td
+                      key={cell.id}
+                      className='pl-4 text-base font-[400] text-[#595C64]'
+                      style={{ width: `${cell.column.getSize()}px` }}
+                    >
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext()
+                      )}
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <div className='mt-auto'>
           <TablePaginationBar table={table} />
         </div>
       </div>

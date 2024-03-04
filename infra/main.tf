@@ -152,7 +152,9 @@ resource "aws_sqs_queue" "requestQueue" {
 }
 
 resource "aws_sns_topic" "requestUpdates" {
-  name = "requestUpdatesTopic"
+  name                        = "requestUpdatesTopic"
+  fifo_topic                  = true
+  content_based_deduplication = true
 }
 
 # # We create this in deploy-tf.sh for now as the order matters, so we make the repo,

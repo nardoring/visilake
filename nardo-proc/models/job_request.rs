@@ -4,9 +4,10 @@ use log::debug;
 use std::fmt;
 
 use aws_sdk_dynamodb::types::AttributeValue;
+use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
-#[derive(Debug)]
+#[derive(Debug, Serialize, Deserialize)]
 pub struct JobRequest {
     pub id: String,
     pub request_id: String, // db key
@@ -17,6 +18,32 @@ pub struct JobRequest {
     pub timestamp: i64,
     pub status: String,
     pub sources: Vec<String>,
+}
+
+pub fn convert_item_to_job_request(item: &HashMap<String, AttributeValue>) -> Result<JobRequest> {
+    let job_request = JobRequest {
+        id: item["id"].as_s().unwrap().clone(),
+        request_id: item["requestID"].as_s().unwrap().clone(),
+        name: item["jobName"].as_s().unwrap().clone(),
+        author: item["author"].as_s().unwrap().clone(),
+        description: item["jobDescription"].as_s().unwrap().clone(),
+        analysis_types: item["analysisTypes"]
+            .as_l()
+            .unwrap()
+            .iter()
+            .map(|v| v.as_s().unwrap().clone())
+            .collect(),
+        timestamp: item["creationDate"].as_n().unwrap().parse::<i64>().unwrap(),
+        status: item["jobStatus"].as_s().unwrap().clone(),
+        sources: item["sources"]
+            .as_l()
+            .unwrap()
+            .iter()
+            .map(|v| v.as_s().unwrap().clone())
+            .collect(),
+    };
+
+    Ok(job_request)
 }
 
 impl fmt::Display for JobRequest {

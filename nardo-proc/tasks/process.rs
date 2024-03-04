@@ -1,8 +1,10 @@
 use crate::aws::sns::publish;
+use crate::models::job_request::{self, convert_item_to_job_request};
 use crate::sns_client;
 use aws_sdk_dynamodb::types::AttributeValue;
 use eyre::Result;
 use log::debug;
+use serde_json;
 use std::collections::HashMap;
 
 pub async fn process_queued_requests(
@@ -42,7 +44,12 @@ pub async fn process_queued_requests(
             AttributeValue::S("PROCESSING".to_string()),
         );
         update_request_builder.send().await?;
-        publish(sns_client, topic_arn, "JOB UPDATED TO PROCESSING").await?;
+
+        // Convert the DynamoDB item to a JobRequest instance
+        let job_request = convert_item_to_job_request(&updated_item)?;
+        debug!("Updated item: {}", job_request);
+        let json_string = serde_json::to_string(&job_request)?;
+        publish(sns_client, topic_arn, &json_string).await?;
     }
 
     Ok(())

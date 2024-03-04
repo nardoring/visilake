@@ -152,7 +152,7 @@ resource "aws_sqs_queue" "requestQueue" {
 }
 
 resource "aws_sns_topic" "requestUpdates" {
-  name                        = "requestUpdatesTopic"
+  name                        = "requestUpdatesTopic.fifo"
   fifo_topic                  = true
   content_based_deduplication = true
 }

@@ -6,6 +6,9 @@ import { api } from '~/utils/api';
 import type { AnalysisTypeOption, Source } from '~/utils/types';
 import LoadingIcon from './LoadingIcon';
 import { Tooltip } from 'react-tooltip';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 
 export default function Form() {
   const inputStyles =
@@ -143,6 +146,23 @@ export default function Form() {
                 : ''
             }`}
           />
+        </div>
+        <div className='flex flex-col'>
+          <label
+            className='mb-1'
+            data-tooltip-id='date-range'
+            data-tooltip-html='Select the date and time range for the analysis. You can choose both the start and end dates along with their respective times.'
+          >
+            Date Range
+          </label>
+          <Tooltip id='date-range' />
+          <div className='col-span-1 flex flex-row space-x-4 w-full'>
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DateTimePicker disableFuture className='w-full'/>
+              <p className='text-3xl'> - </p>
+              <DateTimePicker disableFuture className='w-full'/>
+            </LocalizationProvider>
+          </div>
         </div>
         <div className='col-span-2'>
           <label

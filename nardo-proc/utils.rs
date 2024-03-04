@@ -1,4 +1,6 @@
-use log::{Level, LevelFilter, Metadata, Record};
+use chrono::Local;
+use eyre::Result;
+use fern::InitError;
 use uuid::Uuid;
 
 pub fn use_localstack() -> bool {
@@ -14,29 +16,20 @@ pub fn _generate_request_id() -> String {
         .collect::<String>()
 }
 
-struct SimpleLogger;
-
-impl log::Log for SimpleLogger {
-    fn enabled(&self, metadata: &Metadata) -> bool {
-        metadata.level() <= Level::Info
-    }
-
-    fn log(&self, record: &Record) {
-        if self.enabled(record.metadata()) {
-            println!("{} - {}", record.level(), record.args());
-        }
-    }
-
-    fn flush(&self) {}
-}
-
-pub fn init_logging() {
-    let logger: Box<dyn log::Log> = Box::new(SimpleLogger);
-    let logger_ref: &'static dyn log::Log = Box::leak(logger);
-
-    if let Err(err) = log::set_logger(logger_ref) {
-        eprintln!("Failed to set logger: {}", err);
-        return;
-    }
-    log::set_max_level(LevelFilter::Info);
+pub fn init_logging() -> Result<(), InitError> {
+    fern::Dispatch::new()
+        .format(|out, message, record| {
+            out.finish(format_args!(
+                "{} [{}] [{}] {}",
+                Local::now().format("%H:%M:%S"),
+                record.target(),
+                record.level(),
+                message
+            ))
+        })
+        .level(log::LevelFilter::Debug)
+        // .level(log::LevelFilter::Info)
+        .chain(std::io::stdout())
+        .apply()?;
+    Ok(())
 }

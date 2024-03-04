@@ -44,6 +44,7 @@ pub async fn publish(client: &Client, topic_arn: &str, message: &str) -> Result<
         .publish()
         .topic_arn(topic_arn)
         .message(message)
+        .message_group_id("updates")
         .send()
         .await?;
 
@@ -52,13 +53,11 @@ pub async fn publish(client: &Client, topic_arn: &str, message: &str) -> Result<
     Ok(())
 }
 
-pub async fn test_topic(client: &Client) -> Result<()> {
+pub async fn setup_topic(client: &Client) -> Result<()> {
     let queue_arn = "arn:aws:sqs:us-east-1:000000000000:requestQueue".to_string();
-    let topic_arn = "arn:aws:sns:us-east-1:000000000000:requestUpdatesTopic".to_string();
+    let topic_arn = "arn:aws:sns:us-east-1:000000000000:requestUpdatesTopic.fifo".to_string();
 
-    list_topics(client).await?;
     subscribe(client, &topic_arn, &queue_arn).await?;
-    publish(client, &topic_arn, "test").await?;
 
     Ok(())
 }

@@ -8,19 +8,25 @@ mod models;
 mod utils;
 
 pub(crate) use crate::{
-    aws::dynamodb::{dynamodb_client, list_items, list_tables},
+    aws::dynamodb::dynamodb_client,
+    aws::sqs::{get_message, send_message, sqs_client},
     utils::init_logging,
 };
-use std::error::Error;
+use eyre::Result;
 
 #[tokio::main]
-async fn main() -> Result<(), Box<dyn Error>> {
-    init_logging();
+async fn main() -> Result<()> {
+    let _init_logging = init_logging()?;
 
     let shared_config = config::configure().await?;
-    let dynamodb_client = dynamodb_client(&shared_config);
-    let tables = list_tables(&dynamodb_client).await?;
-    let items = list_items(&dynamodb_client, &tables[1], Some(1)).await?;
+    let _dynamodb_client = dynamodb_client(&shared_config);
+    let sqs_client = sqs_client(&shared_config);
+
+    // let tables = list_tables(&dynamodb_client).await?;
+    // let items = list_items(&dynamodb_client, &tables[1], Some(1)).await?;
+
+    send_message(&sqs_client, &"TEST".to_string()).await?;
+    get_message(&sqs_client).await?;
 
     Ok(())
 }

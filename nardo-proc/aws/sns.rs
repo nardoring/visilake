@@ -8,7 +8,7 @@ pub fn sns_client(conf: &SdkConfig) -> Client {
     Client::from_conf(sns_config_builder.build())
 }
 
-async fn list_topics(client: &Client) -> Result<Vec<String>, Error> {
+pub async fn list_topics(client: &Client) -> Result<Vec<String>, Error> {
     let resp = client.list_topics().send().await?;
 
     let topic_arns: Vec<String> = resp
@@ -37,7 +37,7 @@ async fn subscribe(client: &Client, topic_arn: &str, queue_arn: &str) -> Result<
     Ok(())
 }
 
-async fn publish(client: &Client, topic_arn: &str, message: &str) -> Result<(), Error> {
+pub async fn publish(client: &Client, topic_arn: &str, message: &str) -> Result<(), Error> {
     debug!("Receiving on topic with ARN: `{}`", topic_arn);
 
     let rsp = client

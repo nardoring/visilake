@@ -5,31 +5,30 @@
 mod aws;
 mod config;
 mod models;
+mod tasks;
 mod utils;
 
 pub(crate) use crate::{
     aws::dynamodb::dynamodb_client,
-    aws::sns::{sns_client, test_topic},
+    aws::sns::{list_topics, sns_client, test_topic},
     aws::sqs::{get_message, send_message, sqs_client},
     utils::init_logging,
 };
 use eyre::Result;
+use models::job_request::list_requests;
+use tasks::process::process_queued_requests;
 
 #[tokio::main]
 async fn main() -> Result<()> {
     let _init_logging = init_logging()?;
 
     let shared_config = config::configure().await?;
-    let _dynamodb_client = dynamodb_client(&shared_config);
-    // let sqs_client = sqs_client(&shared_config);
+    let dynamodb_client = dynamodb_client(&shared_config);
     let sns_client = sns_client(&shared_config);
 
-    // let tables = list_tables(&dynamodb_client).await?;
-    // let items = list_items(&dynamodb_client, &tables[1], Some(1)).await?;
+    let topic = list_topics(&sns_client).await?;
 
-    // send_message(&sqs_client, &"TEST".to_string()).await?;
-    // get_message(&sqs_client).await?;
-    test_topic(&sns_client).await?;
+    process_queued_requests(&dynamodb_client, &sns_client, &topic[0]).await?;
 
     Ok(())
 }

@@ -15,6 +15,7 @@ pub fn sqs_client(conf: &SdkConfig) -> Client {
 
 async fn find_queue(client: &Client) -> Result<String, Error> {
     let queues = client.list_queues().send().await?;
+    debug!("Queues: {:?}", queues);
     Ok(queues
         .queue_urls()
         .first()

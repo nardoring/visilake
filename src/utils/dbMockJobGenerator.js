@@ -26,6 +26,9 @@ function generateMockJobs(count, outputFilePath) {
       jobDescription: `Test for job ${i}. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.`,
       analysisTypeNames: getRandomListItem(availableAnalysisTypes),
       sourceNames: getRandomListItem(availableSources),
+      dateRangeStart: getRandomDate().toString(),
+      dateRangeEnd: getRandomDate().toString(),
+      granularity: getRandomGranularity().toString(),
     };
 
     const item = {
@@ -42,6 +45,9 @@ function generateMockJobs(count, outputFilePath) {
       sources: {
         L: input.sourceNames.map((id) => ({ S: id.toString() })),
       },
+      dateRangeStart: input.dateRangeStart,
+      dateRangeEnd: input.dateRangeEnd,
+      granularity: input.granularity,
       powerBILink:
         "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'",
     };
@@ -89,6 +95,20 @@ function getRandomAuthor() {
     mockAuthorNames[Math.floor(Math.random() * mockAuthorNames.length)] ??
     'Jane Doe'
   );
+}
+
+function getRandomGranularity() {
+  const granularities = [
+    1,
+    5,
+    10,
+    100,
+    1000,
+    1000 * 60,
+    1000 * 60 * 60,
+    1000 * 60 * 60 * 24
+  ]
+  return granularities[Math.floor(Math.random() * granularities.length)] ?? -1;
 }
 
 const mockDataDirectory = path.resolve(__dirname, '../../infra/mockdata/');

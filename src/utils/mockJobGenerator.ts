@@ -47,12 +47,12 @@ function generateMockJobs(count: number): Job[] {
       author: mockAuthorNames[Math.floor(Math.random() * 5)] ?? 'Jane Doe',
       analysisTypes: analysisTypes.slice(
         0,
-        Math.floor(Math.random() * 3 - 0.001) + 1
+        Math.floor(Math.random() * analysisTypes.length - 0.001) + 1
       ),
-      sources: sourceNames.slice(0, Math.floor(Math.random() * 5 - 0.001) + 1),
+      sources: sourceNames.slice(0, Math.floor(Math.random() * sourceNames.length - 0.001) + 1),
       dateRangeStart: getRandomDate(new Date(2023, 8, 1), new Date(2023, 12, 31)),
       dateRangeEnd: getRandomDate(new Date(2024, 1, 1), new Date(2023, 3, 1)),
-      granularity: granularities[Math.floor(Math.random()*8)] ?? -1,
+      granularity: granularities[Math.floor(Math.random() * granularities.length)] ?? -1,
     };
 
     mockResponse.push(job);

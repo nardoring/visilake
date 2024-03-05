@@ -15,6 +15,7 @@ function mapJob(job: DatabaseJob): Job {
     powerBILink: job.powerBILink.S,
     author: job.author.S,
     analysisTypes: job.analysisTypes.L.map((t) => t.S),
+    sources: job.sources.L.map((t) => t.S),
   } as Job;
 }
 

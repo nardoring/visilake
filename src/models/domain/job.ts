@@ -8,4 +8,5 @@ export interface Job {
   powerBILink: string;
   author: string;
   analysisTypes: string[];
+  sources: string[];
 }

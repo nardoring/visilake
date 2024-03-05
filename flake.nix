@@ -44,7 +44,7 @@
           pname = "nardo-web";
           version = "0.1.0";
           src = ./.;
-          npmDepsHash = "sha256-go2/pSqwYPMGwG9WjGXYbIXIKKK00Mf6Ns6EuhPZ6fg=";
+          npmDepsHash = "sha256-mw/xQSCtHlZkA1gxDTDczBeLliYjIjbsvWSNU6ZoPMw=";
 
           npmBuild = "SKIP_ENV_VALIDATION=1 npm run build";
 

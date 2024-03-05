@@ -138,10 +138,10 @@ export const jobRouter = createTRPCRouter({
             S: "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'",
           },
           dateRangeStart: {
-            S: input.dateRangeStart.toString(),
+            N: input.dateRangeStart.toString(),
           },
           dateRangeEnd: {
-            S: input.dateRangeEnd.toString(),
+            N: input.dateRangeEnd.toString(),
           },
           granularity: {
             N: input.granularity.toString(), 

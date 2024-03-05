@@ -11,4 +11,7 @@ export interface Job {
   author: DynamoString;
   analysisTypes: DynamoArray<DynamoString>;
   sources: DynamoArray<DynamoString>;
+  dateRangeStart: DynamoString;
+  dateRangeEnd: DynamoString;
+  granularity: DynamoNumber;
 }

@@ -11,6 +11,7 @@ import { v4 as uuidv4 } from 'uuid';
 import mapJobs from '~/mappers/jobMappers';
 import getDynamoDBClient from '~/clients/dynamodb';
 import getSQSClient from '~/clients/sqs';
+import { validateDate } from '~/utils/date';
 
 const QUEUE_NAME = 'requestQueue';
 const DYNAMODB_TABLE = 'mockRequests';
@@ -23,7 +24,7 @@ export const jobRouter = createTRPCRouter({
     const jobQueryParams = {
       TableName: DYNAMODB_TABLE,
       ProjectionExpression:
-        'jobName, jobDescription, jobStatus, powerBILink, author, analysisTypes, creationDate, sources',
+        'jobName, jobDescription, jobStatus, powerBILink, author, analysisTypes, creationDate, sources, dateRangeStart, dateRangeEnd, granularity',
     };
 
     return mapJobs(
@@ -58,6 +59,15 @@ export const jobRouter = createTRPCRouter({
         }),
         analysisTypes: z.array(z.string()).refine((data) => data.length > 0, {
           message: 'analysisTypes should not be empty',
+        }),
+        dateRangeStart: z.date().refine((data) => validateDate(data), {
+          message: 'dateRangeStart should be a valid Date',
+        }),
+        dateRangeEnd: z.date().refine((data) => validateDate(data), {
+          message: 'dateRangeEnd should be a valid Date',
+        }),
+        granularity: z.number().refine((data) => Number.isInteger(data) && data > 0, {
+          message: 'granularity should be a positive integer',
         }),
       })
     )
@@ -126,6 +136,15 @@ export const jobRouter = createTRPCRouter({
           powerBILink: {
             // S: input.powerBILink, // TODO fix later
             S: "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'",
+          },
+          dateRangeStart: {
+            S: input.dateRangeStart.toString(),
+          },
+          dateRangeEnd: {
+            S: input.dateRangeEnd.toString(),
+          },
+          granularity: {
+            N: input.granularity.toString(), 
           },
         },
       };

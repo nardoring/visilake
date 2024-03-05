@@ -16,6 +16,9 @@ function mapJob(job: DatabaseJob): Job {
     author: job.author.S,
     analysisTypes: job.analysisTypes.L.map((t) => t.S),
     sources: job.sources.L.map((t) => t.S),
+    dateRangeStart: new Date(job.dateRangeStart.S),
+    dateRangeEnd: new Date(job.dateRangeEnd.S),
+    granularity: job.granularity.N,
   } as Job;
 }
 

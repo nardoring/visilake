@@ -2,7 +2,7 @@ import Slider from '@mui/material/Slider';
 import type { Dispatch, SetStateAction } from 'react';
 
 interface GranularitySliderProps {
-  setGranularity: Dispatch<SetStateAction<Number>>;
+  setGranularity: Dispatch<SetStateAction<number>>;
 }
 
 export default function GranularitySlider({

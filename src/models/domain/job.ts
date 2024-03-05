@@ -9,4 +9,7 @@ export interface Job {
   author: string;
   analysisTypes: string[];
   sources: string[];
+  dateRangeStart: Date;
+  dateRangeEnd: Date;
+  granularity: number;
 }

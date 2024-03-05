@@ -24,7 +24,7 @@ export default function Form() {
   const [analysisTypes, setAnalysisTypes] = useState<AnalysisTypeOption[]>([]);
   const [dateRangeStart, setDateRangeStart] = useState<Date>();
   const [dateRangeEnd, setDateRangeEnd] = useState<Date>();
-  const [granularity, setGranularity] = useState<Number>(1);
+  const [granularity, setGranularity] = useState<number>(1);
   const {
     data: analysisTypeOptionsData,
     isLoading: analysisTypeOptionsIsLoading,
@@ -84,6 +84,9 @@ export default function Form() {
           jobDescription: jobDescription,
           jobName: jobName,
           analysisTypes: analysisTypeNames,
+          dateRangeStart: dateRangeStart as Date,
+          dateRangeEnd: dateRangeEnd as Date,
+          granularity: granularity
         });
         setFormSuccess(true);
       } catch (error) {

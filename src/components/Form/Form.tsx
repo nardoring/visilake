@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Sources from './Sources';
 import FormPopup from './FormPopup';
 import { MultiSelect } from 'react-multi-select-component';
@@ -20,6 +20,9 @@ export default function Form() {
   const [jobDescription, setJobDescription] = useState('');
   const [submitAttempted, setSubmitAttempted] = useState(false);
   const [analysisTypes, setAnalysisTypes] = useState<AnalysisTypeOption[]>([]);
+  const [dateRangeStart, setDateRangeStart] = useState<Date>();
+  const [dateRangeEnd, setDateRangeEnd] = useState<Date>();
+  const [granularity, setGranularity] = useState<Number>(1);
   const {
     data: analysisTypeOptionsData,
     isLoading: analysisTypeOptionsIsLoading,
@@ -113,6 +116,7 @@ export default function Form() {
             onChange={(e) => setJobName(e.target.value)}
           />
         </div>
+
         <div>
           <label
             data-tooltip-id='types'
@@ -137,6 +141,7 @@ export default function Form() {
             }`}
           />
         </div>
+
         <div className='col-span-2'>
           <Sources
             getSources={getSources}
@@ -148,6 +153,7 @@ export default function Form() {
             }`}
           />
         </div>
+
         <div className='flex flex-col'>
           <label
             className='mb-1'
@@ -157,20 +163,28 @@ export default function Form() {
             Date Range
           </label>
           <Tooltip id='date-range' />
+
           <div className='col-span-1 flex w-full flex-row space-x-4'>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DateTimePicker
                 disableFuture
                 className='w-full'
+                onChange={(newValue: Date | null) =>
+                  setDateRangeStart(newValue as Date)
+                }
               />
               <p className='text-3xl'> - </p>
               <DateTimePicker
                 disableFuture
                 className='w-full'
+                onChange={(newValue: Date | null) =>
+                  setDateRangeEnd(newValue as Date)
+                }
               />
             </LocalizationProvider>
           </div>
         </div>
+
         <div className='flex flex-col'>
           <label
             className='mb-1'
@@ -181,9 +195,10 @@ export default function Form() {
           </label>
           <Tooltip id='granularity' />
           <div className='px-5'>
-            <GranularitySlider />
+            <GranularitySlider setGranularity={setGranularity} />
           </div>
         </div>
+
         <div className='col-span-2'>
           <label
             data-tooltip-id='desc'
@@ -205,6 +220,7 @@ export default function Form() {
             onChange={(e) => setJobDescription(e.target.value)}
           />
         </div>
+
         <div className='col-span-2 flex justify-center '>
           <button
             className='flex w-40 items-center justify-center rounded bg-veryDarkBlue px-4 py-2 text-white shadow-md hover:bg-highlightBlue'

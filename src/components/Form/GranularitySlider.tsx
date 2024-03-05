@@ -1,6 +1,13 @@
 import Slider from '@mui/material/Slider';
+import type { Dispatch, SetStateAction } from 'react';
 
-export default function GranularitySlider() {
+interface GranularitySliderProps {
+  setGranularity: Dispatch<SetStateAction<Number>>;
+}
+
+export default function GranularitySlider({
+  setGranularity,
+}: GranularitySliderProps) {
   const msValue = [
     1,
     5,
@@ -22,6 +29,10 @@ export default function GranularitySlider() {
     return msValue[value - 1] ?? -1;
   }
 
+  const handleChange = (event: Event, newValue: number | number[]) => {
+    setGranularity(calculateValue(newValue as number));
+  };
+
   return (
     <Slider
       marks={marks}
@@ -29,6 +40,7 @@ export default function GranularitySlider() {
       scale={calculateValue}
       max={marks.length}
       step={null}
+      onChange={handleChange}
     ></Slider>
   );
 }

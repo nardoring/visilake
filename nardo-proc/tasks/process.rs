@@ -1,53 +1,71 @@
-use crate::aws::sns::publish;
-use crate::models::job_request::{self, convert_item_to_job_request};
-use crate::sns_client;
-use aws_sdk_dynamodb::types::AttributeValue;
+use crate::{aws::sns::publish, models::job_request::convert_item_to_job_request};
+use aws_sdk_dynamodb::{
+    error::SdkError, operation::update_item::UpdateItemError, types::AttributeValue,
+    Client as DynamoDbClient,
+};
+use aws_sdk_sns::Client as SnsClient;
 use eyre::Result;
 use log::debug;
-use serde_json;
 use std::collections::HashMap;
 
-pub async fn process_queued_requests(
-    dynamodb_client: &aws_sdk_dynamodb::Client,
-    sns_client: &aws_sdk_sns::Client,
-    topic_arn: &str,
-) -> Result<()> {
-    // Scan for QUEUED items with a FilterExpression
+const TABLE: &str = "mockRequests";
+
+async fn scan_for(
+    dynamodb_client: &DynamoDbClient,
+    table: &str,
+    attr_name: &str,
+    attr_val: &str,
+) -> Result<Vec<HashMap<String, AttributeValue>>> {
     let result = dynamodb_client
         .scan()
-        .table_name("mockRequests")
-        .filter_expression("#st = :status_val")
-        .expression_attribute_names("#st", "jobStatus")
-        .expression_attribute_values(":status_val", AttributeValue::S("QUEUED".to_string()))
+        .table_name(table)
+        .filter_expression("#st = :val")
+        .expression_attribute_names("#st", attr_name)
+        .expression_attribute_values(":val", AttributeValue::S(attr_val.to_string()))
         .send()
         .await?;
 
-    let items = result.items();
-    debug!("Items to update {:#?}", items);
+    Ok(result.items().to_vec())
+}
 
-    // Update each QUEUED item to PROCESSING
+async fn update_request_status(
+    dynamodb_client: &DynamoDbClient,
+    item: &HashMap<String, AttributeValue>,
+    new_status: &str,
+) -> Result<HashMap<String, AttributeValue>, SdkError<UpdateItemError>> {
+    let mut updated_item = item.clone();
+    updated_item.insert(
+        "jobStatus".to_string(),
+        AttributeValue::S(new_status.to_string()),
+    );
+
+    let update_request_builder = dynamodb_client
+        .update_item()
+        .table_name("mockRequests")
+        .key("requestID".to_string(), item["requestID"].clone())
+        .update_expression("SET #st = :status_val")
+        .expression_attribute_names("#st", "jobStatus")
+        .expression_attribute_values(":status_val", AttributeValue::S(new_status.to_string()));
+
+    update_request_builder.send().await?;
+    Ok(updated_item)
+}
+
+pub async fn process_queued_requests(
+    dynamodb_client: &DynamoDbClient,
+    sns_client: &SnsClient,
+    topic_arn: &str,
+) -> Result<()> {
+    let items = scan_for(dynamodb_client, TABLE, "jobStatus", "QUEUED").await?;
+
     for item in items {
-        let mut updated_item = item.clone();
-        updated_item.insert(
-            "status".to_string(),
-            AttributeValue::S("PROCESSING".to_string()),
-        );
+        debug!("Item to update {:#?}", item);
 
-        let mut update_request_builder = dynamodb_client.update_item().table_name("mockRequests");
-        update_request_builder =
-            update_request_builder.key("requestID".to_string(), updated_item["requestID"].clone());
-        update_request_builder = update_request_builder.update_expression("SET #st = :status_val");
-        update_request_builder =
-            update_request_builder.expression_attribute_names("#st", "jobStatus");
-        update_request_builder = update_request_builder.expression_attribute_values(
-            ":status_val",
-            AttributeValue::S("PROCESSING".to_string()),
-        );
-        update_request_builder.send().await?;
-
-        // Convert the DynamoDB item to a JobRequest instance
+        let updated_item = update_request_status(dynamodb_client, &item, "PROCESSING").await?;
         let job_request = convert_item_to_job_request(&updated_item)?;
-        debug!("Updated item: {}", job_request);
+
+        debug!("Updated item: {:#?}", job_request);
+
         let json_string = serde_json::to_string(&job_request)?;
         publish(sns_client, topic_arn, &json_string).await?;
     }

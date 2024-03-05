@@ -1,7 +1,6 @@
+#![feature(inherent_associated_types)]
 #![allow(dead_code)]
-#![allow(unused_variables)]
 #![allow(unused_imports)]
-
 mod aws;
 mod config;
 mod models;
@@ -15,7 +14,6 @@ pub(crate) use crate::{
     utils::init_logging,
 };
 use eyre::Result;
-use models::job_request::list_requests;
 use tasks::process::process_queued_requests;
 
 #[tokio::main]

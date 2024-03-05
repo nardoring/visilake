@@ -7,9 +7,11 @@ import type { AnalysisTypeOption, Source } from '~/utils/types';
 import LoadingIcon from './LoadingIcon';
 import { Tooltip } from 'react-tooltip';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import type { Dayjs } from 'dayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import GranularitySlider from './GranularitySlider';
+import { validateDate, validateDateRange } from '~/utils/date';
 
 export default function Form() {
   const inputStyles =
@@ -68,7 +70,10 @@ export default function Form() {
       jobName.trim() !== '' &&
       analysisTypes.length !== 0 &&
       getValidSources().length !== 0 &&
-      jobDescription.trim() !== ''
+      jobDescription.trim() !== '' &&
+      validateDate(dateRangeStart) &&
+      validateDate(dateRangeEnd) &&
+      validateDateRange(dateRangeStart, dateRangeEnd)
     ) {
       const analysisTypeNames: string[] = analysisTypes.map(
         (type) => type.label
@@ -168,18 +173,28 @@ export default function Form() {
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DateTimePicker
                 disableFuture
-                className='w-full'
-                onChange={(newValue: Date | null) =>
-                  setDateRangeStart(newValue as Date)
-                }
+                className={`${'w-full rounded shadow-sm'} ${
+                  submitAttempted && analysisTypes.length === 0
+                    ? 'ring-1 ring-red'
+                    : ''
+                }`}
+                onChange={(newValue: Dayjs | null) => {
+                  const date = newValue ? newValue.toDate() : undefined;
+                  setDateRangeStart(date);
+                }}
               />
               <p className='text-3xl'> - </p>
               <DateTimePicker
                 disableFuture
-                className='w-full'
-                onChange={(newValue: Date | null) =>
-                  setDateRangeEnd(newValue as Date)
-                }
+                className={`${'w-full rounded shadow-sm'} ${
+                  submitAttempted && analysisTypes.length === 0
+                    ? 'ring-1 ring-red'
+                    : ''
+                }`}
+                onChange={(newValue: Dayjs | null) => {
+                  const date = newValue ? newValue.toDate() : undefined;
+                  setDateRangeEnd(date);
+                }}
               />
             </LocalizationProvider>
           </div>

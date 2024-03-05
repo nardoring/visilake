@@ -9,6 +9,7 @@ import { Tooltip } from 'react-tooltip';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
+import GranularitySlider from './GranularitySlider';
 
 export default function Form() {
   const inputStyles =
@@ -156,12 +157,31 @@ export default function Form() {
             Date Range
           </label>
           <Tooltip id='date-range' />
-          <div className='col-span-1 flex flex-row space-x-4 w-full'>
+          <div className='col-span-1 flex w-full flex-row space-x-4'>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <DateTimePicker disableFuture className='w-full'/>
+              <DateTimePicker
+                disableFuture
+                className='w-full'
+              />
               <p className='text-3xl'> - </p>
-              <DateTimePicker disableFuture className='w-full'/>
+              <DateTimePicker
+                disableFuture
+                className='w-full'
+              />
             </LocalizationProvider>
+          </div>
+        </div>
+        <div className='flex flex-col'>
+          <label
+            className='mb-1'
+            data-tooltip-id='granularity'
+            data-tooltip-html='...'
+          >
+            Granularity
+          </label>
+          <Tooltip id='granularity' />
+          <div className='px-5'>
+            <GranularitySlider />
           </div>
         </div>
         <div className='col-span-2'>

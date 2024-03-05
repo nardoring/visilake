@@ -27,6 +27,17 @@ function generateMockJobs(count: number): Job[] {
       'TAG-34567',
     ];
 
+    const granularities = [
+      1,
+      5,
+      10,
+      100,
+      1000,
+      1000 * 60,
+      1000 * 60 * 60,
+      1000 * 60 * 60 * 24
+    ]
+
     const job: Job = {
       jobName: `Job ${i}`,
       date: getRandomDate(new Date(2023, 8, 1), new Date(2024, 3, 3)),
@@ -39,6 +50,9 @@ function generateMockJobs(count: number): Job[] {
         Math.floor(Math.random() * 3 - 0.001) + 1
       ),
       sources: sourceNames.slice(0, Math.floor(Math.random() * 5 - 0.001) + 1),
+      dateRangeStart: getRandomDate(new Date(2023, 8, 1), new Date(2023, 12, 31)),
+      dateRangeEnd: getRandomDate(new Date(2024, 1, 1), new Date(2023, 3, 1)),
+      granularity: granularities[Math.floor(Math.random()*8)] ?? -1,
     };
 
     mockResponse.push(job);

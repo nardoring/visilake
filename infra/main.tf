@@ -151,6 +151,12 @@ resource "aws_sqs_queue" "requestQueue" {
   name = "requestQueue"
 }
 
+
+resource "aws_sqs_queue" "requestUpdatesQueue" {
+  name = "requestUpdatesQueue"
+}
+
+
 resource "aws_sns_topic" "requestUpdates" {
   name                        = "requestUpdatesTopic.fifo"
   fifo_topic                  = true

@@ -15,12 +15,25 @@ pub fn sqs_client(conf: &SdkConfig) -> Client {
 
 async fn find_queue(client: &Client) -> Result<String, Error> {
     let queues = client.list_queues().send().await?;
-    debug!("Queues: {:?}", queues);
+    debug!("Queues: {:#?}", queues);
     Ok(queues
         .queue_urls()
         .first()
         .expect("No queues in this account and Region. Create a queue to proceed.")
         .to_string())
+}
+
+pub async fn list_queues(client: &Client) -> Result<Vec<String>, Error> {
+    let response = client.list_queues().send().await?;
+
+    let queue_urls = response
+        .queue_urls()
+        .iter()
+        .map(|s| s.to_string())
+        .collect();
+    debug!("URLS: {:#?}", queue_urls);
+
+    Ok(queue_urls)
 }
 
 async fn send(client: &Client, queue_url: &String, message: &SQSMessage) -> Result<(), Error> {
@@ -54,17 +67,14 @@ async fn receive(client: &Client, queue_url: &String) -> Result<()> {
     Ok(())
 }
 
-pub async fn get_message(client: &Client) -> Result<()> {
-    let queue_url = find_queue(&client).await?;
-    Ok(receive(&client, &queue_url).await?)
+pub async fn get_message(client: &Client, url: &String) -> Result<()> {
+    Ok(receive(&client, url).await?)
 }
 
-pub async fn send_message(client: &Client, message: &str) -> Result<()> {
-    let queue_url = find_queue(&client).await?;
-
+pub async fn send_message(client: &Client, url: &String, message: &str) -> Result<()> {
     let sqsmessage = SQSMessage {
         body: message.to_owned(),
     };
 
-    Ok(send(&client, &queue_url, &sqsmessage).await?)
+    Ok(send(&client, url, &sqsmessage).await?)
 }

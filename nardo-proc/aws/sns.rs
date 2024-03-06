@@ -32,7 +32,10 @@ async fn subscribe(client: &Client, topic_arn: &str, queue_arn: &str) -> Result<
         .send()
         .await?;
 
-    debug!("Added a subscription: {:?}", rsp);
+    debug!(
+        "Added a subscription: {:?} on endpoint {:?}",
+        rsp, queue_arn
+    );
 
     Ok(())
 }
@@ -54,10 +57,14 @@ pub async fn publish(client: &Client, topic_arn: &str, message: &str) -> Result<
 }
 
 pub async fn setup_topic(client: &Client) -> Result<()> {
-    let queue_arn = "arn:aws:sqs:us-east-1:000000000000:requestQueue".to_string();
+    let request_queue = "arn:aws:sqs:us-east-1:000000000000:requestQueue".to_string();
+    let request_updates_queue =
+        "arn:aws:sqs:us-east-1:000000000000:requestUpdatesQueue".to_string();
+
     let topic_arn = "arn:aws:sns:us-east-1:000000000000:requestUpdatesTopic.fifo".to_string();
 
-    subscribe(client, &topic_arn, &queue_arn).await?;
+    subscribe(client, &topic_arn, &request_queue).await?;
+    subscribe(client, &topic_arn, &request_updates_queue).await?;
 
     Ok(())
 }

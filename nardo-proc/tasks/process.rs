@@ -54,7 +54,7 @@ async fn update_request_status(
 pub async fn process_queued_requests(
     dynamodb_client: &DynamoDbClient,
     sns_client: &SnsClient,
-    topic_arn: &str,
+    topics: &Vec<String>,
 ) -> Result<()> {
     let items = scan_for(dynamodb_client, TABLE, "jobStatus", "QUEUED").await?;
 
@@ -67,7 +67,11 @@ pub async fn process_queued_requests(
         debug!("Updated item: {:#?}", job_request);
 
         let json_string = serde_json::to_string(&job_request)?;
-        publish(sns_client, topic_arn, &json_string).await?;
+
+        for topic in topics {
+            publish(sns_client, topic, &json_string).await?;
+            debug!("Published to: {:#?}", topic);
+        }
     }
 
     Ok(())

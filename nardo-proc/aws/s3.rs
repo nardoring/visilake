@@ -96,6 +96,20 @@ async fn put_object(client: &Client, bucket: &str, object: &str, expires_in: u64
     Ok(())
 }
 
+async fn get_object(client: &Client, bucket: &str, object: &str, expires_in: u64) -> Result<()> {
+    let expires_in = Duration::from_secs(expires_in);
+    let presigned_request = client
+        .get_object()
+        .bucket(bucket)
+        .key(object)
+        .presigned(PresigningConfig::expires_in(expires_in)?)
+        .await?;
+
+    debug!("Object URI: {}", presigned_request.uri());
+
+    Ok(())
+}
+
 pub async fn copy_object(
     client: &Client,
     bucket_name: &str,

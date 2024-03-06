@@ -39,7 +39,7 @@ export default function JobViewBox() {
 
         <div className='py-4 pl-4'>
           <label
-            htmlFor='useCaseDescription'
+            htmlFor='jobDescription'
             className='pr-2 font-bold'
           >
             Description

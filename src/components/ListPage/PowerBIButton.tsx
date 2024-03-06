@@ -1,15 +1,11 @@
+import type { CustomCellRendererProps } from 'ag-grid-react';
 import Image from 'next/image';
-import { Bounce, ToastContainer, toast } from 'react-toastify';
+import { Bounce, toast } from 'react-toastify';
+import type { ToastPosition } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { Tooltip } from 'react-tooltip';
-
-interface PowerBIButtonProps {
-  link: string;
-  status: string;
-}
 
 const toastProperties = {
-  osition: 'bottom-right',
+  position: 'bottom-right' as ToastPosition,
   autoClose: 3000,
   hideProgressBar: false,
   closeOnClick: true,
@@ -20,7 +16,7 @@ const toastProperties = {
   transition: Bounce,
 };
 
-export default function PowerBIButton({ link, status }: PowerBIButtonProps) {
+export default function PowerBIButton(props: CustomCellRendererProps) {
   const notifyLinkCopied = (success: boolean) => {
     if (success) {
       toast.success('PowerBI Link Copied', {
@@ -35,7 +31,7 @@ export default function PowerBIButton({ link, status }: PowerBIButtonProps) {
 
   const handleCopyClick = () => {
     navigator.clipboard
-      .writeText(link)
+      .writeText(String(props.value))
       .then(() => {
         notifyLinkCopied(true);
       })
@@ -44,7 +40,8 @@ export default function PowerBIButton({ link, status }: PowerBIButtonProps) {
       });
   };
 
-  const isDisabled = status !== 'Complete';
+  const isDisabled =
+    (props.data as { jobStatus: string }).jobStatus !== 'Complete';
   const powerBiIconFilePath = isDisabled
     ? '/Power-BI-Gray.png'
     : '/Power-BI.png';
@@ -53,7 +50,7 @@ export default function PowerBIButton({ link, status }: PowerBIButtonProps) {
     : 'Copy link to clipboard';
 
   return (
-    <>
+    <div className='py-1'>
       <button
         className={`ml flex items-center rounded px-4 py-2 font-medium shadow-md ${
           isDisabled
@@ -62,8 +59,6 @@ export default function PowerBIButton({ link, status }: PowerBIButtonProps) {
         }`}
         onClick={handleCopyClick}
         disabled={isDisabled}
-        data-tooltip-id='link-na'
-        data-tooltip-content={powerBiToolTip}
       >
         <Image
           src={powerBiIconFilePath}
@@ -73,19 +68,6 @@ export default function PowerBIButton({ link, status }: PowerBIButtonProps) {
           className='mr-2'
         />
       </button>
-      <Tooltip id='link-na' />
-      <ToastContainer
-        position='bottom-right'
-        autoClose={3000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme='light'
-      />
-    </>
+    </div>
   );
 }

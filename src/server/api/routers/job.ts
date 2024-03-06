@@ -60,14 +60,14 @@ export const jobRouter = createTRPCRouter({
         analysisTypes: z.array(z.string()).refine((data) => data.length > 0, {
           message: 'analysisTypes should not be empty',
         }),
-        dateRangeStart: z.date().refine((data) => validateDate(data), {
+        dateRangeStart: z.number().refine((data) => data > 0, {
           message: 'dateRangeStart should be a valid Date',
         }),
-        dateRangeEnd: z.date().refine((data) => validateDate(data), {
+        dateRangeEnd: z.number().refine((data) => data > 0, {
           message: 'dateRangeEnd should be a valid Date',
         }),
-        granularity: z.number().refine((data) => Number.isInteger(data) && data > 0, {
-          message: 'granularity should be a positive integer',
+        granularity: z.number().refine((data) => data > 0, {
+          message: 'granularity should be a positive number',
         }),
       })
     )

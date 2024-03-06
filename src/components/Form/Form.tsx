@@ -84,8 +84,8 @@ export default function Form() {
           jobDescription: jobDescription,
           jobName: jobName,
           analysisTypes: analysisTypeNames,
-          dateRangeStart: dateRangeStart!,
-          dateRangeEnd: dateRangeEnd!,
+          dateRangeStart: dateRangeStart!.getTime(),
+          dateRangeEnd: dateRangeEnd!.getTime(),
           granularity: granularity
         });
         setFormSuccess(true);

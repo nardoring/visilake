@@ -67,8 +67,39 @@ async fn receive(client: &Client, queue_url: &String) -> Result<()> {
     Ok(())
 }
 
+async fn delete_message(client: &Client, url: &str, receipt_handle: &str) -> Result<(), Error> {
+    client
+        .delete_message()
+        .queue_url(url)
+        .receipt_handle(receipt_handle)
+        .send()
+        .await?;
+
+    Ok(())
+}
+
+async fn receive_and_delete_messages(client: &Client, url: &String) -> Result<(), Error> {
+    let message = client
+        .receive_message()
+        .queue_url(url)
+        .send()
+        .await?
+        .messages
+        .unwrap_or_default();
+
+    for message in message {
+        if let Some(receipt_handle) = message.receipt_handle() {
+            debug!("Processing message: {:?}", message);
+
+            delete_message(client, url, receipt_handle).await?;
+        }
+    }
+
+    Ok(())
+}
+
 pub async fn get_message(client: &Client, url: &String) -> Result<()> {
-    Ok(receive(&client, url).await?)
+    Ok(receive_and_delete_messages(&client, url).await?)
 }
 
 pub async fn send_message(client: &Client, url: &String, message: &str) -> Result<()> {

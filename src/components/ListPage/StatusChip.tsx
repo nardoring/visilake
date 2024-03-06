@@ -1,11 +1,20 @@
-import { Tooltip } from 'react-tooltip';
+import type { CustomCellRendererProps } from 'ag-grid-react';
 
-interface StatusChipProps {
-  status: string;
+const statusMap: Record<string, string> = {
+  complete: 'Completed',
+  inprogress: 'In Progress',
+  notstarted: 'Queued',
+  failed: 'Failed',
+};
+
+interface StatusStyle {
+  backgroundColor: string;
+  borderColor: string;
+  color: string;
 }
 
 /* TODO use tailwind for this eventually */
-const statusStyles = {
+const statusStyles: Record<string, StatusStyle> = {
   complete: {
     backgroundColor: '#CEEEDD',
     borderColor: '#00A13A',
@@ -33,35 +42,21 @@ const statusStyles = {
   },
 };
 
-export default function StatusChip({ status }: StatusChipProps) {
-  const statusMap: Record<string, string> = {
-    complete: 'Completed',
-    inprogress: 'In Progress',
-    notstarted: 'Queued',
-    failed: 'Failed',
-  };
-
-  const statusKey = status.toLowerCase().replace(/\s+/g, '');
-  const statusValue = statusMap[statusKey] ?? 'INVALID';
-  const style =
-    statusStyles[statusKey as keyof typeof statusStyles] ||
-    statusStyles.default;
+export default function StatusChip(props: CustomCellRendererProps) {
+  const statusKey: string = (props.value as string)
+    .toLowerCase()
+    .replace(/\s+/g, '');
+  const statusValue: string = statusMap[statusKey] ?? 'INVALID';
+  const style: StatusStyle | undefined =
+    statusStyles[statusKey] ?? statusStyles.default;
 
   return (
-    <div className={`flex flex-wrap gap-2`}>
+    <div className={`flex flex-wrap gap-2 py-3`}>
       <div
-        className={`m-1 flex min-w-[8rem] items-center justify-center rounded-full border px-2 py-1 text-xs font-medium`}
+        className={`text-xs m-1 flex min-w-[8rem] items-center justify-center rounded-full border px-2 py-1 font-medium`}
         style={style}
       >
-        <div
-          className='max-w-full flex-initial leading-none'
-          data-tooltip-id='status'
-          data-tooltip-content='Placeholder of status explanation'
-        >
-          <Tooltip
-            id='status'
-            className='z-50'
-          />
+        <div className='max-w-full flex-initial leading-none'>
           {statusValue}
         </div>
       </div>

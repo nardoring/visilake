@@ -86,7 +86,7 @@ export default function Form() {
           analysisTypes: analysisTypeNames,
           dateRangeStart: dateRangeStart!.getTime(),
           dateRangeEnd: dateRangeEnd!.getTime(),
-          granularity: granularity
+          granularity: granularity,
         });
         setFormSuccess(true);
       } catch (error) {
@@ -116,7 +116,7 @@ export default function Form() {
 
           <input
             className={`${inputStyles} ${
-              submitAttempted && jobName.trim() === '' ? 'ring-2 ring-red' : ''
+              submitAttempted && jobName.trim() === '' ? 'ring-1 ring-red' : ''
             }`}
             type='text'
             id='jobName'
@@ -177,7 +177,8 @@ export default function Form() {
               <DateTimePicker
                 disableFuture
                 className={`${'w-full rounded shadow-sm'} ${
-                  submitAttempted && analysisTypes.length === 0
+                  (submitAttempted && (dateRangeStart === undefined ||
+                  !validateDate(dateRangeStart)))
                     ? 'ring-1 ring-red'
                     : ''
                 }`}
@@ -190,7 +191,8 @@ export default function Form() {
               <DateTimePicker
                 disableFuture
                 className={`${'w-full rounded shadow-sm'} ${
-                  submitAttempted && analysisTypes.length === 0
+                  (submitAttempted && (dateRangeEnd === undefined ||
+                    !validateDate(dateRangeEnd)))
                     ? 'ring-1 ring-red'
                     : ''
                 }`}

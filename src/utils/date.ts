@@ -24,7 +24,7 @@ export function formatDate(rawDate: Date) {
 
 export function validateDate(date?: Date): boolean {
   return (
-    date !== undefined && !isNaN(date.getTime()) && isFinite(date.getTime())
+    date !== undefined && !isNaN(date.getTime()) && isFinite(date.getTime()) && (date.getTime() < Date.now())
   );
 }
 

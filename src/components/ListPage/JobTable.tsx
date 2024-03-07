@@ -11,6 +11,7 @@ import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-quartz.css';
 import useWindowDimensions from '~/utils/useWindowResolution';
 import Link from 'next/link';
+import getGranularityLabel from '~/utils/granularity';
 
 const ROW_HEIGHT = 70;
 const PAGINATION_PAGE_SIZES = [5, 10, 15, 20];
@@ -47,6 +48,14 @@ export default function JobTable() {
       filter: 'agTextColumnFilter',
     },
     {
+      field: 'sources',
+      filter: 'agMultiColumnFilter',
+      valueGetter: (params: { data: { sources: string[] } }) =>
+        params.data.sources.join(', '),
+      filterValueGetter: (params: { data: { sources: string[] } }) =>
+        params.data.sources,
+    },
+    {
       field: 'analysisTypes',
       filter: 'agMultiColumnFilter',
       valueGetter: (params: { data: { analysisTypes: string[] } }) =>
@@ -55,7 +64,15 @@ export default function JobTable() {
         params.data.analysisTypes,
     },
     {
+      field: 'granularity',
+      filter: 'agSetColumnFilter',
+      hide: true,
+      valueGetter: (params: { data: { granularity: number } }) =>
+        getGranularityLabel(params.data.granularity)
+    },
+    {
       field: 'date',
+      headerName: 'Date Created',
       filter: 'agDateColumnFilter',
       sort: 'desc' as SortDirection,
       // Ignore global filter ()

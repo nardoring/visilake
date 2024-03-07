@@ -211,7 +211,7 @@ export default function Form() {
           <label
             className='mb-1'
             data-tooltip-id='granularity'
-            data-tooltip-html='...'
+            data-tooltip-html='Adjust the time interval between data points. Select "Default" for the minimum interval available.'
           >
             Granularity
           </label>

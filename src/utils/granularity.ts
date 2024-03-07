@@ -1,4 +1,5 @@
 export const granularityData = [
+  { value: 0, label: "Default" },
   { value: 1, label: "1ms" },
   { value: 5, label: "5ms" },
   { value: 10, label: "10ms" },

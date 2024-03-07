@@ -12,6 +12,7 @@ import 'ag-grid-community/styles/ag-theme-quartz.css';
 import useWindowDimensions from '~/utils/useWindowResolution';
 import Link from 'next/link';
 import getGranularityLabel from '~/utils/granularity';
+import { formatDate } from '~/utils/date';
 
 const ROW_HEIGHT = 70;
 const PAGINATION_PAGE_SIZES = [5, 10, 15, 20];
@@ -69,6 +70,24 @@ export default function JobTable() {
       hide: true,
       valueGetter: (params: { data: { granularity: number } }) =>
         getGranularityLabel(params.data.granularity)
+    },
+    {
+      headerName: 'Date Range',
+      //hide: true,
+      maxWidth: 170,
+      minWidth: 170,
+      cellRenderer: (params: {
+        data: {
+          dateRangeEnd: Date;
+          dateRangeStart: Date;
+        };
+      }) => (
+        <p>{formatDate(params.data.dateRangeStart)} - {formatDate(params.data.dateRangeEnd)}</p>
+      ),
+      // Ignore global filter ()
+      getQuickFilterText: () => {
+        return "";
+      },
     },
     {
       field: 'date',

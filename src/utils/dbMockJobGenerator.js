@@ -1,6 +1,5 @@
 const fs = require('fs');
 const path = require('path');
-import { granularityData } from './granularity';
 
 const NUM_OF_ITEMS = 25;
 
@@ -108,7 +107,18 @@ function getRandomAuthor() {
 }
 
 function getRandomGranularity() {
-  const granularities = granularityData.map((data) => data.value);
+  const granularities = [
+    0,
+    1,
+    5,
+    10,
+    100,
+    1000,
+    1000 * 60,
+    1000 * 60 * 60,
+    1000 * 60 * 60 * 24,
+  ];
+
   return granularities[Math.floor(Math.random() * granularities.length)] ?? -1;
 }
 

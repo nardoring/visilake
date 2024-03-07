@@ -1,5 +1,6 @@
 import type { Job } from '~/models/domain/job';
 import type { JobStatus } from '~/models/domain/jobStatus';
+import { granularityData } from './granularity';
 
 const mockAuthorNames = [
   'Emily Johnson',
@@ -27,20 +28,13 @@ function generateMockJobs(count: number): Job[] {
       'TAG-34567',
     ];
 
-    const granularities = [
-      1,
-      5,
-      10,
-      100,
-      1000,
-      1000 * 60,
-      1000 * 60 * 60,
-      1000 * 60 * 60 * 24,
-    ];
+    const granularities = granularityData.map(
+      (data: { value: number }) => data.value
+    );
 
     const job: Job = {
       jobName: `Job ${i}`,
-      date: getRandomDate(new Date(2023, 8, 1), new Date(2024, 3, 5)),
+      date: getRandomDate(new Date(2023, 8, 1), new Date(2024, 2, 5)),
       jobDescription: `This is a test for job ${i}. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.`,
       jobStatus: getRandomStatus(),
       powerBILink: `https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value${i}'`,
@@ -55,9 +49,9 @@ function generateMockJobs(count: number): Job[] {
       ),
       dateRangeStart: getRandomDate(
         new Date(2023, 8, 1),
-        new Date(2023, 12, 31)
+        new Date(2023, 11, 30)
       ),
-      dateRangeEnd: getRandomDate(new Date(2024, 1, 1), new Date(2024, 3, 5)),
+      dateRangeEnd: getRandomDate(new Date(2024, 0, 1), new Date(2024, 2, 5)),
       granularity:
         granularities[Math.floor(Math.random() * granularities.length)] ?? -1,
     };

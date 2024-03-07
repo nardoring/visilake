@@ -28,11 +28,11 @@ function generateMockJobs(count, outputFilePath) {
       sourceNames: getRandomListItem(availableSources),
       dateRangeStart: getRandomDate(
         new Date(2023, 8, 1),
-        new Date(2024, 1, 1)
+        new Date(2024, 0, 1)
       ).toString(),
       dateRangeEnd: getRandomDate(
-        new Date(2024, 1, 2),
-        new Date(2024, 3, 6)
+        new Date(2024, 0, 2),
+        new Date(2024, 2, 6)
       ).toString(),
       granularity: getRandomGranularity().toString(),
     };
@@ -42,7 +42,7 @@ function generateMockJobs(count, outputFilePath) {
       id: getRandomId(),
       creationDate: getRandomDate(
         new Date(2023, 8, 1),
-        new Date(2024, 3, 6)
+        new Date(2024, 2, 6)
       ).toString(),
       jobStatus: getRandomStatus(),
       jobName: input.jobName,

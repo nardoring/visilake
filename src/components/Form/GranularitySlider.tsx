@@ -1,5 +1,6 @@
 import Slider from '@mui/material/Slider';
 import type { Dispatch, SetStateAction } from 'react';
+import { granularityData } from '~/utils/granularity';
 
 interface GranularitySliderProps {
   setGranularity: Dispatch<SetStateAction<number>>;
@@ -8,25 +9,16 @@ interface GranularitySliderProps {
 export default function GranularitySlider({
   setGranularity,
 }: GranularitySliderProps) {
-  const msValue = [
-    1,
-    5,
-    10,
-    100,
-    1000,
-    1000 * 60,
-    1000 * 60 * 60,
-    1000 * 60 * 60 * 24,
-  ];
-  const labels = ['1ms', '5ms', '10ms', '100ms', '1s', '1m', '1h', '1day'];
+  const granularities = granularityData.map((data: { value: number; }) => data.value);
+  const labels = granularityData.map((data: { label: string; }) => data.label);
 
-  const marks = msValue.map((value, index) => ({
+  const marks = granularities.map((value, index) => ({
     value: index + 1,
     label: labels[index],
   }));
 
   function calculateValue(value: number) {
-    return msValue[value - 1] ?? -1;
+    return granularities[value - 1] ?? -1;
   }
 
   const handleChange = (event: Event, newValue: number | number[]) => {

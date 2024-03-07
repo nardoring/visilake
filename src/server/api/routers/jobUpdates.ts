@@ -24,7 +24,6 @@ export const jobUpdatesRouter = createTRPCRouter({
     } as ReceiveMessageRequest;
 
     const messages = await sqs.receiveMessage(recieveParameters).promise();
-    console.log(messages);
     if (messages.Messages && messages.Messages?.length != 0) {
       console.log(messages);
 

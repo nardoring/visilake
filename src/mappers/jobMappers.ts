@@ -7,6 +7,8 @@ function mapJobs(output: DatabaseJob[]): Job[] {
 }
 
 function mapJob(job: DatabaseJob): Job {
+  console.log(job);
+
   return {
     jobName: job.jobName.S,
     date: new Date(Number(job.creationDate.N)),
@@ -16,6 +18,7 @@ function mapJob(job: DatabaseJob): Job {
     author: job.author.S,
     analysisTypes: job.analysisTypes.L.map((t) => t.S),
     sources: job.sources.L.map((t) => t.S),
+    jobId: job.requestID.S,
   } as Job;
 }
 

@@ -11,4 +11,5 @@ export interface Job {
   author: DynamoString;
   analysisTypes: DynamoArray<DynamoString>;
   sources: DynamoArray<DynamoString>;
+  requestID: DynamoString;
 }

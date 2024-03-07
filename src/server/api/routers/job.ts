@@ -23,7 +23,7 @@ export const jobRouter = createTRPCRouter({
     const jobQueryParams = {
       TableName: DYNAMODB_TABLE,
       ProjectionExpression:
-        'jobName, jobDescription, jobStatus, powerBILink, author, analysisTypes, creationDate, sources',
+        'jobName, jobDescription, jobStatus, powerBILink, author, analysisTypes, creationDate, sources, requestID',
     };
 
     return mapJobs(
@@ -33,7 +33,7 @@ export const jobRouter = createTRPCRouter({
             console.log(data, err);
             reject(err ?? (!data.Items ? 'No Items' : 'Unknown error'));
           } else {
-            console.log(data.Items);
+            //console.log(data.Items);
             resolve(data.Items as unknown as Job[]);
           }
         })

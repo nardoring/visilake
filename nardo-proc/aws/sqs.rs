@@ -99,7 +99,7 @@ async fn receive_and_delete_messages(client: &Client, url: &String) -> Result<()
 }
 
 pub async fn get_message(client: &Client, url: &String) -> Result<()> {
-    Ok(receive_and_delete_messages(&client, url).await?)
+    Ok(receive(&client, url).await?)
 }
 
 pub async fn send_message(client: &Client, url: &String, message: &str) -> Result<()> {

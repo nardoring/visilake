@@ -26,15 +26,15 @@ function generateMockJobs(count, outputFilePath) {
       jobDescription: `Test for job ${i}. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.`,
       analysisTypeNames: getRandomListItem(availableAnalysisTypes),
       sourceNames: getRandomListItem(availableSources),
-      dateRangeStart: getRandomDate().toString(),
-      dateRangeEnd: getRandomDate().toString(),
+      dateRangeStart: getRandomDate(new Date(2023, 8, 1), new Date(2024, 1, 1)).toString(),
+      dateRangeEnd: getRandomDate(new Date(2024, 1, 2), new Date(2024, 3, 6)).toString(),
       granularity: getRandomGranularity().toString(),
     };
 
     const item = {
       requestID: i.toString(),
       id: getRandomId(),
-      creationDate: getRandomDate().toString(),
+      creationDate: getRandomDate(new Date(2023, 8, 1), new Date(2024, 3, 6)).toString(),
       jobStatus: getRandomStatus(),
       jobName: input.jobName,
       jobDescription: input.jobDescription,
@@ -77,9 +77,9 @@ function getRandomStatus() {
   return statusOptions[randomIndex];
 }
 
-function getRandomDate() {
-  const startMillis = new Date(2023, 8, 1).getTime();
-  const endMillis = new Date(2024, 1, 15).getTime();
+function getRandomDate(minDate, maxDate) {
+  const startMillis = minDate.getTime();
+  const endMillis = maxDate.getTime();
   return Math.floor(startMillis + Math.random() * (endMillis - startMillis));
 }
 

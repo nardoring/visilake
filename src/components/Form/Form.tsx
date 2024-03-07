@@ -165,8 +165,10 @@ export default function Form() {
         <div className='flex flex-col'>
           <label
             className='mb-1'
+            style={{ alignSelf: 'flex-start' }}
             data-tooltip-id='date-range'
-            data-tooltip-html='Select the date and time range for the analysis. You can choose both the start and end dates along with their respective times.'
+            data-tooltip-html='Select the date and time range for the analysis. <br> You can choose both the start and end dates <br> along with their respective times.'
+            data-tooltip-place='top'
           >
             Date Range
           </label>
@@ -210,12 +212,13 @@ export default function Form() {
         <div className='flex flex-col'>
           <label
             className='mb-1'
+            style={{ alignSelf: 'flex-start' }}
             data-tooltip-id='granularity'
-            data-tooltip-html='Adjust the time interval between data points. Select "Default" for the minimum interval available.'
+            data-tooltip-html='Adjust the time interval between data points. <br> Select "Default" for the minimum interval available.'
           >
             Granularity
           </label>
-          <Tooltip id='granularity' />
+          <Tooltip id='granularity'/>
           <div className='px-5'>
             <GranularitySlider setGranularity={setGranularity} />
           </div>

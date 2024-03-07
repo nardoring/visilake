@@ -31,6 +31,17 @@ export default function JobTable() {
     },
   });
 
+  const [selectedQueueExecutted, setSelectedQueueExecutted] =
+    useState<boolean>(false);
+
+  const { data: selectedQueue, isLoading: selectedQueueIsLoading } =
+    api.jobUpdates.getRandomQueueUrl.useQuery(undefined, {
+      enabled: !selectedQueueExecutted,
+      onSuccess: () => {
+        setSelectedQueueExecutted(true);
+      },
+    });
+
   const [messageQueryExecuted, setMessageQueryExecuted] =
     useState<boolean>(true);
 
@@ -50,29 +61,34 @@ export default function JobTable() {
     return JSON.parse(messageParse.Message) as unknown as JobUpdateMessage;
   };
 
-  api.jobUpdates.getJobUpdates.useQuery(undefined, {
-    enabled: !messageQueryExecuted,
-    onSuccess: (result) => {
-      if (result && result?.length != 0) {
-        const updates = result
-          .filter((message) => message.Body)
-          .map((message) => parseJobUpdateMessage(message.Body!))
-          .filter((update) => update) as JobUpdateMessage[];
+  api.jobUpdates.getJobUpdates.useQuery(
+    { queueUrl: selectedQueue! },
+    {
+      enabled: !messageQueryExecuted && !selectedQueueIsLoading,
+      onSuccess: (result) => {
+        if (result && result?.length != 0) {
+          const updates = result
+            .filter((message) => message.Body)
+            .map((message) => parseJobUpdateMessage(message.Body!))
+            .filter((update) => update) as JobUpdateMessage[];
 
-        updates.forEach((update) => {
-          const updatedRow = gridRef.current?.api.getRowNode(update.request_id);
+          updates.forEach((update) => {
+            const updatedRow = gridRef.current?.api.getRowNode(
+              update.request_id
+            );
 
-          if (!updatedRow) {
-            return;
-          }
+            if (!updatedRow) {
+              return;
+            }
 
-          updatedRow?.setDataValue('jobStatus', update.status);
-        });
-      }
+            updatedRow?.setDataValue('jobStatus', update.status);
+          });
+        }
 
-      setMessageQueryExecuted(true);
-    },
-  });
+        setMessageQueryExecuted(true);
+      },
+    }
+  );
 
   useEffect(() => {
     const interval = setInterval(() => {

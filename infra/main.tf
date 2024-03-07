@@ -151,9 +151,24 @@ resource "aws_sqs_queue" "requestQueue" {
   name = "requestQueue"
 }
 
+resource "aws_sqs_queue" "requestUpdates-1" {
+  name = "requestUpdatesQueue-1"
+}
 
-resource "aws_sqs_queue" "requestUpdatesQueue" {
-  name = "requestUpdatesQueue"
+resource "aws_sqs_queue" "requestUpdates-2" {
+  name = "requestUpdatesQueue-2"
+}
+
+resource "aws_sqs_queue" "requestUpdates-3" {
+  name = "requestUpdatesQueue-3"
+}
+
+resource "aws_sqs_queue" "requestUpdates-4" {
+  name = "requestUpdatesQueue-4"
+}
+
+resource "aws_sqs_queue" "requestUpdates-5" {
+  name = "requestUpdatesQueue-5"
 }
 
 

@@ -32,8 +32,9 @@ async fn main() -> Result<()> {
 
     process_queued_requests(&dynamodb_client, &sns_client, &topics).await?;
 
-    get_message(&sqs_client, &queues[0]).await?;
-    get_message(&sqs_client, &queues[1]).await?;
+    for queue in queues {
+        get_message(&sqs_client, &queue).await?;
+    }
 
     Ok(())
 }

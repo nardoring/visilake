@@ -7,7 +7,7 @@ import {
   ReceiveMessageRequest,
 } from 'aws-sdk/clients/sqs';
 
-const QUEUE_NAME = 'requestQueue';
+const QUEUE_NAME = 'requestUpdatesQueue';
 
 export const jobUpdatesRouter = createTRPCRouter({
   getJobUpdates: publicProcedure.query(async () => {

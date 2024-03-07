@@ -182,7 +182,8 @@ export default function Form() {
                 className={`${'w-full rounded shadow-sm'} ${
                   submitAttempted &&
                   (dateRangeStart === undefined ||
-                    !validateDate(dateRangeStart))
+                    !validateDate(dateRangeStart) ||
+                    !validateDateRange(dateRangeStart, dateRangeEnd))
                     ? 'ring-1 ring-red'
                     : ''
                 }`}
@@ -198,7 +199,9 @@ export default function Form() {
                 ampm={false}
                 className={`${'w-full rounded shadow-sm'} ${
                   submitAttempted &&
-                  (dateRangeEnd === undefined || !validateDate(dateRangeEnd))
+                  (dateRangeEnd === undefined ||
+                    !validateDate(dateRangeEnd) ||
+                    !validateDateRange(dateRangeStart, dateRangeEnd))
                     ? 'ring-1 ring-red'
                     : ''
                 }`}

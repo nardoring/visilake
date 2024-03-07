@@ -28,9 +28,31 @@ export default function JobTable() {
     },
   });
 
+  const [messageQueryExecuted, setMessageQueryExecuted] =
+    useState<boolean>(true);
+  const { data: messages, isLoading: messageLoading } =
+    api.jobUpdates.getJobUpdates.useQuery(undefined, {
+      enabled: !messageQueryExecuted,
+      onSuccess: () => {
+        setMessageQueryExecuted(true);
+      },
+    });
+
+  useEffect(() => {
+    if (messageLoading) {
+      return;
+    }
+
+    if (messages && messages?.length != 0) {
+      console.log(messages);
+
+      setQueryExecuted(false);
+    }
+  }, [messageLoading]);
+
   useEffect(() => {
     const interval = setInterval(() => {
-      setQueryExecuted(false);
+      setMessageQueryExecuted(false);
     }, 10000);
 
     return () => clearInterval(interval);

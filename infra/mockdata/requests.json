@@ -1,45 +1,12 @@
 [
   {
     "requestID": "1",
-    "id": "ltc4db1icex9t",
-    "creationDate": "1700635531039",
-    "jobStatus": "NotStarted",
+    "id": "ltgjmiydqwtro",
+    "creationDate": "1695642639097",
+    "jobStatus": "COMPLETE",
     "jobName": "Job 1",
     "jobDescription": "Test for job 1. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
-    "author": "Olivia Bennett",
-    "analysisTypes": {
-      "L": [
-        {
-          "S": "Rolling Mean"
-        }
-      ]
-    },
-    "sources": {
-      "L": [
-        {
-          "S": "TAG-67891"
-        },
-        {
-          "S": "TAG-78912"
-        },
-        {
-          "S": "TAG-34567"
-        },
-        {
-          "S": "TAG-12345"
-        }
-      ]
-    },
-    "powerBILink": "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'"
-  },
-  {
-    "requestID": "2",
-    "id": "ltc4db1irf5fy",
-    "creationDate": "1698323123523",
-    "jobStatus": "InProgress",
-    "jobName": "Job 2",
-    "jobDescription": "Test for job 2. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
-    "author": "Olivia Bennett",
+    "author": "James Mitchell",
     "analysisTypes": {
       "L": [
         {
@@ -49,6 +16,45 @@
     },
     "sources": {
       "L": [
+        {
+          "S": "TAG-78912"
+        },
+        {
+          "S": "TAG-12345"
+        },
+        {
+          "S": "TAG-67891"
+        },
+        {
+          "S": "TAG-23456"
+        }
+      ]
+    },
+    "powerBILink": "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'"
+  },
+  {
+    "requestID": "2",
+    "id": "ltgjmiydaimtz",
+    "creationDate": "1706791493634",
+    "jobStatus": "FAILED",
+    "jobName": "Job 2",
+    "jobDescription": "Test for job 2. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+    "author": "James Mitchell",
+    "analysisTypes": {
+      "L": [
+        {
+          "S": "Rolling Mean"
+        },
+        {
+          "S": "Rolling Std Deviation"
+        }
+      ]
+    },
+    "sources": {
+      "L": [
+        {
+          "S": "TAG-67891"
+        },
         {
           "S": "TAG-78912"
         }
@@ -58,20 +64,14 @@
   },
   {
     "requestID": "3",
-    "id": "ltc4db1ibm3qy",
-    "creationDate": "1704245206907",
-    "jobStatus": "Failed",
+    "id": "ltgjmiydz3b94",
+    "creationDate": "1695683516312",
+    "jobStatus": "QUEUED",
     "jobName": "Job 3",
     "jobDescription": "Test for job 3. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
-    "author": "Olivia Bennett",
+    "author": "Sophia Turner",
     "analysisTypes": {
       "L": [
-        {
-          "S": "Rolling Std Deviation"
-        },
-        {
-          "S": "Autocorrelation"
-        },
         {
           "S": "Rolling Mean"
         }
@@ -80,10 +80,19 @@
     "sources": {
       "L": [
         {
-          "S": "TAG-78912"
+          "S": "TAG-34567"
+        },
+        {
+          "S": "TAG-23456"
         },
         {
           "S": "TAG-12345"
+        },
+        {
+          "S": "TAG-78912"
+        },
+        {
+          "S": "TAG-67891"
         }
       ]
     },
@@ -91,16 +100,16 @@
   },
   {
     "requestID": "4",
-    "id": "ltc4db1i33ex1",
-    "creationDate": "1701667658020",
-    "jobStatus": "Complete",
+    "id": "ltgjmiydm8qxn",
+    "creationDate": "1699981629963",
+    "jobStatus": "PROCESSING",
     "jobName": "Job 4",
     "jobDescription": "Test for job 4. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
-    "author": "Benjamin Hayes",
+    "author": "Olivia Bennett",
     "analysisTypes": {
       "L": [
         {
-          "S": "Autocorrelation"
+          "S": "Rolling Mean"
         },
         {
           "S": "Rolling Std Deviation"
@@ -110,10 +119,13 @@
     "sources": {
       "L": [
         {
-          "S": "TAG-12345"
+          "S": "TAG-34567"
         },
         {
-          "S": "TAG-67891"
+          "S": "TAG-23456"
+        },
+        {
+          "S": "TAG-12345"
         }
       ]
     },
@@ -121,11 +133,38 @@
   },
   {
     "requestID": "5",
-    "id": "ltc4db1ihd5q4",
-    "creationDate": "1706843786443",
-    "jobStatus": "NotStarted",
+    "id": "ltgjmiyd6cus3",
+    "creationDate": "1707795172334",
+    "jobStatus": "FAILED",
     "jobName": "Job 5",
     "jobDescription": "Test for job 5. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+    "author": "James Mitchell",
+    "analysisTypes": {
+      "L": [
+        {
+          "S": "Autocorrelation"
+        }
+      ]
+    },
+    "sources": {
+      "L": [
+        {
+          "S": "TAG-34567"
+        },
+        {
+          "S": "TAG-23456"
+        }
+      ]
+    },
+    "powerBILink": "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'"
+  },
+  {
+    "requestID": "6",
+    "id": "ltgjmiydqovw2",
+    "creationDate": "1703348672456",
+    "jobStatus": "QUEUED",
+    "jobName": "Job 6",
+    "jobDescription": "Test for job 6. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
     "author": "Benjamin Hayes",
     "analysisTypes": {
       "L": [
@@ -136,51 +175,6 @@
     },
     "sources": {
       "L": [
-        {
-          "S": "TAG-78912"
-        },
-        {
-          "S": "TAG-23456"
-        },
-        {
-          "S": "TAG-67891"
-        },
-        {
-          "S": "TAG-34567"
-        },
-        {
-          "S": "TAG-12345"
-        }
-      ]
-    },
-    "powerBILink": "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'"
-  },
-  {
-    "requestID": "6",
-    "id": "ltc4db1id1qos",
-    "creationDate": "1702125252250",
-    "jobStatus": "NotStarted",
-    "jobName": "Job 6",
-    "jobDescription": "Test for job 6. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
-    "author": "Olivia Bennett",
-    "analysisTypes": {
-      "L": [
-        {
-          "S": "Rolling Mean"
-        }
-      ]
-    },
-    "sources": {
-      "L": [
-        {
-          "S": "TAG-23456"
-        },
-        {
-          "S": "TAG-78912"
-        },
-        {
-          "S": "TAG-12345"
-        },
         {
           "S": "TAG-34567"
         }
@@ -190,38 +184,32 @@
   },
   {
     "requestID": "7",
-    "id": "ltc4db1i30mn6",
-    "creationDate": "1707059774341",
-    "jobStatus": "InProgress",
+    "id": "ltgjmiyditrkj",
+    "creationDate": "1703310589022",
+    "jobStatus": "FAILED",
     "jobName": "Job 7",
     "jobDescription": "Test for job 7. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
-    "author": "James Mitchell",
+    "author": "Olivia Bennett",
     "analysisTypes": {
       "L": [
         {
-          "S": "Rolling Std Deviation"
+          "S": "Autocorrelation"
         },
         {
-          "S": "Autocorrelation"
+          "S": "Rolling Mean"
         }
       ]
     },
     "sources": {
       "L": [
         {
-          "S": "TAG-23456"
+          "S": "TAG-34567"
         },
         {
           "S": "TAG-78912"
         },
         {
-          "S": "TAG-67891"
-        },
-        {
           "S": "TAG-12345"
-        },
-        {
-          "S": "TAG-34567"
         }
       ]
     },
@@ -229,9 +217,9 @@
   },
   {
     "requestID": "8",
-    "id": "ltc4db1ifbxxq",
-    "creationDate": "1694282043130",
-    "jobStatus": "Failed",
+    "id": "ltgjmiydjkbst",
+    "creationDate": "1694904441000",
+    "jobStatus": "QUEUED",
     "jobName": "Job 8",
     "jobDescription": "Test for job 8. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
     "author": "Emily Johnson",
@@ -242,16 +230,16 @@
         },
         {
           "S": "Rolling Mean"
-        },
-        {
-          "S": "Rolling Std Deviation"
         }
       ]
     },
     "sources": {
       "L": [
         {
-          "S": "TAG-23456"
+          "S": "TAG-12345"
+        },
+        {
+          "S": "TAG-78912"
         }
       ]
     },
@@ -259,9 +247,9 @@
   },
   {
     "requestID": "9",
-    "id": "ltc4db1in9rkl",
-    "creationDate": "1695079210263",
-    "jobStatus": "InProgress",
+    "id": "ltgjmiydvr52q",
+    "creationDate": "1704795360528",
+    "jobStatus": "FAILED",
     "jobName": "Job 9",
     "jobDescription": "Test for job 9. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
     "author": "Benjamin Hayes",
@@ -278,10 +266,61 @@
     "sources": {
       "L": [
         {
-          "S": "TAG-23456"
-        },
+          "S": "TAG-34567"
+        }
+      ]
+    },
+    "powerBILink": "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'"
+  },
+  {
+    "requestID": "10",
+    "id": "ltgjmiyd5wirl",
+    "creationDate": "1696297583377",
+    "jobStatus": "FAILED",
+    "jobName": "Job 10",
+    "jobDescription": "Test for job 10. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+    "author": "Benjamin Hayes",
+    "analysisTypes": {
+      "L": [
+        {
+          "S": "Rolling Std Deviation"
+        }
+      ]
+    },
+    "sources": {
+      "L": [
         {
           "S": "TAG-34567"
+        }
+      ]
+    },
+    "powerBILink": "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'"
+  },
+  {
+    "requestID": "11",
+    "id": "ltgjmiye7idqi",
+    "creationDate": "1693967274700",
+    "jobStatus": "COMPLETE",
+    "jobName": "Job 11",
+    "jobDescription": "Test for job 11. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+    "author": "Emily Johnson",
+    "analysisTypes": {
+      "L": [
+        {
+          "S": "Rolling Std Deviation"
+        },
+        {
+          "S": "Rolling Mean"
+        },
+        {
+          "S": "Autocorrelation"
+        }
+      ]
+    },
+    "sources": {
+      "L": [
+        {
+          "S": "TAG-78912"
         },
         {
           "S": "TAG-67891"
@@ -294,15 +333,18 @@
     "powerBILink": "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'"
   },
   {
-    "requestID": "10",
-    "id": "ltc4db1ieer07",
-    "creationDate": "1707672845654",
-    "jobStatus": "NotStarted",
-    "jobName": "Job 10",
-    "jobDescription": "Test for job 10. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
-    "author": "Sophia Turner",
+    "requestID": "12",
+    "id": "ltgjmiye0glw1",
+    "creationDate": "1703694652122",
+    "jobStatus": "FAILED",
+    "jobName": "Job 12",
+    "jobDescription": "Test for job 12. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+    "author": "Emily Johnson",
     "analysisTypes": {
       "L": [
+        {
+          "S": "Rolling Mean"
+        },
         {
           "S": "Autocorrelation"
         },
@@ -313,69 +355,12 @@
     },
     "sources": {
       "L": [
-        {
-          "S": "TAG-23456"
-        }
-      ]
-    },
-    "powerBILink": "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'"
-  },
-  {
-    "requestID": "11",
-    "id": "ltc4db1ibmp4t",
-    "creationDate": "1693606179703",
-    "jobStatus": "Failed",
-    "jobName": "Job 11",
-    "jobDescription": "Test for job 11. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
-    "author": "Olivia Bennett",
-    "analysisTypes": {
-      "L": [
-        {
-          "S": "Rolling Mean"
-        },
-        {
-          "S": "Rolling Std Deviation"
-        }
-      ]
-    },
-    "sources": {
-      "L": [
-        {
-          "S": "TAG-23456"
-        },
         {
           "S": "TAG-78912"
         },
         {
-          "S": "TAG-34567"
-        }
-      ]
-    },
-    "powerBILink": "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'"
-  },
-  {
-    "requestID": "12",
-    "id": "ltc4db1iwwmjd",
-    "creationDate": "1700575459895",
-    "jobStatus": "NotStarted",
-    "jobName": "Job 12",
-    "jobDescription": "Test for job 12. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
-    "author": "Sophia Turner",
-    "analysisTypes": {
-      "L": [
-        {
-          "S": "Rolling Mean"
+          "S": "TAG-23456"
         },
-        {
-          "S": "Rolling Std Deviation"
-        },
-        {
-          "S": "Autocorrelation"
-        }
-      ]
-    },
-    "sources": {
-      "L": [
         {
           "S": "TAG-67891"
         },
@@ -391,29 +376,32 @@
   },
   {
     "requestID": "13",
-    "id": "ltc4db1illvtf",
-    "creationDate": "1698655947783",
-    "jobStatus": "InProgress",
+    "id": "ltgjmiyex5yux",
+    "creationDate": "1699701089135",
+    "jobStatus": "COMPLETE",
     "jobName": "Job 13",
     "jobDescription": "Test for job 13. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
-    "author": "Emily Johnson",
+    "author": "Olivia Bennett",
     "analysisTypes": {
       "L": [
         {
-          "S": "Autocorrelation"
+          "S": "Rolling Std Deviation"
+        },
+        {
+          "S": "Rolling Mean"
         }
       ]
     },
     "sources": {
       "L": [
         {
+          "S": "TAG-12345"
+        },
+        {
+          "S": "TAG-67891"
+        },
+        {
           "S": "TAG-23456"
-        },
-        {
-          "S": "TAG-78912"
-        },
-        {
-          "S": "TAG-34567"
         }
       ]
     },
@@ -421,19 +409,22 @@
   },
   {
     "requestID": "14",
-    "id": "ltc4db1io1dly",
-    "creationDate": "1696114411759",
-    "jobStatus": "Complete",
+    "id": "ltgjmiyerexck",
+    "creationDate": "1703382624644",
+    "jobStatus": "PROCESSING",
     "jobName": "Job 14",
     "jobDescription": "Test for job 14. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
     "author": "Sophia Turner",
     "analysisTypes": {
       "L": [
         {
-          "S": "Autocorrelation"
+          "S": "Rolling Std Deviation"
         },
         {
-          "S": "Rolling Std Deviation"
+          "S": "Rolling Mean"
+        },
+        {
+          "S": "Autocorrelation"
         }
       ]
     },
@@ -441,6 +432,18 @@
       "L": [
         {
           "S": "TAG-12345"
+        },
+        {
+          "S": "TAG-67891"
+        },
+        {
+          "S": "TAG-23456"
+        },
+        {
+          "S": "TAG-34567"
+        },
+        {
+          "S": "TAG-78912"
         }
       ]
     },
@@ -448,14 +451,17 @@
   },
   {
     "requestID": "15",
-    "id": "ltc4db1i7jyih",
-    "creationDate": "1705503221042",
-    "jobStatus": "Complete",
+    "id": "ltgjmiyef77hz",
+    "creationDate": "1706404217089",
+    "jobStatus": "PROCESSING",
     "jobName": "Job 15",
     "jobDescription": "Test for job 15. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
-    "author": "Sophia Turner",
+    "author": "Emily Johnson",
     "analysisTypes": {
       "L": [
+        {
+          "S": "Rolling Mean"
+        },
         {
           "S": "Rolling Std Deviation"
         }
@@ -464,13 +470,10 @@
     "sources": {
       "L": [
         {
-          "S": "TAG-12345"
+          "S": "TAG-67891"
         },
         {
           "S": "TAG-23456"
-        },
-        {
-          "S": "TAG-67891"
         },
         {
           "S": "TAG-34567"
@@ -484,12 +487,12 @@
   },
   {
     "requestID": "16",
-    "id": "ltc4db1ifvueh",
-    "creationDate": "1700772744400",
-    "jobStatus": "Complete",
+    "id": "ltgjmiyevil8d",
+    "creationDate": "1694126769398",
+    "jobStatus": "COMPLETE",
     "jobName": "Job 16",
     "jobDescription": "Test for job 16. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
-    "author": "Olivia Bennett",
+    "author": "Emily Johnson",
     "analysisTypes": {
       "L": [
         {
@@ -503,10 +506,7 @@
           "S": "TAG-12345"
         },
         {
-          "S": "TAG-23456"
-        },
-        {
-          "S": "TAG-67891"
+          "S": "TAG-78912"
         },
         {
           "S": "TAG-34567"
@@ -517,26 +517,32 @@
   },
   {
     "requestID": "17",
-    "id": "ltc4db1isdza1",
-    "creationDate": "1706695346941",
-    "jobStatus": "Failed",
+    "id": "ltgjmiyed6llz",
+    "creationDate": "1700001910956",
+    "jobStatus": "PROCESSING",
     "jobName": "Job 17",
     "jobDescription": "Test for job 17. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
-    "author": "James Mitchell",
+    "author": "Sophia Turner",
     "analysisTypes": {
       "L": [
         {
           "S": "Rolling Mean"
-        },
-        {
-          "S": "Rolling Std Deviation"
         }
       ]
     },
     "sources": {
       "L": [
         {
+          "S": "TAG-67891"
+        },
+        {
           "S": "TAG-23456"
+        },
+        {
+          "S": "TAG-34567"
+        },
+        {
+          "S": "TAG-78912"
         }
       ]
     },
@@ -544,12 +550,12 @@
   },
   {
     "requestID": "18",
-    "id": "ltc4db1ivxi4c",
-    "creationDate": "1704481208357",
-    "jobStatus": "InProgress",
+    "id": "ltgjmiyefw8uf",
+    "creationDate": "1705522594008",
+    "jobStatus": "PROCESSING",
     "jobName": "Job 18",
     "jobDescription": "Test for job 18. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
-    "author": "Benjamin Hayes",
+    "author": "Olivia Bennett",
     "analysisTypes": {
       "L": [
         {
@@ -566,19 +572,7 @@
     "sources": {
       "L": [
         {
-          "S": "TAG-67891"
-        },
-        {
-          "S": "TAG-78912"
-        },
-        {
-          "S": "TAG-34567"
-        },
-        {
           "S": "TAG-23456"
-        },
-        {
-          "S": "TAG-12345"
         }
       ]
     },
@@ -586,26 +580,35 @@
   },
   {
     "requestID": "19",
-    "id": "ltc4db1i4cgy3",
-    "creationDate": "1702008306831",
-    "jobStatus": "NotStarted",
+    "id": "ltgjmiyeakbo5",
+    "creationDate": "1707264920416",
+    "jobStatus": "COMPLETE",
     "jobName": "Job 19",
     "jobDescription": "Test for job 19. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
     "author": "Benjamin Hayes",
     "analysisTypes": {
       "L": [
         {
-          "S": "Autocorrelation"
+          "S": "Rolling Mean"
         },
         {
-          "S": "Rolling Mean"
+          "S": "Rolling Std Deviation"
+        },
+        {
+          "S": "Autocorrelation"
         }
       ]
     },
     "sources": {
       "L": [
         {
+          "S": "TAG-34567"
+        },
+        {
           "S": "TAG-67891"
+        },
+        {
+          "S": "TAG-12345"
         },
         {
           "S": "TAG-78912"
@@ -616,20 +619,14 @@
   },
   {
     "requestID": "20",
-    "id": "ltc4db1ijs3du",
-    "creationDate": "1701654436010",
-    "jobStatus": "Complete",
+    "id": "ltgjmiyezfyew",
+    "creationDate": "1696502442691",
+    "jobStatus": "QUEUED",
     "jobName": "Job 20",
     "jobDescription": "Test for job 20. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
-    "author": "Emily Johnson",
+    "author": "Sophia Turner",
     "analysisTypes": {
       "L": [
-        {
-          "S": "Autocorrelation"
-        },
-        {
-          "S": "Rolling Mean"
-        },
         {
           "S": "Rolling Std Deviation"
         }
@@ -638,16 +635,10 @@
     "sources": {
       "L": [
         {
-          "S": "TAG-34567"
-        },
-        {
           "S": "TAG-12345"
         },
         {
           "S": "TAG-23456"
-        },
-        {
-          "S": "TAG-78912"
         },
         {
           "S": "TAG-67891"
@@ -658,12 +649,12 @@
   },
   {
     "requestID": "21",
-    "id": "ltc4db1imgk0q",
-    "creationDate": "1693899340917",
-    "jobStatus": "Failed",
+    "id": "ltgjmiyexq51f",
+    "creationDate": "1700421140262",
+    "jobStatus": "FAILED",
     "jobName": "Job 21",
     "jobDescription": "Test for job 21. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
-    "author": "Emily Johnson",
+    "author": "James Mitchell",
     "analysisTypes": {
       "L": [
         {
@@ -671,22 +662,22 @@
         },
         {
           "S": "Rolling Mean"
-        },
-        {
-          "S": "Autocorrelation"
         }
       ]
     },
     "sources": {
       "L": [
         {
-          "S": "TAG-12345"
-        },
-        {
           "S": "TAG-34567"
         },
         {
+          "S": "TAG-78912"
+        },
+        {
           "S": "TAG-67891"
+        },
+        {
+          "S": "TAG-12345"
         },
         {
           "S": "TAG-23456"
@@ -697,9 +688,9 @@
   },
   {
     "requestID": "22",
-    "id": "ltc4db1ighjxx",
-    "creationDate": "1699182670623",
-    "jobStatus": "Complete",
+    "id": "ltgjmiyexexlg",
+    "creationDate": "1700281869110",
+    "jobStatus": "PROCESSING",
     "jobName": "Job 22",
     "jobDescription": "Test for job 22. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
     "author": "Emily Johnson",
@@ -707,25 +698,13 @@
       "L": [
         {
           "S": "Rolling Std Deviation"
-        },
-        {
-          "S": "Rolling Mean"
         }
       ]
     },
     "sources": {
       "L": [
         {
-          "S": "TAG-67891"
-        },
-        {
           "S": "TAG-34567"
-        },
-        {
-          "S": "TAG-78912"
-        },
-        {
-          "S": "TAG-23456"
         }
       ]
     },
@@ -733,26 +712,26 @@
   },
   {
     "requestID": "23",
-    "id": "ltc4db1it9a28",
-    "creationDate": "1699111832056",
-    "jobStatus": "NotStarted",
+    "id": "ltgjmiyern16m",
+    "creationDate": "1702932218274",
+    "jobStatus": "QUEUED",
     "jobName": "Job 23",
     "jobDescription": "Test for job 23. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
-    "author": "Emily Johnson",
+    "author": "Olivia Bennett",
     "analysisTypes": {
       "L": [
         {
-          "S": "Rolling Std Deviation"
+          "S": "Autocorrelation"
+        },
+        {
+          "S": "Rolling Mean"
         }
       ]
     },
     "sources": {
       "L": [
         {
-          "S": "TAG-23456"
-        },
-        {
-          "S": "TAG-67891"
+          "S": "TAG-78912"
         }
       ]
     },
@@ -760,19 +739,19 @@
   },
   {
     "requestID": "24",
-    "id": "ltc4db1i20ts5",
-    "creationDate": "1697208671010",
-    "jobStatus": "InProgress",
+    "id": "ltgjmiye3adq7",
+    "creationDate": "1702443259454",
+    "jobStatus": "FAILED",
     "jobName": "Job 24",
     "jobDescription": "Test for job 24. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
-    "author": "Benjamin Hayes",
+    "author": "Sophia Turner",
     "analysisTypes": {
       "L": [
         {
-          "S": "Rolling Mean"
+          "S": "Rolling Std Deviation"
         },
         {
-          "S": "Rolling Std Deviation"
+          "S": "Rolling Mean"
         },
         {
           "S": "Autocorrelation"
@@ -781,12 +760,6 @@
     },
     "sources": {
       "L": [
-        {
-          "S": "TAG-67891"
-        },
-        {
-          "S": "TAG-34567"
-        },
         {
           "S": "TAG-78912"
         },
@@ -795,6 +768,9 @@
         },
         {
           "S": "TAG-12345"
+        },
+        {
+          "S": "TAG-34567"
         }
       ]
     },
@@ -802,16 +778,16 @@
   },
   {
     "requestID": "25",
-    "id": "ltc4db1i4v227",
-    "creationDate": "1693922438157",
-    "jobStatus": "Complete",
+    "id": "ltgjmiyeadly7",
+    "creationDate": "1700028596298",
+    "jobStatus": "PROCESSING",
     "jobName": "Job 25",
     "jobDescription": "Test for job 25. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
     "author": "Emily Johnson",
     "analysisTypes": {
       "L": [
         {
-          "S": "Autocorrelation"
+          "S": "Rolling Mean"
         },
         {
           "S": "Rolling Std Deviation"
@@ -821,13 +797,19 @@
     "sources": {
       "L": [
         {
+          "S": "TAG-23456"
+        },
+        {
           "S": "TAG-34567"
+        },
+        {
+          "S": "TAG-78912"
         },
         {
           "S": "TAG-12345"
         },
         {
-          "S": "TAG-23456"
+          "S": "TAG-67891"
         }
       ]
     },

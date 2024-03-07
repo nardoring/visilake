@@ -77,10 +77,10 @@ export default function JobTable() {
       },
       tooltipValueGetter: (params: ITooltipParams) => {
         const tooltipMessages: Record<string, string> = {
-          Complete: 'Processing job has been completed',
-          InProgress: 'Data is currently being processed',
-          NotStarted: 'Processing job will soon be started',
-          Failed: 'An error has occurred',
+          COMPLETE: 'Processing job has been completed',
+          PROCESSING: 'Data is currently being processed',
+          QUEUED: 'Processing job will soon be started',
+          FAILED: 'An error has occurred',
         };
 
         return tooltipMessages[params.value as string] ?? 'INVALID';
@@ -96,7 +96,7 @@ export default function JobTable() {
       sortable: false,
       headerTooltip: 'Provides a data source link to use within PowerBI',
       tooltipValueGetter: (params: ITooltipParams) => {
-        if ((params.data as { jobStatus: string }).jobStatus !== 'Complete')
+        if ((params.data as { jobStatus: string }).jobStatus !== 'COMPLETE')
           return 'Link is unavailable';
         return 'Copy link to clipboard';
       },

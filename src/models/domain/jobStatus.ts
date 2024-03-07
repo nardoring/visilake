@@ -1,1 +1,1 @@
-export type JobStatus = 'Complete' | 'InProgress' | 'NotStarted' | 'Failed';
+export type JobStatus = 'COMPLETE' | 'PROCESSING' | 'QUEUED' | 'FAILED';

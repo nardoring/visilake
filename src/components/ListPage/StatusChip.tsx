@@ -2,8 +2,8 @@ import type { CustomCellRendererProps } from 'ag-grid-react';
 
 const statusMap: Record<string, string> = {
   complete: 'Completed',
-  inprogress: 'In Progress',
-  notstarted: 'Queued',
+  processing: 'In Progress',
+  queued: 'Queued',
   failed: 'Failed',
 };
 
@@ -20,12 +20,12 @@ const statusStyles: Record<string, StatusStyle> = {
     borderColor: '#00A13A',
     color: '#7E8285',
   },
-  inprogress: {
+  processing: {
     backgroundColor: '#C9E8FB',
     borderColor: '#1790D0',
     color: '#7E8285',
   },
-  notstarted: {
+  queued: {
     backgroundColor: '#FFF2CC',
     borderColor: '#FFE699',
     color: '#7E8285',

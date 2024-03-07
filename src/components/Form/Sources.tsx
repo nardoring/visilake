@@ -3,6 +3,8 @@ import Source from './Source';
 import type { Source as Source_t } from '~/utils/types';
 import { isKeyboardEvent } from '~/utils/keyboardEvent';
 
+import { Tooltip } from 'react-tooltip';
+
 interface SourcesProps {
   getSources: () => Source_t[];
   setSources: React.Dispatch<React.SetStateAction<Source_t[]>>;
@@ -48,7 +50,14 @@ const Sources = ({ getSources, setSources, inputStyles }: SourcesProps) => {
 
   return (
     <>
-      <label htmlFor='sources'>Sources</label>
+      <label
+        data-tooltip-id='sources'
+        data-tooltip-html='Select sources from Data Lake'
+        htmlFor='sources'
+      >
+        Sources
+      </label>
+      <Tooltip id='sources' />
       <input
         className={inputStyles}
         type='text'

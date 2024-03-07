@@ -143,7 +143,7 @@ export const jobRouter = createTRPCRouter({
             N: input.dateRangeEnd.toString(),
           },
           granularity: {
-            N: input.granularity.toString(), 
+            N: input.granularity.toString(),
           },
         },
       };

@@ -180,8 +180,9 @@ export default function Form() {
                 disableFuture
                 ampm={false}
                 className={`${'w-full rounded shadow-sm'} ${
-                  (submitAttempted && (dateRangeStart === undefined ||
-                  !validateDate(dateRangeStart)))
+                  submitAttempted &&
+                  (dateRangeStart === undefined ||
+                    !validateDate(dateRangeStart))
                     ? 'ring-1 ring-red'
                     : ''
                 }`}
@@ -196,8 +197,8 @@ export default function Form() {
                 disableFuture
                 ampm={false}
                 className={`${'w-full rounded shadow-sm'} ${
-                  (submitAttempted && (dateRangeEnd === undefined ||
-                    !validateDate(dateRangeEnd)))
+                  submitAttempted &&
+                  (dateRangeEnd === undefined || !validateDate(dateRangeEnd))
                     ? 'ring-1 ring-red'
                     : ''
                 }`}
@@ -220,7 +221,7 @@ export default function Form() {
           >
             Granularity
           </label>
-          <Tooltip id='granularity'/>
+          <Tooltip id='granularity' />
           <div className='px-5'>
             <GranularitySlider setGranularity={setGranularity} />
           </div>

@@ -78,8 +78,8 @@ resource "aws_dynamodb_table_item" "mockRequest" {
     "analysisTypes"  = each.value.analysisTypes,
     "sources"        = each.value.sources,
     "dateRangeStart" = { "N" = each.value.dateRangeStart },
-    "dateRangeEnd" = { "N" = each.value.dateRangeEnd },
-    "granularity" = { "S" = each.value.granularity },
+    "dateRangeEnd"   = { "N" = each.value.dateRangeEnd },
+    "granularity"    = { "S" = each.value.granularity },
     "powerBILink"    = { "S" = each.value.powerBILink }
   })
 }

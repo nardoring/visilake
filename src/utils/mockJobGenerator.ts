@@ -35,8 +35,8 @@ function generateMockJobs(count: number): Job[] {
       1000,
       1000 * 60,
       1000 * 60 * 60,
-      1000 * 60 * 60 * 24
-    ]
+      1000 * 60 * 60 * 24,
+    ];
 
     const job: Job = {
       jobName: `Job ${i}`,
@@ -49,10 +49,17 @@ function generateMockJobs(count: number): Job[] {
         0,
         Math.floor(Math.random() * analysisTypes.length - 0.001) + 1
       ),
-      sources: sourceNames.slice(0, Math.floor(Math.random() * sourceNames.length - 0.001) + 1),
-      dateRangeStart: getRandomDate(new Date(2023, 8, 1), new Date(2023, 12, 31)),
+      sources: sourceNames.slice(
+        0,
+        Math.floor(Math.random() * sourceNames.length - 0.001) + 1
+      ),
+      dateRangeStart: getRandomDate(
+        new Date(2023, 8, 1),
+        new Date(2023, 12, 31)
+      ),
       dateRangeEnd: getRandomDate(new Date(2024, 1, 1), new Date(2024, 3, 5)),
-      granularity: granularities[Math.floor(Math.random() * granularities.length)] ?? -1,
+      granularity:
+        granularities[Math.floor(Math.random() * granularities.length)] ?? -1,
     };
 
     mockResponse.push(job);

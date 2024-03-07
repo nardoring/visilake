@@ -9,8 +9,10 @@ interface GranularitySliderProps {
 export default function GranularitySlider({
   setGranularity,
 }: GranularitySliderProps) {
-  const granularities = granularityData.map((data: { value: number; }) => data.value);
-  const labels = granularityData.map((data: { label: string; }) => data.label);
+  const granularities = granularityData.map(
+    (data: { value: number }) => data.value
+  );
+  const labels = granularityData.map((data: { label: string }) => data.label);
 
   const marks = granularities.map((value, index) => ({
     value: index + 1,

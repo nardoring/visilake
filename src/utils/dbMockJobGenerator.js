@@ -27,15 +27,24 @@ function generateMockJobs(count, outputFilePath) {
       jobDescription: `Test for job ${i}. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.`,
       analysisTypeNames: getRandomListItem(availableAnalysisTypes),
       sourceNames: getRandomListItem(availableSources),
-      dateRangeStart: getRandomDate(new Date(2023, 8, 1), new Date(2024, 1, 1)).toString(),
-      dateRangeEnd: getRandomDate(new Date(2024, 1, 2), new Date(2024, 3, 6)).toString(),
+      dateRangeStart: getRandomDate(
+        new Date(2023, 8, 1),
+        new Date(2024, 1, 1)
+      ).toString(),
+      dateRangeEnd: getRandomDate(
+        new Date(2024, 1, 2),
+        new Date(2024, 3, 6)
+      ).toString(),
       granularity: getRandomGranularity().toString(),
     };
 
     const item = {
       requestID: i.toString(),
       id: getRandomId(),
-      creationDate: getRandomDate(new Date(2023, 8, 1), new Date(2024, 3, 6)).toString(),
+      creationDate: getRandomDate(
+        new Date(2023, 8, 1),
+        new Date(2024, 3, 6)
+      ).toString(),
       jobStatus: getRandomStatus(),
       jobName: input.jobName,
       jobDescription: input.jobDescription,
@@ -99,7 +108,7 @@ function getRandomAuthor() {
 }
 
 function getRandomGranularity() {
-  const granularities = granularityData.map(data => data.value);
+  const granularities = granularityData.map((data) => data.value);
   return granularities[Math.floor(Math.random() * granularities.length)] ?? -1;
 }
 

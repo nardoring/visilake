@@ -69,7 +69,7 @@ export default function JobTable() {
       filter: 'agSetColumnFilter',
       hide: true,
       valueGetter: (params: { data: { granularity: number } }) =>
-        getGranularityLabel(params.data.granularity)
+        getGranularityLabel(params.data.granularity),
     },
     {
       headerName: 'Date Range',
@@ -82,11 +82,14 @@ export default function JobTable() {
           dateRangeStart: Date;
         };
       }) => (
-        <p>{formatDate(params.data.dateRangeStart)} - {formatDate(params.data.dateRangeEnd)}</p>
+        <p>
+          {formatDate(params.data.dateRangeStart)} -{' '}
+          {formatDate(params.data.dateRangeEnd)}
+        </p>
       ),
       // Ignore global filter ()
       getQuickFilterText: () => {
-        return "";
+        return '';
       },
     },
     {

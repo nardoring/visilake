@@ -28,6 +28,14 @@ export default function JobTable() {
     },
   });
 
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setQueryExecuted(false);
+    }, 10000);
+
+    return () => clearInterval(interval);
+  }, []);
+
   const [colDefs] = useState([
     {
       field: 'jobName',

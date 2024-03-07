@@ -30,25 +30,17 @@ export default function JobTable() {
 
   const [messageQueryExecuted, setMessageQueryExecuted] =
     useState<boolean>(true);
-  const { data: messages, isLoading: messageLoading } =
-    api.jobUpdates.getJobUpdates.useQuery(undefined, {
-      enabled: !messageQueryExecuted,
-      onSuccess: () => {
-        setMessageQueryExecuted(true);
-      },
-    });
 
-  useEffect(() => {
-    if (messageLoading) {
-      return;
-    }
+  api.jobUpdates.getJobUpdates.useQuery(undefined, {
+    enabled: !messageQueryExecuted,
+    onSuccess: (result) => {
+      if (result && result?.length != 0) {
+        setQueryExecuted(false);
+      }
 
-    if (messages && messages?.length != 0) {
-      console.log(messages);
-
-      setQueryExecuted(false);
-    }
-  }, [messageLoading]);
+      setMessageQueryExecuted(true);
+    },
+  });
 
   useEffect(() => {
     const interval = setInterval(() => {

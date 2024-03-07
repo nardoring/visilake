@@ -1,16 +1,26 @@
 [package]
-name = "localstack-example"
+name = "nardo-proc"
 version = "0.1.0"
 edition = "2021"
 
+[[bin]]
+name = "nardo-proc"
+path = "nardo-proc/main.rs"
+
+# [dependencies]
 [dependencies]
-aws-config = "0.56.1"
-aws-sdk-s3 = "0.33.0"
-aws-sdk-sqs = "0.33.0"
-aws-sdk-dynamodb = "0.33.0"
+aws-config = { version= "1.1.7", features = ["behavior-version-latest"] }
+aws-sdk-s3 = { version = "1.17.0" }
+aws-sdk-sns = { version = "1.16.0" }
+aws-sdk-sqs = { version = "1.15.0" }
+aws-sdk-dynamodb = { version = "1.16.0" }
 chrono = "0.4.31"
-tokio = { version = "1.20.1", features = ["full"] }
-uuid = { version = "1.4.1", features = ["v4"] } 
 http = "0.2"
+log = "0.4.21"
+tokio = { version = "1.36.0", features = ["full"] }
 tracing-subscriber = { version = "0.3.15", features = ["env-filter"] }
-maplit = "1.0.2"
+uuid = { version = "1.7.0", features = ["v4"] }
+eyre = "0.6.12"
+fern = "0.6.2"
+serde_json = "1.0.114"
+serde = { version = "1.0.197", features = ["derive"] }

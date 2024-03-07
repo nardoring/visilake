@@ -41,7 +41,7 @@ export default function PowerBIButton(props: CustomCellRendererProps) {
   };
 
   const isDisabled =
-    (props.data as { jobStatus: string }).jobStatus !== 'Complete';
+    (props.data as { jobStatus: string }).jobStatus !== 'COMPLETE';
   const powerBiIconFilePath = isDisabled
     ? '/Power-BI-Gray.png'
     : '/Power-BI.png';

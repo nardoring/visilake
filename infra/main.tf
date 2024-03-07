@@ -151,6 +151,18 @@ resource "aws_sqs_queue" "requestQueue" {
   name = "requestQueue"
 }
 
+
+resource "aws_sqs_queue" "requestUpdatesQueue" {
+  name = "requestUpdatesQueue"
+}
+
+
+resource "aws_sns_topic" "requestUpdates" {
+  name                        = "requestUpdatesTopic.fifo"
+  fifo_topic                  = true
+  content_based_deduplication = true
+}
+
 # # We create this in deploy-tf.sh for now as the order matters, so we make the repo,
 # # push the docker image, then start the remainder of the terraform deployment
 # resource "aws_ecr_repository" "repo1" {

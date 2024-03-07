@@ -176,6 +176,7 @@ export default function Form() {
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DateTimePicker
                 disableFuture
+                ampm={false}
                 className={`${'w-full rounded shadow-sm'} ${
                   (submitAttempted && (dateRangeStart === undefined ||
                   !validateDate(dateRangeStart)))
@@ -190,6 +191,7 @@ export default function Form() {
               <p className='text-3xl'> - </p>
               <DateTimePicker
                 disableFuture
+                ampm={false}
                 className={`${'w-full rounded shadow-sm'} ${
                   (submitAttempted && (dateRangeEnd === undefined ||
                     !validateDate(dateRangeEnd)))

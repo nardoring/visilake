@@ -73,7 +73,7 @@ export default function JobTable() {
     },
     {
       headerName: 'Date Range',
-      //hide: true,
+      hide: true,
       maxWidth: 170,
       minWidth: 170,
       cellRenderer: (params: {

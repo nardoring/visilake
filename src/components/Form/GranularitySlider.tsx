@@ -3,11 +3,11 @@ import type { Dispatch, SetStateAction } from 'react';
 import { granularityData } from '~/utils/granularity';
 
 interface GranularitySliderProps {
-  setGranularity: Dispatch<SetStateAction<number>>;
+  onGranularityChanged: (newValue: number) => void;
 }
 
 export default function GranularitySlider({
-  setGranularity,
+  onGranularityChanged,
 }: GranularitySliderProps) {
   const granularities = granularityData.map(
     (data: { value: number }) => data.value
@@ -19,19 +19,21 @@ export default function GranularitySlider({
     label: labels[index],
   }));
 
-  function calculateValue(value: number) {
+  function calculateGranularity(value: number) {
     return granularities[value - 1] ?? -1;
   }
 
   const handleChange = (event: Event, newValue: number | number[]) => {
-    setGranularity(calculateValue(newValue as number));
+    if (typeof newValue === 'number') {
+      onGranularityChanged(calculateGranularity(newValue));
+    }
   };
 
   return (
     <Slider
       marks={marks}
       min={1}
-      scale={calculateValue}
+      scale={calculateGranularity}
       max={marks.length}
       step={null}
       onChange={handleChange}

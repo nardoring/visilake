@@ -24,7 +24,7 @@ export default function Form() {
   const [analysisTypes, setAnalysisTypes] = useState<AnalysisTypeOption[]>([]);
   const [dateRangeStart, setDateRangeStart] = useState<Date>();
   const [dateRangeEnd, setDateRangeEnd] = useState<Date>();
-  const [granularity, setGranularity] = useState<number>(1);
+  const [granularity, setGranularity] = useState<number>(0);
   const {
     data: analysisTypeOptionsData,
     isLoading: analysisTypeOptionsIsLoading,
@@ -96,6 +96,10 @@ export default function Form() {
       setShowPopup(true);
     }
   }
+
+  const onGranularityChanged = (newValue: number) => {
+    setGranularity(newValue);
+  };
 
   return (
     <form
@@ -226,7 +230,7 @@ export default function Form() {
           </label>
           <Tooltip id='granularity' />
           <div className='px-5'>
-            <GranularitySlider setGranularity={setGranularity} />
+            <GranularitySlider onGranularityChanged={onGranularityChanged} />
           </div>
         </div>
 

@@ -55,7 +55,7 @@ function getRandomDate(startDate: Date, endDate: Date): Date {
 }
 
 function getRandomStatus(): JobStatus {
-  const statusOptions = ['Complete', 'InProgress', 'NotStarted', 'Failed'];
+  const statusOptions = ['COMPLETE', 'PROCESSING', 'QUEUED', 'FAILED'];
   const randomIndex = Math.floor(Math.random() * statusOptions.length);
   return statusOptions[randomIndex] as JobStatus;
 }

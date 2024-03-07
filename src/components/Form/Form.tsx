@@ -185,6 +185,7 @@ export default function Form() {
                     ? 'ring-1 ring-red'
                     : ''
                 }`}
+                closeOnSelect={false}
                 onChange={(newValue: Dayjs | null) => {
                   const date = newValue ? newValue.toDate() : undefined;
                   setDateRangeStart(date);
@@ -200,6 +201,7 @@ export default function Form() {
                     ? 'ring-1 ring-red'
                     : ''
                 }`}
+                closeOnSelect={false}
                 onChange={(newValue: Dayjs | null) => {
                   const date = newValue ? newValue.toDate() : undefined;
                   setDateRangeEnd(date);

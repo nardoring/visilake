@@ -148,27 +148,39 @@ resource "aws_ecs_service" "nardo" {
 }
 
 resource "aws_sqs_queue" "requestQueue" {
-  name = "requestQueue"
+  name                      = "requestQueue"
+  message_retention_seconds = 60 # for localstack only
 }
 
+
 resource "aws_sqs_queue" "requestUpdates-1" {
-  name = "requestUpdatesQueue-1"
+  name                      = "terraform-example-queue"
+  message_retention_seconds = 60 # for localstack only
+
+  # TODO tag everything properly
+  # tags = {
+  #   Environment = "development"
+  # }
 }
 
 resource "aws_sqs_queue" "requestUpdates-2" {
-  name = "requestUpdatesQueue-2"
+  name                      = "requestUpdatesQueue-2"
+  message_retention_seconds = 60 # for localstack only
 }
 
 resource "aws_sqs_queue" "requestUpdates-3" {
-  name = "requestUpdatesQueue-3"
+  name                      = "requestUpdatesQueue-3"
+  message_retention_seconds = 60 # for localstack only
 }
 
 resource "aws_sqs_queue" "requestUpdates-4" {
-  name = "requestUpdatesQueue-4"
+  name                      = "requestUpdatesQueue-4"
+  message_retention_seconds = 60 # for localstack only
 }
 
 resource "aws_sqs_queue" "requestUpdates-5" {
-  name = "requestUpdatesQueue-5"
+  name                      = "requestUpdatesQueue-5"
+  message_retention_seconds = 60 # for localstack only
 }
 
 

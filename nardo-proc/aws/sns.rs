@@ -3,8 +3,6 @@ use aws_sdk_sns::{config::Builder, types::Topic, Client};
 use eyre::{Error, Result};
 use log::debug;
 
-use crate::list_queues;
-
 pub fn sns_client(conf: &SdkConfig) -> Client {
     let sns_config_builder = Builder::from(conf);
     Client::from_conf(sns_config_builder.build())
@@ -23,7 +21,7 @@ pub async fn list_topics(client: &Client) -> Result<Vec<String>, Error> {
     Ok(topic_arns)
 }
 
-pub async fn subscribe(client: &Client, topic_arn: &str, queue_arn: &str) -> Result<(), Error> {
+async fn _subscribe(client: &Client, topic_arn: &str, queue_arn: &str) -> Result<(), Error> {
     debug!(
         "Subscribing {} on topic with ARN: `{}`",
         queue_arn, topic_arn
@@ -61,19 +59,14 @@ pub async fn publish(client: &Client, topic_arn: &str, message: &str) -> Result<
     Ok(())
 }
 
-pub async fn setup_topic(client: &Client) -> Result<()> {
+pub async fn _setup_topic(client: &Client) -> Result<()> {
+    // leaving this here for now
     let topic_arn = "arn:aws:sns:us-east-1:000000000000:requestUpdatesTopic.fifo".to_string();
 
-    let queue_arns = [
-        "arn:aws:sqs:us-east-1:000000000000:requestUpdatesQueue-1",
-        "arn:aws:sqs:us-east-1:000000000000:requestUpdatesQueue-2",
-        "arn:aws:sqs:us-east-1:000000000000:requestUpdatesQueue-3",
-        "arn:aws:sqs:us-east-1:000000000000:requestUpdatesQueue-4",
-        "arn:aws:sqs:us-east-1:000000000000:requestUpdatesQueue-5",
-    ];
+    let queue_arns = ["arn:aws:sqs:us-east-1:000000000000:requestUpdatesQueue-1"];
 
     for queue in queue_arns {
-        subscribe(client, &topic_arn, &queue).await?;
+        _subscribe(client, &topic_arn, &queue).await?;
     }
 
     Ok(())

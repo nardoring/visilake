@@ -147,14 +147,13 @@ resource "aws_ecs_service" "nardo" {
   }
 }
 
-resource "aws_sqs_queue" "requestQueue" {
+resource "aws_sqs_queue" "request_queue" {
   name                      = "requestQueue"
   message_retention_seconds = 60 # for localstack only
 }
 
-
-resource "aws_sqs_queue" "requestUpdates-1" {
-  name                      = "terraform-example-queue"
+resource "aws_sqs_queue" "request_updates_1" {
+  name                      = "requestUpdatesQueue-1"
   message_retention_seconds = 60 # for localstack only
 
   # TODO tag everything properly
@@ -163,31 +162,60 @@ resource "aws_sqs_queue" "requestUpdates-1" {
   # }
 }
 
-resource "aws_sqs_queue" "requestUpdates-2" {
+resource "aws_sqs_queue" "request_updates_2" {
   name                      = "requestUpdatesQueue-2"
   message_retention_seconds = 60 # for localstack only
 }
 
-resource "aws_sqs_queue" "requestUpdates-3" {
+resource "aws_sqs_queue" "request_updates_3" {
   name                      = "requestUpdatesQueue-3"
   message_retention_seconds = 60 # for localstack only
 }
 
-resource "aws_sqs_queue" "requestUpdates-4" {
+resource "aws_sqs_queue" "request_updates_4" {
   name                      = "requestUpdatesQueue-4"
   message_retention_seconds = 60 # for localstack only
 }
 
-resource "aws_sqs_queue" "requestUpdates-5" {
+resource "aws_sqs_queue" "request_updates_5" {
   name                      = "requestUpdatesQueue-5"
   message_retention_seconds = 60 # for localstack only
 }
 
-
-resource "aws_sns_topic" "requestUpdates" {
+resource "aws_sns_topic" "request_updates" {
   name                        = "requestUpdatesTopic.fifo"
   fifo_topic                  = true
   content_based_deduplication = true
+}
+
+resource "aws_sns_topic_subscription" "request_updates_sqs_target1" {
+  topic_arn = aws_sns_topic.request_updates.arn
+  protocol  = "sqs"
+  endpoint  = aws_sqs_queue.request_updates_1.arn
+}
+
+resource "aws_sns_topic_subscription" "request_updates_sqs_target2" {
+  topic_arn = aws_sns_topic.request_updates.arn
+  protocol  = "sqs"
+  endpoint  = aws_sqs_queue.request_updates_2.arn
+}
+
+resource "aws_sns_topic_subscription" "request_updates_sqs_target3" {
+  topic_arn = aws_sns_topic.request_updates.arn
+  protocol  = "sqs"
+  endpoint  = aws_sqs_queue.request_updates_3.arn
+}
+
+resource "aws_sns_topic_subscription" "request_updates_sqs_target4" {
+  topic_arn = aws_sns_topic.request_updates.arn
+  protocol  = "sqs"
+  endpoint  = aws_sqs_queue.request_updates_4.arn
+}
+
+resource "aws_sns_topic_subscription" "request_updates_sqs_target5" {
+  topic_arn = aws_sns_topic.request_updates.arn
+  protocol  = "sqs"
+  endpoint  = aws_sqs_queue.request_updates_5.arn
 }
 
 # # We create this in deploy-tf.sh for now as the order matters, so we make the repo,

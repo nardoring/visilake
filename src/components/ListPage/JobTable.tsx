@@ -54,7 +54,7 @@ export default function JobTable() {
 
     const messageParse = JSON.parse(sqsBody) as JobUpdateTopicMessage;
 
-    if (!messageParse || !messageParse.Message) {
+    if (!messageParse?.Message) {
       return;
     }
 
@@ -69,7 +69,7 @@ export default function JobTable() {
         if (result && result?.length != 0) {
           const updates = result
             .filter((message) => message.Body)
-            .map((message) => parseJobUpdateMessage(message.Body!))
+            .map((message) => parseJobUpdateMessage(message.Body))
             .filter((update) => update) as JobUpdateMessage[];
 
           updates.forEach((update) => {

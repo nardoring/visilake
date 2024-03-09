@@ -10,6 +10,15 @@ const mockAuthorNames = [
   'Olivia Bennett',
 ];
 
+function generateRandomString(length: number): string {
+  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+  let result = '';
+  for (let i = 0; i < length; i++) {
+    result += characters.charAt(Math.floor(Math.random() * characters.length));
+  }
+  return result;
+}
+
 function generateMockJobs(count: number): Job[] {
   const mockResponse: Job[] = [];
 
@@ -33,6 +42,7 @@ function generateMockJobs(count: number): Job[] {
     );
 
     const job: Job = {
+      jobId: generateRandomString(10),
       jobName: `Job ${i}`,
       date: getRandomDate(new Date(2023, 8, 1), new Date(2024, 2, 5)),
       jobDescription: `This is a test for job ${i}. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.`,

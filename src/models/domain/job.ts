@@ -12,4 +12,5 @@ export interface Job {
   dateRangeStart: Date;
   dateRangeEnd: Date;
   granularity: number;
+  jobId: string;
 }

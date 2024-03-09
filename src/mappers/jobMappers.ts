@@ -7,6 +7,8 @@ function mapJobs(output: DatabaseJob[]): Job[] {
 }
 
 function mapJob(job: DatabaseJob): Job {
+  console.log(job);
+
   return {
     jobName: job.jobName.S,
     date: new Date(Number(job.creationDate.N)),
@@ -19,6 +21,7 @@ function mapJob(job: DatabaseJob): Job {
     dateRangeStart: new Date(Number(job.dateRangeStart.N)),
     dateRangeEnd: new Date(Number(job.dateRangeEnd.N)),
     granularity: Number(job.granularity.N),
+    jobId: job.requestID.S,
   } as Job;
 }
 

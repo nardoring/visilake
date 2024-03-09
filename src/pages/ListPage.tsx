@@ -1,7 +1,13 @@
 import JobTable from '~/components/ListPage/JobTable';
 import Layout from '../components/Layout';
 import { ToastContainer } from 'react-toastify';
-import { createContext, useCallback, useContext, useState } from 'react';
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from 'react';
 
 export const SearchBarContext = createContext<{
   searchBarText: string;

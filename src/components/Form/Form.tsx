@@ -227,7 +227,7 @@ export default function Form() {
             className='mb-1'
             style={{ alignSelf: 'flex-start' }}
             data-tooltip-id='granularity'
-            data-tooltip-html='Adjust the time interval between data points. <br> Select "Default" for the minimum interval available.'
+            data-tooltip-html='Adjust the time interval between data points.'
           >
             Granularity
           </label>

@@ -12,6 +12,7 @@ pub(crate) use crate::{
     aws::dynamodb::dynamodb_client,
     aws::sns::{list_topics, sns_client},
     aws::sqs::{get_message, list_queues, sqs_client},
+    models::data::test_csv_to_parquet,
     utils::init_logging,
 };
 use eyre::Result;
@@ -20,6 +21,8 @@ use tasks::process::process_queued_requests;
 #[tokio::main]
 async fn main() -> Result<()> {
     let _init_logging = init_logging()?;
+
+    test_csv_to_parquet();
 
     let shared_config = config::configure().await?;
     let dynamodb_client = dynamodb_client(&shared_config);

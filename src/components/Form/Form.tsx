@@ -12,6 +12,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import GranularitySlider from './GranularitySlider';
 import { validateDate, validateDateRange } from '~/utils/date';
+import { granularityData } from '~/utils/granularity';
 
 export default function Form() {
   const inputStyles =
@@ -24,7 +25,9 @@ export default function Form() {
   const [analysisTypes, setAnalysisTypes] = useState<AnalysisTypeOption[]>([]);
   const [dateRangeStart, setDateRangeStart] = useState<Date>();
   const [dateRangeEnd, setDateRangeEnd] = useState<Date>();
-  const [granularity, setGranularity] = useState<number>(0);
+  const [granularity, setGranularity] = useState<number>(
+    granularityData[0]?.value ?? -1
+  );
   const {
     data: analysisTypeOptionsData,
     isLoading: analysisTypeOptionsIsLoading,

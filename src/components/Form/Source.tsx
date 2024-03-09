@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Bounce, ToastPosition, toast } from 'react-toastify';
 import { api } from '~/utils/api';
 import type { Source } from '~/utils/types';
 
@@ -7,6 +8,30 @@ interface SourceProps {
   updateSource: (source: Source, isValid: boolean) => void;
   onRemove: (source: Source) => void;
 }
+
+const toastProperties = {
+  position: 'bottom-right' as ToastPosition,
+  autoClose: 5000,
+  hideProgressBar: false,
+  closeOnClick: true,
+  pauseOnHover: true,
+  draggable: true,
+  progress: undefined,
+  theme: 'light',
+  transition: Bounce,
+};
+
+const notifySourceValidationResult = (source: string, success: boolean) => {
+  if (success) {
+    toast.success(`${source} was found in the Data Lake`, {
+      ...toastProperties,
+    });
+  } else {
+    toast.error(`${source} was not found in the Data Lake`, {
+      ...toastProperties,
+    });
+  }
+};
 
 const Source = ({ source, updateSource, onRemove }: SourceProps) => {
   const [queryExecuted, setQueryExecuted] = useState<boolean>(false);
@@ -17,6 +42,7 @@ const Source = ({ source, updateSource, onRemove }: SourceProps) => {
         enabled: !queryExecuted,
         onSuccess: (data) => {
           updateSource(source, data.isValid);
+          notifySourceValidationResult(source.name, data.isValid);
           setQueryExecuted(true);
         },
       }

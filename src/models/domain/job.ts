@@ -9,4 +9,5 @@ export interface Job {
   author: string;
   analysisTypes: string[];
   sources: string[];
+  jobId: string;
 }

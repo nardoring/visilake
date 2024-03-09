@@ -10,8 +10,8 @@ mod utils;
 
 pub(crate) use crate::{
     aws::dynamodb::dynamodb_client,
-    aws::sns::{list_topics, setup_topic, sns_client},
-    aws::sqs::{get_message, list_queues, send_message, sqs_client},
+    aws::sns::{list_topics, sns_client},
+    aws::sqs::{get_message, list_queues, sqs_client},
     utils::init_logging,
 };
 use eyre::Result;
@@ -26,14 +26,14 @@ async fn main() -> Result<()> {
     let sns_client = sns_client(&shared_config);
     let sqs_client = sqs_client(&shared_config);
 
-    setup_topic(&sns_client).await?;
     let topics = list_topics(&sns_client).await?;
     let queues = list_queues(&sqs_client).await?;
 
     process_queued_requests(&dynamodb_client, &sns_client, &topics).await?;
 
-    get_message(&sqs_client, &queues[0]).await?;
-    get_message(&sqs_client, &queues[1]).await?;
+    for queue in queues {
+        get_message(&sqs_client, &queue).await?;
+    }
 
     Ok(())
 }

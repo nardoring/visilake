@@ -21,8 +21,11 @@ pub async fn list_topics(client: &Client) -> Result<Vec<String>, Error> {
     Ok(topic_arns)
 }
 
-async fn subscribe(client: &Client, topic_arn: &str, queue_arn: &str) -> Result<(), Error> {
-    debug!("Receiving on topic with ARN: `{}`", topic_arn);
+async fn _subscribe(client: &Client, topic_arn: &str, queue_arn: &str) -> Result<(), Error> {
+    debug!(
+        "Subscribing {} on topic with ARN: `{}`",
+        queue_arn, topic_arn
+    );
 
     let rsp = client
         .subscribe()
@@ -56,15 +59,15 @@ pub async fn publish(client: &Client, topic_arn: &str, message: &str) -> Result<
     Ok(())
 }
 
-pub async fn setup_topic(client: &Client) -> Result<()> {
-    let request_queue = "arn:aws:sqs:us-east-1:000000000000:requestQueue".to_string();
-    let request_updates_queue =
-        "arn:aws:sqs:us-east-1:000000000000:requestUpdatesQueue".to_string();
-
+pub async fn _setup_topic(client: &Client) -> Result<()> {
+    // leaving this here for now
     let topic_arn = "arn:aws:sns:us-east-1:000000000000:requestUpdatesTopic.fifo".to_string();
 
-    subscribe(client, &topic_arn, &request_queue).await?;
-    subscribe(client, &topic_arn, &request_updates_queue).await?;
+    let queue_arns = ["arn:aws:sqs:us-east-1:000000000000:requestUpdatesQueue-1"];
+
+    for queue in queue_arns {
+        _subscribe(client, &topic_arn, &queue).await?;
+    }
 
     Ok(())
 }

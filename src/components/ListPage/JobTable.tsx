@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useRef, useEffect } from 'react';
 import { api } from '~/utils/api';
 import { AgGridReact } from 'ag-grid-react';
-import type { SortDirection } from 'ag-grid-community';
+import type { GetRowIdParams, SortDirection } from 'ag-grid-community';
 import type { ITooltipParams } from 'ag-grid-enterprise';
 import { useSearchBar } from '~/pages/ListPage';
 import PowerBIButton from './PowerBIButton';
@@ -11,6 +11,9 @@ import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-quartz.css';
 import useWindowDimensions from '~/utils/useWindowResolution';
 import Link from 'next/link';
+import { JobUpdateMessage } from '~/models/sqs/jobUpdateMessage';
+import { Job } from '~/models/domain/job';
+import { JobUpdateTopicMessage } from '~/models/sqs/jobUpdateTopicMessage';
 
 const ROW_HEIGHT = 70;
 const PAGINATION_PAGE_SIZES = [5, 10, 15, 20];
@@ -27,6 +30,73 @@ export default function JobTable() {
       setQueryExecuted(true);
     },
   });
+
+  const [selectedQueueExecutted, setSelectedQueueExecutted] =
+    useState<boolean>(false);
+
+  const { data: selectedQueue, isLoading: selectedQueueIsLoading } =
+    api.jobUpdates.getRandomQueueUrl.useQuery(undefined, {
+      enabled: !selectedQueueExecutted,
+      onSuccess: () => {
+        setSelectedQueueExecutted(true);
+      },
+    });
+
+  const [messageQueryExecuted, setMessageQueryExecuted] =
+    useState<boolean>(true);
+
+  const parseJobUpdateMessage = (
+    sqsBody: string | undefined
+  ): JobUpdateMessage | undefined => {
+    if (!sqsBody) {
+      return;
+    }
+
+    const messageParse = JSON.parse(sqsBody) as JobUpdateTopicMessage;
+
+    if (!messageParse?.Message) {
+      return;
+    }
+
+    return JSON.parse(messageParse.Message) as unknown as JobUpdateMessage;
+  };
+
+  api.jobUpdates.getJobUpdates.useQuery(
+    { queueUrl: selectedQueue! },
+    {
+      enabled: !messageQueryExecuted && !selectedQueueIsLoading,
+      onSuccess: (result) => {
+        if (result && result?.length != 0) {
+          const updates = result
+            .filter((message) => message.Body)
+            .map((message) => parseJobUpdateMessage(message.Body))
+            .filter((update) => update) as JobUpdateMessage[];
+
+          updates.forEach((update) => {
+            const updatedRow = gridRef.current?.api.getRowNode(
+              update.request_id
+            );
+
+            if (!updatedRow) {
+              return;
+            }
+
+            updatedRow?.setDataValue('jobStatus', update.status);
+          });
+        }
+
+        setMessageQueryExecuted(true);
+      },
+    }
+  );
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setMessageQueryExecuted(false);
+    }, 10000);
+
+    return () => clearInterval(interval);
+  }, []);
 
   const [colDefs] = useState([
     {
@@ -130,6 +200,8 @@ export default function JobTable() {
   }
 
   const gridOptions = {
+    getRowId: (params: GetRowIdParams<Job>) => params.data.jobId,
+
     rowHeight: ROW_HEIGHT,
 
     pagination: true,

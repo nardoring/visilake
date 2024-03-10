@@ -1,23 +1,42 @@
 import { z } from 'zod';
+import getDynamoDBClient from '~/clients/dynamodb';
 
 import { createTRPCRouter, publicProcedure } from '~/server/api/trpc';
 
+const DYNAMODB_TABLE = 'sourceTags';
+
 export const sourceRouter = createTRPCRouter({
   validateSource: publicProcedure
-    .input(z.object({ source: z.string() }))
+    .input(z.object({ sourceTag: z.string() }))
     .query(async ({ input }) => {
-      const delay = (ms: number) =>
-        new Promise((resolve) => setTimeout(resolve, ms));
+      try {
+        const dynamodb = getDynamoDBClient();
 
-      await delay(2000);
-
-      if (input.source.includes('TAG'))
-        return {
-          isValid: true,
+        const params = {
+          TableName: DYNAMODB_TABLE,
+          KeyConditionExpression: 'sourceTag = :sourceTag',
+          ExpressionAttributeValues: {
+            ':sourceTag': { S: input.sourceTag },
+          },
         };
-      return {
-        isValid: false,
-        errorMessage: `${input.source} was not found in the Data Lake`,
-      };
+
+        const result = await dynamodb.query(params).promise();
+
+        if (result.Items && result.Items.length > 0) {
+          return {
+            isValid: true,
+          };
+        } else {
+          return {
+            isValid: false,
+            errorMessage: `${input.sourceTag} was not found in the Data Lake`,
+          };
+        }
+      } catch (error) {
+        return {
+          isValid: false,
+          errorMessage: 'An error occurred while querying the database',
+        };
+      }
     }),
 });

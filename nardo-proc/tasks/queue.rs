@@ -1,10 +1,12 @@
-use crate::{aws::sns::publish, models::job_request::convert_item_to_job_request};
+use crate::{
+    aws::sns::publish, models::job_request::convert_item_to_job_request, models::status::Status,
+};
 use aws_sdk_dynamodb::{
     error::SdkError, operation::update_item::UpdateItemError, types::AttributeValue,
     Client as DynamoDbClient,
 };
 use aws_sdk_sns::Client as SnsClient;
-use eyre::Result;
+use eyre::{Report, Result};
 use log::debug;
 use std::collections::HashMap;
 
@@ -31,37 +33,46 @@ async fn scan_for(
 async fn update_request_status(
     dynamodb_client: &DynamoDbClient,
     item: &HashMap<String, AttributeValue>,
-    new_status: &str,
-) -> Result<HashMap<String, AttributeValue>, SdkError<UpdateItemError>> {
-    let mut updated_item = item.clone();
-    updated_item.insert(
-        "jobStatus".to_string(),
-        AttributeValue::S(new_status.to_string()),
-    );
+    current_status: Status,
+) -> Result<HashMap<String, AttributeValue>> {
+    if let Some(new_status) = current_status.next() {
+        let new_status_str = new_status.to_string();
+        let mut updated_item = item.clone();
+        updated_item.insert(
+            "jobStatus".to_string(),
+            AttributeValue::S(new_status_str.clone()),
+        );
 
-    let update_request_builder = dynamodb_client
-        .update_item()
-        .table_name("mockRequests")
-        .key("requestID".to_string(), item["requestID"].clone())
-        .update_expression("SET #st = :status_val")
-        .expression_attribute_names("#st", "jobStatus")
-        .expression_attribute_values(":status_val", AttributeValue::S(new_status.to_string()));
+        let update_request_builder = dynamodb_client
+            .update_item()
+            .table_name(TABLE)
+            .key("requestID".to_string(), item["requestID"].clone())
+            .update_expression("SET #st = :status_val")
+            .expression_attribute_names("#st", "jobStatus")
+            .expression_attribute_values(":status_val", AttributeValue::S(new_status_str));
 
-    update_request_builder.send().await?;
-    Ok(updated_item)
+        update_request_builder.send().await?;
+        Ok(updated_item)
+    } else {
+        Err(Report::msg("No next status available"))
+    }
 }
 
-pub async fn process_queued_requests(
+pub async fn queue_new_requests(
     dynamodb_client: &DynamoDbClient,
     sns_client: &SnsClient,
     topics: &Vec<String>,
 ) -> Result<()> {
-    let items = scan_for(dynamodb_client, TABLE, "jobStatus", "QUEUED").await?;
+    let items = scan_for(dynamodb_client, TABLE, "jobStatus", "PENDING").await?;
 
     for item in items {
         debug!("Item to update {:#?}", item);
 
-        let updated_item = update_request_status(dynamodb_client, &item, "PROCESSING").await?;
+        let job_request = convert_item_to_job_request(&item)?;
+
+        let updated_item =
+            update_request_status(dynamodb_client, &item, job_request.status).await?;
+
         let job_request = convert_item_to_job_request(&updated_item)?;
 
         debug!("Updated item: {:#?}", job_request);

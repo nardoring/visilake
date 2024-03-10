@@ -1,6 +1,7 @@
 import type { CustomCellRendererProps } from 'ag-grid-react';
 
 const statusMap: Record<string, string> = {
+  pending: 'Pending',
   complete: 'Completed',
   processing: 'In Progress',
   queued: 'Queued',
@@ -15,6 +16,11 @@ interface StatusStyle {
 
 /* TODO use tailwind for this eventually */
 const statusStyles: Record<string, StatusStyle> = {
+  pending: {
+    backgroundColor: '#BFC3C6',
+    borderColor: '#7E8285',
+    color: '#1790D0',
+  },
   complete: {
     backgroundColor: '#CEEEDD',
     borderColor: '#00A13A',

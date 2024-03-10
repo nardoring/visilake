@@ -25,7 +25,7 @@ const Source = ({ source, updateSource, onRemove }: SourceProps) => {
   const [queryExecuted, setQueryExecuted] = useState<boolean>(false);
   const { data: sourceValidationData, isLoading } =
     api.source.validateSource.useQuery(
-      { source: source.name },
+      { sourceTag: source.name },
       {
         enabled: !queryExecuted,
         onSuccess: (data) => {

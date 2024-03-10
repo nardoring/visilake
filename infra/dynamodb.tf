@@ -49,15 +49,70 @@ resource "aws_dynamodb_table" "sourceTags" {
 }
 
 resource "aws_dynamodb_table" "mockRequests" {
-  name           = "mockRequests"
-  read_capacity  = 10
-  write_capacity = 5
+  name         = "mockRequests"
+  billing_mode = "PAY_PER_REQUEST"
+  hash_key     = "requestID"
 
   attribute {
     name = "requestID"
     type = "S"
   }
-  hash_key = "requestID"
+
+  attribute {
+    name = "creationDate"
+    type = "N"
+  }
+
+}
+
+resource "aws_dynamodb_table" "jobs" {
+  name         = "Jobs"
+  billing_mode = "PAY_PER_REQUEST"
+  hash_key     = "jobID"
+
+  attribute {
+    name = "jobID"
+    type = "S"
+  }
+
+  attribute {
+    name = "requestID"
+    type = "S"
+  }
+
+  global_secondary_index {
+    name            = "RequestIDIndex"
+    hash_key        = "requestID"
+    projection_type = "KEYS_ONLY"
+  }
+}
+
+resource "aws_dynamodb_table" "mockResponses" {
+  name         = "JobResponses"
+  billing_mode = "PAY_PER_REQUEST"
+  hash_key     = "responseID"
+
+  attribute {
+    name = "responseID"
+    type = "S"
+  }
+
+  attribute {
+    name = "requestID"
+    type = "S"
+  }
+
+  attribute {
+    name = "start_timestamp"
+    type = "N"
+  }
+
+  global_secondary_index {
+    name               = "RequestIDIndex"
+    hash_key           = "requestID"
+    projection_type    = "INCLUDE"
+    non_key_attributes = ["start_timestamp", "end_timestamp"]
+  }
 }
 
 # Populate the table with our types

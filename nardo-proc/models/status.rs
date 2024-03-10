@@ -1,11 +1,11 @@
 use eyre::Result;
 use serde::{
     de::{self, Visitor},
-    Deserializer, Serializer,
+    Deserialize, Deserializer, Serialize, Serializer,
 };
 use std::{error::Error, fmt, str::FromStr};
 
-#[derive(Debug)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum Status {
     Pending,
     Queued,

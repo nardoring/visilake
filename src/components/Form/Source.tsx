@@ -31,9 +31,12 @@ const Source = ({ source, updateSource, onRemove }: SourceProps) => {
         onSuccess: (data) => {
           updateSource(source, data.isValid);
           if (!data.isValid) {
-            toast.error(data.errorMessage, {
+            toast.error(data.notificationErrorMessage, {
               ...toastProperties,
             });
+            if (data.consoleErrorMessage !== undefined){
+              console.error(data.consoleErrorMessage)
+            }
           }
           setQueryExecuted(true);
         },

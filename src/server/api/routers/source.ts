@@ -17,6 +17,7 @@ export const sourceRouter = createTRPCRouter({
         };
       return {
         isValid: false,
+        errorMessage: `${input.source} was not found in the Data Lake`,
       };
     }),
 });

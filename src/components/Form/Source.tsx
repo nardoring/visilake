@@ -21,18 +21,6 @@ const toastProperties = {
   transition: Bounce,
 };
 
-const notifySourceValidationResult = (source: string, success: boolean) => {
-  if (success) {
-    toast.success(`${source} was found in the Data Lake`, {
-      ...toastProperties,
-    });
-  } else {
-    toast.error(`${source} was not found in the Data Lake`, {
-      ...toastProperties,
-    });
-  }
-};
-
 const Source = ({ source, updateSource, onRemove }: SourceProps) => {
   const [queryExecuted, setQueryExecuted] = useState<boolean>(false);
   const { data: sourceValidationData, isLoading } =
@@ -42,7 +30,11 @@ const Source = ({ source, updateSource, onRemove }: SourceProps) => {
         enabled: !queryExecuted,
         onSuccess: (data) => {
           updateSource(source, data.isValid);
-          notifySourceValidationResult(source.name, data.isValid);
+          if (!data.isValid) {
+            toast.error(data.errorMessage, {
+              ...toastProperties,
+            });
+          }
           setQueryExecuted(true);
         },
       }

@@ -11,7 +11,7 @@ interface SourceProps {
 
 const toastProperties = {
   position: 'bottom-right' as ToastPosition,
-  autoClose: 5000,
+  autoClose: 10000,
   hideProgressBar: false,
   closeOnClick: true,
   pauseOnHover: true,

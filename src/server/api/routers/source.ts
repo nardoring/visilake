@@ -15,7 +15,7 @@ export const sourceRouter = createTRPCRouter({
       if (!sourceTagValidator.safeParse(input.sourceTag).success) {
         return {
           isValid: false,
-          notificationErrorMessage: `${input.sourceTag} is not in the valid format`,
+          notificationErrorMessage: `${input.sourceTag} is not in the valid format. Valid format is 1234-AB(C)-12345`,
         };
       }
 

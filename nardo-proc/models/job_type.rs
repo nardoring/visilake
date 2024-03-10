@@ -64,6 +64,14 @@ where
     serializer.serialize_str(&job_type.to_string())
 }
 
+pub fn serialize_job_types<S>(job_types: &[JobType], serializer: S) -> Result<S::Ok, S::Error>
+where
+    S: Serializer,
+{
+    let job_types_str: Vec<String> = job_types.iter().map(|jt| jt.to_string()).collect();
+    serializer.serialize_some(&job_types_str)
+}
+
 pub fn deserialize_job_type<'de, D>(deserializer: D) -> Result<JobType, D::Error>
 where
     D: Deserializer<'de>,
@@ -86,4 +94,34 @@ where
     }
 
     deserializer.deserialize_str(JobTypeVisitor)
+}
+
+pub fn deserialize_job_types<'de, D>(deserializer: D) -> Result<Vec<JobType>, D::Error>
+where
+    D: Deserializer<'de>,
+{
+    struct JobTypesVisitor;
+
+    impl<'de> Visitor<'de> for JobTypesVisitor {
+        type Value = Vec<JobType>;
+
+        fn expecting(&self, formatter: &mut fmt::Formatter) -> fmt::Result {
+            formatter.write_str("a list of strings representing job types")
+        }
+
+        fn visit_seq<A>(self, mut seq: A) -> Result<Self::Value, A::Error>
+        where
+            A: de::SeqAccess<'de>,
+        {
+            let mut job_types = Vec::new();
+
+            while let Some(job_type_str) = seq.next_element::<String>()? {
+                job_types.push(job_type_str.parse::<JobType>().map_err(de::Error::custom)?);
+            }
+
+            Ok(job_types)
+        }
+    }
+
+    deserializer.deserialize_seq(JobTypesVisitor)
 }

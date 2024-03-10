@@ -14,6 +14,8 @@ import Link from 'next/link';
 import { JobUpdateMessage } from '~/models/sqs/jobUpdateMessage';
 import { Job } from '~/models/domain/job';
 import { JobUpdateTopicMessage } from '~/models/sqs/jobUpdateTopicMessage';
+import getGranularityLabel from '~/utils/granularity';
+import { formatDate } from '~/utils/date';
 
 const ROW_HEIGHT = 70;
 const PAGINATION_PAGE_SIZES = [5, 10, 15, 20];
@@ -117,6 +119,14 @@ export default function JobTable() {
       filter: 'agTextColumnFilter',
     },
     {
+      field: 'sources',
+      filter: 'agMultiColumnFilter',
+      valueGetter: (params: { data: { sources: string[] } }) =>
+        params.data.sources.join(', '),
+      filterValueGetter: (params: { data: { sources: string[] } }) =>
+        params.data.sources,
+    },
+    {
       field: 'analysisTypes',
       filter: 'agMultiColumnFilter',
       valueGetter: (params: { data: { analysisTypes: string[] } }) =>
@@ -125,7 +135,36 @@ export default function JobTable() {
         params.data.analysisTypes,
     },
     {
+      field: 'granularity',
+      filter: 'agSetColumnFilter',
+      hide: true,
+      valueGetter: (params: { data: { granularity: number } }) =>
+        getGranularityLabel(params.data.granularity),
+    },
+    {
+      headerName: 'Date Range',
+      hide: true,
+      maxWidth: 170,
+      minWidth: 170,
+      cellRenderer: (params: {
+        data: {
+          dateRangeEnd: Date;
+          dateRangeStart: Date;
+        };
+      }) => (
+        <p>
+          {formatDate(params.data.dateRangeStart)} -{' '}
+          {formatDate(params.data.dateRangeEnd)}
+        </p>
+      ),
+      // Ignore global filter ()
+      getQuickFilterText: () => {
+        return '';
+      },
+    },
+    {
       field: 'date',
+      headerName: 'Date Created',
       filter: 'agDateColumnFilter',
       sort: 'desc' as SortDirection,
       // Ignore global filter ()

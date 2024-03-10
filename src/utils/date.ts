@@ -21,3 +21,20 @@ export function formatDate(rawDate: Date) {
 
   return formattedDate;
 }
+
+export function validateDate(date?: Date): boolean {
+  return (
+    date !== undefined &&
+    !isNaN(date.getTime()) &&
+    isFinite(date.getTime()) &&
+    date.getTime() < Date.now()
+  );
+}
+
+export function validateDateRange(startDate?: Date, endDate?: Date): boolean {
+  if (startDate === undefined || endDate === undefined) {
+    return false;
+  }
+
+  return startDate.getTime() <= endDate.getTime();
+}

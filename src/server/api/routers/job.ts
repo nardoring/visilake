@@ -23,7 +23,7 @@ export const jobRouter = createTRPCRouter({
     const jobQueryParams = {
       TableName: DYNAMODB_TABLE,
       ProjectionExpression:
-        'jobName, jobDescription, jobStatus, powerBILink, author, analysisTypes, creationDate, sources, requestID',
+        'jobName, jobDescription, jobStatus, powerBILink, author, analysisTypes, creationDate, sources, dateRangeStart, dateRangeEnd, granularity, requestID',
     };
 
     return mapJobs(
@@ -58,6 +58,15 @@ export const jobRouter = createTRPCRouter({
         }),
         analysisTypes: z.array(z.string()).refine((data) => data.length > 0, {
           message: 'analysisTypes should not be empty',
+        }),
+        dateRangeStart: z.number().refine((data) => data > 0, {
+          message: 'dateRangeStart should be a valid Date',
+        }),
+        dateRangeEnd: z.number().refine((data) => data > 0, {
+          message: 'dateRangeEnd should be a valid Date',
+        }),
+        granularity: z.number().refine((data) => data > 0, {
+          message: 'granularity should be a positive number',
         }),
       })
     )
@@ -126,6 +135,15 @@ export const jobRouter = createTRPCRouter({
           powerBILink: {
             // S: input.powerBILink, // TODO fix later
             S: "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'",
+          },
+          dateRangeStart: {
+            N: input.dateRangeStart.toString(),
+          },
+          dateRangeEnd: {
+            N: input.dateRangeEnd.toString(),
+          },
+          granularity: {
+            N: input.granularity.toString(),
           },
         },
       };

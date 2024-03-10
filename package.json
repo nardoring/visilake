@@ -9,10 +9,14 @@
     "start": "next start"
   },
   "dependencies": {
+    "@emotion/react": "^11.11.4",
+    "@emotion/styled": "^11.11.0",
     "@fortawesome/fontawesome-svg-core": "^6.4.2",
     "@fortawesome/free-solid-svg-icons": "^6.4.2",
     "@fortawesome/react-fontawesome": "^0.2.0",
     "@headlessui/react": "^1.7.18",
+    "@mui/material": "^5.15.11",
+    "@mui/x-date-pickers": "^6.19.6",
     "@t3-oss/env-nextjs": "^0.7.0",
     "@tanstack/react-query": "^4.32.6",
     "@trpc/client": "^10.37.1",
@@ -23,6 +27,7 @@
     "ag-grid-enterprise": "^31.1.1",
     "ag-grid-react": "^31.1.1",
     "aws-sdk": "^2.814.0",
+    "dayjs": "^1.11.10",
     "next": "^13.5.4",
     "next-auth": "^4.23.0",
     "react": "18.2.0",

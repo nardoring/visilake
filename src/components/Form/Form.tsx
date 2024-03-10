@@ -6,6 +6,13 @@ import { api } from '~/utils/api';
 import type { AnalysisTypeOption, Source } from '~/utils/types';
 import LoadingIcon from './LoadingIcon';
 import { Tooltip } from 'react-tooltip';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import type { Dayjs } from 'dayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
+import GranularitySlider from './GranularitySlider';
+import { validateDate, validateDateRange } from '~/utils/date';
+import { granularityData } from '~/utils/granularity';
 
 export default function Form() {
   const inputStyles =
@@ -16,6 +23,11 @@ export default function Form() {
   const [jobDescription, setJobDescription] = useState('');
   const [submitAttempted, setSubmitAttempted] = useState(false);
   const [analysisTypes, setAnalysisTypes] = useState<AnalysisTypeOption[]>([]);
+  const [dateRangeStart, setDateRangeStart] = useState<Date>();
+  const [dateRangeEnd, setDateRangeEnd] = useState<Date>();
+  const [granularity, setGranularity] = useState<number>(
+    granularityData[0]?.value ?? -1
+  );
   const {
     data: analysisTypeOptionsData,
     isLoading: analysisTypeOptionsIsLoading,
@@ -61,7 +73,10 @@ export default function Form() {
       jobName.trim() !== '' &&
       analysisTypes.length !== 0 &&
       getValidSources().length !== 0 &&
-      jobDescription.trim() !== ''
+      jobDescription.trim() !== '' &&
+      validateDate(dateRangeStart) &&
+      validateDate(dateRangeEnd) &&
+      validateDateRange(dateRangeStart, dateRangeEnd)
     ) {
       const analysisTypeNames: string[] = analysisTypes.map(
         (type) => type.label
@@ -72,6 +87,9 @@ export default function Form() {
           jobDescription: jobDescription,
           jobName: jobName,
           analysisTypes: analysisTypeNames,
+          dateRangeStart: dateRangeStart!.getTime(),
+          dateRangeEnd: dateRangeEnd!.getTime(),
+          granularity: granularity,
         });
         setFormSuccess(true);
       } catch (error) {
@@ -81,6 +99,10 @@ export default function Form() {
       setShowPopup(true);
     }
   }
+
+  const onGranularityChanged = (newValue: number) => {
+    setGranularity(newValue);
+  };
 
   return (
     <form
@@ -101,7 +123,7 @@ export default function Form() {
 
           <input
             className={`${inputStyles} ${
-              submitAttempted && jobName.trim() === '' ? 'ring-2 ring-red' : ''
+              submitAttempted && jobName.trim() === '' ? 'ring-1 ring-red' : ''
             }`}
             type='text'
             id='jobName'
@@ -109,6 +131,7 @@ export default function Form() {
             onChange={(e) => setJobName(e.target.value)}
           />
         </div>
+
         <div>
           <label
             data-tooltip-id='types'
@@ -133,6 +156,7 @@ export default function Form() {
             }`}
           />
         </div>
+
         <div className='col-span-2'>
           <Sources
             getSources={getSources}
@@ -144,6 +168,75 @@ export default function Form() {
             }`}
           />
         </div>
+
+        <div className='flex flex-col'>
+          <label
+            className='mb-1'
+            style={{ alignSelf: 'flex-start' }}
+            data-tooltip-id='date-range'
+            data-tooltip-html='Select the date and time range for the analysis. <br> You can choose both the start and end dates <br> along with their respective times.'
+            data-tooltip-place='top'
+          >
+            Date Range
+          </label>
+          <Tooltip id='date-range' />
+
+          <div className='col-span-1 flex w-full flex-row space-x-4'>
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DateTimePicker
+                disableFuture
+                ampm={false}
+                className={`${'w-full rounded shadow-sm'} ${
+                  submitAttempted &&
+                  (dateRangeStart === undefined ||
+                    !validateDate(dateRangeStart) ||
+                    !validateDateRange(dateRangeStart, dateRangeEnd))
+                    ? 'ring-1 ring-red'
+                    : ''
+                }`}
+                closeOnSelect={false}
+                onChange={(newValue: Dayjs | null) => {
+                  const date = newValue ? newValue.toDate() : undefined;
+                  setDateRangeStart(date);
+                }}
+              />
+              <p className='text-3xl'> - </p>
+              <DateTimePicker
+                disableFuture
+                ampm={false}
+                className={`${'w-full rounded shadow-sm'} ${
+                  submitAttempted &&
+                  (dateRangeEnd === undefined ||
+                    !validateDate(dateRangeEnd) ||
+                    !validateDateRange(dateRangeStart, dateRangeEnd))
+                    ? 'ring-1 ring-red'
+                    : ''
+                }`}
+                closeOnSelect={false}
+                onChange={(newValue: Dayjs | null) => {
+                  const date = newValue ? newValue.toDate() : undefined;
+                  setDateRangeEnd(date);
+                }}
+              />
+            </LocalizationProvider>
+          </div>
+        </div>
+
+        <div className='flex flex-col'>
+          <label
+            className='mb-1'
+            style={{ alignSelf: 'flex-start' }}
+            data-tooltip-id='granularity'
+            data-tooltip-html='Adjust the time interval between data points.'
+          >
+            Granularity
+          </label>
+          <Tooltip id='granularity' />
+          <div className='px-5'>
+            <GranularitySlider onGranularityChanged={onGranularityChanged} />
+          </div>
+        </div>
+
         <div className='col-span-2'>
           <label
             data-tooltip-id='desc'
@@ -165,6 +258,7 @@ export default function Form() {
             onChange={(e) => setJobDescription(e.target.value)}
           />
         </div>
+
         <div className='col-span-2 flex justify-center '>
           <button
             className='flex w-40 items-center justify-center rounded bg-veryDarkBlue px-4 py-2 text-white shadow-md hover:bg-highlightBlue'

@@ -26,12 +26,24 @@ function generateMockJobs(count, outputFilePath) {
       jobDescription: `Test for job ${i}. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.`,
       analysisTypeNames: getRandomListItem(availableAnalysisTypes),
       sourceNames: getRandomListItem(availableSources),
+      dateRangeStart: getRandomDate(
+        new Date(2023, 8, 1),
+        new Date(2024, 0, 1)
+      ).toString(),
+      dateRangeEnd: getRandomDate(
+        new Date(2024, 0, 2),
+        new Date(2024, 2, 6)
+      ).toString(),
+      granularity: getRandomGranularity().toString(),
     };
 
     const item = {
       requestID: i.toString(),
       id: getRandomId(),
-      creationDate: getRandomDate().toString(),
+      creationDate: getRandomDate(
+        new Date(2023, 8, 1),
+        new Date(2024, 2, 6)
+      ).toString(),
       jobStatus: getRandomStatus(),
       jobName: input.jobName,
       jobDescription: input.jobDescription,
@@ -42,6 +54,9 @@ function generateMockJobs(count, outputFilePath) {
       sources: {
         L: input.sourceNames.map((id) => ({ S: id.toString() })),
       },
+      dateRangeStart: input.dateRangeStart,
+      dateRangeEnd: input.dateRangeEnd,
+      granularity: input.granularity,
       powerBILink:
         "https://app.powerbi.com/groups/me/reports/{ReportId}/ReportSection?filter=TableName/FieldName eq 'value'",
     };
@@ -71,9 +86,9 @@ function getRandomStatus() {
   return statusOptions[randomIndex];
 }
 
-function getRandomDate() {
-  const startMillis = new Date(2023, 8, 1).getTime();
-  const endMillis = new Date(2024, 1, 15).getTime();
+function getRandomDate(minDate, maxDate) {
+  const startMillis = minDate.getTime();
+  const endMillis = maxDate.getTime();
   return Math.floor(startMillis + Math.random() * (endMillis - startMillis));
 }
 
@@ -89,6 +104,22 @@ function getRandomAuthor() {
     mockAuthorNames[Math.floor(Math.random() * mockAuthorNames.length)] ??
     'Jane Doe'
   );
+}
+
+function getRandomGranularity() {
+  const granularities = [
+    0,
+    1,
+    5,
+    10,
+    100,
+    1000,
+    1000 * 60,
+    1000 * 60 * 60,
+    1000 * 60 * 60 * 24,
+  ];
+
+  return granularities[Math.floor(Math.random() * granularities.length)] ?? -1;
 }
 
 const mockDataDirectory = path.resolve(__dirname, '../../infra/mockdata/');

@@ -12,4 +12,7 @@ export interface Job {
   analysisTypes: DynamoArray<DynamoString>;
   sources: DynamoArray<DynamoString>;
   requestID: DynamoString;
+  dateRangeStart: DynamoNumber;
+  dateRangeEnd: DynamoNumber;
+  granularity: DynamoNumber;
 }

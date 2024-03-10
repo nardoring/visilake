@@ -52,7 +52,7 @@ const Sources = ({ getSources, setSources, inputStyles }: SourcesProps) => {
     <>
       <label
         data-tooltip-id='sources'
-        data-tooltip-html='Select sources from Data Lake'
+        data-tooltip-html='Select sources from Data Lake <br> Valid format is 1234-AB(C)-12345'
         htmlFor='sources'
       >
         Sources
@@ -63,6 +63,7 @@ const Sources = ({ getSources, setSources, inputStyles }: SourcesProps) => {
         type='text'
         id='sources'
         value={currentSource}
+        placeholder='1234-AB(C)-12345'
         onChange={(e) => setCurrentSource(e.target.value)}
         onBlur={handleSourceEntry}
         onKeyDown={handleSourceEntry}

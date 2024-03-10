@@ -11,7 +11,6 @@ export const sourceRouter = createTRPCRouter({
   validateSource: publicProcedure
     .input(z.object({ sourceTag: z.string() }))
     .query(async ({ input }) => {
-      
       if (!sourceTagValidator.safeParse(input.sourceTag).success) {
         return {
           isValid: false,
@@ -45,7 +44,8 @@ export const sourceRouter = createTRPCRouter({
       } catch (error) {
         return {
           isValid: false,
-          notificationErrorMessage: 'An error occurred while querying the database',
+          notificationErrorMessage:
+            'An error occurred while querying the database',
           consoleErrorMessage: error,
         };
       }

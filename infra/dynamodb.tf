@@ -62,9 +62,9 @@ resource "aws_dynamodb_table" "mockRequests" {
 
 # Populate the table with our types
 locals {
-  mock_types    = jsondecode(file("${path.module}/mockdata/analysisTypes.json"))
-  mock_requests = jsondecode(file("${path.module}/mockdata/requests.json"))
-  mock_sourceTags  = jsondecode(file("${path.module}/mockdata/sourceTags.json"))
+  mock_types      = jsondecode(file("${path.module}/mockdata/analysisTypes.json"))
+  mock_requests   = jsondecode(file("${path.module}/mockdata/requests.json"))
+  mock_sourceTags = jsondecode(file("${path.module}/mockdata/sourceTags.json"))
 }
 
 resource "aws_dynamodb_table_item" "analysisType" {

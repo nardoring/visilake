@@ -34,8 +34,8 @@ const Source = ({ source, updateSource, onRemove }: SourceProps) => {
             toast.error(data.notificationErrorMessage, {
               ...toastProperties,
             });
-            if (data.consoleErrorMessage !== undefined){
-              console.error(data.consoleErrorMessage)
+            if (data.consoleErrorMessage !== undefined) {
+              console.error(data.consoleErrorMessage);
             }
           }
           setQueryExecuted(true);

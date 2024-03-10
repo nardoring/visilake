@@ -13,16 +13,16 @@ pub(crate) use crate::{
     aws::sns::{list_topics, sns_client},
     aws::sqs::{get_message, list_queues, sqs_client},
     models::data::test_csv_to_parquet,
+    tasks::queue::{complete_processed_jobs, process_queued_jobs, queue_new_requests},
     utils::init_logging,
 };
 use eyre::Result;
-use tasks::queue::queue_new_requests;
 
 #[tokio::main]
 async fn main() -> Result<()> {
     let _init_logging = init_logging()?;
 
-    test_csv_to_parquet();
+    // test_csv_to_parquet();
 
     let shared_config = config::configure().await?;
     let dynamodb_client = dynamodb_client(&shared_config);
@@ -33,6 +33,10 @@ async fn main() -> Result<()> {
     let queues = list_queues(&sqs_client).await?;
 
     queue_new_requests(&dynamodb_client, &sns_client, &topics).await?;
+    tokio::time::sleep(tokio::time::Duration::from_secs(10)).await;
+    process_queued_jobs(&dynamodb_client, &sns_client, &topics).await?;
+    tokio::time::sleep(tokio::time::Duration::from_secs(10)).await;
+    complete_processed_jobs(&dynamodb_client, &sns_client, &topics).await?;
 
     for queue in queues {
         get_message(&sqs_client, &queue).await?;

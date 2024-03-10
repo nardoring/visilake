@@ -148,7 +148,7 @@ resource "aws_dynamodb_table_item" "mockRequest" {
   for_each   = { for req in local.mock_requests : req.requestID => req }
   table_name = aws_dynamodb_table.mockRequests.name
   hash_key   = aws_dynamodb_table.mockRequests.hash_key
-  range_key   = aws_dynamodb_table.mockRequests.range_key
+  range_key  = aws_dynamodb_table.mockRequests.range_key
 
   item = jsonencode({
     "requestID"      = { "S" = each.value.requestID },

@@ -877,7 +877,13 @@
     "analysisTypes": {
       "L": [
         {
+          "S": "Rolling Std Deviation"
+        },
+        {
           "S": "Autocorrelation"
+        },
+        {
+          "S": "Rolling Mean"
         }
       ]
     },

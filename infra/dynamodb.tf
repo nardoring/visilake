@@ -64,11 +64,23 @@ resource "aws_dynamodb_table" "mockRequests" {
 locals {
   mock_types    = jsondecode(file("${path.module}/mockdata/analysisTypes.json"))
   mock_requests = jsondecode(file("${path.module}/mockdata/requests.json"))
+  mock_sources  = jsondecode(file("${path.module}/mockdata/sources.json"))
 }
 
 resource "aws_dynamodb_table_item" "analysisType" {
   for_each   = { for item in local.mock_types : item.id => item }
   table_name = aws_dynamodb_table.analysisTypes.name
+  hash_key   = "id"
+
+  item = jsonencode({
+    "id"   = { "S" = each.value.id },
+    "name" = { "S" = each.value.name }
+  })
+}
+
+resource "aws_dynamodb_table_item" "source" {
+  for_each   = { for item in local.mock_sources : item.id => item }
+  table_name = aws_dynamodb_table.sources.name
   hash_key   = "id"
 
   item = jsonencode({

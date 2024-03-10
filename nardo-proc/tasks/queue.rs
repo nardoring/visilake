@@ -47,6 +47,7 @@ async fn update_request_status(
             .update_item()
             .table_name(TABLE)
             .key("requestID".to_string(), item["requestID"].clone())
+            .key("creationDate", item["creationDate"].clone())
             .update_expression("SET #st = :status_val")
             .expression_attribute_names("#st", "jobStatus")
             .expression_attribute_values(":status_val", AttributeValue::S(new_status_str));
@@ -64,6 +65,66 @@ pub async fn queue_new_requests(
     topics: &Vec<String>,
 ) -> Result<()> {
     let items = scan_for(dynamodb_client, TABLE, "jobStatus", "PENDING").await?;
+
+    for item in items {
+        debug!("Item to update {:#?}", item);
+
+        let job_request = convert_item_to_job_request(&item)?;
+
+        let updated_item =
+            update_request_status(dynamodb_client, &item, job_request.status).await?;
+
+        let job_request = convert_item_to_job_request(&updated_item)?;
+
+        debug!("Updated item: {:#?}", job_request);
+
+        let json_string = serde_json::to_string(&job_request)?;
+
+        for topic in topics {
+            publish(sns_client, topic, &json_string).await?;
+            debug!("Published to: {:#?}", topic);
+        }
+    }
+
+    Ok(())
+}
+
+pub async fn process_queued_jobs(
+    dynamodb_client: &DynamoDbClient,
+    sns_client: &SnsClient,
+    topics: &Vec<String>,
+) -> Result<()> {
+    let items = scan_for(dynamodb_client, TABLE, "jobStatus", "QUEUED").await?;
+
+    for item in items {
+        debug!("Item to update {:#?}", item);
+
+        let job_request = convert_item_to_job_request(&item)?;
+
+        let updated_item =
+            update_request_status(dynamodb_client, &item, job_request.status).await?;
+
+        let job_request = convert_item_to_job_request(&updated_item)?;
+
+        debug!("Updated item: {:#?}", job_request);
+
+        let json_string = serde_json::to_string(&job_request)?;
+
+        for topic in topics {
+            publish(sns_client, topic, &json_string).await?;
+            debug!("Published to: {:#?}", topic);
+        }
+    }
+
+    Ok(())
+}
+
+pub async fn complete_processed_jobs(
+    dynamodb_client: &DynamoDbClient,
+    sns_client: &SnsClient,
+    topics: &Vec<String>,
+) -> Result<()> {
+    let items = scan_for(dynamodb_client, TABLE, "jobStatus", "PROCESSING").await?;
 
     for item in items {
         debug!("Item to update {:#?}", item);

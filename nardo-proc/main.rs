@@ -16,7 +16,7 @@ pub(crate) use crate::{
     utils::init_logging,
 };
 use eyre::Result;
-use tasks::process::process_queued_requests;
+use tasks::queue::queue_new_requests;
 
 #[tokio::main]
 async fn main() -> Result<()> {
@@ -32,7 +32,7 @@ async fn main() -> Result<()> {
     let topics = list_topics(&sns_client).await?;
     let queues = list_queues(&sqs_client).await?;
 
-    process_queued_requests(&dynamodb_client, &sns_client, &topics).await?;
+    queue_new_requests(&dynamodb_client, &sns_client, &topics).await?;
 
     for queue in queues {
         get_message(&sqs_client, &queue).await?;

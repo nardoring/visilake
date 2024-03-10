@@ -71,32 +71,12 @@ export const jobRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ input }) => {
-      const sqs = getSQSClient();
-
       const requestID = shortUid();
       console.log('\nRequestID:\n', requestID);
-      const message = { requestID: requestID, ...input };
-
-      const queueUrlResponse = await sqs
-        .getQueueUrl({ QueueName: QUEUE_NAME })
-        .promise();
-      const queueUrl = queueUrlResponse.QueueUrl;
-
-      if (!queueUrl) {
-        throw new Error('Failed to get the SQS queue URL');
-      }
-
-      let sqsParams = {
-        MessageBody: JSON.stringify(message),
-        QueueUrl: queueUrl,
-      };
-
-      await sqs.sendMessage(sqsParams).promise();
-
       const dynamodb = getDynamoDBClient();
 
-      // set status in DynamoDB to QUEUED
-      const status = 'QUEUED';
+      // set status in DynamoDB to PENDING
+      const status = 'PENDING';
       let dynamodbParams = {
         TableName: DYNAMODB_TABLE,
         Item: {

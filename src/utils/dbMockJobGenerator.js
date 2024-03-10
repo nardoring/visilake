@@ -81,7 +81,13 @@ function getRandomListItem(availableIndexes) {
 }
 
 function getRandomStatus() {
-  const statusOptions = ['COMPLETE', 'PROCESSING', 'QUEUED', 'FAILED'];
+  const statusOptions = [
+    'PENDING',
+    'QUEUED',
+    'PROCESSING',
+    'COMPLETE',
+    'FAILED',
+  ];
   const randomIndex = Math.floor(Math.random() * statusOptions.length);
   return statusOptions[randomIndex];
 }

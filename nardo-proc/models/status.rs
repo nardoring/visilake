@@ -7,7 +7,7 @@ use std::{error::Error, fmt, str::FromStr};
 
 #[derive(Debug)]
 pub enum Status {
-    New,
+    Pending,
     Queued,
     Processing,
     Completed,
@@ -30,7 +30,7 @@ impl FromStr for Status {
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         match s {
-            "NEW" => Ok(Status::New),
+            "PENDING" => Ok(Status::Pending),
             "QUEUED" => Ok(Status::Queued),
             "PROCESSING" => Ok(Status::Processing),
             "COMPLETE" => Ok(Status::Completed),
@@ -43,7 +43,7 @@ impl FromStr for Status {
 impl fmt::Display for Status {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let status_str = match self {
-            Status::New => "NEW",
+            Status::Pending => "PENDING",
             Status::Queued => "QUEUED",
             Status::Processing => "PROCESSING",
             Status::Completed => "COMPLETE",
@@ -54,9 +54,9 @@ impl fmt::Display for Status {
 }
 
 impl Status {
-    fn next(&self) -> Option<Status> {
+    pub fn next(&self) -> Option<Status> {
         match self {
-            Status::New => Some(Status::Queued),
+            Status::Pending => Some(Status::Queued),
             Status::Queued => Some(Status::Processing),
             Status::Processing => Some(Status::Completed),
             Status::Completed | Status::Failed => None,

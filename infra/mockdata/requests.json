@@ -836,9 +836,6 @@
       "L": [
         {
           "S": "Autocorrelation"
-        },
-        {
-          "S": "Rolling Std Deviation"
         }
       ]
     },

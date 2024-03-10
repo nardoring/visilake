@@ -1,6 +1,8 @@
 const fs = require('fs');
 const path = require('path');
+const { v4: uuidv4 } = require('uuid');
 
+const shortUid = () => uuidv4().substring(0, 8);
 const NUM_OF_ITEMS = 25;
 
 function generateMockJobs(count, outputFilePath) {
@@ -38,8 +40,8 @@ function generateMockJobs(count, outputFilePath) {
     };
 
     const item = {
-      requestID: i.toString(),
-      id: getRandomId(),
+      requestID: shortUid(),
+      id: shortUid(),
       creationDate: getRandomDate(
         new Date(2023, 8, 1),
         new Date(2024, 2, 6)

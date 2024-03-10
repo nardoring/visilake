@@ -37,6 +37,7 @@ resource "aws_dynamodb_table" "mockRequests" {
   name         = "mockRequests"
   billing_mode = "PAY_PER_REQUEST"
   hash_key     = "requestID"
+  range_key    = "creationDate"
 
   attribute {
     name = "requestID"
@@ -47,7 +48,6 @@ resource "aws_dynamodb_table" "mockRequests" {
     name = "creationDate"
     type = "N"
   }
-
 }
 
 resource "aws_dynamodb_table" "jobs" {
@@ -76,6 +76,7 @@ resource "aws_dynamodb_table" "mockResponses" {
   name         = "JobResponses"
   billing_mode = "PAY_PER_REQUEST"
   hash_key     = "responseID"
+  range_key    = "start_timestamp"
 
   attribute {
     name = "responseID"
@@ -120,11 +121,12 @@ resource "aws_dynamodb_table_item" "analysisType" {
 resource "aws_dynamodb_table_item" "mockRequest" {
   for_each   = { for req in local.mock_requests : req.requestID => req }
   table_name = aws_dynamodb_table.mockRequests.name
-  hash_key   = "requestID"
+  hash_key   = aws_dynamodb_table.mockRequests.hash_key
+  range_key   = aws_dynamodb_table.mockRequests.range_key
 
   item = jsonencode({
     "requestID"      = { "S" = each.value.requestID },
-    "id"             = { "S" = each.value.id },
+    "id"             = { "S" = tostring(each.value.id) },
     "creationDate"   = { "N" = each.value.creationDate },
     "jobStatus"      = { "S" = each.value.jobStatus },
     "jobName"        = { "S" = each.value.jobName },

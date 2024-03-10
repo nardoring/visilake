@@ -5,10 +5,20 @@ import { createTRPCRouter, publicProcedure } from '~/server/api/trpc';
 
 const DYNAMODB_TABLE = 'sourceTags';
 
+const sourceTagValidator = z.string().regex(/^\d{4}-[A-Z]{2,3}-\d{5}$/);
+
 export const sourceRouter = createTRPCRouter({
   validateSource: publicProcedure
     .input(z.object({ sourceTag: z.string() }))
     .query(async ({ input }) => {
+      
+      if (!sourceTagValidator.safeParse(input.sourceTag).success) {
+        return {
+          isValid: false,
+          notificationErrorMessage: `${input.sourceTag} is not in the valid format`,
+        };
+      }
+
       try {
         const dynamodb = getDynamoDBClient();
 
@@ -29,13 +39,14 @@ export const sourceRouter = createTRPCRouter({
         } else {
           return {
             isValid: false,
-            errorMessage: `${input.sourceTag} was not found in the Data Lake`,
+            notificationErrorMessage: `${input.sourceTag} was not found in the Data Lake`,
           };
         }
       } catch (error) {
         return {
           isValid: false,
-          errorMessage: 'An error occurred while querying the database',
+          notificationErrorMessage: 'An error occurred while querying the database',
+          consoleErrorMessage: error,
         };
       }
     }),

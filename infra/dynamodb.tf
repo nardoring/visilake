@@ -10,9 +10,11 @@
  * Resources Created:
  * - AWS DynamoDB Table: `analysisTypes` for storing different types of analyses.
  *   - Attributes: `id` (String) as the primary key.
+ * - AWS DynamoDB Table: `sources` for storing source tags.
+ *   - Attributes: `id` (String) as the primary key.
  * - AWS DynamoDB Table: `mockRequests` for tracking mock requests.
  *   - Attributes: `requestID` (String) as the primary key.
- * - DynamoDB Table Items: Pre-populated data for `analysisTypes` and `mockRequests`
+ * - DynamoDB Table Items: Pre-populated data for `analysisTypes`, `sources`, and `mockRequests`
  *   from local JSON files, ensuring initial data setup for application use.
  *
  * Design Decisions:
@@ -22,6 +24,19 @@
 
 resource "aws_dynamodb_table" "analysisTypes" {
   name           = "analysisTypes"
+  read_capacity  = 10
+  write_capacity = 5
+
+  attribute {
+    name = "id"
+    type = "S"
+  }
+
+  hash_key = "id"
+}
+
+resource "aws_dynamodb_table" "sources" {
+  name           = "sources"
   read_capacity  = 10
   write_capacity = 5
 

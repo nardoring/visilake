@@ -33,6 +33,13 @@ impl TimeSeriesData {
         // Return a new instance of TimeSeriesData representing the filtered dataset
         todo!()
     }
+
+    pub fn filter_by_granularity(&self, grandularity: i32) -> Self {
+        // TODO filter rows based on the values in a timestamp column fractionally
+        // by the granularity conf
+        // Return a new instance of TimeSeriesData representing the filtered dataset
+        todo!()
+    }
 }
 
 pub fn test_csv_to_parquet() {

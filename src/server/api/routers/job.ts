@@ -10,9 +10,7 @@ import type { Job } from '~/models/db/job';
 import { v4 as uuidv4 } from 'uuid';
 import mapJobs from '~/mappers/jobMappers';
 import getDynamoDBClient from '~/clients/dynamodb';
-import getSQSClient from '~/clients/sqs';
 
-const QUEUE_NAME = 'requestQueue';
 const DYNAMODB_TABLE = 'mockRequests';
 const shortUid = () => uuidv4().substring(0, 8);
 

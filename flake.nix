@@ -122,6 +122,13 @@
         #     pandas
         #     numpy
         #   ]);
+
+        # info on this dataset can be found here
+        # https://data.world/data-society/us-air-pollution-data
+        dataset = pkgs.fetchurl {
+          url = "https://query.data.world/s/mz5ot3l4zrgvldncfgxu34nda45kvb";
+          sha256 = "sha256-52Iova39Ao3Xom11rFFF42OjCokxJ8AixLKRTXhi10Q=";
+        };
       in {
         treefmt.config = {
           projectRootFile = "flake.nix";
@@ -168,6 +175,10 @@
             ]
             ++ localstack
             ++ treefmtPrograms;
+
+          shellHook = ''
+            ln -sf ${dataset} ./infra/mockdata/dataset.csv
+          '';
 
           RUST_SRC_PATH = "${toolchain}/lib/rustlib/src/rust/library";
 

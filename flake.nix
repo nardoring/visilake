@@ -180,6 +180,7 @@
 
           shellHook = ''
             ln -sf ${dataset} ./infra/mockdata/dataset.csv
+            node src/utils/dbMockJobGenerator.js
           '';
 
           RUST_BACKTRACE = 1;

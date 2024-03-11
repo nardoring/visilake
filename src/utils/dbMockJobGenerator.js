@@ -1,8 +1,6 @@
 const fs = require('fs');
 const path = require('path');
-const { v4: uuidv4 } = require('uuid');
 
-const shortUid = () => uuidv4().substring(0, 8);
 // pass the number of mockrequests in when you run it
 // defaults to 12 to show at least 2 page on most resolutions
 //   node src/dbMockJobGenerator.js 2 will produce 2 requests
@@ -49,8 +47,8 @@ function generateMockJobs(count, outputFilePath) {
     };
 
     const item = {
-      requestID: shortUid(),
-      id: shortUid(),
+      requestID: getRandomId(),
+      id: getRandomId(),
       creationDate: getRandomDate(
         new Date(2023, 8, 1),
         new Date(2024, 2, 6)
@@ -77,6 +75,12 @@ function generateMockJobs(count, outputFilePath) {
 
   const jsonString = JSON.stringify(mockRequests, null, 2);
   fs.writeFileSync(outputFilePath, jsonString, 'utf-8');
+}
+
+function getRandomId() {
+  const timestamp = new Date().getTime().toString(36);
+  const randomChars = Math.random().toString(36).substr(2, 5);
+  return (timestamp + randomChars).substring(0, 8);
 }
 
 function generateRandomDescription() {

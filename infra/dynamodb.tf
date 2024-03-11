@@ -10,9 +10,11 @@
  * Resources Created:
  * - AWS DynamoDB Table: `analysisTypes` for storing different types of analyses.
  *   - Attributes: `id` (String) as the primary key.
+ * - AWS DynamoDB Table: `sourceTags` for storing source tags.
+ *   - Attributes: `sourceTag` (String) as the primary key, since there shouldn't be any duplicate tags.
  * - AWS DynamoDB Table: `mockRequests` for tracking mock requests.
  *   - Attributes: `requestID` (String) as the primary key.
- * - DynamoDB Table Items: Pre-populated data for `analysisTypes` and `mockRequests`
+ * - DynamoDB Table Items: Pre-populated data for `analysisTypes`, `sources`, and `mockRequests`
  *   from local JSON files, ensuring initial data setup for application use.
  *
  * Design Decisions:
@@ -33,6 +35,19 @@ resource "aws_dynamodb_table" "analysisTypes" {
   hash_key = "id"
 }
 
+resource "aws_dynamodb_table" "sourceTags" {
+  name           = "sourceTags"
+  read_capacity  = 10
+  write_capacity = 5
+
+  attribute {
+    name = "sourceTag"
+    type = "S"
+  }
+
+  hash_key = "sourceTag"
+}
+
 resource "aws_dynamodb_table" "mockRequests" {
   name           = "mockRequests"
   read_capacity  = 10
@@ -47,8 +62,9 @@ resource "aws_dynamodb_table" "mockRequests" {
 
 # Populate the table with our types
 locals {
-  mock_types    = jsondecode(file("${path.module}/mockdata/analysisTypes.json"))
-  mock_requests = jsondecode(file("${path.module}/mockdata/requests.json"))
+  mock_types      = jsondecode(file("${path.module}/mockdata/analysisTypes.json"))
+  mock_requests   = jsondecode(file("${path.module}/mockdata/requests.json"))
+  mock_sourceTags = jsondecode(file("${path.module}/mockdata/sourceTags.json"))
 }
 
 resource "aws_dynamodb_table_item" "analysisType" {
@@ -59,6 +75,16 @@ resource "aws_dynamodb_table_item" "analysisType" {
   item = jsonencode({
     "id"   = { "S" = each.value.id },
     "name" = { "S" = each.value.name }
+  })
+}
+
+resource "aws_dynamodb_table_item" "sourceTags" {
+  for_each   = { for item in local.mock_sourceTags : item.sourceTag => item }
+  table_name = aws_dynamodb_table.sourceTags.name
+  hash_key   = "sourceTag"
+
+  item = jsonencode({
+    "sourceTag" = { "S" = each.value.sourceTag }
   })
 }
 

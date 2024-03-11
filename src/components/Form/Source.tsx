@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Bounce, ToastPosition, toast } from 'react-toastify';
 import { api } from '~/utils/api';
 import type { Source } from '~/utils/types';
 
@@ -8,15 +9,35 @@ interface SourceProps {
   onRemove: (source: Source) => void;
 }
 
+const toastProperties = {
+  position: 'bottom-right' as ToastPosition,
+  autoClose: 10000,
+  hideProgressBar: false,
+  closeOnClick: true,
+  pauseOnHover: true,
+  draggable: true,
+  progress: undefined,
+  theme: 'light',
+  transition: Bounce,
+};
+
 const Source = ({ source, updateSource, onRemove }: SourceProps) => {
   const [queryExecuted, setQueryExecuted] = useState<boolean>(false);
   const { data: sourceValidationData, isLoading } =
     api.source.validateSource.useQuery(
-      { source: source.name },
+      { sourceTag: source.name },
       {
         enabled: !queryExecuted,
         onSuccess: (data) => {
           updateSource(source, data.isValid);
+          if (!data.isValid) {
+            toast.error(data.notificationErrorMessage, {
+              ...toastProperties,
+            });
+            if (data.consoleErrorMessage !== undefined) {
+              console.error(data.consoleErrorMessage);
+            }
+          }
           setQueryExecuted(true);
         },
       }

@@ -16,7 +16,6 @@
     rust-overlay.url = "github:oxalica/rust-overlay";
   };
   outputs = inputs @ {
-    self,
     flake-parts,
     systems,
     nixpkgs,
@@ -27,11 +26,12 @@
     dynamoUrl = "http://dynamodb.us-east-1.localhost.localstack.cloud:4566/";
     sqsUrl = "http://sqs.us-east-1.localhost.localstack.cloud:4566/";
   in
-    flake-parts.lib.mkFlake {inherit self inputs;} ({...}: {
+    flake-parts.lib.mkFlake {inherit inputs;} ({...}: {
       systems = ["x86_64-linux"];
       imports = [inputs.treefmt-nix.flakeModule];
 
       perSystem = {
+        self',
         system,
         config,
         ...
@@ -43,6 +43,8 @@
         };
 
         toolchain = pkgs.rust-bin.fromRustupToolchainFile ./nardo-proc/toolchain.toml;
+
+        nardo-proc = pkgs.callPackage ./nardo-proc {};
 
         nardo = pkgs.buildNpmPackage {
           # https://create.t3.gg/en/deployment/docker
@@ -180,6 +182,7 @@
             ln -sf ${dataset} ./infra/mockdata/dataset.csv
           '';
 
+          RUST_BACKTRACE = 1;
           RUST_SRC_PATH = "${toolchain}/lib/rustlib/src/rust/library";
 
           LOCALSTACK_API_KEY = "4CVxMCDrKZ";
@@ -195,9 +198,11 @@
 
         packages = {
           nardo = nardo;
+          nardo-rust = nardo-proc;
           nardo-image = nardo-image;
           localstackpro-image = localstackpro-image;
         };
+        checks.systems = self'.packages.nardo-rust;
       };
     });
 }

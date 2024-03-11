@@ -1,5 +1,3 @@
-#![allow(incomplete_features)]
-#![feature(inherent_associated_types)]
 #![allow(dead_code)]
 #![allow(unused_imports)]
 #![allow(unused_variables)]

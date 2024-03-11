@@ -16,8 +16,9 @@ pub struct TimeSeriesData {
 }
 
 impl TimeSeriesData {
-    pub fn from_parquet(file_path: &str) -> arrow::error::Result<Self> {
-        let file = File::open(file_path).unwrap();
+    /// Returns a TimeSeriesData from dataset in .parquet on disk at `infile`
+    pub fn from_parquet(infile: &str) -> arrow::error::Result<Self> {
+        let file = File::open(infile).unwrap();
         let builder = ParquetRecordBatchReaderBuilder::try_new(file).unwrap();
         debug!("Converted arrow schema is: {}", builder.schema());
 
@@ -31,6 +32,7 @@ impl TimeSeriesData {
         Ok(TimeSeriesData { record_batches })
     }
 
+    /// Returns a TimeSeriesData from a given filepath to a .parquet dataset
     pub fn from_csv(infile: &str) -> Result<Self> {
         let mut file = File::open(&infile).unwrap();
         let format = Format::default().with_header(true);
@@ -57,6 +59,7 @@ impl TimeSeriesData {
         Ok(TimeSeriesData { record_batches })
     }
 
+    /// Writes the TimeSeriesData to disk in parquet format
     pub fn to_parquet(&self, outfile: &str) -> Result<()> {
         let file = File::create(outfile).unwrap();
         let writer_props = WriterProperties::builder()
@@ -100,76 +103,85 @@ impl TimeSeriesData {
 #[cfg(test)]
 mod tests {
     use super::*;
-    #[cfg(test)]
-    mod tests {
-        use super::*;
-        use arrow::array::{BooleanArray, Date32Array, Float64Array, TimestampNanosecondArray};
-        use chrono::{NaiveDate, NaiveDateTime};
-        use std::convert::TryInto;
+    use arrow::array::{BooleanArray, Date32Array, Float64Array, TimestampNanosecondArray};
+    use chrono::{NaiveDate, NaiveDateTime};
+    use std::convert::TryInto;
+    use std::io::Write;
+    use tempfile::NamedTempFile;
 
-        #[test]
-        fn test_from_csv_variety_types() {
-            let infile = format!(
-                "{}/infra/mockdata/various_types.csv",
-                env!("CARGO_MANIFEST_DIR")
-            );
-            let ts_data_result = TimeSeriesData::from_csv(&infile);
-            assert!(ts_data_result.is_ok());
+    #[test]
+    fn test_from_csv_variety_types() {
+        let csv_data = r#"
+            c_int,c_float,c_string,c_bool,c_date,c_datetime
+            1,1.1,\"1.11\",true,1970-01-01,1970-01-01T00:00:00
+            2,2.2,\"2.22\",true,2020-11-08,2020-11-08T01:00:00
+            3,,\"3.33\",true,1969-12-31,1969-11-08T02:00:00
+            4,4.4,,false,,
+            5,6.6,\"\",false,1990-01-01,1990-01-01T03:00:00
+            4,4e6,,false,,
+            4,4.0e-6,,false,,
+"#;
+        let mut tmpfile = NamedTempFile::new().unwrap();
+        writeln!(tmpfile, "{}", csv_data).unwrap();
 
-            let ts_data = ts_data_result.unwrap();
-            assert_eq!(ts_data.record_batches.len(), 1);
+        let infile = tmpfile.path().to_str().unwrap().to_string();
 
-            let batch = &ts_data.record_batches[0];
+        let ts_data_result = TimeSeriesData::from_csv(&infile);
+        assert!(ts_data_result.is_ok());
 
-            print_batches(&[batch.clone()]).unwrap();
-            assert_eq!(batch.num_rows(), 7);
+        let ts_data = ts_data_result.unwrap();
+        assert_eq!(ts_data.record_batches.len(), 1);
 
-            let c_float = batch
-                .column(1)
-                .as_any()
-                .downcast_ref::<Float64Array>()
-                .unwrap();
-            assert!((c_float.value(0) - 1.1).abs() < f64::EPSILON);
+        let batch = &ts_data.record_batches[0];
 
-            let c_bool = batch
-                .column(3)
-                .as_any()
-                .downcast_ref::<BooleanArray>()
-                .unwrap();
-            assert_eq!(c_bool.value(0), true);
+        print_batches(&[batch.clone()]).unwrap();
+        assert_eq!(batch.num_rows(), 7);
 
-            // Days since Unix epoch (for Date32Array):
+        let c_float = batch
+            .column(1)
+            .as_any()
+            .downcast_ref::<Float64Array>()
+            .unwrap();
+        assert!((c_float.value(0) - 1.1).abs() < f64::EPSILON);
 
-            //     1970-01-01: 0 days
-            //     2020-11-08: 18574 days
-            //     1969-12-31: -1 days
-            //     1990-01-01: 7305 days
+        let c_bool = batch
+            .column(3)
+            .as_any()
+            .downcast_ref::<BooleanArray>()
+            .unwrap();
+        assert_eq!(c_bool.value(0), true);
 
-            if let Some(c_date) = batch.column(4).as_any().downcast_ref::<Date32Array>() {
-                assert_eq!(c_date.value(0), 0); // 1970-01-01
-                assert_eq!(c_date.value(1), 18574); // 2020-11-08
-                assert_eq!(c_date.value(2), -1); // 1969-12-31
-                assert_eq!(c_date.value(4), 7305); // 1990-01-01
-            }
+        // Days since Unix epoch (for Date32Array):
 
-            // Nanoseconds since Unix epoch (for TimestampNanosecondArray):
+        //     1970-01-01: 0 days
+        //     2020-11-08: 18574 days
+        //     1969-12-31: -1 days
+        //     1990-01-01: 7305 days
 
-            //     1970-01-01T00:00:00: 0 nanoseconds
-            //     2020-11-08T01:00:00: 1.6047972e+18 nanoseconds
-            //     1969-11-08T02:00:00: -4658400000000000 nanoseconds
-            //     1990-01-01T03:00:00: 6.311628e+17 nanoseconds
-            // Date32Array for days since Unix epoch
+        if let Some(c_date) = batch.column(4).as_any().downcast_ref::<Date32Array>() {
+            assert_eq!(c_date.value(0), 0); // 1970-01-01
+            assert_eq!(c_date.value(1), 18574); // 2020-11-08
+            assert_eq!(c_date.value(2), -1); // 1969-12-31
+            assert_eq!(c_date.value(4), 7305); // 1990-01-01
+        }
 
-            if let Some(c_datetime) = batch
-                .column(5)
-                .as_any()
-                .downcast_ref::<TimestampNanosecondArray>()
-            {
-                assert_eq!(c_datetime.value(0) as f64, 0.0); // 1970-01-01T00:00:00
-                assert_eq!(c_datetime.value(1) as f64, 1.6047972e+18); // 2020-11-08T01:00:00
-                assert_eq!(c_datetime.value(2) as f64, -4658400000000000.0); // 1969-11-08T02:00:00
-                assert_eq!(c_datetime.value(4) as f64, 6.311628e+17); // 1990-01-01T03:00:00
-            }
+        // Nanoseconds since Unix epoch (for TimestampNanosecondArray):
+
+        //     1970-01-01T00:00:00: 0 nanoseconds
+        //     2020-11-08T01:00:00: 1.6047972e+18 nanoseconds
+        //     1969-11-08T02:00:00: -4658400000000000 nanoseconds
+        //     1990-01-01T03:00:00: 6.311628e+17 nanoseconds
+        // Date32Array for days since Unix epoch
+
+        if let Some(c_datetime) = batch
+            .column(5)
+            .as_any()
+            .downcast_ref::<TimestampNanosecondArray>()
+        {
+            assert_eq!(c_datetime.value(0) as f64, 0.0); // 1970-01-01T00:00:00
+            assert_eq!(c_datetime.value(1) as f64, 1.6047972e+18); // 2020-11-08T01:00:00
+            assert_eq!(c_datetime.value(2) as f64, -4658400000000000.0); // 1969-11-08T02:00:00
+            assert_eq!(c_datetime.value(4) as f64, 6.311628e+17); // 1990-01-01T03:00:00
         }
     }
 }

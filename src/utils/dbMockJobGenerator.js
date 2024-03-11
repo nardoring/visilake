@@ -15,11 +15,11 @@ function generateMockJobs(count, outputFilePath) {
   ];
 
   const availableSources = [
-    'TAG-12345',
-    'TAG-67891',
-    'TAG-23456',
-    'TAG-78912',
-    'TAG-34567',
+    '1100-LI-12345',
+    '1000-FIC-67891',
+    '1000-PIT-67892',
+    '3200-TI-78912',
+    '3200-FI-34567',
   ];
 
   for (let i = 1; i <= count; i++) {

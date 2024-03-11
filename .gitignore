@@ -56,3 +56,7 @@ terraform.**
 
 # logs
 **.log
+
+# dataset
+dataset.csv
+dataset.parquet

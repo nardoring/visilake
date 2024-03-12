@@ -81,6 +81,11 @@ const Sources = ({ getSources, setSources, inputStyles }: SourcesProps) => {
             }
           }
         }
+        onChange={(e, value, reason) => {
+          if (reason == "selectOption") {
+            setCurrentSource(value as string)
+          }
+        }}
         renderInput={(params) => (
           <TextField
             {...params}

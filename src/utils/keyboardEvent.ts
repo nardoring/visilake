@@ -1,5 +1,10 @@
 export const isKeyboardEvent = (
-  e: React.KeyboardEvent<HTMLInputElement> | React.FocusEvent<HTMLInputElement>
-): e is React.KeyboardEvent<HTMLInputElement> => {
-  return (e as React.KeyboardEvent<HTMLInputElement>).key !== undefined;
+  e:
+    | React.KeyboardEvent<HTMLTextAreaElement | HTMLInputElement>
+    | React.FocusEvent<HTMLTextAreaElement | HTMLInputElement>
+): e is React.KeyboardEvent<HTMLTextAreaElement | HTMLInputElement> => {
+  return (
+    (e as React.KeyboardEvent<HTMLTextAreaElement | HTMLInputElement>).key !==
+    undefined
+  );
 };

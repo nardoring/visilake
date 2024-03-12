@@ -2,8 +2,11 @@ import React, { useState } from 'react';
 import Source from './Source';
 import type { Source as Source_t } from '~/utils/types';
 import { isKeyboardEvent } from '~/utils/keyboardEvent';
+import Autocomplete from '@mui/material/Autocomplete';
+import { api } from '~/utils/api';
 
 import { Tooltip } from 'react-tooltip';
+import TextField from '@mui/material/TextField';
 
 interface SourcesProps {
   getSources: () => Source_t[];
@@ -37,8 +40,8 @@ const Sources = ({ getSources, setSources, inputStyles }: SourcesProps) => {
 
   const handleSourceEntry = (
     e:
-      | React.KeyboardEvent<HTMLInputElement>
-      | React.FocusEvent<HTMLInputElement>
+      | React.KeyboardEvent<HTMLTextAreaElement | HTMLInputElement>
+      | React.FocusEvent<HTMLTextAreaElement | HTMLInputElement>
   ) => {
     if (isKeyboardEvent(e) && e.key === 'Enter') {
       e.preventDefault(); // Prevent form submission
@@ -47,6 +50,11 @@ const Sources = ({ getSources, setSources, inputStyles }: SourcesProps) => {
       checkSourceEntry();
     }
   };
+
+  const { data: sourceData, isLoading: sourceDataLoading } =
+    api.source.getSources.useQuery();
+
+  const sources = sourceDataLoading ? [] : sourceData ?? [];
 
   return (
     <>
@@ -58,15 +66,36 @@ const Sources = ({ getSources, setSources, inputStyles }: SourcesProps) => {
         Sources
       </label>
       <Tooltip id='sources' />
-      <input
-        className={inputStyles}
-        type='text'
-        id='sources'
+      <Autocomplete
+        id='source-autocomplete'
+        freeSolo
+        autoComplete
+        limitTags={5}
         value={currentSource}
-        placeholder='1234-AB(C)-12345'
-        onChange={(e) => setCurrentSource(e.target.value)}
-        onBlur={handleSourceEntry}
-        onKeyDown={handleSourceEntry}
+        options={sources.sort()}
+        onKeyDown={(e) =>
+          {
+            if (e.key == "Enter") {
+              setCurrentSource((e.target as HTMLInputElement).value)
+              handleSourceEntry(e as React.KeyboardEvent<HTMLTextAreaElement | HTMLInputElement>);
+            }
+          }
+        }
+        renderInput={(params) => (
+          <TextField
+            {...params}
+            className={inputStyles}
+            type='text'
+            id='sources'
+            placeholder='1234-AB(C)-12345'
+
+            // Update source state value
+            onChange={(e) => setCurrentSource(e.target.value)}
+
+            // Handle source submission
+            onBlur={handleSourceEntry}
+          />
+        )}
       />
       <div className='flex flex-wrap gap-0'>
         {getSources().map((source) => (

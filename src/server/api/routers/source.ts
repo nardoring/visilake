@@ -60,7 +60,7 @@ export const sourceRouter = createTRPCRouter({
         .promise());
   
         if (result.Items && result.Items.length > 0) {
-          return result.Items.map(item => item.sourceTag!.S);
+          return result.Items.map(item => item.sourceTag!.S) as string[];
         } else {
           return [];
         }

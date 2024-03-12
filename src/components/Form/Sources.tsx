@@ -20,7 +20,7 @@ const Sources = ({ getSources, setSources, inputStyles }: SourcesProps) => {
   const [currentSource, setCurrentSource] = useState<string>('');
 
   const autocompleteOptions = createFilterOptions({
-    limit: AUTOCOMPLETE_OPTIONS_LIMIT
+    limit: AUTOCOMPLETE_OPTIONS_LIMIT,
   });
 
   const checkSourceEntry = () => {
@@ -79,17 +79,17 @@ const Sources = ({ getSources, setSources, inputStyles }: SourcesProps) => {
         filterOptions={autocompleteOptions}
         value={currentSource}
         options={sources.sort()}
-        onKeyDown={(e) =>
-          {
-            if (e.key == "Enter") {
-              setCurrentSource((e.target as HTMLInputElement).value)
-              handleSourceEntry(e as React.KeyboardEvent<HTMLTextAreaElement | HTMLInputElement>);
-            }
+        onKeyDown={(e) => {
+          if (e.key == 'Enter') {
+            setCurrentSource((e.target as HTMLInputElement).value);
+            handleSourceEntry(
+              e as React.KeyboardEvent<HTMLTextAreaElement | HTMLInputElement>
+            );
           }
-        }
+        }}
         onChange={(e, value, reason) => {
-          if (reason == "selectOption") {
-            setCurrentSource(value as string)
+          if (reason == 'selectOption') {
+            setCurrentSource(value as string);
           }
         }}
         renderInput={(params) => (

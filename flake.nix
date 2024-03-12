@@ -26,6 +26,7 @@
   }: let
     dynamoUrl = "http://dynamodb.us-east-1.localhost.localstack.cloud:4566/";
     sqsUrl = "http://sqs.us-east-1.localhost.localstack.cloud:4566/";
+    authorName = "Test Author";
   in
     flake-parts.lib.mkFlake {inherit self inputs;} ({...}: {
       systems = ["x86_64-linux"];
@@ -108,6 +109,7 @@
               "AWS_REGION=us-east-1"
               "DYNAMO_URL=${dynamoUrl}"
               "SQS_URL=${sqsUrl}"
+              "NEXT_PUBLIC_AUTHOR_NAME=${authorName}"
             ];
             WorkingDir = "/app";
             User = "nextjs";

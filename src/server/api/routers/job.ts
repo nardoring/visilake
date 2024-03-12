@@ -10,9 +10,13 @@ import type { Job } from '~/models/db/job';
 import { v4 as uuidv4 } from 'uuid';
 import mapJobs from '~/mappers/jobMappers';
 import getDynamoDBClient from '~/clients/dynamodb';
+import getSQSClient from '~/clients/sqs';
+import { env } from '~/env.mjs';
 
 const DYNAMODB_TABLE = 'mockRequests';
 const shortUid = () => uuidv4().substring(0, 8);
+
+const AUTHOR_NAME = env.NEXT_PUBLIC_AUTHOR_NAME;
 
 export const jobRouter = createTRPCRouter({
   getJobs: publicProcedure.query(async () => {
@@ -97,8 +101,7 @@ export const jobRouter = createTRPCRouter({
             S: input.jobDescription,
           },
           author: {
-            // S: input.author, // TODO do we have author name yet?
-            S: 'Test Author',
+            S: AUTHOR_NAME,
           },
           analysisTypes: {
             L: input.analysisTypes.map((type) => ({

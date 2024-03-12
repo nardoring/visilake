@@ -88,11 +88,6 @@ const Sources = ({ getSources, setSources, inputStyles }: SourcesProps) => {
             type='text'
             id='sources'
             placeholder='1234-AB(C)-12345'
-
-            // Update source state value
-            onChange={(e) => setCurrentSource(e.target.value)}
-
-            // Handle source submission
             onBlur={handleSourceEntry}
           />
         )}

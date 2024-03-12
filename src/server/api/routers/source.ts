@@ -50,4 +50,19 @@ export const sourceRouter = createTRPCRouter({
         };
       }
     }),
+    getSources: publicProcedure.query(async () => {
+      const dynamodb = getDynamoDBClient();
+  
+      const result = (await dynamodb
+        .scan({
+          TableName: DYNAMODB_TABLE,
+        })
+        .promise());
+  
+        if (result.Items && result.Items.length > 0) {
+          return result.Items.map(item => item.sourceTag!.S);
+        } else {
+          return [];
+        }
+    }),
 });

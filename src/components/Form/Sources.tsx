@@ -2,11 +2,13 @@ import React, { useState } from 'react';
 import Source from './Source';
 import type { Source as Source_t } from '~/utils/types';
 import { isKeyboardEvent } from '~/utils/keyboardEvent';
-import Autocomplete from '@mui/material/Autocomplete';
+import Autocomplete, { createFilterOptions } from '@mui/material/Autocomplete';
 import { api } from '~/utils/api';
 
 import { Tooltip } from 'react-tooltip';
 import TextField from '@mui/material/TextField';
+
+const AUTOCOMPLETE_OPTIONS_LIMIT = 5;
 
 interface SourcesProps {
   getSources: () => Source_t[];
@@ -16,6 +18,10 @@ interface SourcesProps {
 
 const Sources = ({ getSources, setSources, inputStyles }: SourcesProps) => {
   const [currentSource, setCurrentSource] = useState<string>('');
+
+  const autocompleteOptions = createFilterOptions({
+    limit: AUTOCOMPLETE_OPTIONS_LIMIT
+  });
 
   const checkSourceEntry = () => {
     if (
@@ -54,7 +60,7 @@ const Sources = ({ getSources, setSources, inputStyles }: SourcesProps) => {
   const { data: sourceData, isLoading: sourceDataLoading } =
     api.source.getSources.useQuery();
 
-  const sources = sourceDataLoading ? [] : sourceData ?? [];
+  const sources: string[] = sourceDataLoading ? [] : sourceData ?? [];
 
   return (
     <>
@@ -70,7 +76,7 @@ const Sources = ({ getSources, setSources, inputStyles }: SourcesProps) => {
         id='source-autocomplete'
         freeSolo
         autoComplete
-        limitTags={5}
+        filterOptions={autocompleteOptions}
         value={currentSource}
         options={sources.sort()}
         onKeyDown={(e) =>

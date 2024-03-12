@@ -52,7 +52,7 @@ function deploy() {
     set -e  # Exit immediately if a command exits with a non-zero status
     SECONDS=0
     echo -e "\n# - $(date '+%Y-%m-%d %H:%M:%S') -------------------------------------------------------#\n"
-    node src/utils/dbMockJobGenerator.js
+    node ../src/utils/dbMockJobGenerator.js
     clean # cleanup potential old state
 
     # build docker images with nix and load them into docker
@@ -88,7 +88,7 @@ while [[ $# -gt 0 ]]; do
             shift
             ;;
         -r|--redeploy)
-            node src/utils/dbMockJobGenerator.js
+            node ../src/utils/dbMockJobGenerator.js
             tflocal refresh
             tflocal apply --auto-approve
             shift

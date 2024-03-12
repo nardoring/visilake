@@ -78,9 +78,7 @@ function generateMockJobs(count, outputFilePath) {
 }
 
 function getRandomId() {
-  const timestamp = new Date().getTime().toString(36);
-  const randomChars = Math.random().toString(36).substr(2, 5);
-  return (timestamp + randomChars).substring(0, 8);
+  return Math.random().toString(36).substring(2, 10);
 }
 
 function generateRandomDescription() {

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Source from './Source';
 import type { Source as Source_t } from '~/utils/types';
 import { isKeyboardEvent } from '~/utils/keyboardEvent';
@@ -17,20 +17,21 @@ interface SourcesProps {
 }
 
 const Sources = ({ getSources, setSources, inputStyles }: SourcesProps) => {
-  const [currentSource, setCurrentSource] = useState<string>('');
+  const [currentInput, setCurrentInput] = useState<string>('');
+  const [sourceSubmission, setSourceSubmission] = useState<string>('');
 
   const autocompleteOptions = createFilterOptions({
     limit: AUTOCOMPLETE_OPTIONS_LIMIT,
   });
 
-  const checkSourceEntry = () => {
+  const handleSourceSubmission = () => {
     if (
-      currentSource.trim() !== '' &&
-      !getSources().some((source) => source.name === currentSource)
+      sourceSubmission.trim() !== '' &&
+      !getSources().some((source) => source.name === sourceSubmission)
     ) {
-      setSources([...getSources(), { name: currentSource, isValid: false }]);
-      setCurrentSource('');
+      setSources([...getSources(), { name: sourceSubmission, isValid: false }]);
     }
+    setCurrentInput('');
   };
 
   const handleRemoveSource = (source: Source_t) => {
@@ -44,18 +45,9 @@ const Sources = ({ getSources, setSources, inputStyles }: SourcesProps) => {
     setSources(updatedSources);
   };
 
-  const handleSourceEntry = (
-    e:
-      | React.KeyboardEvent<HTMLTextAreaElement | HTMLInputElement>
-      | React.FocusEvent<HTMLTextAreaElement | HTMLInputElement>
-  ) => {
-    if (isKeyboardEvent(e) && e.key === 'Enter') {
-      e.preventDefault(); // Prevent form submission
-      checkSourceEntry();
-    } else if (e.type === 'blur') {
-      checkSourceEntry();
-    }
-  };
+  useEffect(() => {
+    handleSourceSubmission();
+  }, [sourceSubmission]);
 
   const { data: sourceData, isLoading: sourceDataLoading } =
     api.source.getSources.useQuery();
@@ -77,21 +69,26 @@ const Sources = ({ getSources, setSources, inputStyles }: SourcesProps) => {
         freeSolo
         autoComplete
         filterOptions={autocompleteOptions}
-        value={currentSource}
+        inputValue={currentInput}
         options={sources.sort()}
+        // Handle source submission when user hits enter
         onKeyDown={(e) => {
           if (e.key == 'Enter') {
-            setCurrentSource((e.target as HTMLInputElement).value);
-            handleSourceEntry(
-              e as React.KeyboardEvent<HTMLTextAreaElement | HTMLInputElement>
-            );
+            e.preventDefault();
+            setSourceSubmission((e.target as HTMLInputElement).value);
           }
         }}
+        onInputChange={(e, v) => setCurrentInput(v)}
+        // Submit source when selecting an autocomplete option
         onChange={(e, value, reason) => {
-          if (reason == 'selectOption') {
-            setCurrentSource(value as string);
+          if (reason === 'selectOption') {
+            setSourceSubmission(value as string);
           }
         }}
+        // Submit source when clicking outside the input box
+        onBlur={(e) =>
+          setSourceSubmission((e.target as HTMLInputElement).value)
+        }
         renderInput={(params) => (
           <TextField
             {...params}
@@ -99,7 +96,6 @@ const Sources = ({ getSources, setSources, inputStyles }: SourcesProps) => {
             type='text'
             id='sources'
             placeholder='1234-AB(C)-12345'
-            onBlur={handleSourceEntry}
           />
         )}
       />

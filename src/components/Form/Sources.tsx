@@ -31,6 +31,7 @@ const Sources = ({ getSources, setSources, inputStyles }: SourcesProps) => {
       setSources([...getSources(), { name: sourceSubmission, isValid: false }]);
     }
     setCurrentInput('');
+    setSourceSubmission('');
   };
 
   const handleRemoveSource = (source: Source_t) => {

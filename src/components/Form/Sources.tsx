@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Source from './Source';
 import type { Source as Source_t } from '~/utils/types';
-import { isKeyboardEvent } from '~/utils/keyboardEvent';
 import Autocomplete, { createFilterOptions } from '@mui/material/Autocomplete';
 import { api } from '~/utils/api';
 

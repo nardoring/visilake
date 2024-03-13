@@ -161,7 +161,7 @@ export default function Form() {
           <Sources
             getSources={getSources}
             setSources={setSources}
-            inputStyles={`${inputStyles} ${
+            inputStyles={`rounded-md ${
               submitAttempted && getValidSources().length === 0
                 ? 'ring-red ring-1'
                 : ''
@@ -186,7 +186,7 @@ export default function Form() {
               <DateTimePicker
                 disableFuture
                 ampm={false}
-                className={`${'w-full rounded shadow-sm'} ${
+                className={`${'w-full rounded shadow-sm bg-white'} ${
                   submitAttempted &&
                   (dateRangeStart === undefined ||
                     !validateDate(dateRangeStart) ||
@@ -204,7 +204,7 @@ export default function Form() {
               <DateTimePicker
                 disableFuture
                 ampm={false}
-                className={`${'w-full rounded shadow-sm'} ${
+                className={`${'w-full rounded shadow-sm bg-white'} ${
                   submitAttempted &&
                   (dateRangeEnd === undefined ||
                     !validateDate(dateRangeEnd) ||

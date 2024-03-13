@@ -66,6 +66,7 @@ const Sources = ({ getSources, setSources, inputStyles }: SourcesProps) => {
       <Tooltip id='sources' />
       <Autocomplete
         id='source-autocomplete'
+        className={inputStyles}
         freeSolo
         autoComplete
         filterOptions={autocompleteOptions}
@@ -92,7 +93,7 @@ const Sources = ({ getSources, setSources, inputStyles }: SourcesProps) => {
         renderInput={(params) => (
           <TextField
             {...params}
-            className={inputStyles}
+            className='bg-white rounded-md'
             type='text'
             id='sources'
             placeholder='1234-AB(C)-12345'

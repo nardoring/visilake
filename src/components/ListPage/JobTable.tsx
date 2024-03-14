@@ -64,6 +64,21 @@ export default function JobTable() {
     return JSON.parse(messageParse.Message) as unknown as JobUpdateMessage;
   };
 
+  const mapJobUpdateMessageToUseCase = (jobUpdate: JobUpdateMessage): Job => {
+    return {
+      jobName: jobUpdate.name,
+      jobDescription: jobUpdate.description,
+      jobId: jobUpdate.request_id,
+      jobStatus: jobUpdate.status,
+      analysisTypes: jobUpdate.analysis_types,
+      author: jobUpdate.author,
+      date: new Date(jobUpdate.timestamp * 1000),
+      granularity: 1,
+      dateRangeEnd: new Date(),
+      dateRangeStart: new Date(),
+    } as Job;
+  };
+
   api.jobUpdates.getJobUpdates.useQuery(
     { queueUrl: selectedQueue! },
     {
@@ -76,15 +91,21 @@ export default function JobTable() {
             .filter((update) => update) as JobUpdateMessage[];
 
           updates.forEach((update) => {
-            const updatedRow = gridRef.current?.api.getRowNode(
-              update.request_id
-            );
+            if (update.status == 'QUEUED') {
+              const newJob = mapJobUpdateMessageToUseCase(update);
 
-            if (!updatedRow) {
-              return;
+              gridRef.current?.api.applyTransaction({ add: [newJob] });
+            } else {
+              const updatedRow = gridRef.current?.api.getRowNode(
+                update.request_id
+              );
+
+              if (!updatedRow) {
+                return;
+              }
+
+              updatedRow?.setDataValue('jobStatus', update.status);
             }
-
-            updatedRow?.setDataValue('jobStatus', update.status);
           });
         }
 

@@ -16,7 +16,6 @@
     rust-overlay.url = "github:oxalica/rust-overlay";
   };
   outputs = inputs @ {
-    self,
     flake-parts,
     systems,
     nixpkgs,
@@ -27,11 +26,12 @@
     dynamoUrl = "http://dynamodb.us-east-1.localhost.localstack.cloud:4566/";
     sqsUrl = "http://sqs.us-east-1.localhost.localstack.cloud:4566/";
   in
-    flake-parts.lib.mkFlake {inherit self inputs;} ({...}: {
+    flake-parts.lib.mkFlake {inherit inputs;} ({...}: {
       systems = ["x86_64-linux"];
       imports = [inputs.treefmt-nix.flakeModule];
 
       perSystem = {
+        self',
         system,
         config,
         ...
@@ -43,6 +43,8 @@
         };
 
         toolchain = pkgs.rust-bin.fromRustupToolchainFile ./nardo-proc/toolchain.toml;
+
+        nardo-proc = pkgs.callPackage ./nardo-proc {};
 
         nardo = pkgs.buildNpmPackage {
           # https://create.t3.gg/en/deployment/docker
@@ -122,6 +124,13 @@
         #     pandas
         #     numpy
         #   ]);
+
+        # info on this dataset can be found here
+        # https://data.world/data-society/us-air-pollution-data
+        dataset = pkgs.fetchurl {
+          url = "https://query.data.world/s/mz5ot3l4zrgvldncfgxu34nda45kvb";
+          sha256 = "sha256-52Iova39Ao3Xom11rFFF42OjCokxJ8AixLKRTXhi10Q=";
+        };
       in {
         treefmt.config = {
           projectRootFile = "flake.nix";
@@ -169,6 +178,12 @@
             ++ localstack
             ++ treefmtPrograms;
 
+          shellHook = ''
+            ln -sf ${dataset} ./infra/mockdata/dataset.csv
+            node src/utils/dbMockJobGenerator.js
+          '';
+
+          RUST_BACKTRACE = 1;
           RUST_SRC_PATH = "${toolchain}/lib/rustlib/src/rust/library";
 
           LOCALSTACK_API_KEY = "4CVxMCDrKZ";
@@ -184,9 +199,11 @@
 
         packages = {
           nardo = nardo;
+          nardo-rust = nardo-proc;
           nardo-image = nardo-image;
           localstackpro-image = localstackpro-image;
         };
+        checks.systems = self'.packages.nardo-rust;
       };
     });
 }

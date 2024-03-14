@@ -1,10 +1,8 @@
-import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import GranularitySlider from '~/components/Form/GranularitySlider';
 import { useState } from 'react';
 import { granularityData } from '~/utils/granularity';
-import { Accordion, Typography } from '@mui/material';
+import { Typography } from '@mui/material';
 
 export default function GranularitySection() {
   const [granularity, setGranularity] = useState<number>(
@@ -35,7 +33,7 @@ export default function GranularitySection() {
         <div className='px-10'>
           <GranularitySlider onGranularityChanged={onGranularityChanged} />
           <Typography className='text-center'>
-            Datapoints will be {getGranularityLabel(granularity)} apart
+            Datapoints will be <strong>{getGranularityLabel(granularity)}</strong> apart
           </Typography>
         </div>
       </AccordionDetails>

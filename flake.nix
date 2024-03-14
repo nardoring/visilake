@@ -197,6 +197,7 @@
           AWS_REGION = "us-east-1";
           DYNAMO_URL = "${dynamoUrl}";
           SQS_URL = "${sqsUrl}";
+          NEXT_PUBLIC_AUTHOR_NAME = "${authorName}";
         };
 
         packages = {

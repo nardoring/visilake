@@ -1,11 +1,6 @@
-use crate::models::job_request::JobRequest;
 use aws_config::SdkConfig;
 use aws_sdk_dynamodb::{
-    config::Builder,
-    error::SdkError,
-    operation::{delete_item::DeleteItemOutput, put_item::PutItemError},
-    types::AttributeValue,
-    Client, Error,
+    config::Builder, operation::delete_item::DeleteItemOutput, types::AttributeValue, Client, Error,
 };
 use eyre::Result;
 use log::debug;

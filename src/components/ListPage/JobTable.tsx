@@ -13,6 +13,7 @@ import useWindowDimensions from '~/utils/useWindowResolution';
 import Link from 'next/link';
 import { JobUpdateMessage } from '~/models/sqs/jobUpdateMessage';
 import { Job } from '~/models/domain/job';
+import { statusOrder, JobStatus } from '~/models/domain/jobStatus';
 import { JobUpdateTopicMessage } from '~/models/sqs/jobUpdateTopicMessage';
 import getGranularityLabel from '~/utils/granularity';
 import { formatDate } from '~/utils/date';
@@ -184,11 +185,20 @@ export default function JobTable() {
         cellRenderer: StatusChip,
         suppressSelectAll: true,
       },
+      comparator: (valueA: unknown, valueB: unknown) => {
+        if (typeof valueA === 'string' && typeof valueB === 'string') {
+          const orderA = statusOrder[valueA as JobStatus] || 0;
+          const orderB = statusOrder[valueB as JobStatus] || 0;
+          return orderA - orderB;
+        }
+        return 0;
+      },
       tooltipValueGetter: (params: ITooltipParams) => {
         const tooltipMessages: Record<string, string> = {
-          COMPLETE: 'Processing job has been completed',
-          PROCESSING: 'Data is currently being processed',
+          PENDING: 'Processing job will soon be queued',
           QUEUED: 'Processing job will soon be started',
+          PROCESSING: 'Data is currently being processed',
+          COMPLETE: 'Processing job has been completed',
           FAILED: 'An error has occurred',
         };
 

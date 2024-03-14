@@ -2,10 +2,6 @@ import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import GranularitySlider from '../Form/GranularitySlider';
-import { useState } from 'react';
-import { granularityData } from '~/utils/granularity';
-import { Typography } from '@mui/material';
 import GranularitySection from './AccordionSections/GranularitySection';
 
 export default function HelpAccordion() {
@@ -15,7 +11,7 @@ export default function HelpAccordion() {
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
           id='panel1-analysisTypes'
-          className='text-2xl'
+          className='text-2xl font-bold'
         >
           Analysis Types
         </AccordionSummary>
@@ -28,7 +24,7 @@ export default function HelpAccordion() {
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
           id='panel2-sources'
-          className='text-2xl'
+          className='text-2xl font-bold'
         >
           Sources
         </AccordionSummary>
@@ -41,7 +37,7 @@ export default function HelpAccordion() {
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
           id='panel3-granularity'
-          className='text-2xl'
+          className='text-2xl font-bold'
         >
           Granularity
         </AccordionSummary>

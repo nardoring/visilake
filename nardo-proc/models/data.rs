@@ -114,7 +114,8 @@ impl TimeSeriesData {
                     .map(|maybe_time| maybe_time.map(|time| time >= start_time && time <= end_time))
                     .collect::<BooleanArray>();
 
-                filter_record_batch(batch, &mask).expect("Failed to filter record batch")
+                filter_record_batch(batch, &mask)
+                    .expect("Failed to filter record batch by time range")
             })
             .collect();
 
@@ -123,11 +124,41 @@ impl TimeSeriesData {
         }
     }
 
-    pub fn filter_by_granularity(&self, grandularity: i32) -> Self {
-        // TODO filter rows based on the values in a timestamp column fractionally
-        // by the granularity conf
-        // Return a new instance of TimeSeriesData representing the filtered dataset
-        todo!()
+    /// Returns a new instance of TimeSeriesData representing the filtered dataset
+    pub fn filter_by_granularity(&self, granularity: i64) -> Self {
+        let filtered_batches: Vec<RecordBatch> = self
+            .record_batches
+            .iter()
+            .map(|batch| {
+                let timestamp_col_index = batch
+                    .schema()
+                    .fields()
+                    .iter()
+                    .position(|field| field.name() == "timestamp")
+                    .expect("Timestamp column not found");
+
+                let timestamp_col = batch
+                    .column(timestamp_col_index)
+                    .as_any()
+                    .downcast_ref::<TimestampNanosecondArray>()
+                    .expect("Timestamp column has incorrect type");
+
+                // granularity is given in milliseconds, convert it to nanoseconds
+                let granularity_ns = granularity * 1_000_000;
+
+                let mask = timestamp_col
+                    .iter()
+                    .map(|maybe_time| maybe_time.map(|time| time % granularity_ns == 0))
+                    .collect::<BooleanArray>();
+
+                filter_record_batch(batch, &mask)
+                    .expect("Failed to filter record batch by granularity")
+            })
+            .collect();
+
+        TimeSeriesData {
+            record_batches: filtered_batches,
+        }
     }
 }
 
@@ -244,6 +275,53 @@ mod tests {
         TimeSeriesData {
             record_batches: vec![batch],
         }
+    }
+
+    #[test]
+    fn filter_by_granularity_filters() {
+        let ts_data = create_timeseries_data(
+            vec![
+                Some(0),             // 0ms
+                Some(500_000_000),   // 500ms
+                Some(1_000_000_000), // 1000ms
+                Some(1_500_000_000), // 1500ms
+                Some(2_000_000_000), // 2000ms
+                Some(2_500_000_000), // 2500ms
+                Some(3_000_000_000), // 3000ms
+            ],
+            vec![1, 2, 3, 4, 5, 6, 7],
+        );
+
+        // Apply granularity filtering with 1 second granularity (1000 milliseconds)
+        let filtered_data = ts_data.filter_by_granularity(1000);
+
+        assert_eq!(filtered_data.record_batches.len(), 1);
+        let filtered_batch = &filtered_data.record_batches[0];
+
+        let filtered_timestamps = filtered_batch
+            .column(0)
+            .as_any()
+            .downcast_ref::<TimestampNanosecondArray>()
+            .unwrap();
+        let filtered_values = filtered_batch
+            .column(1)
+            .as_any()
+            .downcast_ref::<Int64Array>()
+            .unwrap();
+
+        assert_eq!(filtered_timestamps.len(), 4);
+        assert_eq!(filtered_values.len(), 4);
+
+        // Verify that the correct timestamps (and their corresponding values) are kept
+        // multiples of 1000ms (1 second) are kept
+        assert_eq!(filtered_timestamps.value(0), 0); // 0ms
+        assert_eq!(filtered_timestamps.value(1), 1_000_000_000); // 1000ms
+        assert_eq!(filtered_timestamps.value(2), 2_000_000_000); // 2000ms
+        assert_eq!(filtered_timestamps.value(3), 3_000_000_000); // 3000ms
+        assert_eq!(filtered_values.value(0), 1);
+        assert_eq!(filtered_values.value(1), 3);
+        assert_eq!(filtered_values.value(2), 5);
+        assert_eq!(filtered_values.value(3), 7);
     }
 
     #[test]

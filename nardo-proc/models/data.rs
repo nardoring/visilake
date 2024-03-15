@@ -1,21 +1,18 @@
 use arrow::{
-    array::{ArrayRef, BooleanArray, TimestampNanosecondArray},
+    array::{BooleanArray, TimestampNanosecondArray},
     compute::filter_record_batch,
     csv,
-    datatypes::{DataType, Field, Schema},
     record_batch::RecordBatch,
-    util::pretty::print_batches,
 };
 use arrow_csv::reader::Format;
 use eyre::Result;
-use log::{debug, info};
+use log::debug;
 use parquet::{
     arrow::{arrow_reader::ParquetRecordBatchReaderBuilder, ArrowWriter},
     basic::Compression,
     file::properties::WriterProperties,
 };
 use std::{fs::File, io::Seek, sync::Arc};
-use tempfile::tempfile;
 
 #[derive(Debug, Clone)]
 pub struct TimeSeriesData {
@@ -138,19 +135,15 @@ impl TimeSeriesData {
 mod tests {
     use super::*;
     use arrow::{
-        array::{BooleanArray, Date32Array, Float64Array, Int64Array, TimestampNanosecondArray},
-        // datatypes::{DataType, Field, Schema},
+        array::{ArrayRef, Date32Array, Float64Array, Int64Array},
         datatypes::{DataType, Field, Schema, TimeUnit},
-        record_batch::RecordBatch,
+        util::pretty::print_batches,
     };
-    use chrono::{NaiveDate, NaiveDateTime};
-    use std::convert::TryInto;
     use std::io::Write;
-    use std::sync::Arc;
     use tempfile::NamedTempFile;
 
     #[test]
-    fn test_from_csv_variety_types() {
+    fn from_csv_handles_variety_of_types() {
         let csv_data = r#"
             c_int,c_float,c_string,c_bool,c_date,c_datetime
             1,1.1,\"1.11\",true,1970-01-01,1970-01-01T00:00:00
@@ -225,104 +218,50 @@ mod tests {
         }
     }
 
-    #[test]
-    fn test_filter_by_time_range() {
+    /// Helper function to create a TimeSeriesData instance from given timestamps and values
+    fn create_timeseries_data(timestamps: Vec<Option<i64>>, values: Vec<i64>) -> TimeSeriesData {
         let schema = Schema::new(vec![
             Field::new(
                 "timestamp",
-                // Timestamp to include TimeUnit and optional timezone
                 DataType::Timestamp(TimeUnit::Nanosecond, None),
                 false,
             ),
             Field::new("value", DataType::Int64, false),
         ]);
 
-        let timestamps = vec![Some(1), Some(2), Some(3), Some(4), Some(5)];
-        let timestamps_array = TimestampNanosecondArray::from(timestamps);
-
-        let values = Int64Array::from(vec![10, 20, 30, 40, 50]);
+        let timestamp_array = TimestampNanosecondArray::from(timestamps);
+        let value_array = Int64Array::from(values);
 
         let batch = RecordBatch::try_new(
             Arc::new(schema),
             vec![
-                Arc::new(timestamps_array) as ArrayRef,
-                Arc::new(values) as ArrayRef,
+                Arc::new(timestamp_array) as ArrayRef,
+                Arc::new(value_array) as ArrayRef,
             ],
         )
-        .unwrap();
+        .expect("Failed to create record batch");
 
-        let ts_data = TimeSeriesData {
+        TimeSeriesData {
             record_batches: vec![batch],
-        };
-
-        // start and end are inclusive
-        let start_time = 2;
-        let end_time = 4;
-        let filtered_data = ts_data.filter_by_time_range(start_time, end_time);
-
-        assert_eq!(filtered_data.record_batches.len(), 1);
-        let filtered_batch = &filtered_data.record_batches[0];
-
-        let filtered_timestamps = filtered_batch
-            .column(0)
-            .as_any()
-            .downcast_ref::<TimestampNanosecondArray>()
-            .unwrap();
-        let filtered_values = filtered_batch
-            .column(1)
-            .as_any()
-            .downcast_ref::<Int64Array>()
-            .unwrap();
-
-        assert_eq!(filtered_timestamps.len(), 3);
-        assert_eq!(filtered_values.len(), 3);
-
-        for i in 0..filtered_timestamps.len() {
-            let timestamp_value = filtered_timestamps.value(i);
-            assert!(timestamp_value >= start_time && timestamp_value <= end_time);
-            assert_eq!(filtered_values.value(i), (i as i64 + 1) * 10 + 10);
         }
     }
 
     #[test]
-    fn test_filter_by_timestamp_range() {
-        let schema = Schema::new(vec![
-            Field::new(
-                "timestamp",
-                // Timestamp to include TimeUnit and optional timezone
-                DataType::Timestamp(TimeUnit::Nanosecond, None),
-                false,
-            ),
-            Field::new("value", DataType::Int64, false),
-        ]);
-
-        let timestamps = TimestampNanosecondArray::from(vec![
-            Some(1_000_000_000), // 1 second
-            Some(2_000_000_000), // 2 seconds
-            Some(3_000_000_000), // 3 seconds
-            Some(4_000_000_000), // 4 seconds
-            Some(5_000_000_000), // 5 seconds
-        ]);
-        let values = Int64Array::from(vec![10, 20, 30, 40, 50]);
-
-        let batch = RecordBatch::try_new(
-            Arc::new(schema),
+    fn filter_by_time_range_filters_expected_rows() {
+        let ts_data = create_timeseries_data(
             vec![
-                Arc::new(timestamps) as ArrayRef,
-                Arc::new(values) as ArrayRef,
+                Some(1_000_000_000),
+                Some(2_000_000_000),
+                Some(3_000_000_000),
+                Some(4_000_000_000),
+                Some(5_000_000_000),
             ],
-        )
-        .unwrap();
+            vec![10, 20, 30, 40, 50],
+        );
 
-        let ts_data = TimeSeriesData {
-            record_batches: vec![batch],
-        };
+        let filtered_data = ts_data.filter_by_time_range(2_000_000_000, 4_000_000_000);
 
-        let start_time = 2_000_000_000;
-        // let start_time = 1_000_000_001; // note this would also pass this test
-        let end_time = 4_000_000_000;
-
-        let filtered_data = ts_data.filter_by_time_range(start_time, end_time);
+        assert_eq!(filtered_data.record_batches[0].num_rows(), 3);
 
         assert_eq!(filtered_data.record_batches.len(), 1);
         let filtered_batch = &filtered_data.record_batches[0];
@@ -348,33 +287,8 @@ mod tests {
     }
 
     #[test]
-    fn test_filter_empty_dataset() {
-        let schema = Schema::new(vec![
-            Field::new(
-                "timestamp",
-                DataType::Timestamp(TimeUnit::Nanosecond, None),
-                false,
-            ),
-            Field::new("value", DataType::Int64, false),
-        ]);
-
-        // Create columns with zero rows to match the schema
-        let timestamps = TimestampNanosecondArray::from(vec![None; 0]); // Zero-length array
-        let values = Int64Array::from(vec![None; 0]); // Zero-length array
-
-        // Create a RecordBatch with our schema and zero rows
-        let batch = RecordBatch::try_new(
-            Arc::new(schema),
-            vec![
-                Arc::new(timestamps) as ArrayRef,
-                Arc::new(values) as ArrayRef,
-            ],
-        )
-        .expect("Failed to create empty RecordBatch");
-
-        let ts_data = TimeSeriesData {
-            record_batches: vec![batch],
-        };
+    fn filter_empty_dataset_returns_empty_result() {
+        let ts_data = create_timeseries_data(vec![], vec![]);
 
         let filtered_data = ts_data.filter_by_time_range(1, 2);
 
@@ -383,41 +297,24 @@ mod tests {
     }
 
     #[test]
-    fn test_filter_late_starttime() {
-        let schema = Schema::new(vec![
-            Field::new(
-                "timestamp",
-                // Timestamp to include TimeUnit and optional timezone
-                DataType::Timestamp(TimeUnit::Nanosecond, None),
-                false,
-            ),
-            Field::new("value", DataType::Int64, false),
-        ]);
-
-        let timestamps = TimestampNanosecondArray::from(vec![
-            Some(1_000_000_000), // 1 second
-            Some(2_000_000_000), // 2 seconds
-            Some(3_000_000_000), // 3 seconds
-            Some(4_000_000_000), // 4 seconds
-            Some(5_000_000_000), // 5 seconds
-        ]);
-        let values = Int64Array::from(vec![10, 20, 30, 40, 50]);
-
-        let batch = RecordBatch::try_new(
-            Arc::new(schema),
+    fn filter_late_starttime_returns_empty_dataset() {
+        let ts_data = create_timeseries_data(
             vec![
-                Arc::new(timestamps) as ArrayRef,
-                Arc::new(values) as ArrayRef,
+                Some(1_000_000_000),
+                Some(2_000_000_000),
+                Some(3_000_000_000),
+                Some(4_000_000_000),
+                Some(5_000_000_000),
             ],
-        )
-        .unwrap();
+            vec![10, 20, 30, 40, 50],
+        );
 
-        let ts_data = TimeSeriesData {
-            record_batches: vec![batch],
-        };
+        let filtered_data = ts_data.filter_by_time_range(6_000_000_000, 7_000_000_000);
 
-        // start time is later in time than end time
-        let filtered_data = ts_data.filter_by_time_range(4_000_000_000, 3_000_000_000);
+        assert!(
+            filtered_data.record_batches.is_empty()
+                || filtered_data.record_batches[0].num_rows() == 0
+        );
 
         assert_eq!(filtered_data.record_batches.len(), 1);
         let filtered_batch = &filtered_data.record_batches[0];
@@ -438,42 +335,19 @@ mod tests {
     }
 
     #[test]
-    fn test_filter_no_start_rows() {
-        let schema = Schema::new(vec![
-            Field::new(
-                "timestamp",
-                // Timestamp to include TimeUnit and optional timezone
-                DataType::Timestamp(TimeUnit::Nanosecond, None),
-                false,
-            ),
-            Field::new("value", DataType::Int64, false),
-        ]);
-
-        let timestamps = TimestampNanosecondArray::from(vec![
-            Some(3_000_000_000), // 3 seconds
-            Some(4_000_000_000), // 4 seconds
-            Some(5_000_000_000), // 5 seconds
-        ]);
-        let values = Int64Array::from(vec![30, 40, 50]);
-
-        let batch = RecordBatch::try_new(
-            Arc::new(schema),
+    fn filter_with_no_starting_rows_returns_partial_data() {
+        let ts_data = create_timeseries_data(
             vec![
-                Arc::new(timestamps) as ArrayRef,
-                Arc::new(values) as ArrayRef,
+                Some(3_000_000_000),
+                Some(4_000_000_000),
+                Some(5_000_000_000),
             ],
-        )
-        .unwrap();
+            vec![30, 40, 50],
+        );
 
-        let ts_data = TimeSeriesData {
-            record_batches: vec![batch],
-        };
+        let filtered_data = ts_data.filter_by_time_range(0, 4_000_000_000);
 
-        let start_time = 0_000_000_000;
-        let end_time = 4_000_000_000;
-
-        let filtered_data = ts_data.filter_by_time_range(start_time, end_time);
-
+        assert_eq!(filtered_data.record_batches[0].num_rows(), 2);
         assert_eq!(filtered_data.record_batches.len(), 1);
         let filtered_batch = &filtered_data.record_batches[0];
         let filtered_timestamps = filtered_batch
@@ -492,41 +366,17 @@ mod tests {
     }
 
     #[test]
-    fn test_filter_all_existing_rows() {
-        let schema = Schema::new(vec![
-            Field::new(
-                "timestamp",
-                // Timestamp to include TimeUnit and optional timezone
-                DataType::Timestamp(TimeUnit::Nanosecond, None),
-                false,
-            ),
-            Field::new("value", DataType::Int64, false),
-        ]);
-
-        let timestamps = TimestampNanosecondArray::from(vec![
-            Some(3_000_000_000), // 3 seconds
-            Some(4_000_000_000), // 4 seconds
-            Some(5_000_000_000), // 5 seconds
-        ]);
-        let values = Int64Array::from(vec![30, 40, 50]);
-
-        let batch = RecordBatch::try_new(
-            Arc::new(schema),
+    fn filter_includes_all_existing_rows_when_range_is_wider() {
+        let ts_data = create_timeseries_data(
             vec![
-                Arc::new(timestamps) as ArrayRef,
-                Arc::new(values) as ArrayRef,
+                Some(3_000_000_000),
+                Some(4_000_000_000),
+                Some(5_000_000_000),
             ],
-        )
-        .unwrap();
+            vec![30, 40, 50],
+        );
 
-        let ts_data = TimeSeriesData {
-            record_batches: vec![batch],
-        };
-
-        let start_time = 0_000_000_000;
-        let end_time = 10_000_000_000;
-
-        let filtered_data = ts_data.filter_by_time_range(start_time, end_time);
+        let filtered_data = ts_data.filter_by_time_range(1_000_000_000, 6_000_000_000);
 
         assert_eq!(filtered_data.record_batches.len(), 1);
         let filtered_batch = &filtered_data.record_batches[0];

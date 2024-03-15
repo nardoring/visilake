@@ -300,6 +300,67 @@ mod tests {
     }
 
     #[test]
+    fn test_filter_by_granularity_various_granularities() {
+        let granularities = vec![
+            // 0,
+            1,
+            5,
+            10,
+            100,
+            1000,
+            1000 * 60,
+            1000 * 60 * 60,
+            1000 * 60 * 60 * 24,
+        ];
+
+        let ts_data = create_timeseries_data(
+            vec![
+                Some(0),                   // 0ms
+                Some(500_000_000),         // 500ms
+                Some(1_000_000_000),       // 1000ms (1 second)
+                Some(1_500_000_000),       // 1500ms
+                Some(2_000_000_000),       // 2000ms (2 seconds)
+                Some(3_600_000_000_000),   // 1 hour
+                Some(86_400_000_000_000),  // 1 day
+                Some(172_800_000_000_000), // 2 day
+            ],
+            vec![1, 2, 3, 4, 5, 6, 7, 8],
+        );
+
+        for granularity in granularities {
+            let filtered_data = ts_data.filter_by_granularity(granularity).unwrap();
+
+            let expected_num_records: usize = ts_data
+                .record_batches
+                .iter()
+                .map(|batch| {
+                    let timestamp_col = batch
+                        .column(0)
+                        .as_any()
+                        .downcast_ref::<TimestampNanosecondArray>()
+                        .unwrap();
+                    timestamp_col
+                        .iter()
+                        .filter_map(|maybe_time| maybe_time)
+                        .filter(|&time| time % (granularity * 1_000_000) == 0)
+                        .count()
+                })
+                .sum();
+
+            assert_eq!(
+                filtered_data
+                    .record_batches
+                    .iter()
+                    .map(|batch| batch.num_rows())
+                    .sum::<usize>(),
+                expected_num_records,
+                "Granularity: {}ms did not filter correctly",
+                granularity
+            );
+        }
+    }
+
+    #[test]
     fn filter_by_time_range_filters_expected_rows() {
         let ts_data = create_timeseries_data(
             vec![

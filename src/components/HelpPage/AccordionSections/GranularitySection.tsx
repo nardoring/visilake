@@ -28,7 +28,7 @@ export default function GranularitySection() {
           analysis to focus on specific details or broader trends.
         </Typography>
         <br />
-        <Typography variant='h6'>Try it Yourself</Typography>
+        <Typography variant='h5'>Try it Yourself</Typography>
         <br />
         <div className='px-10'>
           <GranularitySlider onGranularityChanged={onGranularityChanged} />

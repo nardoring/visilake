@@ -90,8 +90,10 @@ impl TimeSeriesData {
         Ok(())
     }
 
-    /// Returns a new instance of TimeSeriesData representing the filtered dataset
-    pub fn filter_by_time_range(&self, start_time: i64, end_time: i64) -> Self {
+    fn filter_record_batches<F>(&self, filter_fn: F) -> Result<Self>
+    where
+        F: Fn(i64) -> bool + Copy,
+    {
         let filtered_batches: Vec<RecordBatch> = self
             .record_batches
             .iter()
@@ -101,64 +103,37 @@ impl TimeSeriesData {
                     .fields()
                     .iter()
                     .position(|field| field.name() == "timestamp")
-                    .expect("Timestamp column not found");
+                    .ok_or_else(|| eyre::eyre!("Timestamp column not found"))?;
 
                 let timestamp_col = batch
                     .column(timestamp_col_index)
                     .as_any()
                     .downcast_ref::<TimestampNanosecondArray>()
-                    .expect("Timestamp column has incorrect type");
+                    .ok_or_else(|| eyre::eyre!("Timestamp column has incorrect type"))?;
 
                 let mask = timestamp_col
                     .iter()
-                    .map(|maybe_time| maybe_time.map(|time| time >= start_time && time <= end_time))
+                    .map(|maybe_time| maybe_time.map(|time| filter_fn(time)))
                     .collect::<BooleanArray>();
 
                 filter_record_batch(batch, &mask)
-                    .expect("Failed to filter record batch by time range")
+                    .map_err(|_| eyre::eyre!("Failed to filter record batch"))
             })
-            .collect();
+            .collect::<Result<_>>()?;
 
-        TimeSeriesData {
+        Ok(TimeSeriesData {
             record_batches: filtered_batches,
-        }
+        })
     }
 
-    /// Returns a new instance of TimeSeriesData representing the filtered dataset
-    pub fn filter_by_granularity(&self, granularity: i64) -> Self {
-        let filtered_batches: Vec<RecordBatch> = self
-            .record_batches
-            .iter()
-            .map(|batch| {
-                let timestamp_col_index = batch
-                    .schema()
-                    .fields()
-                    .iter()
-                    .position(|field| field.name() == "timestamp")
-                    .expect("Timestamp column not found");
+    pub fn filter_by_time_range(&self, start_time: i64, end_time: i64) -> Result<Self> {
+        self.filter_record_batches(move |time| time >= start_time && time <= end_time)
+    }
 
-                let timestamp_col = batch
-                    .column(timestamp_col_index)
-                    .as_any()
-                    .downcast_ref::<TimestampNanosecondArray>()
-                    .expect("Timestamp column has incorrect type");
-
-                // granularity is given in milliseconds, convert it to nanoseconds
-                let granularity_ns = granularity * 1_000_000;
-
-                let mask = timestamp_col
-                    .iter()
-                    .map(|maybe_time| maybe_time.map(|time| time % granularity_ns == 0))
-                    .collect::<BooleanArray>();
-
-                filter_record_batch(batch, &mask)
-                    .expect("Failed to filter record batch by granularity")
-            })
-            .collect();
-
-        TimeSeriesData {
-            record_batches: filtered_batches,
-        }
+    pub fn filter_by_granularity(&self, granularity: i64) -> Result<Self> {
+        // Convert granularity from milliseconds to nanoseconds
+        let granularity_ns = granularity * 1_000_000;
+        self.filter_record_batches(move |time| time % granularity_ns == 0)
     }
 }
 
@@ -293,7 +268,7 @@ mod tests {
         );
 
         // Apply granularity filtering with 1 second granularity (1000 milliseconds)
-        let filtered_data = ts_data.filter_by_granularity(1000);
+        let filtered_data = ts_data.filter_by_granularity(1000).unwrap();
 
         assert_eq!(filtered_data.record_batches.len(), 1);
         let filtered_batch = &filtered_data.record_batches[0];
@@ -337,7 +312,9 @@ mod tests {
             vec![10, 20, 30, 40, 50],
         );
 
-        let filtered_data = ts_data.filter_by_time_range(2_000_000_000, 4_000_000_000);
+        let filtered_data = ts_data
+            .filter_by_time_range(2_000_000_000, 4_000_000_000)
+            .unwrap();
 
         assert_eq!(filtered_data.record_batches[0].num_rows(), 3);
 
@@ -368,7 +345,7 @@ mod tests {
     fn filter_empty_dataset_returns_empty_result() {
         let ts_data = create_timeseries_data(vec![], vec![]);
 
-        let filtered_data = ts_data.filter_by_time_range(1, 2);
+        let filtered_data = ts_data.filter_by_time_range(1, 2).unwrap();
 
         assert_eq!(filtered_data.record_batches.len(), 1);
         assert_eq!(filtered_data.record_batches[0].num_rows(), 0);
@@ -387,7 +364,9 @@ mod tests {
             vec![10, 20, 30, 40, 50],
         );
 
-        let filtered_data = ts_data.filter_by_time_range(6_000_000_000, 7_000_000_000);
+        let filtered_data = ts_data
+            .filter_by_time_range(6_000_000_000, 7_000_000_000)
+            .unwrap();
 
         assert!(
             filtered_data.record_batches.is_empty()
@@ -423,7 +402,7 @@ mod tests {
             vec![30, 40, 50],
         );
 
-        let filtered_data = ts_data.filter_by_time_range(0, 4_000_000_000);
+        let filtered_data = ts_data.filter_by_time_range(0, 4_000_000_000).unwrap();
 
         assert_eq!(filtered_data.record_batches[0].num_rows(), 2);
         assert_eq!(filtered_data.record_batches.len(), 1);
@@ -454,7 +433,9 @@ mod tests {
             vec![30, 40, 50],
         );
 
-        let filtered_data = ts_data.filter_by_time_range(1_000_000_000, 6_000_000_000);
+        let filtered_data = ts_data
+            .filter_by_time_range(1_000_000_000, 6_000_000_000)
+            .unwrap();
 
         assert_eq!(filtered_data.record_batches.len(), 1);
         let filtered_batch = &filtered_data.record_batches[0];

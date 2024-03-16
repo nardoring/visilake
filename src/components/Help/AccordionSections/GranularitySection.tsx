@@ -19,22 +19,27 @@ export default function GranularitySection() {
   return (
     <div>
       <AccordionDetails>
-        <Typography>
+        <Typography className='pl-7'>
           The granularity input enables you to adjust the time intervals between
           data points in your analysis. Granularity determines the level of
           detail in your analysis, ranging from finer to broader time intervals.
           By using the slider, you can choose to examine data with more precise
           time intervals or broader ones, allowing you to customize your
           analysis to focus on specific details or broader trends.
+          <br />
+          <br />
+          If the granularity you select is finer than what the data supports,
+          the system will automatically default to the lowest available
+          granularity for the dataset
         </Typography>
-        <br />
+        <Typography className='pt-4'></Typography>
         <Typography
           variant='h6'
           sx={{ fontWeight: 'bold' }}
+          className='pb-3'
         >
           Try it Yourself
         </Typography>
-        <br />
         <div className='px-10'>
           <GranularitySlider onGranularityChanged={onGranularityChanged} />
           <Typography className='text-center'>

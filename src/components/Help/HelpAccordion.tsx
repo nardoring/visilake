@@ -16,7 +16,7 @@ export default function HelpAccordion() {
         >
           Analysis Type(s)
         </AccordionSummary>
-        <AnalysisTypesSection/>
+        <AnalysisTypesSection />
       </Accordion>
       <Accordion>
         <AccordionSummary
@@ -26,7 +26,7 @@ export default function HelpAccordion() {
         >
           Sources
         </AccordionSummary>
-        <SourcesSection/>
+        <SourcesSection />
       </Accordion>
       <Accordion>
         <AccordionSummary

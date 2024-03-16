@@ -28,12 +28,18 @@ export default function GranularitySection() {
           analysis to focus on specific details or broader trends.
         </Typography>
         <br />
-        <Typography variant='h6' sx={{ fontWeight: 'bold' }}>Try it Yourself</Typography>
+        <Typography
+          variant='h6'
+          sx={{ fontWeight: 'bold' }}
+        >
+          Try it Yourself
+        </Typography>
         <br />
         <div className='px-10'>
           <GranularitySlider onGranularityChanged={onGranularityChanged} />
           <Typography className='text-center'>
-            Datapoints will be <strong>{getGranularityLabel(granularity)}</strong> apart
+            Datapoints will be{' '}
+            <strong>{getGranularityLabel(granularity)}</strong> apart
           </Typography>
         </div>
       </AccordionDetails>

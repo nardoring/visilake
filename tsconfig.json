@@ -29,7 +29,7 @@
     "**/*.tsx",
     "**/*.cjs",
     "**/*.mjs",
-    ".next/types/**/*.ts", "src/components/HelpPage/AccordionSections",
+    ".next/types/**/*.ts",
   ],
   "exclude": ["node_modules"],
 }

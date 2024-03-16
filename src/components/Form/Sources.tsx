@@ -18,6 +18,9 @@ interface SourcesProps {
 const Sources = ({ getSources, setSources, inputStyles }: SourcesProps) => {
   const [currentInput, setCurrentInput] = useState<string>('');
   const [sourceSubmission, setSourceSubmission] = useState<string>('');
+  const { data: sourceData, isLoading: sourceDataLoading } =
+    api.source.getSources.useQuery();
+  const sources: string[] = sourceDataLoading ? [] : sourceData ?? [];
 
   const autocompleteOptions = createFilterOptions({
     limit: AUTOCOMPLETE_OPTIONS_LIMIT,
@@ -45,14 +48,13 @@ const Sources = ({ getSources, setSources, inputStyles }: SourcesProps) => {
     setSources(updatedSources);
   };
 
+  const filteredOptions = sources.filter(
+    (source) => !getSources().some((selected) => selected.name === source)
+  );
+
   useEffect(() => {
     handleSourceSubmission();
   }, [sourceSubmission]);
-
-  const { data: sourceData, isLoading: sourceDataLoading } =
-    api.source.getSources.useQuery();
-
-  const sources: string[] = sourceDataLoading ? [] : sourceData ?? [];
 
   return (
     <>
@@ -71,7 +73,7 @@ const Sources = ({ getSources, setSources, inputStyles }: SourcesProps) => {
         autoComplete
         filterOptions={autocompleteOptions}
         inputValue={currentInput}
-        options={sources.sort()}
+        options={filteredOptions.sort()}
         // Handle source submission when user hits enter
         onKeyDown={(e) => {
           if (e.key == 'Enter') {

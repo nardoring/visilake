@@ -4,22 +4,22 @@ import { List, ListItem, Typography } from '@mui/material';
 export default function AnalysisTypesSection() {
   return (
     <AccordionDetails>
-      <Typography paragraph>
+      <Typography>
         The analysis type(s) input lets you choose what kind of analysis you
         want to perform on your data. You can select from three types:
       </Typography>
       <List>
         {analysisTypeExplanations.map((type, index) => (
           <ListItem key={index}>
-            <Typography paragraph>
+            <Typography>
               <strong>{type.title}:</strong>&nbsp;{type.description}
             </Typography>
           </ListItem>
         ))}
       </List>
-      <Typography paragraph>
+      <Typography>
         You can choose one or more of these options, and they will be applied in
-        the order you select them. If you don't want to perform any analysis and
+        the order you select them. If you don&apos;t want to perform any analysis and
         just want to retrieve the raw data, you can choose not to select any
         options.
       </Typography>

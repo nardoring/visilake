@@ -1,7 +1,8 @@
 use arrow::{
-    array::{BooleanArray, TimestampNanosecondArray},
+    array::{BooleanArray, TimestampMillisecondArray},
     compute::filter_record_batch,
     csv,
+    datatypes::{DataType, Field, Schema, TimeUnit},
     record_batch::RecordBatch,
 };
 use arrow_csv::reader::Format;
@@ -16,37 +17,62 @@ use std::{fs::File, io::Seek, sync::Arc};
 
 #[derive(Debug, Clone)]
 pub struct TimeSeriesData {
+    schema: Arc<Schema>,
     record_batches: Vec<RecordBatch>,
 }
 
 impl TimeSeriesData {
-    /// Returns a TimeSeriesData from dataset in .parquet on disk at `infile`
+    /// Constructs a `TimeSeriesData` instance from a Parquet file on disk.
+    ///
+    /// # Arguments
+    ///
+    /// * `infile` - A string slice that holds the path to the input Parquet file.
+    ///
+    /// # Returns
+    ///
+    /// A result containing either a `TimeSeriesData` instance populated with the data from the input file
+    /// or an error if the operation fails.
     pub fn from_parquet(infile: &str) -> arrow::error::Result<Self> {
-        let file = File::open(infile).unwrap();
-        let builder = ParquetRecordBatchReaderBuilder::try_new(file).unwrap();
-        debug!("Converted arrow schema is: {}", builder.schema());
+        let file = File::open(infile)?;
+        let builder = ParquetRecordBatchReaderBuilder::try_new(file)?;
+        debug!("Converted arrow schema is: {:#?}", builder.schema());
 
-        let mut reader = builder.build().unwrap();
+        let schema = builder.schema().clone();
+
+        let mut reader = builder.build()?;
 
         let mut record_batches = Vec::new();
         while let Some(Ok(batch)) = reader.next() {
             record_batches.push(batch);
         }
 
-        Ok(TimeSeriesData { record_batches })
+        Ok(TimeSeriesData {
+            schema,
+            record_batches,
+        })
     }
 
-    /// Returns a TimeSeriesData from a given filepath to a .parquet dataset
+    /// Constructs a `TimeSeriesData` instance from a CSV file on disk, inferring the schema from the CSV headers.
+    ///
+    /// # Arguments
+    ///
+    /// * `infile` - A string slice that holds the path to the input CSV file.
+    ///
+    /// # Returns
+    ///
+    /// A result containing either a `TimeSeriesData` instance populated with the data from the input file
+    /// or an error if the operation fails. This function assumes the first row of the CSV contains headers that define the schema.
     pub fn from_csv(infile: &str) -> Result<Self> {
-        let mut file = File::open(&infile).unwrap();
+        let mut file = File::open(&infile)?;
         let format = Format::default().with_header(true);
-        let (schema, _) = format.infer_schema(&mut file, Some(100)).unwrap();
-        file.seek(std::io::SeekFrom::Start(0)).unwrap();
+        let (schema, _) = format.infer_schema(&mut file, Some(100))?;
+        let schema_arc = Arc::new(schema);
+        file.seek(std::io::SeekFrom::Start(0))?;
 
-        let builder = csv::ReaderBuilder::new(Arc::new(schema))
+        let builder = csv::ReaderBuilder::new(schema_arc.clone())
             .with_format(format)
             .with_batch_size(512);
-        let mut csv_reader = builder.build(file).unwrap();
+        let mut csv_reader = builder.build(file)?;
 
         let mut record_batches = Vec::new();
 
@@ -60,21 +86,27 @@ impl TimeSeriesData {
             infile
         );
 
-        Ok(TimeSeriesData { record_batches })
+        Ok(TimeSeriesData {
+            schema: schema_arc,
+            record_batches,
+        })
     }
 
-    /// Writes the TimeSeriesData to disk in parquet format
+    /// Writes the contained `TimeSeriesData` to disk in Parquet format.
+    ///
+    /// # Arguments
+    ///
+    /// * `outfile` - A string slice that holds the path where the output Parquet file will be written.
+    ///
+    /// # Returns
+    ///
+    /// A result indicating the success or failure of the write operation.
     pub fn to_parquet(&self, outfile: &str) -> Result<()> {
-        let file = File::create(outfile).unwrap();
+        let file = File::create(outfile)?;
         let writer_props = WriterProperties::builder()
             .set_compression(Compression::SNAPPY)
             .build();
-        let mut writer = ArrowWriter::try_new(
-            file,
-            Arc::new(self.record_batches[0].schema().as_ref().clone()),
-            Some(writer_props),
-        )
-        .unwrap();
+        let mut writer = ArrowWriter::try_new(file, self.schema.clone(), Some(writer_props))?;
 
         for batch in &self.record_batches {
             writer.write(&batch)?;
@@ -90,6 +122,16 @@ impl TimeSeriesData {
         Ok(())
     }
 
+    /// Filters the record batches based on a provided filter function, supporting dynamic identification of temporal fields.
+    ///
+    /// # Arguments
+    ///
+    /// * `filter_fn` - A closure that takes a timestamp in nanoseconds and returns a boolean indicating whether the record should be included.
+    ///
+    /// # Returns
+    ///
+    /// A result containing either a new `TimeSeriesData` instance with the filtered record batches
+    /// or an error if the operation fails.
     fn filter_record_batches<F>(&self, filter_fn: F) -> Result<Self>
     where
         F: Fn(i64) -> bool + Copy,
@@ -98,20 +140,20 @@ impl TimeSeriesData {
             .record_batches
             .iter()
             .map(|batch| {
-                let timestamp_col_index = batch
+                let temporal_field_index = batch
                     .schema()
                     .fields()
                     .iter()
-                    .position(|field| field.name() == "timestamp")
-                    .ok_or_else(|| eyre::eyre!("Timestamp column not found"))?;
+                    .position(|field| field.data_type().is_temporal())
+                    .ok_or_else(|| eyre::eyre!("Temporal column not found"))?;
 
-                let timestamp_col = batch
-                    .column(timestamp_col_index)
+                let temporal_col = batch
+                    .column(temporal_field_index)
                     .as_any()
-                    .downcast_ref::<TimestampNanosecondArray>()
-                    .ok_or_else(|| eyre::eyre!("Timestamp column has incorrect type"))?;
+                    .downcast_ref::<TimestampMillisecondArray>()
+                    .ok_or_else(|| eyre::eyre!("Temporal column has incorrect type"))?;
 
-                let mask = timestamp_col
+                let mask = temporal_col
                     .iter()
                     .map(|maybe_time| maybe_time.map(|time| filter_fn(time)))
                     .collect::<BooleanArray>();
@@ -119,21 +161,120 @@ impl TimeSeriesData {
                 filter_record_batch(batch, &mask)
                     .map_err(|_| eyre::eyre!("Failed to filter record batch"))
             })
-            .collect::<Result<_>>()?;
+            .collect::<Result<Vec<RecordBatch>>>()?;
 
         Ok(TimeSeriesData {
+            schema: self.schema.clone(),
             record_batches: filtered_batches,
         })
     }
 
+    /// Filters the record batches to include only those records that fall within a specified time range.
+    ///
+    /// # Arguments
+    ///
+    /// * `start_time` - The start of the time range in nanoseconds.
+    /// * `end_time` - The end of the time range in nanoseconds.
+    ///
+    /// # Returns
+    ///
+    /// A result containing either a new `TimeSeriesData` instance with the filtered record batches
+    /// or an error if the operation fails.
     pub fn filter_by_time_range(&self, start_time: i64, end_time: i64) -> Result<Self> {
         self.filter_record_batches(move |time| time >= start_time && time <= end_time)
     }
 
+    /// Filters the record batches to adjust the time between sampled events according to the specified granularity,
+    /// taking into account the datatype of the temporal column for granularity adjustment.
+    ///
+    /// # Arguments
+    ///
+    /// * `granularity` - The desired granularity in milliseconds.
+    ///
+    /// # Returns
+    ///
+    /// A result containing either a new `TimeSeriesData` instance with the filtered record batches
+    /// or an error if the operation fails.
     pub fn filter_by_granularity(&self, granularity: i64) -> Result<Self> {
-        // Convert granularity from milliseconds to nanoseconds
-        let granularity_ns = granularity * 1_000_000;
-        self.filter_record_batches(move |time| time % granularity_ns == 0)
+        let data_type = self
+            .schema
+            .fields()
+            .iter()
+            .find_map(|field| {
+                if field.data_type().is_temporal() {
+                    Some(field.data_type())
+                } else {
+                    None
+                }
+            })
+            .expect("Temporal column not found");
+
+        let conversion_factor = match data_type {
+            DataType::Timestamp(unit, _) => match unit {
+                TimeUnit::Second => 1_000_000_000,
+                TimeUnit::Millisecond => 1_000_000,
+                TimeUnit::Microsecond => 1_000,
+                TimeUnit::Nanosecond => 1,
+            },
+            DataType::Date32 => 86_400_000_000_000, // days to nanoseconds
+            DataType::Date64 => 1_000_000,          // milliseconds to nanoseconds
+            DataType::Time32(_) => 1_000_000,       // milliseconds to nanoseconds
+            DataType::Time64(unit) => match unit {
+                TimeUnit::Second => 1_000_000_000,
+                TimeUnit::Millisecond => 1_000_000,
+                TimeUnit::Microsecond => 1_000,
+                TimeUnit::Nanosecond => 1,
+            },
+            _ => unimplemented!("Unsupported temporal type"),
+        };
+
+        // Adjust granularity based on the data type
+        let adjusted_granularity = granularity * conversion_factor;
+
+        self.filter_record_batches(move |time| time % adjusted_granularity == 0)
+    }
+
+    /// Retrieves a list of field names from the schema.
+    ///
+    /// # Returns
+    ///
+    /// A vector containing the names of all fields in the schema.
+    pub fn field_names(&self) -> Vec<String> {
+        self.schema
+            .fields()
+            .iter()
+            .map(|f| f.name().clone())
+            .collect()
+    }
+
+    /// Checks if a field with the specified name exists in the schema.
+    ///
+    /// # Arguments
+    ///
+    /// * `field_name` - The name of the field to check.
+    ///
+    /// # Returns
+    ///
+    /// `true` if the field exists in the schema, `false` otherwise.
+    pub fn has_field(&self, field_name: &str) -> bool {
+        self.schema.fields().iter().any(|f| f.name() == field_name)
+    }
+
+    /// Retrieves the data type of a field by its name.
+    ///
+    /// # Arguments
+    ///
+    /// * `field_name` - The name of the field.
+    ///
+    /// # Returns
+    ///
+    /// An option containing the `DataType` of the field if it exists, or `None` if the field is not found in the schema.
+    pub fn field_type(&self, field_name: &str) -> Option<DataType> {
+        self.schema
+            .fields()
+            .iter()
+            .find(|f| f.name() == field_name)
+            .map(|f| f.data_type().clone())
     }
 }
 
@@ -204,7 +345,7 @@ mod tests {
             assert_eq!(c_date.value(4), 7305); // 1990-01-01
         }
 
-        // Nanoseconds since Unix epoch (for TimestampNanosecondArray):
+        // Milliseconds since Unix epoch (for TimestampMillisecondArray):
 
         //     1970-01-01T00:00:00: 0 nanoseconds
         //     2020-11-08T01:00:00: 1.6047972e+18 nanoseconds
@@ -215,7 +356,7 @@ mod tests {
         if let Some(c_datetime) = batch
             .column(5)
             .as_any()
-            .downcast_ref::<TimestampNanosecondArray>()
+            .downcast_ref::<TimestampMillisecondArray>()
         {
             assert_eq!(c_datetime.value(0) as f64, 0.0); // 1970-01-01T00:00:00
             assert_eq!(c_datetime.value(1) as f64, 1.6047972e+18); // 2020-11-08T01:00:00
@@ -229,17 +370,17 @@ mod tests {
         let schema = Schema::new(vec![
             Field::new(
                 "timestamp",
-                DataType::Timestamp(TimeUnit::Nanosecond, None),
+                DataType::Timestamp(TimeUnit::Millisecond, None),
                 false,
             ),
             Field::new("value", DataType::Int64, false),
         ]);
 
-        let timestamp_array = TimestampNanosecondArray::from(timestamps);
+        let timestamp_array = TimestampMillisecondArray::from(timestamps);
         let value_array = Int64Array::from(values);
 
         let batch = RecordBatch::try_new(
-            Arc::new(schema),
+            Arc::new(schema.clone()),
             vec![
                 Arc::new(timestamp_array) as ArrayRef,
                 Arc::new(value_array) as ArrayRef,
@@ -248,6 +389,7 @@ mod tests {
         .expect("Failed to create record batch");
 
         TimeSeriesData {
+            schema: Arc::new(schema),
             record_batches: vec![batch],
         }
     }
@@ -276,7 +418,7 @@ mod tests {
         let filtered_timestamps = filtered_batch
             .column(0)
             .as_any()
-            .downcast_ref::<TimestampNanosecondArray>()
+            .downcast_ref::<TimestampMillisecondArray>()
             .unwrap();
         let filtered_values = filtered_batch
             .column(1)
@@ -302,7 +444,6 @@ mod tests {
     #[test]
     fn test_filter_by_granularity_various_granularities() {
         let granularities = vec![
-            // 0,
             1,
             5,
             10,
@@ -337,7 +478,7 @@ mod tests {
                     let timestamp_col = batch
                         .column(0)
                         .as_any()
-                        .downcast_ref::<TimestampNanosecondArray>()
+                        .downcast_ref::<TimestampMillisecondArray>()
                         .unwrap();
                     timestamp_col
                         .iter()
@@ -384,7 +525,7 @@ mod tests {
         let filtered_timestamps = filtered_batch
             .column(0)
             .as_any()
-            .downcast_ref::<TimestampNanosecondArray>()
+            .downcast_ref::<TimestampMillisecondArray>()
             .unwrap();
         let filtered_values = filtered_batch
             .column(1)
@@ -439,7 +580,7 @@ mod tests {
         let filtered_timestamps = filtered_batch
             .column(0)
             .as_any()
-            .downcast_ref::<TimestampNanosecondArray>()
+            .downcast_ref::<TimestampMillisecondArray>()
             .unwrap();
         let filtered_values = filtered_batch
             .column(1)
@@ -471,7 +612,7 @@ mod tests {
         let filtered_timestamps = filtered_batch
             .column(0)
             .as_any()
-            .downcast_ref::<TimestampNanosecondArray>()
+            .downcast_ref::<TimestampMillisecondArray>()
             .unwrap();
         let filtered_values = filtered_batch
             .column(1)
@@ -503,7 +644,7 @@ mod tests {
         let filtered_timestamps = filtered_batch
             .column(0)
             .as_any()
-            .downcast_ref::<TimestampNanosecondArray>()
+            .downcast_ref::<TimestampMillisecondArray>()
             .unwrap();
         let filtered_values = filtered_batch
             .column(1)
@@ -513,5 +654,69 @@ mod tests {
 
         assert_eq!(filtered_timestamps.len(), 3);
         assert_eq!(filtered_values.len(), 3);
+    }
+
+    #[test]
+    fn filter_by_temporal_field_identifies_and_filters_correctly() {
+        // Create a schema with various field types, including a temporal one not named "timestamp"
+        let schema = Schema::new(vec![
+            Field::new("id", DataType::Int64, false),
+            Field::new(
+                "maybe_a_time",
+                DataType::Timestamp(TimeUnit::Millisecond, None),
+                false,
+            ),
+            Field::new("value", DataType::Float64, false),
+        ]);
+
+        let event_times = vec![
+            Some(1_000_000_000), // 1 second
+            Some(2_000_000_000), // 2 seconds
+            Some(3_000_000_000), // 3 seconds
+            Some(4_000_000_000), // 4 seconds
+            Some(5_000_000_000), // 5 seconds
+        ];
+
+        // Corresponding IDs and values
+        let ids = vec![Some(1), Some(2), Some(3), Some(4), Some(5)];
+        let values = vec![Some(10.0), Some(20.0), Some(30.0), Some(40.0), Some(50.0)];
+
+        let event_time_array = TimestampMillisecondArray::from(event_times);
+        let id_array = Int64Array::from(ids);
+        let value_array = Float64Array::from(values);
+
+        let batch = RecordBatch::try_new(
+            Arc::new(schema.clone()),
+            vec![
+                Arc::new(id_array) as ArrayRef,
+                Arc::new(event_time_array) as ArrayRef,
+                Arc::new(value_array) as ArrayRef,
+            ],
+        )
+        .expect("Failed to create record batch");
+
+        let ts_data = TimeSeriesData {
+            schema: Arc::new(schema),
+            record_batches: vec![batch],
+        };
+
+        // Apply filtering based on the "maybe_a_time" column
+        let filter_fn = |time: i64| time >= 2_000_000_000 && time <= 4_000_000_000;
+        let filtered_data = ts_data.filter_record_batches(filter_fn).unwrap();
+
+        assert_eq!(filtered_data.record_batches.len(), 1);
+        let filtered_batch = &filtered_data.record_batches[0];
+
+        let filtered_event_times = filtered_batch
+            .column(1)
+            .as_any()
+            .downcast_ref::<TimestampMillisecondArray>()
+            .unwrap();
+
+        // Verify that only timestamps within the specified range (2 to 4 seconds) are included
+        assert_eq!(filtered_event_times.len(), 3);
+        assert_eq!(filtered_event_times.value(0), 2_000_000_000);
+        assert_eq!(filtered_event_times.value(1), 3_000_000_000);
+        assert_eq!(filtered_event_times.value(2), 4_000_000_000);
     }
 }

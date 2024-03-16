@@ -5,7 +5,7 @@ export default function AnalysisTypesSection() {
   return (
     <AccordionDetails>
       <Typography paragraph>
-        The "analysis types" input lets you choose what kind of analysis you
+        The analysis type(s) input lets you choose what kind of analysis you
         want to perform on your data. You can select from three types:
       </Typography>
       <List>

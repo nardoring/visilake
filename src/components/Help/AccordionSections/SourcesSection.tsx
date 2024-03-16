@@ -55,7 +55,7 @@ export default function SourcesSection() {
     <AccordionDetails>
       <div className='pl-5'>
         <Typography className='pb-3 pl-2'>
-          The Sources input enables you to enter the source tags for the data
+          The sources input enables you to enter the source tags for the data
           you would like to analyze. Each source tag is associated with time
           series data for the device specified by the tag. The format used for
           the tags is a custom ISA 5.1 format:

@@ -1,9 +1,5 @@
 import AccordionDetails from '@mui/material/AccordionDetails';
-import {
-  List,
-  ListItem,
-  Typography,
-} from '@mui/material';
+import { List, ListItem, Typography } from '@mui/material';
 import Image from 'next/image';
 
 const examples = {
@@ -58,10 +54,11 @@ export default function SourcesSection() {
   return (
     <AccordionDetails>
       <div className='pl-5'>
-        <Typography className='pl-2 pb-3'>
+        <Typography className='pb-3 pl-2'>
           The Sources input enables you to enter the source tags for the data
-          you would like to analyze. The format used for the tags is a custom
-          ISA 5.1 format:
+          you would like to analyze. Each source tag is associated with time
+          series data for the device specified by the tag. The format used for
+          the tags is a custom ISA 5.1 format:
         </Typography>
         <div className='flex items-center justify-center'>
           <div className='mx-auto my-auto h-1/2 w-1/2'>

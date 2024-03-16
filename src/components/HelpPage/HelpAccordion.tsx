@@ -14,7 +14,7 @@ export default function HelpAccordion() {
           id='panel1-analysisTypes'
           className='text-2xl font-bold'
         >
-          Analysis Types
+          Analysis Type(s)
         </AccordionSummary>
         <AnalysisTypesSection/>
       </Accordion>

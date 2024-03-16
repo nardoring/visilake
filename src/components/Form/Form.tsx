@@ -106,7 +106,7 @@ export default function Form() {
 
   return (
     <form
-      className='z-40 col-start-2 col-end-9 row-span-6 row-start-3 p-4 '
+      className='z-40 col-start-2 col-end-9 row-span-6 row-start-3 px-4'
       onSubmit={handleSubmit}
       id='jobSubmissionForm'
     >

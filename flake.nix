@@ -26,6 +26,7 @@
     dynamoUrl = "http://dynamodb.us-east-1.localhost.localstack.cloud:4566/";
     sqsUrl = "http://sqs.us-east-1.localhost.localstack.cloud:4566/";
     authorName = "Test Author";
+    snsUrl = "http://sns.us-east-1.localhost.localstack.cloud:4566/";
   in
     flake-parts.lib.mkFlake {inherit inputs;} ({...}: {
       systems = ["x86_64-linux"];
@@ -112,6 +113,7 @@
               "DYNAMO_URL=${dynamoUrl}"
               "SQS_URL=${sqsUrl}"
               "NEXT_PUBLIC_AUTHOR_NAME=${authorName}"
+              "SNS_URL=${snsUrl}"
             ];
             WorkingDir = "/app";
             User = "nextjs";
@@ -197,7 +199,11 @@
           AWS_REGION = "us-east-1";
           DYNAMO_URL = "${dynamoUrl}";
           SQS_URL = "${sqsUrl}";
+<<<<<<< HEAD
           NEXT_PUBLIC_AUTHOR_NAME = "${authorName}";
+=======
+          SNS_URL = "${snsUrl}";
+>>>>>>> 6332cda (Added SNS client)
         };
 
         packages = {

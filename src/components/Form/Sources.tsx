@@ -1,9 +1,13 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Source from './Source';
 import type { Source as Source_t } from '~/utils/types';
-import { isKeyboardEvent } from '~/utils/keyboardEvent';
+import Autocomplete, { createFilterOptions } from '@mui/material/Autocomplete';
+import { api } from '~/utils/api';
 
 import { Tooltip } from 'react-tooltip';
+import TextField from '@mui/material/TextField';
+
+const AUTOCOMPLETE_OPTIONS_LIMIT = 5;
 
 interface SourcesProps {
   getSources: () => Source_t[];
@@ -12,16 +16,25 @@ interface SourcesProps {
 }
 
 const Sources = ({ getSources, setSources, inputStyles }: SourcesProps) => {
-  const [currentSource, setCurrentSource] = useState<string>('');
+  const [currentInput, setCurrentInput] = useState<string>('');
+  const [sourceSubmission, setSourceSubmission] = useState<string>('');
+  const { data: sourceData, isLoading: sourceDataLoading } =
+    api.source.getSources.useQuery();
+  const sources: string[] = sourceDataLoading ? [] : sourceData ?? [];
 
-  const checkSourceEntry = () => {
+  const autocompleteOptions = createFilterOptions({
+    limit: AUTOCOMPLETE_OPTIONS_LIMIT,
+  });
+
+  const handleSourceSubmission = () => {
     if (
-      currentSource.trim() !== '' &&
-      !getSources().some((source) => source.name === currentSource)
+      sourceSubmission.trim() !== '' &&
+      !getSources().some((source) => source.name === sourceSubmission)
     ) {
-      setSources([...getSources(), { name: currentSource, isValid: false }]);
-      setCurrentSource('');
+      setSources([...getSources(), { name: sourceSubmission, isValid: false }]);
     }
+    setCurrentInput('');
+    setSourceSubmission('');
   };
 
   const handleRemoveSource = (source: Source_t) => {
@@ -35,18 +48,13 @@ const Sources = ({ getSources, setSources, inputStyles }: SourcesProps) => {
     setSources(updatedSources);
   };
 
-  const handleSourceEntry = (
-    e:
-      | React.KeyboardEvent<HTMLInputElement>
-      | React.FocusEvent<HTMLInputElement>
-  ) => {
-    if (isKeyboardEvent(e) && e.key === 'Enter') {
-      e.preventDefault(); // Prevent form submission
-      checkSourceEntry();
-    } else if (e.type === 'blur') {
-      checkSourceEntry();
-    }
-  };
+  const filteredOptions = sources.filter(
+    (source) => !getSources().some((selected) => selected.name === source)
+  );
+
+  useEffect(() => {
+    handleSourceSubmission();
+  }, [sourceSubmission]);
 
   return (
     <>
@@ -58,15 +66,41 @@ const Sources = ({ getSources, setSources, inputStyles }: SourcesProps) => {
         Sources
       </label>
       <Tooltip id='sources' />
-      <input
+      <Autocomplete
+        id='source-autocomplete'
         className={inputStyles}
-        type='text'
-        id='sources'
-        value={currentSource}
-        placeholder='1234-AB(C)-12345'
-        onChange={(e) => setCurrentSource(e.target.value)}
-        onBlur={handleSourceEntry}
-        onKeyDown={handleSourceEntry}
+        freeSolo
+        autoComplete
+        filterOptions={autocompleteOptions}
+        inputValue={currentInput}
+        options={filteredOptions.sort()}
+        // Handle source submission when user hits enter
+        onKeyDown={(e) => {
+          if (e.key == 'Enter') {
+            e.preventDefault();
+            setSourceSubmission((e.target as HTMLInputElement).value);
+          }
+        }}
+        onInputChange={(e, v) => setCurrentInput(v)}
+        // Submit source when selecting an autocomplete option
+        onChange={(e, value, reason) => {
+          if (reason === 'selectOption') {
+            setSourceSubmission(value as string);
+          }
+        }}
+        // Submit source when clicking outside the input box
+        onBlur={(e) =>
+          setSourceSubmission((e.target as HTMLInputElement).value)
+        }
+        renderInput={(params) => (
+          <TextField
+            {...params}
+            className='bg-white rounded-md'
+            type='text'
+            id='sources'
+            placeholder='1234-AB(C)-12345'
+          />
+        )}
       />
       <div className='flex flex-wrap gap-0'>
         {getSources().map((source) => (

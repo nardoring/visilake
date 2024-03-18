@@ -73,6 +73,7 @@ export default function JobTable() {
       analysisTypes: jobUpdate.analysis_types,
       author: jobUpdate.author,
       date: new Date(jobUpdate.timestamp * 1000),
+      sources: jobUpdate.sources,
       granularity: 1,
       dateRangeEnd: new Date(),
       dateRangeStart: new Date(),
@@ -91,9 +92,10 @@ export default function JobTable() {
             .filter((update) => update) as JobUpdateMessage[];
 
           updates.forEach((update) => {
-            if (update.status == 'QUEUED') {
+            console.log(update);
+            if (update.status == 'PENDING') {
               const newJob = mapJobUpdateMessageToUseCase(update);
-
+              console.log(newJob);
               gridRef.current?.api.applyTransaction({ add: [newJob] });
             } else {
               const updatedRow = gridRef.current?.api.getRowNode(

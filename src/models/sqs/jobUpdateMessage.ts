@@ -8,4 +8,8 @@ export type JobUpdateMessage = {
   author: string;
   name: string;
   description: string;
+  sources: string[];
+  dateRangeStart: Date;
+  dateRangeEnd: Date;
+  granularity: number;
 };

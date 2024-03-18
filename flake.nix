@@ -199,11 +199,8 @@
           AWS_REGION = "us-east-1";
           DYNAMO_URL = "${dynamoUrl}";
           SQS_URL = "${sqsUrl}";
-<<<<<<< HEAD
           NEXT_PUBLIC_AUTHOR_NAME = "${authorName}";
-=======
           SNS_URL = "${snsUrl}";
->>>>>>> 6332cda (Added SNS client)
         };
 
         packages = {

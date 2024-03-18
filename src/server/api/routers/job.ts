@@ -155,6 +155,6 @@ export const jobRouter = createTRPCRouter({
         Message: JSON.stringify(jobUpdate),
       } as PublishInput;
 
-      await snsClient.publish(snsClientParams);
+      await snsClient.publish(snsClientParams).promise();
     }),
 });

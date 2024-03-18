@@ -22,6 +22,7 @@ const AUTHOR_NAME = env.NEXT_PUBLIC_AUTHOR_NAME;
 
 const SNS_TOPIC_ARN =
   'arn:aws:sns:us-east-1:000000000000:requestUpdatesTopic.fifo';
+const SNS_MESSAGE_GROUP_ID = 'updates';
 
 export const jobRouter = createTRPCRouter({
   getJobs: publicProcedure.query(async () => {
@@ -146,6 +147,10 @@ export const jobRouter = createTRPCRouter({
         name: input.jobName,
         description: input.jobDescription,
         status: status,
+        sources: input.sources,
+        dateRangeEnd: new Date(input.dateRangeEnd),
+        dateRangeStart: new Date(input.dateRangeStart),
+        granularity: input.granularity,
       } as JobUpdateMessage; // Todo: new fields date ranges + granularity?
 
       const snsClient = getSNSClient();
@@ -153,6 +158,7 @@ export const jobRouter = createTRPCRouter({
       const snsClientParams = {
         TopicArn: SNS_TOPIC_ARN,
         Message: JSON.stringify(jobUpdate),
+        MessageGroupId: SNS_MESSAGE_GROUP_ID,
       } as PublishInput;
 
       await snsClient.publish(snsClientParams).promise();

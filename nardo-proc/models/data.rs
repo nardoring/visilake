@@ -126,7 +126,7 @@ impl TimeSeriesData {
     ///
     /// # Arguments
     ///
-    /// * `filter_fn` - A closure that takes a timestamp in nanoseconds and returns a boolean indicating whether the record should be included.
+    /// * `filter_fn` - A closure that takes a timestamp in milliseconds and returns a boolean indicating whether the record should be included.
     ///
     /// # Returns
     ///
@@ -173,8 +173,8 @@ impl TimeSeriesData {
     ///
     /// # Arguments
     ///
-    /// * `start_time` - The start of the time range in nanoseconds.
-    /// * `end_time` - The end of the time range in nanoseconds.
+    /// * `start_time` - The start of the time range in milliseconds.
+    /// * `end_time` - The end of the time range in milliseconds.
     ///
     /// # Returns
     ///
@@ -211,20 +211,13 @@ impl TimeSeriesData {
 
         let conversion_factor = match data_type {
             DataType::Timestamp(unit, _) => match unit {
-                TimeUnit::Second => 1_000_000_000,
-                TimeUnit::Millisecond => 1_000_000,
-                TimeUnit::Microsecond => 1_000,
+                TimeUnit::Second => 1_000,
+                TimeUnit::Millisecond => 1,
+                TimeUnit::Microsecond => 1, // just going to ignore <ms, lol
                 TimeUnit::Nanosecond => 1,
             },
-            DataType::Date32 => 86_400_000_000_000, // days to nanoseconds
-            DataType::Date64 => 1_000_000,          // milliseconds to nanoseconds
-            DataType::Time32(_) => 1_000_000,       // milliseconds to nanoseconds
-            DataType::Time64(unit) => match unit {
-                TimeUnit::Second => 1_000_000_000,
-                TimeUnit::Millisecond => 1_000_000,
-                TimeUnit::Microsecond => 1_000,
-                TimeUnit::Nanosecond => 1,
-            },
+            DataType::Date32 => 86_400_000, // days to ms
+            DataType::Date64 => 1,          // represented in ms
             _ => unimplemented!("Unsupported temporal type"),
         };
 
@@ -347,10 +340,10 @@ mod tests {
 
         // Milliseconds since Unix epoch (for TimestampMillisecondArray):
 
-        //     1970-01-01T00:00:00: 0 nanoseconds
-        //     2020-11-08T01:00:00: 1.6047972e+18 nanoseconds
-        //     1969-11-08T02:00:00: -4658400000000000 nanoseconds
-        //     1990-01-01T03:00:00: 6.311628e+17 nanoseconds
+        //     1970-01-01T00:00:00: 0 milliseconds
+        //     2020-11-08T01:00:00: 1.6047972e+18 milliseconds
+        //     1969-11-08T02:00:00: -4658400000000000 milliseconds
+        //     1990-01-01T03:00:00: 6.311628e+17 milliseconds
         // Date32Array for days since Unix epoch
 
         if let Some(c_datetime) = batch
@@ -398,13 +391,13 @@ mod tests {
     fn filter_by_granularity_filters() {
         let ts_data = create_timeseries_data(
             vec![
-                Some(0),             // 0ms
-                Some(500_000_000),   // 500ms
-                Some(1_000_000_000), // 1000ms
-                Some(1_500_000_000), // 1500ms
-                Some(2_000_000_000), // 2000ms
-                Some(2_500_000_000), // 2500ms
-                Some(3_000_000_000), // 3000ms
+                Some(0),
+                Some(500),
+                Some(1_000),
+                Some(1_500),
+                Some(2_000),
+                Some(2_500),
+                Some(3_000),
             ],
             vec![1, 2, 3, 4, 5, 6, 7],
         );
@@ -430,11 +423,10 @@ mod tests {
         assert_eq!(filtered_values.len(), 4);
 
         // Verify that the correct timestamps (and their corresponding values) are kept
-        // multiples of 1000ms (1 second) are kept
-        assert_eq!(filtered_timestamps.value(0), 0); // 0ms
-        assert_eq!(filtered_timestamps.value(1), 1_000_000_000); // 1000ms
-        assert_eq!(filtered_timestamps.value(2), 2_000_000_000); // 2000ms
-        assert_eq!(filtered_timestamps.value(3), 3_000_000_000); // 3000ms
+        assert_eq!(filtered_timestamps.value(0), 0);
+        assert_eq!(filtered_timestamps.value(1), 1_000);
+        assert_eq!(filtered_timestamps.value(2), 2_000);
+        assert_eq!(filtered_timestamps.value(3), 3_000);
         assert_eq!(filtered_values.value(0), 1);
         assert_eq!(filtered_values.value(1), 3);
         assert_eq!(filtered_values.value(2), 5);
@@ -456,14 +448,14 @@ mod tests {
 
         let ts_data = create_timeseries_data(
             vec![
-                Some(0),                   // 0ms
-                Some(500_000_000),         // 500ms
-                Some(1_000_000_000),       // 1000ms (1 second)
-                Some(1_500_000_000),       // 1500ms
-                Some(2_000_000_000),       // 2000ms (2 seconds)
-                Some(3_600_000_000_000),   // 1 hour
-                Some(86_400_000_000_000),  // 1 day
-                Some(172_800_000_000_000), // 2 day
+                Some(0),           // 0ms
+                Some(500),         // 0.5 seconds
+                Some(1_000),       // 1 second
+                Some(1_500),       // 1.5 seconds
+                Some(2_000),       // 2 seconds
+                Some(3_600_000),   // 1 hour
+                Some(86_400_000),  // 1 day
+                Some(172_800_000), // 2 day
             ],
             vec![1, 2, 3, 4, 5, 6, 7, 8],
         );
@@ -483,7 +475,7 @@ mod tests {
                     timestamp_col
                         .iter()
                         .filter_map(|maybe_time| maybe_time)
-                        .filter(|&time| time % (granularity * 1_000_000) == 0)
+                        .filter(|&time| time % granularity == 0)
                         .count()
                 })
                 .sum();
@@ -505,18 +497,16 @@ mod tests {
     fn filter_by_time_range_filters_expected_rows() {
         let ts_data = create_timeseries_data(
             vec![
-                Some(1_000_000_000),
-                Some(2_000_000_000),
-                Some(3_000_000_000),
-                Some(4_000_000_000),
-                Some(5_000_000_000),
+                Some(1_000),
+                Some(2_000),
+                Some(3_000),
+                Some(4_000),
+                Some(5_000),
             ],
             vec![10, 20, 30, 40, 50],
         );
 
-        let filtered_data = ts_data
-            .filter_by_time_range(2_000_000_000, 4_000_000_000)
-            .unwrap();
+        let filtered_data = ts_data.filter_by_time_range(2_000, 4_000).unwrap();
 
         assert_eq!(filtered_data.record_batches[0].num_rows(), 3);
 
@@ -535,9 +525,9 @@ mod tests {
 
         assert_eq!(filtered_timestamps.len(), 3);
         assert_eq!(filtered_values.len(), 3);
-        assert_eq!(filtered_timestamps.value(0), 2_000_000_000);
-        assert_eq!(filtered_timestamps.value(1), 3_000_000_000);
-        assert_eq!(filtered_timestamps.value(2), 4_000_000_000);
+        assert_eq!(filtered_timestamps.value(0), 2_000);
+        assert_eq!(filtered_timestamps.value(1), 3_000);
+        assert_eq!(filtered_timestamps.value(2), 4_000);
         assert_eq!(filtered_values.value(0), 20);
         assert_eq!(filtered_values.value(1), 30);
         assert_eq!(filtered_values.value(2), 40);
@@ -557,18 +547,16 @@ mod tests {
     fn filter_late_starttime_returns_empty_dataset() {
         let ts_data = create_timeseries_data(
             vec![
-                Some(1_000_000_000),
-                Some(2_000_000_000),
-                Some(3_000_000_000),
-                Some(4_000_000_000),
-                Some(5_000_000_000),
+                Some(1_000),
+                Some(2_000),
+                Some(3_000),
+                Some(4_000),
+                Some(5_000),
             ],
             vec![10, 20, 30, 40, 50],
         );
 
-        let filtered_data = ts_data
-            .filter_by_time_range(6_000_000_000, 7_000_000_000)
-            .unwrap();
+        let filtered_data = ts_data.filter_by_time_range(6_000, 7_000).unwrap();
 
         assert!(
             filtered_data.record_batches.is_empty()
@@ -596,15 +584,11 @@ mod tests {
     #[test]
     fn filter_with_no_starting_rows_returns_partial_data() {
         let ts_data = create_timeseries_data(
-            vec![
-                Some(3_000_000_000),
-                Some(4_000_000_000),
-                Some(5_000_000_000),
-            ],
+            vec![Some(3_000), Some(4_000), Some(5_000)],
             vec![30, 40, 50],
         );
 
-        let filtered_data = ts_data.filter_by_time_range(0, 4_000_000_000).unwrap();
+        let filtered_data = ts_data.filter_by_time_range(0, 4_000).unwrap();
 
         assert_eq!(filtered_data.record_batches[0].num_rows(), 2);
         assert_eq!(filtered_data.record_batches.len(), 1);
@@ -627,17 +611,11 @@ mod tests {
     #[test]
     fn filter_includes_all_existing_rows_when_range_is_wider() {
         let ts_data = create_timeseries_data(
-            vec![
-                Some(3_000_000_000),
-                Some(4_000_000_000),
-                Some(5_000_000_000),
-            ],
+            vec![Some(3_000), Some(4_000), Some(5_000)],
             vec![30, 40, 50],
         );
 
-        let filtered_data = ts_data
-            .filter_by_time_range(1_000_000_000, 6_000_000_000)
-            .unwrap();
+        let filtered_data = ts_data.filter_by_time_range(1_000, 6_000).unwrap();
 
         assert_eq!(filtered_data.record_batches.len(), 1);
         let filtered_batch = &filtered_data.record_batches[0];
@@ -670,11 +648,11 @@ mod tests {
         ]);
 
         let event_times = vec![
-            Some(1_000_000_000), // 1 second
-            Some(2_000_000_000), // 2 seconds
-            Some(3_000_000_000), // 3 seconds
-            Some(4_000_000_000), // 4 seconds
-            Some(5_000_000_000), // 5 seconds
+            Some(1_000),
+            Some(2_000),
+            Some(3_000),
+            Some(4_000),
+            Some(5_000),
         ];
 
         // Corresponding IDs and values
@@ -701,7 +679,7 @@ mod tests {
         };
 
         // Apply filtering based on the "maybe_a_time" column
-        let filter_fn = |time: i64| time >= 2_000_000_000 && time <= 4_000_000_000;
+        let filter_fn = |time: i64| time >= 2_000 && time <= 4_000;
         let filtered_data = ts_data.filter_record_batches(filter_fn).unwrap();
 
         assert_eq!(filtered_data.record_batches.len(), 1);
@@ -715,8 +693,8 @@ mod tests {
 
         // Verify that only timestamps within the specified range (2 to 4 seconds) are included
         assert_eq!(filtered_event_times.len(), 3);
-        assert_eq!(filtered_event_times.value(0), 2_000_000_000);
-        assert_eq!(filtered_event_times.value(1), 3_000_000_000);
-        assert_eq!(filtered_event_times.value(2), 4_000_000_000);
+        assert_eq!(filtered_event_times.value(0), 2_000);
+        assert_eq!(filtered_event_times.value(1), 3_000);
+        assert_eq!(filtered_event_times.value(2), 4_000);
     }
 }

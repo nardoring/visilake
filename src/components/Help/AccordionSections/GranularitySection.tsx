@@ -13,9 +13,12 @@ export default function GranularitySection() {
     setGranularity(newValue);
   };
 
-  function getGranularityLabel(value: number) {
-    return granularityData.find((item) => item.value === value)?.label ?? -1;
+  function getGranularityDisplayLabel(value: number) {
+    const label =
+      granularityData.find((item) => item.value === value)?.label ?? '';
+    return label ? `Datapoints will be ${label} apart` : '';
   }
+
   return (
     <div>
       <AccordionDetails>
@@ -43,8 +46,7 @@ export default function GranularitySection() {
         <div className='px-10'>
           <GranularitySlider onGranularityChanged={onGranularityChanged} />
           <Typography className='text-center'>
-            Datapoints will be{' '}
-            <strong>{getGranularityLabel(granularity)}</strong> apart
+            {getGranularityDisplayLabel(granularity)}
           </Typography>
         </div>
       </AccordionDetails>

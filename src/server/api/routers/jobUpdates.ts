@@ -22,7 +22,10 @@ export const jobUpdatesRouter = createTRPCRouter({
     const sns = getSNSClient();
 
     const queueName =
-      BASE_JOB_UPDATES_QUEUE_NAME + '-' + uuidv4().toString().toLowerCase();
+      BASE_JOB_UPDATES_QUEUE_NAME +
+      '-' +
+      uuidv4().toString().toLowerCase() +
+      '.fifo';
 
     const newQueueParams = {
       QueueName: queueName,

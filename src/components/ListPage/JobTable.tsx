@@ -38,7 +38,7 @@ export default function JobTable() {
     useState<boolean>(false);
 
   const { data: selectedQueue, isLoading: selectedQueueIsLoading } =
-    api.jobUpdates.getRandomQueueUrl.useQuery(undefined, {
+    api.jobUpdates.getQueueUrl.useQuery(undefined, {
       enabled: !selectedQueueExecutted,
       onSuccess: () => {
         setSelectedQueueExecutted(true);

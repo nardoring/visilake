@@ -9,15 +9,17 @@ import {
 } from 'aws-sdk/clients/sqs';
 
 import { v4 as uuidv4 } from 'uuid';
+import getSNSClient from '~/clients/sns';
+import { SubscribeInput, SubscribeResponse } from 'aws-sdk/clients/sns';
 
-const IGNORED_QUEUE_URL =
-  'http://sqs.us-east-1.localhost.localstack.cloud:4566/000000000000/requestQueue';
-
+const SNS_TOPIC_ARN =
+  'arn:aws:sns:us-east-1:000000000000:requestUpdatesTopic.fifo';
 const BASE_JOB_UPDATES_QUEUE_NAME = 'requestUpdates';
 
 export const jobUpdatesRouter = createTRPCRouter({
   getQueueUrl: publicProcedure.query(async () => {
     const sqs = getSQSClient();
+    const sns = getSNSClient();
 
     const queueName =
       BASE_JOB_UPDATES_QUEUE_NAME + '-' + uuidv4().toString().toLowerCase();
@@ -45,6 +47,14 @@ export const jobUpdatesRouter = createTRPCRouter({
       console.log('Queue not created. No queue url found');
       return undefined;
     }
+
+    const subscribeTopicParams = {
+      Protocol: 'sqs',
+      TopicArn: SNS_TOPIC_ARN,
+      Endpoint: queueUrl,
+    } as SubscribeInput;
+
+    await sns.subscribe(subscribeTopicParams).promise();
 
     return queueUrl;
   }),

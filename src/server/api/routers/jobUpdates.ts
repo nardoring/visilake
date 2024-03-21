@@ -4,6 +4,7 @@ import getSQSClient from '~/clients/sqs';
 import {
   CreateQueueRequest,
   DeleteMessageBatchRequestEntry,
+  GetQueueAttributesRequest,
   GetQueueUrlRequest,
   ReceiveMessageRequest,
 } from 'aws-sdk/clients/sqs';
@@ -51,10 +52,22 @@ export const jobUpdatesRouter = createTRPCRouter({
       return undefined;
     }
 
+    const getQueueAttributesParams = {
+      QueueUrl: queueUrl,
+      AttributeNames: ['QueueArn'],
+    } as GetQueueAttributesRequest;
+
+    const queueAttributes = await sqs
+      .getQueueAttributes(getQueueAttributesParams)
+      .promise();
+
+    const topics = await sns.listTopics().promise();
+    console.log(topics);
+
     const subscribeTopicParams = {
       Protocol: 'sqs',
       TopicArn: SNS_TOPIC_ARN,
-      Endpoint: queueUrl,
+      Endpoint: queueAttributes.Attributes?.QueueArn,
     } as SubscribeInput;
 
     await sns.subscribe(subscribeTopicParams).promise();

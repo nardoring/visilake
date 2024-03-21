@@ -6,7 +6,7 @@ export default function AnalysisTypesSection() {
     <AccordionDetails>
       <Typography>
         The analysis type(s) input lets you choose what kind of analysis you
-        want to perform on your data. You can select from three types:
+        want to perform on your data. Here are three example types:
       </Typography>
       <List>
         {analysisTypeExplanations.map((type, index) => (

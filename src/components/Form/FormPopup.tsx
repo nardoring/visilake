@@ -29,6 +29,7 @@ export default function FormPopup({
                 */}
                 {formSuccess ? (
                   <svg
+                    id='form-popup-success-svg-icon'
                     xmlns='http://www.w3.org/2000/svg'
                     height='50'
                     width='50'
@@ -42,6 +43,7 @@ export default function FormPopup({
                   </svg>
                 ) : (
                   <svg
+                    id='form-popup-failure-svg-icon'
                     xmlns='http://www.w3.org/2000/svg'
                     height='50'
                     width='50'
@@ -56,7 +58,7 @@ export default function FormPopup({
                 )}
                 {/*header*/}
                 <div className='flex rounded-t pt-5'>
-                  <h3 className='text-2xl font-semibold'>
+                  <h3 className='text-2xl font-semibold' id='form-popup-header'>
                     {formSuccess
                       ? 'Job Successfully Submitted'
                       : 'Job Submission Failed'}

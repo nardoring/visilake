@@ -14,6 +14,7 @@ export default function Navbar() {
 
       {!isCurrentPage('/ListPage') ? (
         <button
+          id='view-jobs-button'
           className='z-40 ml-5 min-w-[10vw] rounded-md bg-transparent px-4 py-2 text-white hover:bg-blue hover:shadow-lg'
           onClick={() => {
             void router.push('/ListPage');

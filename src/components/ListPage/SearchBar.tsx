@@ -21,12 +21,14 @@ export default function SearchBar() {
           <FontAwesomeIcon icon={faMagnifyingGlass} />
         </span>
         <input
+          id='list-search-bar-input'
           className='block min-w-[20vw] rounded-md border border-black bg-veryLightBlue py-2 pl-10 text-gray-900 shadow-lg focus:ring-offset-2 focus:ring-4 focus:ring-boldBlue'
           type='text'
           onChange={(event) => onSearchBarChanged(event.target.value)}
         />
       </div>
       <button
+        id='new-job-button'
         className='block min-w-[10vw] ml-5 rounded bg-transparent px-4 py-2 text-white hover:bg-blue hover:shadow-lg'
         type='submit'
         onClick={() => {

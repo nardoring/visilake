@@ -242,7 +242,10 @@ export default function Form() {
             Granularity
           </label>
           <Tooltip id='granularity' />
-          <div className='px-5' id='granularity-input'>
+          <div
+            className='px-5'
+            id='granularity-input'
+          >
             <GranularitySlider onGranularityChanged={onGranularityChanged} />
           </div>
         </div>

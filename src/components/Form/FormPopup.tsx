@@ -58,7 +58,10 @@ export default function FormPopup({
                 )}
                 {/*header*/}
                 <div className='flex rounded-t pt-5'>
-                  <h3 className='text-2xl font-semibold' id='form-popup-header'>
+                  <h3
+                    className='text-2xl font-semibold'
+                    id='form-popup-header'
+                  >
                     {formSuccess
                       ? 'Job Successfully Submitted'
                       : 'Job Submission Failed'}

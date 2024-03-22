@@ -12,14 +12,16 @@ export const athenaRouter = createTRPCRouter({
   executeQuery: publicProcedure.input(querySchema).query(async ({ input }) => {
     const athena = getAthenaClient();
 
-    const sqlQuery = input.query; // TODO
+    const sqlQuery = input.query;
 
     const startQueryResponse = await athena.send(
+      // https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/client/athena/command/StartQueryExecutionCommand/
       new StartQueryExecutionCommand({
         QueryString: sqlQuery,
-        QueryExecutionContext: {
-          Database: 'data-catalog-database',
-        },
+        // QueryExecutionContext: {
+        //   Database: 'data-catalog-database',
+        //   Catalog: 'AwsDataCatalog',
+        // },
         ResultConfiguration: {
           OutputLocation:
             's3://aws-athena-query-results-000000000000-us-east-1',
@@ -28,6 +30,8 @@ export const athenaRouter = createTRPCRouter({
     );
 
     const queryExecutionId = startQueryResponse.QueryExecutionId;
+    console.log('Query ID:', queryExecutionId);
+    console.log('Query response:', startQueryResponse);
 
     if (!queryExecutionId) {
       throw new Error('Failed to obtain queryExecutionId from Athena.');
@@ -37,8 +41,10 @@ export const athenaRouter = createTRPCRouter({
       athena,
       queryExecutionId
     );
+    console.log('Query Details:', executionDetails);
 
     const results = await fetchQueryResults(athena, queryExecutionId);
+    console.log('Result:', results);
 
     return {
       queryExecutionId,

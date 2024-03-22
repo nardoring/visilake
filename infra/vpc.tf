@@ -152,6 +152,19 @@ resource "aws_route_table_association" "private_two" {
 
 ### Endpoints and Interaces ###
 
+# Athena VPC Endpoint (Gateway)
+resource "aws_vpc_endpoint" "athena" {
+  vpc_id            = aws_vpc.main.id
+  service_name      = "com.amazonaws.${var.aws_region}.athena"
+  vpc_endpoint_type = "Gateway"
+
+  route_table_ids = [
+    aws_route_table.private_one.id,
+    aws_route_table.private_two.id,
+    aws_route_table.public.id,
+  ]
+}
+
 # DynamoDB VPC Endpoint (Gateway)
 resource "aws_vpc_endpoint" "dynamodb" {
   vpc_id            = aws_vpc.main.id

@@ -15,7 +15,7 @@ interface AthenaDatum {
   VarCharValue?: string;
 }
 
-interface AthenaQueryResultRow {
+export interface AthenaQueryResultRow {
   Data: AthenaDatum[];
 }
 
@@ -31,6 +31,7 @@ export async function waitForQueryExecution(
         QueryExecutionId: queryExecutionId,
       })
     );
+    console.log('Waiting on query execution: ', response);
 
     if (!response.QueryExecution) {
       throw new Error(
@@ -57,12 +58,15 @@ export async function waitForQueryExecution(
         };
         return executionDetails;
       case 'FAILED':
+        throw new Error(
+          `Query failed. State: ${Status.State}, Reason: ${Status.StateChangeReason ?? 'No reason provided'}`
+        );
       case 'CANCELLED':
         throw new Error(
-          `Query failed or was cancelled. State: ${Status.State}, Reason: ${Status.StateChangeReason ?? 'No reason provided'}`
+          `Query cancelled. State: ${Status.State}, Reason: ${Status.StateChangeReason ?? 'No reason provided'}`
         );
       default:
-        await new Promise((resolve) => setTimeout(resolve, 1000));
+        await new Promise((resolve) => setTimeout(resolve, 5000));
     }
   }
 
@@ -75,6 +79,8 @@ export async function fetchQueryResults(
 ): Promise<AthenaQueryResultRow[]> {
   const results: AthenaQueryResultRow[] = [];
   let nextToken: string | undefined;
+
+  console.log('Fetching results for:', queryExecutionId)
 
   do {
     const { ResultSet, NextToken } = await athenaClient.send(

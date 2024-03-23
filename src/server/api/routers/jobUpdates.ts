@@ -4,6 +4,7 @@ import getSQSClient from '~/clients/sqs';
 import {
   CreateQueueRequest,
   DeleteMessageBatchRequestEntry,
+  DeleteQueueRequest,
   GetQueueAttributesRequest,
   GetQueueUrlRequest,
   ReceiveMessageRequest,

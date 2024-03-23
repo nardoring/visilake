@@ -33,7 +33,6 @@ pub async fn get_queue_age(client: &Client, queue_url: &String) -> Option<i64> {
             let age: Result<i64, _> = created_timestamp.parse();
             let now = Utc::now().timestamp();
             
-            println!("Queue Timestamp: {}", created_timestamp);
             match age {
                 Ok(num) => return Some(now - num),
                 Err(_) => return None

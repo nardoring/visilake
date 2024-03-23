@@ -3,7 +3,9 @@ mod aws;
 mod config;
 mod utils;
 
-const MAX_QUEUE_AGE: i64 = 30;
+const MAX_QUEUE_HOURS: i64 = 2;
+
+const MAX_QUEUE_AGE: i64 = MAX_QUEUE_HOURS * 60 * 60;
 
 const BASE_QUEUE_STIRNG: &str = "requestUpdates";
 

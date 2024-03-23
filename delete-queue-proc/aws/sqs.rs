@@ -57,7 +57,7 @@ pub async fn delete_queue(client: &Client, queue_url: &String) {
     match delete_queue_result {
         Ok(_) => {}
         Err(e) => {
-            println!("Error deleting queues: {}", e.to_string())
+            println!("Error deleting queue: {}", e.to_string())
         }
     }
 }

@@ -1,6 +1,6 @@
 use aws_config::{defaults, BehaviorVersion, SdkConfig};
-use utils::use_localstack;
 use eyre::Result;
+use utils::use_localstack;
 
 use crate::utils;
 

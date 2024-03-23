@@ -1,6 +1,6 @@
 use aws::sqs::{delete_queue, get_queue_age, list_queues, sqs_client};
-mod config;
 mod aws;
+mod config;
 mod utils;
 
 const MAX_QUEUE_AGE: i64 = 30;
@@ -18,7 +18,9 @@ async fn main() {
     for queue in queues.iter().filter(|&q| q.contains(BASE_QUEUE_STIRNG)) {
         println!("Processing: {}", queue);
 
-        let queue_age = get_queue_age(&sqs, &queue).await.expect("Failed getting age");
+        let queue_age = get_queue_age(&sqs, &queue)
+            .await
+            .expect("Failed getting age");
 
         if queue_age > MAX_QUEUE_AGE {
             println!("Deleting: {}", queue);

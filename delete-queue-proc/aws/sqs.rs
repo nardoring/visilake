@@ -1,6 +1,6 @@
 use aws_config::SdkConfig;
-use aws_sdk_sqs::{config::Builder, Client};
 use aws_sdk_sqs::types::QueueAttributeName;
+use aws_sdk_sqs::{config::Builder, Client};
 use chrono::Utc;
 
 pub fn sqs_client(conf: &SdkConfig) -> Client {
@@ -9,8 +9,12 @@ pub fn sqs_client(conf: &SdkConfig) -> Client {
 }
 
 pub async fn list_queues(client: &Client) -> Option<Vec<String>> {
-    let response = client.list_queues().send().await.expect("Error fetching queues");
-    
+    let response = client
+        .list_queues()
+        .send()
+        .await
+        .expect("Error fetching queues");
+
     let queue_urls = response
         .queue_urls()
         .iter()
@@ -29,13 +33,16 @@ pub async fn get_queue_age(client: &Client, queue_url: &String) -> Option<i64> {
         .await;
 
     if let Some(attributes) = response.ok() {
-        if let Some(created_timestamp) = attributes.attributes?.get(&QueueAttributeName::CreatedTimestamp) {
+        if let Some(created_timestamp) = attributes
+            .attributes?
+            .get(&QueueAttributeName::CreatedTimestamp)
+        {
             let age: Result<i64, _> = created_timestamp.parse();
             let now = Utc::now().timestamp();
-            
+
             match age {
                 Ok(num) => return Some(now - num),
-                Err(_) => return None
+                Err(_) => return None,
             }
         }
     }
@@ -44,13 +51,13 @@ pub async fn get_queue_age(client: &Client, queue_url: &String) -> Option<i64> {
     None
 }
 
-pub async fn delete_queue(client: &Client,  queue_url: &String) {
+pub async fn delete_queue(client: &Client, queue_url: &String) {
     let delete_queue_result = client.delete_queue().queue_url(queue_url).send().await;
 
     match delete_queue_result {
-        Ok(_) => {},
+        Ok(_) => {}
         Err(e) => {
             println!("Error deleting queues: {}", e.to_string())
-        },
+        }
     }
 }

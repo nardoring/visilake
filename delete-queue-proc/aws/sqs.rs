@@ -1,30 +1,15 @@
 use aws_config::SdkConfig;
-use aws_sdk_sqs::Error;
 use aws_sdk_sqs::{config::Builder, Client};
 use aws_sdk_sqs::types::QueueAttributeName;
-use chrono::{TimeZone, Utc};
-
-#[derive(Debug)]
-struct SQSMessage {
-    body: String,
-}
+use chrono::Utc;
 
 pub fn sqs_client(conf: &SdkConfig) -> Client {
     let sqs_config_builder = Builder::from(conf);
     Client::from_conf(sqs_config_builder.build())
 }
 
-async fn find_queue(client: &Client) -> Result<String, Error> {
-    let queues = client.list_queues().send().await?;
-    Ok(queues
-        .queue_urls()
-        .first()
-        .expect("No queues in this account and Region. Create a queue to proceed.")
-        .to_string())
-}
-
-pub async fn list_old_queues(client: &Client) -> Result<Vec<String>, Error> {
-    let response = client.list_queues().send().await?;
+pub async fn list_queues(client: &Client) -> Option<Vec<String>> {
+    let response = client.list_queues().send().await.expect("Error fetching queues");
     
     let queue_urls = response
         .queue_urls()
@@ -32,40 +17,27 @@ pub async fn list_old_queues(client: &Client) -> Result<Vec<String>, Error> {
         .map(|s| s.to_string())
         .collect();
 
-    let old_queue_urls : Vec<String> = Vec::new();
-
-    for queue_url in old_queue_urls {
-        if let Some(queue_age) = get_queue_age(client, &queue_url).await {
-            old_queue_urls.append(queue_url);
-        }
-    }
-
-    Ok(old_queue_urls)
+    Some(queue_urls)
 }
 
-pub async fn get_queue_age(client: &Client, queue_url: &String) -> Option<&String> {
+pub async fn get_queue_age(client: &Client, queue_url: &String) -> Option<i64> {
     let response = client
         .get_queue_attributes()
         .queue_url(queue_url)
-        .attribute_names(vec![&QueueAttributeName::CreatedTimestamp])
+        .attribute_names(QueueAttributeName::CreatedTimestamp)
         .send()
-        .await?;
+        .await;
 
-    if let Some(attributes) = response.attributes {
-        if let Some(created_timestamp) = attributes.get(&QueueAttributeName::CreatedTimestamp) {
-            let created_time = Utc.timestamp_opt(created_timestamp.parse::<i64>().unwrap(), 0);
-            let now = Utc::now();
-            let duration = now.signed_duration_since(created_time);
+    if let Some(attributes) = response.ok() {
+        if let Some(created_timestamp) = attributes.attributes?.get(&QueueAttributeName::CreatedTimestamp) {
+            let age: Result<i64, _> = created_timestamp.parse();
+            let now = Utc::now().timestamp();
             
-            println!("Queue Age: {} days", duration.num_hours());
-            
-            if duration.num_hours() > 1 {
-                return Some(queue_url)
+            println!("Queue Timestamp: {}", created_timestamp);
+            match age {
+                Ok(num) => return Some(now - num),
+                Err(_) => return None
             }
-            else {
-                return None
-            }
-
         }
     }
 
@@ -73,11 +45,13 @@ pub async fn get_queue_age(client: &Client, queue_url: &String) -> Option<&Strin
     None
 }
 
-pub async fn delete_queues(client: &Client, queue_urls: Vec<String> ) {
-  for queue_url in queue_urls {
-    delete_queue(client, &queue_url);
-  }
-}
 pub async fn delete_queue(client: &Client,  queue_url: &String) {
-    client
+    let delete_queue_result = client.delete_queue().queue_url(queue_url).send().await;
+
+    match delete_queue_result {
+        Ok(_) => {},
+        Err(e) => {
+            println!("Error deleting queues: {}", e.to_string())
+        },
+    }
 }

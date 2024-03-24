@@ -60,7 +60,6 @@ function deploy() {
     docker load < "$(nix build --print-out-paths .#nardo-image)"
 
     localstack start -d
-    docker rmi localstack/localstack:latest
 
     echo -e "\n# - $(date '+%Y-%m-%d %H:%M:%S') -------------------------------------------------------#\n"
     # create a new ECR repository locally, tag the Docker image, push to ECR

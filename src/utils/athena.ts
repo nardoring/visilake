@@ -80,7 +80,7 @@ export async function fetchQueryResults(
   const results: AthenaQueryResultRow[] = [];
   let nextToken: string | undefined;
 
-  console.log('Fetching results for:', queryExecutionId)
+  console.log('Fetching results for:', queryExecutionId);
 
   do {
     const { ResultSet, NextToken } = await athenaClient.send(

@@ -75,7 +75,6 @@
         localstackpro-image = pkgs.dockerTools.pullImage {
           imageName = "localstack/localstack-pro";
           imageDigest = "sha256:945606c6f58f187822db188e4c6354d3ee49931fc00d6b0aad8fcf36b18eae5a";
-          # sha256 = "sha256-oJlIFsIRtvZSLtABjapc+ZJeJUcDi+xhct/H3o/5pck=";
           sha256 = "sha256-I3foIleIRK8+lVadmxMNwwd6+ZoGdXJsWIbJSt8nKRQ=";
           finalImageName = "localstack/localstack-pro";
           finalImageTag = "latest";
@@ -169,6 +168,7 @@
               package = pkgs.terraform;
             };
           };
+          settings.formatter.prettier.excludes = ["./infra/covid19-lake-data/**"];
         };
 
         devShells.default = pkgs.mkShell {

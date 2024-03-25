@@ -24,6 +24,7 @@
     ...
   }: let
     athenaUrl = "http://athena.us-east-1.localhost.localstack.cloud:4566/";
+    athenaResults = "s3://aws-athena-query-results-000000000000-us-east-1";
     dynamoUrl = "http://dynamodb.us-east-1.localhost.localstack.cloud:4566/";
     sqsUrl = "http://sqs.us-east-1.localhost.localstack.cloud:4566/";
     authorName = "Test Author";
@@ -111,6 +112,7 @@
               "NEXT_TELEMETRY_DISABLED=1"
               "AWS_REGION=us-east-1"
               "ATHENA_URL=${athenaUrl}"
+              "ATHENA_QUERY_RESULTS=${athenaResults}"
               "DYNAMO_URL=${dynamoUrl}"
               "SQS_URL=${sqsUrl}"
               "NEXT_PUBLIC_AUTHOR_NAME=${authorName}"
@@ -200,6 +202,7 @@
           AWS_DEFAULT_REGION = "us-east-1";
           AWS_REGION = "us-east-1";
           ATHENA_URL = "${athenaUrl}";
+          ATHENA_QUERY_RESULTS = "${athenaResults}";
           DYNAMO_URL = "${dynamoUrl}";
           SQS_URL = "${sqsUrl}";
           NEXT_PUBLIC_AUTHOR_NAME = "${authorName}";

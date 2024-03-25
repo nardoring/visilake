@@ -9,47 +9,40 @@ const querySchema = z.object({
 });
 
 export const athenaRouter = createTRPCRouter({
-  executeQuery: publicProcedure.input(querySchema).query(async ({ input }) => {
-    const athena = getAthenaClient();
+  executeQuery: publicProcedure
+    .input(querySchema)
+    .mutation(async ({ input }) => {
+      const athena = getAthenaClient();
 
-    const sqlQuery = input.query;
+      const sqlQuery = input.query;
+      const outputLocation = process.env.ATHENA_QUERY_RESULTS ?? 's3://aws-athena-query-results-000000000000-us-east-1';
 
-    const startQueryResponse = await athena.send(
-      // https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/client/athena/command/StartQueryExecutionCommand/
-      new StartQueryExecutionCommand({
-        QueryString: sqlQuery,
-        // QueryExecutionContext: {
-        //   Database: 'data-catalog-database',
-        //   Catalog: 'AwsDataCatalog',
-        // },
-        ResultConfiguration: {
-          OutputLocation:
-            's3://aws-athena-query-results-000000000000-us-east-1',
-        },
-      })
-    );
+      const startQueryResponse = await athena.send(
+        new StartQueryExecutionCommand({
+          QueryString: sqlQuery,
+          ResultConfiguration: {
+            OutputLocation: outputLocation,
+          },
+        })
+      );
 
-    const queryExecutionId = startQueryResponse.QueryExecutionId;
-    console.log('Query ID:', queryExecutionId);
-    console.log('Query response:', startQueryResponse);
+      const queryExecutionId = startQueryResponse.QueryExecutionId;
 
-    if (!queryExecutionId) {
-      throw new Error('Failed to obtain queryExecutionId from Athena.');
-    }
+      if (!queryExecutionId) {
+        throw new Error('Failed to obtain queryExecutionId from Athena.');
+      }
 
-    const executionDetails = await waitForQueryExecution(
-      athena,
-      queryExecutionId
-    );
-    console.log('Query Details:', executionDetails);
+      const executionDetails = await waitForQueryExecution(
+        athena,
+        queryExecutionId
+      );
 
-    const results = await fetchQueryResults(athena, queryExecutionId);
-    console.log('Result:', results);
+      const results = await fetchQueryResults(athena, queryExecutionId);
 
-    return {
-      queryExecutionId,
-      executionStatus: executionDetails.Status.State,
-      results,
-    };
-  }),
+      return {
+        queryExecutionId,
+        executionStatus: executionDetails.Status.State,
+        results,
+      };
+    }),
 });

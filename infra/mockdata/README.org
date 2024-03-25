@@ -1,0 +1,356 @@
+* Mock data
+
+*** [[https://data.world/data-society/us-air-pollution-data][US Air Pollution dataset]]
+This dataset deals with pollution in the U.S. Pollution in the U.S. has been well documented by the U.S. EPA.
+Includes four major pollutants (Nitrogen Dioxide, Sulphur Dioxide, Carbon Monoxide and Ozone).
+
+State Code: The code allocated by US EPA to each state
+County code: The code of counties in a specific state allocated by US EPA
+Site Num: The site number in a specific county allocated by US EPA
+Address: Address of the monitoring site
+State: State of monitoring site
+County: County of monitoring site
+City: City of the monitoring site
+Date Local: Date of monitoring
+
+The four pollutants (NO2, O3, SO2 and O3) each has 5 specific columns. For instance, for NO2:</p>
+
+NO2 Units: The units measured for NO2
+NO2 Mean: The arithmetic mean of concentration of NO2 within a given day
+NO2 AQI: The calculated air quality index of NO2 within a given day
+NO2 1st Max Value: The maximum value obtained for NO2 concentration in a given day
+NO2 1st Max Hour: The hour when the maximum NO2 concentration was recorded in a given day
+
+**** Parquet Metadata and Schema
+
+#+begin_quote
+############ file meta data ############
+created_by: parquet-rs version 50.0.0
+num_columns: 29
+num_rows: 1746661
+num_row_groups: 2
+format_version: 1.0
+serialized_size: 9145
+
+
+############ Columns ############
+
+State Code
+County Code
+Site Num
+Address
+State
+County
+City
+Date Local
+NO2 Units
+NO2 Mean
+NO2 1st Max Value
+NO2 1st Max Hour
+NO2 AQI
+O3 Units
+O3 Mean
+O3 1st Max Value
+O3 1st Max Hour
+O3 AQI
+SO2 Units
+SO2 Mean
+SO2 1st Max Value
+SO2 1st Max Hour
+SO2 AQI
+CO Units
+CO Mean
+CO 1st Max Value
+CO 1st Max Hour
+CO AQI
+
+############ Column() ############
+name:
+path:
+max_definition_level: 1
+max_repetition_level: 0
+physical_type: INT64
+logical_type: None
+converted_type (legacy): NONE
+compression: SNAPPY (space_saved: 15%)
+
+############ Column(State Code) ############
+name: State Code
+path: State Code
+max_definition_level: 1
+max_repetition_level: 0
+physical_type: INT64
+logical_type: None
+converted_type (legacy): NONE
+compression: SNAPPY (space_saved: 11%)
+
+############ Column(County Code) ############
+name: County Code
+path: County Code
+max_definition_level: 1
+max_repetition_level: 0
+physical_type: INT64
+logical_type: None
+converted_type (legacy): NONE
+compression: SNAPPY (space_saved: 8%)
+
+############ Column(Site Num) ############
+name: Site Num
+path: Site Num
+max_definition_level: 1
+max_repetition_level: 0
+physical_type: INT64
+logical_type: None
+converted_type (legacy): NONE
+compression: SNAPPY (space_saved: 10%)
+
+############ Column(Address) ############
+name: Address
+path: Address
+max_definition_level: 1
+max_repetition_level: 0
+physical_type: BYTE_ARRAY
+logical_type: String
+converted_type (legacy): UTF8
+compression: SNAPPY (space_saved: 11%)
+
+############ Column(State) ############
+name: State
+path: State
+max_definition_level: 1
+max_repetition_level: 0
+physical_type: BYTE_ARRAY
+logical_type: String
+converted_type (legacy): UTF8
+compression: SNAPPY (space_saved: 3%)
+
+############ Column(County) ############
+name: County
+path: County
+max_definition_level: 1
+max_repetition_level: 0
+physical_type: BYTE_ARRAY
+logical_type: String
+converted_type (legacy): UTF8
+compression: SNAPPY (space_saved: 4%)
+
+############ Column(City) ############
+name: City
+path: City
+max_definition_level: 1
+max_repetition_level: 0
+physical_type: BYTE_ARRAY
+logical_type: String
+converted_type (legacy): UTF8
+compression: SNAPPY (space_saved: 6%)
+
+############ Column(Date Local) ############
+name: Date Local
+path: Date Local
+max_definition_level: 1
+max_repetition_level: 0
+physical_type: INT32
+logical_type: Date
+converted_type (legacy): DATE
+compression: SNAPPY (space_saved: 84%)
+
+############ Column(NO2 Units) ############
+name: NO2 Units
+path: NO2 Units
+max_definition_level: 1
+max_repetition_level: 0
+physical_type: BYTE_ARRAY
+logical_type: String
+converted_type (legacy): UTF8
+compression: SNAPPY (space_saved: -4%)
+
+############ Column(NO2 Mean) ############
+name: NO2 Mean
+path: NO2 Mean
+max_definition_level: 1
+max_repetition_level: 0
+physical_type: DOUBLE
+logical_type: None
+converted_type (legacy): NONE
+compression: SNAPPY (space_saved: 20%)
+
+############ Column(NO2 1st Max Value) ############
+name: NO2 1st Max Value
+path: NO2 1st Max Value
+max_definition_level: 1
+max_repetition_level: 0
+physical_type: DOUBLE
+logical_type: None
+converted_type (legacy): NONE
+compression: SNAPPY (space_saved: 55%)
+
+############ Column(NO2 1st Max Hour) ############
+name: NO2 1st Max Hour
+path: NO2 1st Max Hour
+max_definition_level: 1
+max_repetition_level: 0
+physical_type: INT64
+logical_type: None
+converted_type (legacy): NONE
+compression: SNAPPY (space_saved: 35%)
+
+############ Column(NO2 AQI) ############
+name: NO2 AQI
+path: NO2 AQI
+max_definition_level: 1
+max_repetition_level: 0
+physical_type: INT64
+logical_type: None
+converted_type (legacy): NONE
+compression: SNAPPY (space_saved: 49%)
+
+############ Column(O3 Units) ############
+name: O3 Units
+path: O3 Units
+max_definition_level: 1
+max_repetition_level: 0
+physical_type: BYTE_ARRAY
+logical_type: String
+converted_type (legacy): UTF8
+compression: SNAPPY (space_saved: -4%)
+
+############ Column(O3 Mean) ############
+name: O3 Mean
+path: O3 Mean
+max_definition_level: 1
+max_repetition_level: 0
+physical_type: DOUBLE
+logical_type: None
+converted_type (legacy): NONE
+compression: SNAPPY (space_saved: 15%)
+
+############ Column(O3 1st Max Value) ############
+name: O3 1st Max Value
+path: O3 1st Max Value
+max_definition_level: 1
+max_repetition_level: 0
+physical_type: DOUBLE
+logical_type: None
+converted_type (legacy): NONE
+compression: SNAPPY (space_saved: 49%)
+
+############ Column(O3 1st Max Hour) ############
+name: O3 1st Max Hour
+path: O3 1st Max Hour
+max_definition_level: 1
+max_repetition_level: 0
+physical_type: INT64
+logical_type: None
+converted_type (legacy): NONE
+compression: SNAPPY (space_saved: 43%)
+
+############ Column(O3 AQI) ############
+name: O3 AQI
+path: O3 AQI
+max_definition_level: 1
+max_repetition_level: 0
+physical_type: INT64
+logical_type: None
+converted_type (legacy): NONE
+compression: SNAPPY (space_saved: 32%)
+
+############ Column(SO2 Units) ############
+name: SO2 Units
+path: SO2 Units
+max_definition_level: 1
+max_repetition_level: 0
+physical_type: BYTE_ARRAY
+logical_type: String
+converted_type (legacy): UTF8
+compression: SNAPPY (space_saved: -4%)
+
+############ Column(SO2 Mean) ############
+name: SO2 Mean
+path: SO2 Mean
+max_definition_level: 1
+max_repetition_level: 0
+physical_type: DOUBLE
+logical_type: None
+converted_type (legacy): NONE
+compression: SNAPPY (space_saved: 20%)
+
+############ Column(SO2 1st Max Value) ############
+name: SO2 1st Max Value
+path: SO2 1st Max Value
+max_definition_level: 1
+max_repetition_level: 0
+physical_type: DOUBLE
+logical_type: None
+converted_type (legacy): NONE
+compression: SNAPPY (space_saved: 42%)
+
+############ Column(SO2 1st Max Hour) ############
+name: SO2 1st Max Hour
+path: SO2 1st Max Hour
+max_definition_level: 1
+max_repetition_level: 0
+physical_type: INT64
+logical_type: None
+converted_type (legacy): NONE
+compression: SNAPPY (space_saved: 25%)
+
+############ Column(SO2 AQI) ############
+name: SO2 AQI
+path: SO2 AQI
+max_definition_level: 1
+max_repetition_level: 0
+physical_type: DOUBLE
+logical_type: None
+converted_type (legacy): NONE
+compression: SNAPPY (space_saved: 52%)
+
+############ Column(CO Units) ############
+name: CO Units
+path: CO Units
+max_definition_level: 1
+max_repetition_level: 0
+physical_type: BYTE_ARRAY
+logical_type: String
+converted_type (legacy): UTF8
+compression: SNAPPY (space_saved: -4%)
+
+############ Column(CO Mean) ############
+name: CO Mean
+path: CO Mean
+max_definition_level: 1
+max_repetition_level: 0
+physical_type: DOUBLE
+logical_type: None
+converted_type (legacy): NONE
+compression: SNAPPY (space_saved: 4%)
+
+############ Column(CO 1st Max Value) ############
+name: CO 1st Max Value
+path: CO 1st Max Value
+max_definition_level: 1
+max_repetition_level: 0
+physical_type: DOUBLE
+logical_type: None
+converted_type (legacy): NONE
+compression: SNAPPY (space_saved: 46%)
+
+############ Column(CO 1st Max Hour) ############
+name: CO 1st Max Hour
+path: CO 1st Max Hour
+max_definition_level: 1
+max_repetition_level: 0
+physical_type: INT64
+logical_type: None
+converted_type (legacy): NONE
+compression: SNAPPY (space_saved: 3%)
+
+############ Column(CO AQI) ############
+name: CO AQI
+path: CO AQI
+max_definition_level: 1
+max_repetition_level: 0
+physical_type: DOUBLE
+logical_type: None
+converted_type (legacy): NONE
+compression: SNAPPY (space_saved: 47%)
+#+end_quote

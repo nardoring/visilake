@@ -1,26 +1,20 @@
-resource "aws_s3_bucket" "covid19_lake" {
-  bucket = "covid19-lake"
+resource "aws_s3_bucket" "data_lake" {
+  bucket = "data-lake"
 }
 
-resource "aws_s3_object" "template" {
-  bucket = "covid19-lake"
-  key    = "cfn/CovidLakeStack.template.json"
-  source = "./CovidLakeStack.template.json"
-}
-
-resource "aws_s3_bucket_object" "data_files" {
-  for_each = fileset("./covid19-lake-data/", "**/*")
-  bucket   = aws_s3_bucket.covid19_lake.bucket
+resource "aws_s3_object" "data_files" {
+  for_each = fileset("./mockdata/", "**/*")
+  bucket   = aws_s3_bucket.data_lake.bucket
   key      = each.value
-  source   = "./covid19-lake-data/${each.value}"
+  source   = "./mockdata/${each.value}"
 }
 
-resource "aws_glue_catalog_database" "covid19_database" {
-  name = "covid-19"
+resource "aws_glue_catalog_database" "mock_data_database" {
+  name = "mockdata"
 }
 
 resource "aws_glue_catalog_table" "hospital_beds" {
-  database_name = aws_glue_catalog_database.covid19_database.name
+  database_name = aws_glue_catalog_database.mock_data_database.name
   name          = "hospital_beds"
   table_type    = "EXTERNAL_TABLE"
 
@@ -31,7 +25,7 @@ resource "aws_glue_catalog_table" "hospital_beds" {
   }
 
   storage_descriptor {
-    location      = "s3://covid19-lake/rearc-usa-hospital-beds"
+    location      = "s3://data-lake/rearc-usa-hospital-beds"
     input_format  = "org.apache.hadoop.mapred.TextInputFormat"
     output_format = "org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat"
 
@@ -149,6 +143,176 @@ resource "aws_glue_catalog_table" "hospital_beds" {
       name    = "longtitude"
       type    = "double"
       comment = "hospital location (longitude)"
+    }
+  }
+}
+
+resource "aws_glue_catalog_table" "air_quality_data" {
+  database_name = aws_glue_catalog_database.mock_data_database.name
+  name          = "air_quality"
+  table_type    = "EXTERNAL_TABLE"
+
+  parameters = {
+    EXTERNAL              = "TRUE"
+    "parquet.compression" = "SNAPPY"
+  }
+
+  storage_descriptor {
+    location      = "s3://data-lake/air-quality"
+    input_format  = "org.apache.hadoop.hive.ql.io.parquet.MapredParquetInputFormat"
+    output_format = "org.apache.hadoop.hive.ql.io.parquet.MapredParquetOutputFormat"
+
+    ser_de_info {
+      serialization_library = "org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe"
+
+      parameters = {
+        "serialization.format" = 1
+      }
+    }
+
+    columns {
+      name = "unnamed"
+      type = "bigint"
+    }
+
+    columns {
+      name = "state code"
+      type = "bigint"
+    }
+
+    columns {
+      name = "county code"
+      type = "bigint"
+    }
+
+    columns {
+      name = "site num"
+      type = "bigint"
+    }
+
+    columns {
+      name = "address"
+      type = "string"
+    }
+
+    columns {
+      name = "state"
+      type = "string"
+    }
+
+    columns {
+      name = "county"
+      type = "string"
+    }
+
+    columns {
+      name = "city"
+      type = "string"
+    }
+
+    columns {
+      name = "date local"
+      type = "int"
+    }
+
+    columns {
+      name = "no2 units"
+      type = "string"
+    }
+
+    columns {
+      name = "no2 mean"
+      type = "double"
+    }
+
+    columns {
+      name = "no2 1st max value"
+      type = "double"
+    }
+
+    columns {
+      name = "no2 1st max hour"
+      type = "bigint"
+    }
+
+    columns {
+      name = "no2 aqi"
+      type = "bigint"
+    }
+
+    columns {
+      name = "o3 units"
+      type = "string"
+    }
+
+    columns {
+      name = "o3 mean"
+      type = "double"
+    }
+
+    columns {
+      name = "o3 1st max value"
+      type = "double"
+    }
+
+    columns {
+      name = "o3 1st max hour"
+      type = "bigint"
+    }
+
+    columns {
+      name = "o3 aqi"
+      type = "bigint"
+    }
+
+    columns {
+      name = "so2 units"
+      type = "string"
+    }
+
+    columns {
+      name = "so2 mean"
+      type = "double"
+    }
+
+    columns {
+      name = "so2 1st max value"
+      type = "double"
+    }
+
+    columns {
+      name = "so2 1st max hour"
+      type = "bigint"
+    }
+
+    columns {
+      name = "so2 aqi"
+      type = "double"
+    }
+
+    columns {
+      name = "co units"
+      type = "string"
+    }
+
+    columns {
+      name = "co mean"
+      type = "double"
+    }
+
+    columns {
+      name = "co 1st max value"
+      type = "double"
+    }
+
+    columns {
+      name = "co 1st max hour"
+      type = "bigint"
+    }
+
+    columns {
+      name = "co aqi"
+      type = "double"
     }
   }
 }

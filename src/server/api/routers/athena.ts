@@ -15,7 +15,9 @@ export const athenaRouter = createTRPCRouter({
       const athena = getAthenaClient();
 
       const sqlQuery = input.query;
-      const outputLocation = process.env.ATHENA_QUERY_RESULTS ?? 's3://aws-athena-query-results-000000000000-us-east-1';
+      const outputLocation =
+        process.env.ATHENA_QUERY_RESULTS ??
+        's3://aws-athena-query-results-000000000000-us-east-1';
 
       const startQueryResponse = await athena.send(
         new StartQueryExecutionCommand({

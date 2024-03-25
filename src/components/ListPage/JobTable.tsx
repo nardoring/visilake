@@ -74,9 +74,9 @@ export default function JobTable() {
       author: jobUpdate.author,
       date: new Date(jobUpdate.timestamp * 1000),
       sources: jobUpdate.sources,
-      granularity: 1,
-      dateRangeEnd: new Date(),
-      dateRangeStart: new Date(),
+      granularity: jobUpdate.granularity,
+      dateRangeEnd: jobUpdate.dateRangeEnd,
+      dateRangeStart: jobUpdate.dateRangeStart,
     } as Job;
   };
 

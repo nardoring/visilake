@@ -3,8 +3,8 @@ import { api } from '~/utils/api';
 
 function AthenaQueryComponent() {
   const { data, isLoading, error } = api.athena.executeQuery.useQuery({
-    query: 'SELECT * FROM covid_19.hospital_beds LIMIT 10', // an example query
-    /* query: 'SELECT * FROM covid_19.enigma_jhu LIMIT 10', // an example query */
+    /* query: 'SELECT * FROM mockdata.hospital_beds LIMIT 2', // an example query */
+    query: 'SELECT * FROM mockdata.air_quality LIMIT 2', // an example query
   });
 
   if (isLoading) return <div>Loading...</div>;

@@ -168,7 +168,7 @@
               package = pkgs.terraform;
             };
           };
-          settings.formatter.prettier.excludes = ["./infra/covid19-lake-data/**"];
+          settings.formatter.prettier.excludes = ["./infra/mockdata/rearc-usa-hospital-beds/**"];
         };
 
         devShells.default = pkgs.mkShell {
@@ -179,6 +179,7 @@
               # pyEnv
               nodejs
               nodePackages.eslint
+              # parquet-tools
             ]
             ++ localstack
             ++ treefmtPrograms;

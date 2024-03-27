@@ -18,11 +18,11 @@ pub(crate) use crate::{
 };
 use clap::{Parser, Subcommand};
 use eyre::Result;
-use tasks::delete_queue::delete_old_queues;
 use std::{
     io::{self, Write},
     sync::Arc,
 };
+use tasks::delete_queue::delete_old_queues;
 
 struct Clients {
     dynamodb: Arc<aws_sdk_dynamodb::Client>,
@@ -91,7 +91,7 @@ async fn respond(line: &str, clients: &Clients) -> Result<bool, eyre::Report> {
             write!(std::io::stdout(), "Exiting ...")?;
             std::io::stdout().flush()?;
             return Ok(true);
-        },
+        }
     }
     Ok(false)
 }

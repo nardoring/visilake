@@ -1,6 +1,6 @@
-use log::debug;
 use crate::aws::sqs::{delete_queue, get_queue_age};
 use aws_sdk_sqs::{types::QueueAttributeName, Client};
+use log::debug;
 
 const MAX_QUEUE_HOURS: i64 = 2;
 

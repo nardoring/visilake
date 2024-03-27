@@ -109,3 +109,41 @@ pub async fn send_message(client: &Client, url: &String, message: &str) -> Resul
 
     Ok(send(&client, url, &sqsmessage).await?)
 }
+
+pub async fn get_queue_age(client: &Client, queue_url: &String) -> Option<i64> {
+    let response = client
+        .get_queue_attributes()
+        .queue_url(queue_url)
+        .attribute_names(QueueAttributeName::CreatedTimestamp)
+        .send()
+        .await;
+
+    if let Some(attributes) = response.ok() {
+        if let Some(created_timestamp) = attributes
+            .attributes?
+            .get(&QueueAttributeName::CreatedTimestamp)
+        {
+            let age: Result<i64, _> = created_timestamp.parse();
+            let now = Utc::now().timestamp();
+
+            match age {
+                Ok(num) => return Some(now - num),
+                Err(_) => return None,
+            }
+        }
+    }
+
+    debug!("CreatedTimestamp not found");
+    None
+}
+
+pub async fn delete_queue(client: &Client, queue_url: &String) {
+    let delete_queue_result = client.delete_queue().queue_url(queue_url).send().await;
+
+    match delete_queue_result {
+        Ok(_) => {}
+        Err(e) => {
+            debug!("Error deleting queue: {}", e.to_string())
+        }
+    }
+}

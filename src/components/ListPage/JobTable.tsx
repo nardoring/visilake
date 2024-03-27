@@ -38,7 +38,7 @@ export default function JobTable() {
     useState<boolean>(false);
 
   const { data: selectedQueue, isLoading: selectedQueueIsLoading } =
-    api.jobUpdates.getRandomQueueUrl.useQuery(undefined, {
+    api.jobUpdates.getQueueUrl.useQuery(undefined, {
       enabled: !selectedQueueExecutted,
       onSuccess: () => {
         setSelectedQueueExecutted(true);
@@ -74,9 +74,9 @@ export default function JobTable() {
       author: jobUpdate.author,
       date: new Date(jobUpdate.timestamp * 1000),
       sources: jobUpdate.sources,
-      granularity: 1,
-      dateRangeEnd: new Date(),
-      dateRangeStart: new Date(),
+      granularity: jobUpdate.granularity,
+      dateRangeEnd: jobUpdate.dateRangeEnd,
+      dateRangeStart: jobUpdate.dateRangeStart,
     } as Job;
   };
 

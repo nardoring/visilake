@@ -22,6 +22,7 @@ use std::{
     io::{self, Write},
     sync::Arc,
 };
+use tasks::delete_queue::delete_old_queues;
 
 struct Clients {
     dynamodb: Arc<aws_sdk_dynamodb::Client>,
@@ -48,6 +49,8 @@ enum Commands {
     ProcessQueuedJobs,
     /// Injest parquet and display it
     TestParquet,
+    /// Deletes old update topic queues
+    DeleteQueues,
     /// Exits the REPL
     Exit,
 }
@@ -80,6 +83,9 @@ async fn respond(line: &str, clients: &Clients) -> Result<bool, eyre::Report> {
         }
         Commands::TestParquet => {
             todo!()
+        }
+        Commands::DeleteQueues => {
+            delete_old_queues(&clients.sqs, queues).await;
         }
         Commands::Exit => {
             write!(std::io::stdout(), "Exiting ...")?;

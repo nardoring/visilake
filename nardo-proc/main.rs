@@ -18,6 +18,7 @@ pub(crate) use crate::{
 };
 use clap::{Parser, Subcommand};
 use eyre::Result;
+use tasks::delete_queue::delete_old_queues;
 use std::{
     io::{self, Write},
     sync::Arc,
@@ -84,7 +85,7 @@ async fn respond(line: &str, clients: &Clients) -> Result<bool, eyre::Report> {
             todo!()
         }
         Commands::DeleteQueues => {
-            delete_old_queues(&clients.sqs).await;
+            delete_old_queues(&clients.sqs, queues).await;
         }
         Commands::Exit => {
             write!(std::io::stdout(), "Exiting ...")?;

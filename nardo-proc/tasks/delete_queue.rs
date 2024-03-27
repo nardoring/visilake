@@ -1,5 +1,6 @@
-use aws_sdk_sqs::Client;
+use log::debug;
 use crate::aws::sqs::{delete_queue, get_queue_age};
+use aws_sdk_sqs::{types::QueueAttributeName, Client};
 
 const MAX_QUEUE_HOURS: i64 = 2;
 
@@ -7,9 +8,7 @@ const MAX_QUEUE_AGE: i64 = MAX_QUEUE_HOURS * 60 * 60;
 
 const BASE_QUEUE_STIRNG: &str = "requestUpdates";
 
-async fn delete_old_queues(sqs_client: &Client, queues: Vec<String>) {
-    let shared_config = config::configure().await.expect("Config failed");
-
+pub async fn delete_old_queues(sqs_client: &Client, queues: Vec<String>) {
     for queue in queues.iter().filter(|&q| q.contains(BASE_QUEUE_STIRNG)) {
         debug!("Processing: {}", queue);
 

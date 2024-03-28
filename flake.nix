@@ -23,6 +23,8 @@
     rust-overlay,
     ...
   }: let
+    athenaUrl = "http://athena.us-east-1.localhost.localstack.cloud:4566/";
+    athenaResults = "s3://aws-athena-query-results-000000000000-us-east-1";
     dynamoUrl = "http://dynamodb.us-east-1.localhost.localstack.cloud:4566/";
     sqsUrl = "http://sqs.us-east-1.localhost.localstack.cloud:4566/";
     authorName = "Test Author";
@@ -53,7 +55,7 @@
           pname = "nardo-web";
           version = "0.1.0";
           src = ./.;
-          npmDepsHash = "sha256-wLTYQH5/quYnx3VGXHsEdGvoXWd+qZXeJif6/hIL+hw=";
+          npmDepsHash = "sha256-ynLFwAsC9pG+4vzVZtRioeUUa0pFZIEWmFLY2pcSRAg=";
 
           npmBuild = "SKIP_ENV_VALIDATION=1 npm run build";
 
@@ -74,8 +76,8 @@
 
         localstackpro-image = pkgs.dockerTools.pullImage {
           imageName = "localstack/localstack-pro";
-          imageDigest = "sha256:b6bb4d7b1209b47daccd2d58e669b0fb19ace3ecd98572ec6e3e75921768f6f6";
-          sha256 = "sha256-oJlIFsIRtvZSLtABjapc+ZJeJUcDi+xhct/H3o/5pck=";
+          imageDigest = "sha256:945606c6f58f187822db188e4c6354d3ee49931fc00d6b0aad8fcf36b18eae5a";
+          sha256 = "sha256-I3foIleIRK8+lVadmxMNwwd6+ZoGdXJsWIbJSt8nKRQ=";
           finalImageName = "localstack/localstack-pro";
           finalImageTag = "latest";
         };
@@ -110,6 +112,8 @@
               "NODE_ENV=production"
               "NEXT_TELEMETRY_DISABLED=1"
               "AWS_REGION=us-east-1"
+              "ATHENA_URL=${athenaUrl}"
+              "ATHENA_QUERY_RESULTS=${athenaResults}"
               "DYNAMO_URL=${dynamoUrl}"
               "SQS_URL=${sqsUrl}"
               "NEXT_PUBLIC_AUTHOR_NAME=${authorName}"
@@ -168,6 +172,7 @@
               package = pkgs.terraform;
             };
           };
+          settings.formatter.prettier.excludes = ["./infra/mockdata/rearc-usa-hospital-beds/**"];
         };
 
         devShells.default = pkgs.mkShell {
@@ -178,6 +183,7 @@
               # pyEnv
               nodejs
               nodePackages.eslint
+              # parquet-tools
             ]
             ++ localstack
             ++ treefmtPrograms;
@@ -197,6 +203,8 @@
           AWS_SECRET_ACCESS_KEY = "test";
           AWS_DEFAULT_REGION = "us-east-1";
           AWS_REGION = "us-east-1";
+          ATHENA_URL = "${athenaUrl}";
+          ATHENA_QUERY_RESULTS = "${athenaResults}";
           DYNAMO_URL = "${dynamoUrl}";
           SQS_URL = "${sqsUrl}";
           NEXT_PUBLIC_AUTHOR_NAME = "${authorName}";

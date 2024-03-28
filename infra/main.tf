@@ -82,6 +82,8 @@ resource "aws_iam_role_policy" "ecs_role_policy" {
           "elasticloadbalancing:RegisterTargets",
           "dynamodb:*",
           "sqs:*",
+          "s3:*",
+          "athena:*",
         ],
         Effect   = "Allow",
         Resource = "*"
@@ -125,6 +127,8 @@ resource "aws_iam_role_policy" "ecs_task_execution_policy" {
           "logs:PutLogEvents",
           "dynamodb:*",
           "sqs:*",
+          "s3:*",
+          "athena:*",
         ],
         Effect   = "Allow",
         Resource = "*"

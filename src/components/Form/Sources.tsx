@@ -102,7 +102,10 @@ const Sources = ({ getSources, setSources, inputStyles }: SourcesProps) => {
           />
         )}
       />
-      <div className='flex flex-wrap gap-0'>
+      <div
+        className='flex flex-wrap gap-0'
+        id='source-tag-container'
+      >
         {getSources().map((source) => (
           <Source
             key={`file-source-${source.name}`}

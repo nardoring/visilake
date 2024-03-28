@@ -59,6 +59,7 @@ const Sources = ({ getSources, setSources, inputStyles }: SourcesProps) => {
   return (
     <>
       <label
+        id='sources-label'
         data-tooltip-id='sources'
         data-tooltip-html='Select sources from Data Lake <br> Valid format is 1234-AB(C)-12345'
         htmlFor='sources'
@@ -97,7 +98,6 @@ const Sources = ({ getSources, setSources, inputStyles }: SourcesProps) => {
             {...params}
             className='bg-white rounded-md'
             type='text'
-            id='sources'
             placeholder='1234-AB(C)-12345'
           />
         )}

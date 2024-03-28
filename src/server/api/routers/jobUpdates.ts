@@ -2,30 +2,77 @@ import { z } from 'zod';
 import { createTRPCRouter, publicProcedure } from '../trpc';
 import getSQSClient from '~/clients/sqs';
 import {
-  DeleteMessageBatchRequest,
+  CreateQueueRequest,
   DeleteMessageBatchRequestEntry,
+  GetQueueAttributesRequest,
+  GetQueueUrlRequest,
   ReceiveMessageRequest,
 } from 'aws-sdk/clients/sqs';
 
-const IGNORED_QUEUE_URL =
-  'http://sqs.us-east-1.localhost.localstack.cloud:4566/000000000000/requestQueue';
+import { v4 as uuidv4 } from 'uuid';
+import getSNSClient from '~/clients/sns';
+import { SubscribeInput, SubscribeResponse } from 'aws-sdk/clients/sns';
+
+const SNS_TOPIC_ARN =
+  'arn:aws:sns:us-east-1:000000000000:requestUpdatesTopic.fifo';
+const BASE_JOB_UPDATES_QUEUE_NAME = 'requestUpdates';
 
 export const jobUpdatesRouter = createTRPCRouter({
-  getRandomQueueUrl: publicProcedure.query(async () => {
+  getQueueUrl: publicProcedure.query(async () => {
     const sqs = getSQSClient();
-    const listQueuesResponse = await sqs.listQueues().promise();
+    const sns = getSNSClient();
 
-    const queueUrls = listQueuesResponse.QueueUrls?.filter(
-      (url) => url !== IGNORED_QUEUE_URL
-    );
-    console.log(queueUrls);
-    if (!queueUrls || queueUrls.length === 0) {
-      console.log('No queues found.');
+    const queueName =
+      BASE_JOB_UPDATES_QUEUE_NAME +
+      '-' +
+      uuidv4().toString().toLowerCase() +
+      '.fifo';
+
+    const newQueueParams = {
+      QueueName: queueName,
+      Attributes: {
+        FifoQueue: 'true',
+        MessageRetentionPeriod: '60',
+        ContentBasedDeduplication: 'true',
+      },
+    } as CreateQueueRequest;
+
+    await sqs.createQueue(newQueueParams).promise();
+
+    const getQueueUrlParams = {
+      QueueName: queueName,
+    } as GetQueueUrlRequest;
+
+    const queueResponse = await sqs.getQueueUrl(getQueueUrlParams).promise();
+
+    const queueUrl = queueResponse.QueueUrl;
+    console.log(queueUrl);
+    if (!queueUrl || queueUrl.length === 0) {
+      console.log('Queue not created. No queue url found');
       return undefined;
     }
 
-    const randomIndex = Math.floor(Math.random() * queueUrls.length);
-    return queueUrls[randomIndex];
+    const getQueueAttributesParams = {
+      QueueUrl: queueUrl,
+      AttributeNames: ['QueueArn'],
+    } as GetQueueAttributesRequest;
+
+    const queueAttributes = await sqs
+      .getQueueAttributes(getQueueAttributesParams)
+      .promise();
+
+    const topics = await sns.listTopics().promise();
+    console.log(topics);
+
+    const subscribeTopicParams = {
+      Protocol: 'sqs',
+      TopicArn: SNS_TOPIC_ARN,
+      Endpoint: queueAttributes.Attributes?.QueueArn,
+    } as SubscribeInput;
+
+    await sns.subscribe(subscribeTopicParams).promise();
+
+    return queueUrl;
   }),
   getJobUpdates: publicProcedure
     .input(z.object({ queueUrl: z.string() }))

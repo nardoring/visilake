@@ -38,7 +38,7 @@ export default function JobTable() {
     useState<boolean>(false);
 
   const { data: selectedQueue, isLoading: selectedQueueIsLoading } =
-    api.jobUpdates.getRandomQueueUrl.useQuery(undefined, {
+    api.jobUpdates.getQueueUrl.useQuery(undefined, {
       enabled: !selectedQueueExecutted,
       onSuccess: () => {
         setSelectedQueueExecutted(true);
@@ -64,6 +64,22 @@ export default function JobTable() {
     return JSON.parse(messageParse.Message) as unknown as JobUpdateMessage;
   };
 
+  const mapJobUpdateMessageToUseCase = (jobUpdate: JobUpdateMessage): Job => {
+    return {
+      jobName: jobUpdate.name,
+      jobDescription: jobUpdate.description,
+      jobId: jobUpdate.request_id,
+      jobStatus: jobUpdate.status,
+      analysisTypes: jobUpdate.analysis_types,
+      author: jobUpdate.author,
+      date: new Date(jobUpdate.timestamp * 1000),
+      sources: jobUpdate.sources,
+      granularity: jobUpdate.granularity,
+      dateRangeEnd: jobUpdate.dateRangeEnd,
+      dateRangeStart: jobUpdate.dateRangeStart,
+    } as Job;
+  };
+
   api.jobUpdates.getJobUpdates.useQuery(
     { queueUrl: selectedQueue! },
     {
@@ -76,15 +92,22 @@ export default function JobTable() {
             .filter((update) => update) as JobUpdateMessage[];
 
           updates.forEach((update) => {
-            const updatedRow = gridRef.current?.api.getRowNode(
-              update.request_id
-            );
+            console.log(update);
+            if (update.status == 'PENDING') {
+              const newJob = mapJobUpdateMessageToUseCase(update);
+              console.log(newJob);
+              gridRef.current?.api.applyTransaction({ add: [newJob] });
+            } else {
+              const updatedRow = gridRef.current?.api.getRowNode(
+                update.request_id
+              );
 
-            if (!updatedRow) {
-              return;
+              if (!updatedRow) {
+                return;
+              }
+
+              updatedRow?.setDataValue('jobStatus', update.status);
             }
-
-            updatedRow?.setDataValue('jobStatus', update.status);
           });
         }
 

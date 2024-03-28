@@ -106,27 +106,28 @@ export default function Form() {
 
   return (
     <form
-      className='z-40 col-start-2 col-end-9 row-span-6 row-start-3 p-4 '
+      className='z-40 col-start-2 col-end-9 row-span-6 row-start-3 px-4'
       onSubmit={handleSubmit}
       id='jobSubmissionForm'
     >
       <div className='font-nunito mt-12 grid grid-cols-2 gap-x-6 gap-y-4 rounded border border-slate-400 bg-veryLightGrey p-4 font-medium shadow-md'>
         <div>
           <label
+            id='job-name-label'
             data-tooltip-id='name'
             data-tooltip-html='Short name of job or task'
-            htmlFor='jobName'
+            htmlFor='job-name-input'
           >
             Job Name
           </label>
           <Tooltip id='name' />
 
           <input
+            id='job-name-input'
             className={`${inputStyles} ${
               submitAttempted && jobName.trim() === '' ? 'ring-1 ring-red' : ''
             }`}
             type='text'
-            id='jobName'
             onKeyDown={handleKeyDown}
             onChange={(e) => setJobName(e.target.value)}
           />
@@ -134,27 +135,30 @@ export default function Form() {
 
         <div>
           <label
+            id='analysis-types-label'
             data-tooltip-id='types'
             data-tooltip-html='Analysis to be ran on selected source(s) <br> Multiple types may be selected'
-            htmlFor='analysisType'
+            htmlFor='analysis-type-input'
           >
             Analysis Type(s)
           </label>
           <Tooltip id='types' />
-          <MultiSelect
-            options={analysisTypeOptions}
-            value={analysisTypes}
-            onChange={setAnalysisTypes}
-            labelledBy='AnalysisTypeSelect'
-            isLoading={analysisTypeOptionsIsLoading}
-            hasSelectAll={false}
-            disableSearch={true}
-            className={`${'rounded shadow-sm'} ${
-              submitAttempted && analysisTypes.length === 0
-                ? 'ring-1 ring-red'
-                : ''
-            }`}
-          />
+          <div id='analysis-type-input'>
+            <MultiSelect
+              options={analysisTypeOptions}
+              value={analysisTypes}
+              onChange={setAnalysisTypes}
+              labelledBy='AnalysisTypeSelect'
+              isLoading={analysisTypeOptionsIsLoading}
+              hasSelectAll={false}
+              disableSearch={true}
+              className={`${'rounded shadow-sm'} ${
+                submitAttempted && analysisTypes.length === 0
+                  ? 'ring-1 ring-red'
+                  : ''
+              }`}
+            />
+          </div>
         </div>
 
         <div className='col-span-2'>
@@ -171,6 +175,7 @@ export default function Form() {
 
         <div className='flex flex-col'>
           <label
+            id='date-range-label'
             className='mb-1'
             style={{ alignSelf: 'flex-start' }}
             data-tooltip-id='date-range'
@@ -183,47 +188,52 @@ export default function Form() {
 
           <div className='col-span-1 flex w-full flex-row space-x-4'>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <DateTimePicker
-                disableFuture
-                ampm={false}
-                className={`${'w-full rounded shadow-sm bg-white'} ${
-                  submitAttempted &&
-                  (dateRangeStart === undefined ||
-                    !validateDate(dateRangeStart) ||
-                    !validateDateRange(dateRangeStart, dateRangeEnd))
-                    ? 'ring-1 ring-red'
-                    : ''
-                }`}
-                closeOnSelect={false}
-                onChange={(newValue: Dayjs | null) => {
-                  const date = newValue ? newValue.toDate() : undefined;
-                  setDateRangeStart(date);
-                }}
-              />
+              <div id='date-range-start-input'>
+                <DateTimePicker
+                  disableFuture
+                  ampm={false}
+                  className={`${'w-full rounded bg-white shadow-sm'} ${
+                    submitAttempted &&
+                    (dateRangeStart === undefined ||
+                      !validateDate(dateRangeStart) ||
+                      !validateDateRange(dateRangeStart, dateRangeEnd))
+                      ? 'ring-1 ring-red'
+                      : ''
+                  }`}
+                  closeOnSelect={false}
+                  onChange={(newValue: Dayjs | null) => {
+                    const date = newValue ? newValue.toDate() : undefined;
+                    setDateRangeStart(date);
+                  }}
+                />
+              </div>
               <p className='text-3xl'> - </p>
-              <DateTimePicker
-                disableFuture
-                ampm={false}
-                className={`${'w-full rounded shadow-sm bg-white'} ${
-                  submitAttempted &&
-                  (dateRangeEnd === undefined ||
-                    !validateDate(dateRangeEnd) ||
-                    !validateDateRange(dateRangeStart, dateRangeEnd))
-                    ? 'ring-1 ring-red'
-                    : ''
-                }`}
-                closeOnSelect={false}
-                onChange={(newValue: Dayjs | null) => {
-                  const date = newValue ? newValue.toDate() : undefined;
-                  setDateRangeEnd(date);
-                }}
-              />
+              <div id='date-range-end-input'>
+                <DateTimePicker
+                  disableFuture
+                  ampm={false}
+                  className={`${'w-full rounded bg-white shadow-sm'} ${
+                    submitAttempted &&
+                    (dateRangeEnd === undefined ||
+                      !validateDate(dateRangeEnd) ||
+                      !validateDateRange(dateRangeStart, dateRangeEnd))
+                      ? 'ring-1 ring-red'
+                      : ''
+                  }`}
+                  closeOnSelect={false}
+                  onChange={(newValue: Dayjs | null) => {
+                    const date = newValue ? newValue.toDate() : undefined;
+                    setDateRangeEnd(date);
+                  }}
+                />
+              </div>
             </LocalizationProvider>
           </div>
         </div>
 
         <div className='flex flex-col'>
           <label
+            id='granularity-label'
             className='mb-1'
             style={{ alignSelf: 'flex-start' }}
             data-tooltip-id='granularity'
@@ -232,28 +242,32 @@ export default function Form() {
             Granularity
           </label>
           <Tooltip id='granularity' />
-          <div className='px-5'>
+          <div
+            className='px-5'
+            id='granularity-input'
+          >
             <GranularitySlider onGranularityChanged={onGranularityChanged} />
           </div>
         </div>
 
         <div className='col-span-2'>
           <label
+            id='job-description-label'
             data-tooltip-id='desc'
             data-tooltip-html='Details about:<br>- sources<br>- analysis type<br>- hypothesis<br>- expectations<br>- additional notes'
-            htmlFor='jobDescription'
+            htmlFor='job-description-input'
           >
             Description
           </label>
           <Tooltip id='desc' />
           <textarea
+            id='job-description-input'
             className={`${inputStyles} ${
               submitAttempted && jobDescription.trim() === ''
                 ? 'ring-1 ring-red'
                 : ''
             }`}
             rows={4}
-            id='jobDescription'
             onKeyDown={handleKeyDown}
             onChange={(e) => setJobDescription(e.target.value)}
           />
@@ -261,6 +275,7 @@ export default function Form() {
 
         <div className='col-span-2 flex justify-center '>
           <button
+            id='submit-job-button'
             className='flex w-40 items-center justify-center rounded bg-veryDarkBlue px-4 py-2 text-white shadow-md hover:bg-highlightBlue'
             type='submit'
             disabled={jobSubmission.isLoading}

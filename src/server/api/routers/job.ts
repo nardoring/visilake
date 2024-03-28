@@ -12,10 +12,17 @@ import mapJobs from '~/mappers/jobMappers';
 import getDynamoDBClient from '~/clients/dynamodb';
 import { env } from '~/env.mjs';
 
+import { JobUpdateMessage } from '~/models/sqs/jobUpdateMessage';
+import getSNSClient from '~/clients/sns';
+import { PublishInput } from 'aws-sdk/clients/sns';
+
 const DYNAMODB_TABLE = 'mockRequests';
 const shortUid = () => uuidv4().substring(0, 8);
-
 const AUTHOR_NAME = env.NEXT_PUBLIC_AUTHOR_NAME;
+
+const SNS_TOPIC_ARN =
+  'arn:aws:sns:us-east-1:000000000000:requestUpdatesTopic.fifo';
+const SNS_MESSAGE_GROUP_ID = 'updates';
 
 export const jobRouter = createTRPCRouter({
   getJobs: publicProcedure.query(async () => {
@@ -74,10 +81,13 @@ export const jobRouter = createTRPCRouter({
     .mutation(async ({ input }) => {
       const requestID = shortUid();
       console.log('\nRequestID:\n', requestID);
+
+      const date = Date.now();
+
+      const status = 'PENDING';
+
       const dynamodb = getDynamoDBClient();
 
-      // set status in DynamoDB to PENDING
-      const status = 'PENDING';
       let dynamodbParams = {
         TableName: DYNAMODB_TABLE,
         Item: {
@@ -88,7 +98,7 @@ export const jobRouter = createTRPCRouter({
             S: requestID,
           },
           creationDate: {
-            N: Date.now().toString(),
+            N: date.toString(),
           },
           jobStatus: {
             S: status,
@@ -128,5 +138,29 @@ export const jobRouter = createTRPCRouter({
         },
       };
       await dynamodb.putItem(dynamodbParams).promise();
+
+      const jobUpdate = {
+        request_id: requestID,
+        timestamp: date,
+        analysis_types: input.analysisTypes,
+        author: AUTHOR_NAME,
+        name: input.jobName,
+        description: input.jobDescription,
+        status: status,
+        sources: input.sources,
+        dateRangeEnd: new Date(input.dateRangeEnd),
+        dateRangeStart: new Date(input.dateRangeStart),
+        granularity: input.granularity,
+      } as JobUpdateMessage; // Todo: new fields date ranges + granularity?
+
+      const snsClient = getSNSClient();
+
+      const snsClientParams = {
+        TopicArn: SNS_TOPIC_ARN,
+        Message: JSON.stringify(jobUpdate),
+        MessageGroupId: SNS_MESSAGE_GROUP_ID,
+      } as PublishInput;
+
+      await snsClient.publish(snsClientParams).promise();
     }),
 });

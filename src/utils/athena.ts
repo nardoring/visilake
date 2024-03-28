@@ -23,7 +23,7 @@ export interface AthenaQueryResultRow {
 
 export async function waitForQueryExecution(
   athenaClient: AthenaClient,
-  queryExecutionId: string,
+  queryExecutionId: string
 ): Promise<ExecutionDetails> {
   let attempts = 0;
 
@@ -73,7 +73,9 @@ export async function waitForQueryExecution(
     }
   }
 
-  throw new Error('Maximum number of retries reached, unable to complete query execution.');
+  throw new Error(
+    'Maximum number of retries reached, unable to complete query execution.'
+  );
 }
 
 export async function fetchQueryResults(

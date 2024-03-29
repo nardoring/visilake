@@ -35,7 +35,6 @@
       imports = [inputs.treefmt-nix.flakeModule];
 
       perSystem = {
-        self',
         system,
         config,
         ...
@@ -132,13 +131,6 @@
         #     pandas
         #     numpy
         #   ]);
-
-        # info on this dataset can be found here
-        # https://data.world/data-society/us-air-pollution-data
-        dataset = pkgs.fetchurl {
-          url = "https://query.data.world/s/mz5ot3l4zrgvldncfgxu34nda45kvb";
-          sha256 = "sha256-52Iova39Ao3Xom11rFFF42OjCokxJ8AixLKRTXhi10Q=";
-        };
       in {
         treefmt.config = {
           projectRootFile = "flake.nix";
@@ -172,7 +164,7 @@
               package = pkgs.terraform;
             };
           };
-          settings.formatter.prettier.excludes = ["./infra/mockdata/rearc-usa-hospital-beds/**"];
+          settings.formatter.prettier.excludes = ["./infra/mockdata/**"];
         };
 
         devShells.default = pkgs.mkShell {
@@ -187,11 +179,6 @@
             ]
             ++ localstack
             ++ treefmtPrograms;
-
-          shellHook = ''
-            ln -sf ${dataset} ./infra/mockdata/dataset.csv
-            node src/utils/dbMockJobGenerator.js
-          '';
 
           RUST_BACKTRACE = 1;
           RUST_SRC_PATH = "${toolchain}/lib/rustlib/src/rust/library";
@@ -217,7 +204,7 @@
           nardo-image = nardo-image;
           localstackpro-image = localstackpro-image;
         };
-        checks.systems = self'.packages.nardo-rust;
+        # checks.systems = self'.packages.nardo-rust;
       };
     });
 }

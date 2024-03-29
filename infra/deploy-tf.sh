@@ -52,7 +52,6 @@ function deploy() {
     set -e  # Exit immediately if a command exits with a non-zero status
     SECONDS=0
     echo -e "\n# - $(date '+%Y-%m-%d %H:%M:%S') -------------------------------------------------------#\n"
-    node ../src/utils/dbMockJobGenerator.js
     clean # cleanup potential old state
 
     # build docker images with nix and load them into docker
@@ -80,6 +79,14 @@ function deploy() {
 
 while [[ $# -gt 0 ]]; do
     case $1 in
+        -i|--init)
+            cd mockdata
+            git update-index --assume-unchanged metadata/requests.json
+            node metadata/dbMockJobGenerator.js
+            cp -f ./metadata/job-outputs/mockup-view.html ../../public/mockup-view.html
+            cd ..
+            shift
+            ;;
         -v|--verbose)
             echo "Debug statements enabled"
             export DEBUG=1
@@ -87,10 +94,8 @@ while [[ $# -gt 0 ]]; do
             shift
             ;;
         -r|--redeploy)
-            node ../src/utils/dbMockJobGenerator.js
             tflocal refresh
             tflocal apply --auto-approve
-            shift
             exit 1
             ;;
         -d|--docker)

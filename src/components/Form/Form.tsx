@@ -188,7 +188,10 @@ export default function Form() {
 
           <div className='col-span-1 flex w-full flex-row space-x-4'>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <div id='date-range-start-input'>
+              <div
+                id='date-range-start-input'
+                className='w-full'
+              >
                 <DateTimePicker
                   disableFuture
                   ampm={false}
@@ -208,7 +211,10 @@ export default function Form() {
                 />
               </div>
               <p className='text-3xl'> - </p>
-              <div id='date-range-end-input'>
+              <div
+                id='date-range-end-input'
+                className='w-full'
+              >
                 <DateTimePicker
                   disableFuture
                   ampm={false}

@@ -10,8 +10,7 @@ export function formatDate(rawDate: Date) {
   const optionsTime: Intl.DateTimeFormatOptions = {
     hour: '2-digit',
     minute: '2-digit',
-    second: '2-digit',
-    hour12: false,
+    hourCycle: 'h23',
   };
 
   const formattedDate =

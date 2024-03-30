@@ -9,6 +9,13 @@ resource "aws_s3_object" "data_files" {
   source   = "./mockdata/datalake/${each.value}"
 }
 
+resource "aws_s3_object" "metadata_files" {
+  for_each = fileset("./mockdata/metadata/", "**/*")
+  bucket   = aws_s3_bucket.data_lake.bucket
+  key      = each.value
+  source   = "./mockdata/metadata/${each.value}"
+}
+
 resource "aws_glue_catalog_database" "mock_data_database" {
   name = "mockdata"
 }

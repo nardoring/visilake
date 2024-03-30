@@ -4,8 +4,6 @@ import {
   GetQueryResultsCommand,
 } from '@aws-sdk/client-athena';
 
-const MAX_RETRIES = 5;
-
 interface ExecutionDetails {
   Status: {
     State: 'QUEUED' | 'RUNNING' | 'SUCCEEDED' | 'FAILED' | 'CANCELLED';
@@ -25,9 +23,9 @@ export async function waitForQueryExecution(
   athenaClient: AthenaClient,
   queryExecutionId: string
 ): Promise<ExecutionDetails> {
-  let attempts = 0;
+  let isQueryStillRunning = true;
 
-  while (attempts < MAX_RETRIES) {
+  while (isQueryStillRunning) {
     const response = await athenaClient.send(
       new GetQueryExecutionCommand({
         QueryExecutionId: queryExecutionId,
@@ -51,6 +49,7 @@ export async function waitForQueryExecution(
 
     switch (Status.State) {
       case 'SUCCEEDED':
+        isQueryStillRunning = false;
         const executionDetails: ExecutionDetails = {
           Status: {
             State: Status.State,
@@ -67,15 +66,11 @@ export async function waitForQueryExecution(
           `Query cancelled. State: ${Status.State}, Reason: ${Status.StateChangeReason ?? 'No reason provided'}`
         );
       default:
-        await new Promise((resolve) => setTimeout(resolve, 50));
-        attempts++;
-        continue;
+        await new Promise((resolve) => setTimeout(resolve, 5000));
     }
   }
 
-  throw new Error(
-    'Maximum number of retries reached, unable to complete query execution.'
-  );
+  throw new Error('waitForQueryExecution exited unexpectedly.');
 }
 
 export async function fetchQueryResults(

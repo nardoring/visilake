@@ -166,7 +166,7 @@ export default function JobTable() {
         getGranularityLabel(params.data.granularity),
     },
     {
-      headerName: 'Date Range',
+      field: 'dateRange',
       hide: true,
       maxWidth: 170,
       minWidth: 170,

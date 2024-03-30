@@ -47,7 +47,7 @@ const Source = ({ source, updateSource, onRemove }: SourceProps) => {
 
   return (
     <div
-      className={`m-1 flex items-center justify-center rounded-full border ${
+      className={`source-tag m-1 flex items-center justify-center rounded-full border ${
         loading
           ? 'border-black bg-veryLightGrey'
           : sourceValidationData?.isValid

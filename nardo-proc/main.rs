@@ -16,6 +16,8 @@ pub(crate) use crate::{
     tasks::queue::{complete_processed_jobs, process_queued_jobs, queue_new_requests},
     utils::init_logging,
 };
+use aws::s3::{list_buckets, list_objects, s3_client};
+
 use clap::{Parser, Subcommand};
 use eyre::Result;
 use std::{
@@ -28,6 +30,7 @@ struct Clients {
     dynamodb: Arc<aws_sdk_dynamodb::Client>,
     sns: Arc<aws_sdk_sns::Client>,
     sqs: Arc<aws_sdk_sqs::Client>,
+    s3: Arc<aws_sdk_s3::Client>,
 }
 
 #[derive(Debug, Parser)]
@@ -43,6 +46,8 @@ enum Commands {
     ListTopics,
     /// List queues from AWS SQS
     ListQueues,
+    /// List buckets and objects from AWS s3
+    ListS3,
     /// List messages from AWS SQS
     ListMessages,
     /// Process queued jobs
@@ -68,6 +73,14 @@ async fn respond(line: &str, clients: &Clients) -> Result<bool, eyre::Report> {
         }
         Commands::ListQueues => {
             println!("Queues: {:#?}", queues)
+        }
+        Commands::ListS3 => {
+            let buckets = list_buckets(&clients.s3).await?;
+            println!("Buckets: {:#?}\n", buckets);
+            for bucket in buckets {
+                // println!("Objects in: {:#?}", bucket);
+                let objects = list_objects(&clients.s3, &bucket).await?;
+            }
         }
         Commands::ListMessages => {
             for queue in queues {
@@ -105,6 +118,7 @@ async fn main() -> Result<()> {
         dynamodb: Arc::new(dynamodb_client(&shared_config)),
         sns: Arc::new(sns_client(&shared_config)),
         sqs: Arc::new(sqs_client(&shared_config)),
+        s3: Arc::new(s3_client(&shared_config)),
     };
 
     loop {

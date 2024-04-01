@@ -21,64 +21,46 @@ pub fn s3_client(conf: &SdkConfig) -> Client {
     Client::from_conf(s3_config_builder.build())
 }
 
-async fn list_buckets(strict: bool, client: &Client, region: &str) -> Result<()> {
+pub async fn list_buckets(client: &Client) -> Result<Vec<String>> {
     let resp = client.list_buckets().send().await?;
     let buckets = resp.buckets();
-    let num_buckets = buckets.len();
+    let bucket_names: Vec<String> = buckets
+        .iter()
+        .filter_map(|bucket| bucket.name().map(String::from))
+        .collect();
 
-    let mut in_region = 0;
+    debug!("Found {} buckets in all regions.", bucket_names.len());
 
-    for bucket in buckets {
-        if strict {
-            let r = client
-                .get_bucket_location()
-                .bucket(bucket.name().unwrap_or_default())
-                .send()
-                .await?;
-
-            if r.location_constraint().unwrap().as_ref() == region {
-                debug!("{}", bucket.name().unwrap_or_default());
-                in_region += 1;
-            }
-        } else {
-            debug!("{}", bucket.name().unwrap_or_default());
-        }
-    }
-
-    if strict {
-        debug!(
-            "Found {} buckets in the {} region out of a total of {} buckets.",
-            in_region, region, num_buckets
-        );
-    } else {
-        debug!("Found {} buckets in all regions.", num_buckets);
-    }
-
-    Ok(())
+    Ok(bucket_names)
 }
 
-pub async fn list_objects(client: &Client, bucket: &str) -> Result<()> {
+pub async fn list_objects(client: &Client, bucket: &str) -> Result<Vec<String>> {
     let mut response = client
         .list_objects_v2()
-        .bucket(bucket.to_owned())
-        .max_keys(10) // In this example, go 10 at a time.
+        .bucket(bucket)
+        .max_keys(10)
         .into_paginator()
         .send();
+
+    let mut object_keys = Vec::new();
 
     while let Some(result) = response.next().await {
         match result {
             Ok(output) => {
-                for object in output.contents() {
-                    debug!(" - {}", object.key().unwrap_or("Unknown"));
-                }
+                object_keys.extend(
+                    output
+                        .contents()
+                        .iter()
+                        .filter_map(|object| object.key().map(String::from)),
+                );
             }
             Err(err) => {
-                error!("{err:?}")
+                error!("{err:#?}")
             }
         }
     }
 
-    Ok(())
+    Ok(object_keys)
 }
 
 async fn put_object(client: &Client, bucket: &str, object: &str, expires_in: u64) -> Result<()> {
@@ -143,18 +125,37 @@ pub async fn download_object(
         .await
 }
 
-pub async fn upload_object(
-    client: &Client,
-    bucket_name: &str,
-    file_name: &str,
-    key: &str,
-) -> Result<PutObjectOutput, SdkError<PutObjectError>> {
-    let body = ByteStream::from_path(Path::new(file_name)).await;
-    client
-        .put_object()
-        .bucket(bucket_name)
-        .key(key)
-        .body(body.unwrap())
-        .send()
-        .await
+pub async fn upload_object(client: &Client, bucket: &str, filename: &str, key: &str) -> Result<()> {
+    let resp = client.list_buckets().send().await?;
+
+    for bucket in resp.buckets() {
+        println!("bucket: {:#?}", bucket.name().unwrap_or_default())
+    }
+
+    println!();
+
+    let body = ByteStream::from_path(Path::new(filename)).await;
+
+    match body {
+        Ok(b) => {
+            let resp = client
+                .put_object()
+                .bucket(bucket)
+                .key(key)
+                .body(b)
+                .send()
+                .await?;
+
+            println!("Upload success. Version: {:#?}", resp.version_id);
+
+            let resp = client.get_object().bucket(bucket).key(key).send().await?;
+            let data = resp.body.collect().await;
+            println!("data: {:#?}", data.unwrap().into_bytes());
+        }
+        Err(err) => {
+            error!("{err:#?}")
+        }
+    }
+
+    Ok(())
 }

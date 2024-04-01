@@ -14,7 +14,7 @@ pub struct JobResponse {
     pub request_id: String,  // points to the originating JobRequest
     pub start_timestamp: i64,
     pub end_timestamp: i64,
-
+    pub powerbi_link: String, // future
     #[serde(
         serialize_with = "serialize_job_types",
         deserialize_with = "deserialize_job_types"
@@ -74,6 +74,13 @@ pub fn convert_item_to_job_response(item: &HashMap<String, AttributeValue>) -> R
             .map_err(|_| eyre::Error::msg("Invalid endTimestamp"))?
             .parse::<i64>()
             .map_err(|_| eyre::Error::msg("Invalid end timestamp format"))?,
+        powerbi_link: item
+            .get("powerbiLink")
+            .ok_or_else(|| eyre::Error::msg("Missing powerbiLink"))?
+            .as_s()
+            .map_err(|_| eyre::Error::msg("Invalid powerbiLink"))?
+            .to_owned(),
+
         job_type,
         job_status,
     };

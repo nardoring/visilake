@@ -7,7 +7,7 @@ trait AnalysisJob {
 }
 
 struct CorrelationJob;
-struct RollingMeanJob;
+struct EdaJob;
 
 impl AnalysisJob for CorrelationJob {
     fn run(&self, data: &TimeSeriesData) -> Result<TimeSeriesData> {
@@ -16,9 +16,9 @@ impl AnalysisJob for CorrelationJob {
     }
 }
 
-impl AnalysisJob for RollingMeanJob {
+impl AnalysisJob for EdaJob {
     fn run(&self, data: &TimeSeriesData) -> Result<TimeSeriesData> {
-        // TODO Implement rolling mean analysis on the data
+        // TODO Implement EDA analysis on the data
         todo!()
     }
 }
@@ -47,7 +47,7 @@ impl JobQueue {
 fn create_job_instance(job_type: JobType) -> Box<dyn AnalysisJob> {
     match job_type {
         JobType::Corr => Box::new(CorrelationJob {}),
-        JobType::RollingMean => Box::new(RollingMeanJob {}),
+        JobType::Eda => Box::new(EdaJob {}),
         JobType::None => panic!("Invalid job type for execution"),
     }
 }

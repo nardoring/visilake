@@ -7,8 +7,8 @@ use std::{error::Error, fmt, str::FromStr};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum JobType {
+    Eda,
     Corr,
-    RollingMean,
     None,
 }
 
@@ -28,8 +28,8 @@ impl FromStr for JobType {
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         match s {
+            "eda" => Ok(JobType::Eda),
             "correlation" => Ok(JobType::Corr),
-            "rolling-mean" => Ok(JobType::RollingMean),
             "NONE" => Ok(JobType::None),
             _ => Err(ParseJobTypeError),
         }
@@ -39,8 +39,8 @@ impl FromStr for JobType {
 impl fmt::Display for JobType {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let job_type_str = match self {
+            JobType::Eda => "eda",
             JobType::Corr => "correlation",
-            JobType::RollingMean => "rolling-mean",
             JobType::None => "NONE",
         };
         write!(f, "{}", job_type_str)
@@ -50,8 +50,8 @@ impl fmt::Display for JobType {
 impl JobType {
     fn next(&self) -> Option<JobType> {
         match self {
-            JobType::Corr => Some(JobType::RollingMean),
-            JobType::RollingMean => Some(JobType::None),
+            JobType::Eda => Some(JobType::Eda),
+            JobType::Corr => Some(JobType::None),
             JobType::None => None,
         }
     }

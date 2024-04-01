@@ -71,7 +71,7 @@ export default function JobViewBox() {
         </div>
 
         <iframe
-          src='/data.html'
+          src='/mockup-view.html'
           title='HTML Content'
           className='w-full min-h-screen'
           style={{ pointerEvents: 'auto' }}

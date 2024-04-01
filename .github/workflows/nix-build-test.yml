@@ -13,10 +13,12 @@ jobs:
   Build:
     runs-on: build
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
+        with:
+          submodules: true
       - uses: DeterminateSystems/nix-installer-action@main
       - uses: DeterminateSystems/magic-nix-cache-action@main
       - name: Run `nix flake check`
         run: nix flake check
       - name: Test deploy infrastructure
-        run: nix develop -c ./infra/deploy-tf.sh --verbose
+        run: nix develop -c ./infra/deploy-tf.sh --init --verbose

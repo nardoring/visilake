@@ -2,7 +2,7 @@
 
 The easiest way to deploy the nardo-web application is by using the =nix= package manager along with our deploy script.
 
-[[file:flake.nix][flake.nix]] provides the necessary dependencies, builds the nodejs application, packages the nodejs application in a docker container, pulls the [[https://www.localstack.cloud/][Localstack]]-pro docker image, and sets the necessary environment variables to deploy the test environment.
+[[file:flake.nix][flake.nix]] provides the all the project's dependencies, builds the nodejs application, packages the nodejs application in a docker container, pulls the [[https://www.localstack.cloud/][Localstack]]-pro docker image, and sets the necessary environment variables to deploy the test environment.
 
 We provide comprehensive instructions for a windows deployment through =WSL2= in our [[https://github.com/nardoring/devenv][devenv]] repository.
 
@@ -18,11 +18,20 @@ chmod +x ./infra/deploy-tf.sh
 ./infra/deploy-tf.sh
 #+end_src
 
+If you'd like to deploy the project with our supplied mockdata:
+
+#+begin_src shell
+./infra/deploy-tf.sh --init
+#+end_src
+
+This will setup the [[https://github.com/nardoring/mockdata][mockdata]] for you. For all options see the usage below:
+
 #+begin_src shell
 Usage: ./infra/deploy-tf.sh [options]
 
 Options:
   none                   Full Localstack and Terraform Deployment
+  -i, --init             Initiate the git submodule for the datalake and mock data
   -v, --verbose          Enable debug for Terraform and Localstack
   -r, --redeploy         Re-deploy Terraform config to Localstack
   -d, --docker           Re-deploy the nardo docker image to Localstack

@@ -58,6 +58,4 @@ terraform.**
 **.log
 
 # data
-dataset.csv
-dataset.parquet
-requests.json
+mockup-view.html

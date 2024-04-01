@@ -2,9 +2,7 @@ import React, { useState } from 'react';
 import { api } from '~/utils/api';
 
 function AthenaQueryComponent() {
-  const [query, setQuery] = useState(
-    'SELECT * FROM mockdata.air_quality LIMIT 2'
-  );
+  const [query, setQuery] = useState('SELECT * FROM mockdata.dataset1 LIMIT 2');
   const executeQueryMutation = api.athena.executeQuery.useMutation();
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {

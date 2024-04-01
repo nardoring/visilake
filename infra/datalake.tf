@@ -3,10 +3,17 @@ resource "aws_s3_bucket" "data_lake" {
 }
 
 resource "aws_s3_object" "data_files" {
-  for_each = fileset("./mockdata/", "**/*")
+  for_each = fileset("./mockdata/datalake/", "**/*")
   bucket   = aws_s3_bucket.data_lake.bucket
   key      = each.value
-  source   = "./mockdata/${each.value}"
+  source   = "./mockdata/datalake/${each.value}"
+}
+
+resource "aws_s3_object" "metadata_files" {
+  for_each = fileset("./mockdata/metadata/", "**/*")
+  bucket   = aws_s3_bucket.data_lake.bucket
+  key      = each.value
+  source   = "./mockdata/metadata/${each.value}"
 }
 
 resource "aws_glue_catalog_database" "mock_data_database" {
@@ -15,7 +22,7 @@ resource "aws_glue_catalog_database" "mock_data_database" {
 
 resource "aws_glue_catalog_table" "air_quality_data" {
   database_name = aws_glue_catalog_database.mock_data_database.name
-  name          = "air_quality"
+  name          = "dataset1"
   table_type    = "EXTERNAL_TABLE"
 
   parameters = {
@@ -24,7 +31,7 @@ resource "aws_glue_catalog_table" "air_quality_data" {
   }
 
   storage_descriptor {
-    location      = "s3://data-lake/air-quality"
+    location      = "s3://data-lake/dataset1"
     input_format  = "org.apache.hadoop.hive.ql.io.parquet.MapredParquetInputFormat"
     output_format = "org.apache.hadoop.hive.ql.io.parquet.MapredParquetOutputFormat"
 

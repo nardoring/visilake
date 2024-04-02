@@ -105,6 +105,7 @@ while [[ $# -gt 0 ]]; do
             shift
             ;;
         -r|--redeploy)
+            cd infra
             tflocal refresh
             tflocal apply --auto-approve
             exit 1

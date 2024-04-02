@@ -66,7 +66,7 @@ export const jobRouter = createTRPCRouter({
       return mapJob(
         await new Promise((resolve, reject) =>
           dynamodb.query(jobQueryParams, (err, data) => {
-            if (err || !data.Items || data.Items.length < 1) {
+            if (err || !data.Items) {
               console.log(data, err);
               reject(
                 err ??
@@ -75,7 +75,13 @@ export const jobRouter = createTRPCRouter({
                     : 'Unknown error')
               );
             } else {
-              resolve((data.Items as unknown as Job[])[0]!);
+              const job = (data.Items as unknown as Job[])[0];
+
+              if (!job) {
+                reject('No Item');
+              } else {
+                resolve(job);
+              }
             }
           })
         )

@@ -54,7 +54,7 @@
           pname = "visilake-web";
           version = "0.1.0";
           src = ./.;
-          npmDepsHash = "sha256-ynLFwAsC9pG+4vzVZtRioeUUa0pFZIEWmFLY2pcSRAg=";
+          npmDepsHash = "sha256-qiye8SxhgE2ZgvjOHwpzeNFo4g4jVUPfmrkZK1dkTQQ=";
 
           npmBuild = "SKIP_ENV_VALIDATION=1 npm run build";
 

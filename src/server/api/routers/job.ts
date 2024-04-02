@@ -8,7 +8,7 @@ import { z } from 'zod';
 import { createTRPCRouter, publicProcedure } from '../trpc';
 import type { Job } from '~/models/db/job';
 import { v4 as uuidv4 } from 'uuid';
-import mapJobs from '~/mappers/jobMappers';
+import { mapJobs, mapJob } from '~/mappers/jobMappers';
 import getDynamoDBClient from '~/clients/dynamodb';
 import { env } from '~/env.mjs';
 
@@ -48,7 +48,32 @@ export const jobRouter = createTRPCRouter({
       )
     );
   }),
+  getJob: publicProcedure
+    .input(z.object({ jobId: z.string() }))
+    .query(async ({ input }) => {
+      const dynamodb = getDynamoDBClient();
 
+      const jobQueryParams = {
+        TableName: DYNAMODB_TABLE,
+        Key: { requestId: { S: input.jobId } },
+        ProjectionExpression:
+          'jobName, jobDescription, jobStatus, powerBILink, author, analysisTypes, creationDate, sources, dateRangeStart, dateRangeEnd, granularity, requestID',
+      };
+
+      return mapJob(
+        await new Promise((resolve, reject) =>
+          dynamodb.getItem(jobQueryParams, (err, data) => {
+            if (err || !data.Item) {
+              console.log(data, err);
+              reject(err ?? (!data.Item ? 'No Item' : 'Unknown error'));
+            } else {
+              //console.log(data.Items);
+              resolve(data.Item as unknown as Job);
+            }
+          })
+        )
+      );
+    }),
   submitJob: publicProcedure
     .input(
       z.object({

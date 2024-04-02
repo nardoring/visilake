@@ -1,5 +1,5 @@
 {
-  description = "Nardo Web project with T3 and rust stack deployed to localstack";
+  description = "Visilake Web project with T3 and rust stack deployed to localstack";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
@@ -47,11 +47,11 @@
 
         toolchain = pkgs.rust-bin.fromRustupToolchainFile ./nardo-proc/toolchain.toml;
 
-        nardo-proc = pkgs.callPackage ./nardo-proc {};
+        visilake-proc = pkgs.callPackage ./nardo-proc {}; # TODO: Rename rust app dir
 
-        nardo = pkgs.buildNpmPackage {
+        visilake = pkgs.buildNpmPackage {
           # https://create.t3.gg/en/deployment/docker
-          pname = "nardo-web";
+          pname = "visilake-web";
           version = "0.1.0";
           src = ./.;
           npmDepsHash = "sha256-ynLFwAsC9pG+4vzVZtRioeUUa0pFZIEWmFLY2pcSRAg=";
@@ -81,14 +81,14 @@
           finalImageTag = "latest";
         };
 
-        nardo-image = pkgs.dockerTools.buildImage {
-          name = "nardo";
+        visilake-image = pkgs.dockerTools.buildImage {
+          name = "visilake";
           tag = "latest";
 
           copyToRoot = pkgs.buildEnv {
-            name = "nardo";
+            name = "visilake";
             paths = [
-              nardo
+              visilake
               pkgs.nodejs
             ];
             pathsToLink = ["/bin /app"];
@@ -199,12 +199,12 @@
         };
 
         packages = {
-          nardo = nardo;
-          nardo-rust = nardo-proc;
-          nardo-image = nardo-image;
+          visilake = visilake;
+          visilake-rust = visilake-proc;
+          visilake-image = visilake-image;
           localstackpro-image = localstackpro-image;
         };
-        # checks.systems = self'.packages.nardo-rust;
+        # checks.systems = self'.packages.visilake-rust;
       };
     });
 }

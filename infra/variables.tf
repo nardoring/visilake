@@ -11,13 +11,13 @@ variable "stack_name" {
 
 variable "service_name" {
   type        = string
-  default     = "nardo"
+  default     = "visilake"
   description = "A name for the service"
 }
 
 variable "image_url" {
   type        = string
-  default     = "nardo"
+  default     = "visilake"
   description = "The url of a docker image for the service"
 }
 

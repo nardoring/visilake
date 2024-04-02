@@ -1,6 +1,6 @@
-* Nardo Web
+* Visilake Web
 
-The easiest way to deploy the nardo-web application is by using the =nix= package manager along with our deploy script.
+The easiest way to deploy the visilake-web application is by using the =nix= package manager along with our deploy script.
 
 [[file:flake.nix][flake.nix]] provides the all the project's dependencies, builds the nodejs application, packages the nodejs application in a docker container, pulls the [[https://www.localstack.cloud/][Localstack]]-pro docker image, and sets the necessary environment variables to deploy the test environment.
 

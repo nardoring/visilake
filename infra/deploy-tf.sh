@@ -8,7 +8,7 @@ function usage() {
     echo -e "  -i, --init             Initiate the git submodule for the datalake and mock data"
     echo -e "  -v, --verbose          Enable debug for Terraform and Localstack"
     echo -e "  -r, --redeploy         Re-deploy Terraform config to Localstack"
-    echo -e "  -d, --docker           Re-deploy the nardo docker image to Localstack"
+    echo -e "  -d, --docker           Re-deploy the visilake docker image to Localstack"
     echo -e "  -t, --teardown [mode]  Perform teardown."
     echo -e "                         Modes: 'h' or 'hard' for hard teardown, no mode for standard teardown"
     echo -e "                                 hard teardown will remove all docker images on your system"
@@ -43,10 +43,10 @@ function hard_teardown() {
 }
 
 function push_app() {
-    localImageName="nardo:latest"
+    localImageName="visilake:latest"
     docker tag $localImageName "localhost.localstack.cloud:4510/repo1"
     docker push "localhost.localstack.cloud:4510/repo1"
-    docker rmi nardo:latest
+    docker rmi visilake:latest
 }
 
 function setup_datalake() {
@@ -71,7 +71,7 @@ function deploy() {
 
     # build docker images with nix and load them into docker
     docker load < "$(nix build --print-out-paths .#localstackpro-image)"
-    docker load < "$(nix build --print-out-paths .#nardo-image)"
+    docker load < "$(nix build --print-out-paths .#visilake-image)"
 
     localstack start -d
 
@@ -110,7 +110,7 @@ while [[ $# -gt 0 ]]; do
             exit 1
             ;;
         -d|--docker)
-            docker load < "$(nix build --print-out-paths .#nardo-image)"
+            docker load < "$(nix build --print-out-paths .#visilake-image)"
             push_app
             shift
             exit 1

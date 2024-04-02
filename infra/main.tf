@@ -137,7 +137,7 @@ resource "aws_iam_role_policy" "ecs_task_execution_policy" {
   })
 }
 
-resource "aws_ecs_service" "nardo" {
+resource "aws_ecs_service" "visilake" {
   name            = var.service_name
   cluster         = var.stack_name
   task_definition = aws_ecs_task_definition.task.arn

@@ -55,20 +55,27 @@ export const jobRouter = createTRPCRouter({
 
       const jobQueryParams = {
         TableName: DYNAMODB_TABLE,
-        Key: { requestId: { S: input.jobId } },
+        KeyConditionExpression: 'requestID = :requestID',
+        ExpressionAttributeValues: {
+          ':requestID': { S: input.jobId },
+        },
         ProjectionExpression:
           'jobName, jobDescription, jobStatus, powerBILink, author, analysisTypes, creationDate, sources, dateRangeStart, dateRangeEnd, granularity, requestID',
       };
 
       return mapJob(
         await new Promise((resolve, reject) =>
-          dynamodb.getItem(jobQueryParams, (err, data) => {
-            if (err || !data.Item) {
+          dynamodb.query(jobQueryParams, (err, data) => {
+            if (err || !data.Items || data.Items.length < 1) {
               console.log(data, err);
-              reject(err ?? (!data.Item ? 'No Item' : 'Unknown error'));
+              reject(
+                err ??
+                  (!data.Items || data.Items.length < 1
+                    ? 'No Item'
+                    : 'Unknown error')
+              );
             } else {
-              //console.log(data.Items);
-              resolve(data.Item as unknown as Job);
+              resolve((data.Items as unknown as Job[])[0]!);
             }
           })
         )

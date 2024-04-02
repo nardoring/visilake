@@ -3,7 +3,6 @@ import Layout from '../../components/Layout';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { Job } from '~/models/domain/job';
-import { useQuery } from '@tanstack/react-query';
 import { api } from '~/utils/api';
 
 export default function ListPage() {
@@ -17,17 +16,22 @@ export default function ListPage() {
     { jobId: jobId ?? '' },
     {
       enabled: jobId != null && !job,
-      onSuccess: () => {
-        setJob(job);
+      onSuccess: (data) => {
+        setJob(data);
       },
     }
   );
 
   useEffect(() => {
+    const id = Array.isArray(router.query.id)
+      ? router.query.id[0]
+      : router.query.id;
+
     const storedItemData = localStorage.getItem('itemData');
     if (storedItemData) {
-      setJob(JSON.parse(storedItemData));
+      setJob((JSON.parse(storedItemData) as Job[]).find((j) => j.jobId == id));
     } else {
+      setJobId(id);
     }
   }, [router.query.id]);
 

@@ -34,7 +34,7 @@ Options:
   -i, --init             Initiate the git submodule for the datalake and mock data
   -v, --verbose          Enable debug for Terraform and Localstack
   -r, --redeploy         Re-deploy Terraform config to Localstack
-  -d, --docker           Re-deploy the nardo docker image to Localstack
+  -d, --docker           Re-deploy the visilake docker image to Localstack
   -t, --teardown [mode]  Perform teardown.
                          Modes: 'h' or 'hard' for hard teardown, no mode for standard teardown
                                  hard teardown will remove all docker images on your system

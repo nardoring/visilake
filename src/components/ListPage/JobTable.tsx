@@ -130,9 +130,9 @@ export default function JobTable() {
     {
       field: 'jobName',
       filter: 'agTextColumnFilter',
-      cellRenderer: (params: { value: string }) => (
+      cellRenderer: (params: { value: string; data: { jobId: string } }) => (
         <Link
-          href='/ViewPage'
+          href={`/ViewPage/${params.data.jobId}`}
           passHref
           className='hover:font-bold'
           onClick={(e) => {

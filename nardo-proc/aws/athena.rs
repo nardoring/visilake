@@ -104,14 +104,21 @@ pub async fn get_query_results(
 
 pub async fn execute_ctas_query(
     client: &Client,
-    ctas_query: &str,
+    base_query: &str,
     new_table: &str,
     database: &str,
+    external_location: &str,
     output_location: &str,
 ) -> Result<String, Error> {
-    let ctas_query_format = format!(
-        "CREATE TABLE {} WITH (format = 'Parquet', parquet_compression = 'SNAPPY') AS {}",
-        new_table, ctas_query
+    // Example
+    // let ctas_query = r#"CREATE TABLE "mockdata"."test_table_ctas_7"
+    //                     WITH (external_location = 's3://metadata/test-jobID-7/')
+    //                     AS SELECT * FROM mockdata.dataset1 LIMIT 2"#;
+    let ctas_query = format!(
+        r#"CREATE TABLE "{}"."{}"
+           WITH (external_location = '{}')
+           AS {}"#,
+        database, new_table, external_location, base_query
     );
 
     let response = client
@@ -183,15 +190,22 @@ mod tests {
         let shared_config = config::configure().await.unwrap();
         let client = athena_client(&shared_config);
 
-        let test_query = "SELECT * FROM mockdata.dataset1 LIMIT 2";
-        let new_table = "test_table_ctas";
-        let database = "mockdata";
-        let output_location = "s3://metadata/test-jobID/athena-queries";
+        let base_query = "SELECT * FROM mockdata.dataset1 LIMIT 2";
+        let new_table_name = "test_table_ctas";
+        let database_name = "mockdata";
+        let s3_external_location = "s3://metadata/test-jobID/";
+        let output_location = "s3://aws-athena-query-results-000000000000-us-east-1";
 
-        let query_execution_id =
-            execute_ctas_query(&client, test_query, new_table, database, output_location)
-                .await
-                .expect("Failed to start query execution");
+        let query_execution_id = execute_ctas_query(
+            &client,
+            base_query,
+            new_table_name,
+            database_name,
+            s3_external_location,
+            output_location,
+        )
+        .await
+        .expect("Failed to start query execution");
 
         let mut status = "".to_string();
         while status != "SUCCEEDED" {
@@ -204,9 +218,9 @@ mod tests {
             }
         }
 
-        let check_table_query = format!("SHOW TABLES LIKE '{}'", new_table);
+        let check_table_query = format!("SHOW TABLES LIKE '{}'", new_table_name);
         let check_query_execution_id =
-            start_query_execution(&client, &check_table_query, database, output_location)
+            start_query_execution(&client, &check_table_query, database_name, output_location)
                 .await
                 .expect("Failed to start table check query execution");
 

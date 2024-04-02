@@ -109,7 +109,10 @@ pub async fn execute_ctas_query(
     database: &str,
     output_location: &str,
 ) -> Result<String, Error> {
-    let ctas_query = format!("CREATE TABLE {} AS {}", new_table, ctas_query);
+    let ctas_query_format = format!(
+        "CREATE TABLE {} WITH (format = 'Parquet', parquet_compression = 'SNAPPY') AS {}",
+        new_table, ctas_query
+    );
 
     let response = client
         .start_query_execution()
@@ -180,10 +183,10 @@ mod tests {
         let shared_config = config::configure().await.unwrap();
         let client = athena_client(&shared_config);
 
-        let test_query = "SELECT 1 AS test_column";
-        let new_table = "test_table";
+        let test_query = "SELECT * FROM mockdata.dataset1 LIMIT 2";
+        let new_table = "test_table_ctas";
         let database = "mockdata";
-        let output_location = "s3://aws-athena-query-results-000000000000-us-east-1";
+        let output_location = "s3://metadata/test-jobID/athena-queries";
 
         let query_execution_id =
             execute_ctas_query(&client, test_query, new_table, database, output_location)
@@ -201,9 +204,9 @@ mod tests {
             }
         }
 
-        let check_table_query = "SHOW TABLES LIKE 'cloudfront_logs_rust'";
+        let check_table_query = format!("SHOW TABLES LIKE '{}'", new_table);
         let check_query_execution_id =
-            start_query_execution(&client, check_table_query, database, output_location)
+            start_query_execution(&client, &check_table_query, database, output_location)
                 .await
                 .expect("Failed to start table check query execution");
 

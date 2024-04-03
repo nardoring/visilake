@@ -51,10 +51,10 @@
 
         visilake = pkgs.buildNpmPackage {
           # https://create.t3.gg/en/deployment/docker
-          pname = "visilake-web";
+          pname = "visilake";
           version = "0.1.0";
           src = ./.;
-          npmDepsHash = "sha256-qiye8SxhgE2ZgvjOHwpzeNFo4g4jVUPfmrkZK1dkTQQ=";
+          npmDepsHash = "sha256-VMR9H6o8xL7ap3k0TTsvll+hA6DQanInT+0hO7W6XR4=";
 
           npmBuild = "SKIP_ENV_VALIDATION=1 npm run build";
 

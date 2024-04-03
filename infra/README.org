@@ -12,7 +12,7 @@ Options:
   -i, --init             Initiate the git submodule for the datalake and mock data
   -v, --verbose          Enable debug for Terraform and Localstack
   -r, --redeploy         Re-deploy Terraform config to Localstack
-  -d, --docker           Re-deploy the nardo docker image to Localstack
+  -d, --docker           Re-deploy the visilake docker image to Localstack
   -t, --teardown [mode]  Perform teardown.
                          Modes: 'h' or 'hard' for hard teardown, no mode for standard teardown
                                  hard teardown will remove all docker images on your system
@@ -41,8 +41,8 @@ This deploys a service on AWS Fargate, hosted in a private subnet and accessible
 
 ***** Parameters
 - /StackName/: Name of the parent Fargate networking stack. Default: infra
-- /ServiceName/: A name for the service. Default: nardo
-- /ImageUrl/: URL of a Docker image for the service. Default: nardo
+- /ServiceName/: A name for the service. Default: visilake
+- /ImageUrl/: URL of a Docker image for the service. Default: visilake
 - /ContainerPort/: Port number the application in the container binds to. Default: 3000
 - /HostPort/: Port number the application on the host binds to. Default: 45139
 - /ContainerCpu/: CPU allocation for the container. Default: 256

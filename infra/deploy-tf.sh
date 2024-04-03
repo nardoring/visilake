@@ -5,8 +5,9 @@ function usage() {
     echo -e "Usage: $0 [options]"
     echo -e "\nOptions:"
     echo -e "  none                   Full Localstack and Terraform Deployment"
-    echo -e "  -i, --init             Initiate the git submodule for the datalake and mock data"
     echo -e "  -v, --verbose          Enable debug for Terraform and Localstack"
+    echo -e "  -i, --init             Initiate the git submodule for the datalake and mock data"
+    echo -e "  -w, --warmup           Warmup Athena and download bigdata docker image"
     echo -e "  -r, --redeploy         Re-deploy Terraform config to Localstack"
     echo -e "  -d, --docker           Re-deploy the nardo docker image to Localstack"
     echo -e "  -t, --teardown [mode]  Perform teardown."
@@ -92,16 +93,26 @@ function deploy() {
     echo "Executed in $SECONDS seconds."
 }
 
+function warmup() {
+    # warmup athena because on first launch this takes a while to download the bigdata stack
+    awslocal athena list-databases --catalog-name mockdata
+}
+
 while [[ $# -gt 0 ]]; do
     case $1 in
-        -i|--init)
-            setup_datalake
-            shift
-            ;;
         -v|--verbose)
             echo "Debug statements enabled"
             export DEBUG=1
             export TF_LOG=DEBUG
+            shift
+            ;;
+        -i|--init)
+            setup_datalake
+            deploy
+            shift
+            ;;
+        -w|--warmup)
+            warmup
             shift
             ;;
         -r|--redeploy)

@@ -12,7 +12,7 @@ export default function JobViewBox({ job }: JobViewBoxProps) {
     if (job.jobStatus == 'COMPLETE') {
       return `${s3URL}data-lake/metadata/${job.jobId}/${job.jobId}-eda.html`;
     } else if (job.jobStatus == 'FAILED') {
-      return `${s3URL}data-lake/metadata/${job.jobId}/${job.jobId}-error.html`;
+      return `${s3URL}data-lake/metadata/${job.jobId}/${job.jobId}-error.log`;
     }
   };
 

@@ -29,6 +29,7 @@
     sqsUrl = "http://sqs.us-east-1.localhost.localstack.cloud:4566/";
     authorName = "Test Author";
     snsUrl = "http://sns.us-east-1.localhost.localstack.cloud:4566/";
+    s3Url = "http://s3.us-east-1.localhost.localstack.cloud:4566/";
   in
     flake-parts.lib.mkFlake {inherit inputs;} ({...}: {
       systems = ["x86_64-linux"];
@@ -117,6 +118,7 @@
               "SQS_URL=${sqsUrl}"
               "NEXT_PUBLIC_AUTHOR_NAME=${authorName}"
               "SNS_URL=${snsUrl}"
+              "S3_URL=${s3Url}"
             ];
             WorkingDir = "/app";
             User = "nextjs";
@@ -196,6 +198,7 @@
           SQS_URL = "${sqsUrl}";
           NEXT_PUBLIC_AUTHOR_NAME = "${authorName}";
           SNS_URL = "${snsUrl}";
+          S3_URL = "${s3Url}";
         };
 
         packages = {

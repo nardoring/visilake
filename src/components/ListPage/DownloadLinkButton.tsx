@@ -24,7 +24,7 @@ interface DownloadLinkButtonProps {
 
 export default function DownloadLinkButton(props: DownloadLinkButtonProps) {
   const getFileLink = () => {
-    return `${props}metadata/${props.jobId}/${props.jobId}-data.parquet`;
+    return `${props.s3Link}metadata/${props.jobId}/${props.jobId}-data.parquet`;
   };
 
   const isDisabled = props.isDisabled || props.s3Link == undefined;

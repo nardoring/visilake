@@ -123,7 +123,7 @@ mod tests {
     #[tokio::test]
     async fn test_simulated_job_run() -> Result<()> {
         let job_request = JobRequest {
-            analysis_types: vec!["simulated".to_string()],
+            analysis_types: vec!["Simulated Job".to_string()],
             id: uuid::Uuid::new_v4().to_string(),
             request_id: uuid::Uuid::new_v4().to_string(),
             author: "test author".to_string(),
@@ -148,9 +148,9 @@ mod tests {
 
         let job_request_2 = JobRequest {
             analysis_types: vec![
-                "simulated".to_string(),
-                // "eda".to_string(),
-                // "simerror".to_string(),
+                "Simulated Job".to_string(),
+                "Exploratory Data Analysis".to_string(),
+                "Simulated Error".to_string(),
             ],
             id: uuid::Uuid::new_v4().to_string(),
             request_id: uuid::Uuid::new_v4().to_string(),

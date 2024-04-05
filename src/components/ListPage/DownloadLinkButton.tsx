@@ -18,7 +18,7 @@ const toastProperties = {
 
 interface DownloadLinkButtonProps {
   jobId: string;
-  s3Link: string;
+  s3Link: string | undefined;
   isDisabled: boolean;
 }
 
@@ -27,7 +27,7 @@ export default function DownloadLinkButton(props: DownloadLinkButtonProps) {
     return `${props}metadata/${props.jobId}/${props.jobId}-data.parquet`;
   };
 
-  const isDisabled = props.isDisabled;
+  const isDisabled = props.isDisabled || props.s3Link == undefined;
 
   const powerBiIconFilePath = isDisabled
     ? '/Apache_Parquet_logo.svg.grey.png'
@@ -43,6 +43,7 @@ export default function DownloadLinkButton(props: DownloadLinkButtonProps) {
         }`}
         href={getFileLink()}
         onClick={(e) => {
+          console.log(props);
           if (isDisabled) {
             e.preventDefault();
             return;

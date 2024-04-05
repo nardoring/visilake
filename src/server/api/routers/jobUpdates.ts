@@ -107,6 +107,6 @@ export const jobUpdatesRouter = createTRPCRouter({
         await sqs.deleteMessageBatch(deleteBatchParameters).promise();
       }
 
-      return messages.Messages;
+      return messages.Messages ?? [];
     }),
 });

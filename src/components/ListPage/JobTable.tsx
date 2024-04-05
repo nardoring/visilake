@@ -36,6 +36,23 @@ export default function JobTable() {
     },
   });
 
+  const { data: s3URL, isLoading: isS3UrlLoading } = api.s3.getS3Url.useQuery(
+    undefined,
+    {
+      onSuccess: (d) => {
+        // This is stupid, hacky, and I hate it, but for some reason ag-grid does not response to react state changes. Not the useQuery, not the useState, not even if I make a useEffect doing a force refresh.
+        // I just want to get this to work, so that's what we got to deal with...
+        gridRef.current?.api.forEachNode((rowNode) => {
+          rowNode.data['s3Url'] = d;
+        });
+        gridRef.current?.api.refreshCells({
+          columns: ['downloadButton'],
+          force: true,
+        });
+      },
+    }
+  );
+
   const [selectedQueueExecutted, setSelectedQueueExecutted] =
     useState<boolean>(false);
 
@@ -204,14 +221,15 @@ export default function JobTable() {
     },
     { field: 'author', filter: 'agMultiColumnFilter' },
     {
-      field: 'csvDownloadLink',
+      field: 'downloadButton',
       headerName: 'Download',
-      cellRenderer: (props: CustomCellRendererProps) =>
-        DownloadLinkButton({
+      cellRenderer: (props: CustomCellRendererProps) => {
+        return DownloadLinkButton({
           jobId: props.data.jobId,
-          s3Link: '',
+          s3Link: props.data.s3Url,
           isDisabled: props.data.jobStatus != 'COMPLETE',
-        }),
+        });
+      },
       maxWidth: 115,
       cellClass: 'ag-cell-download-btn',
       minWidth: 115,
@@ -321,33 +339,33 @@ export default function JobTable() {
     gridRef.current?.api?.setGridOption('quickFilterText', searchBarText);
   }, [searchBarText]);
 
-  if (isLoading) {
+  if (isLoading || isS3UrlLoading || s3URL == undefined) {
     // Render a loading indicator or message
     return (
       <div className='fixed z-40 flex h-full w-full items-center justify-center bg-lightIndigo/70'>
         <p className='z-40 pb-80 text-6xl text-black'>Connecting...</p>
       </div>
     );
-  }
-
-  return (
-    <div className='col-start-2 col-end-9 row-start-2 mb-5 mt-5'>
-      <div
-        className='relative z-20 col-start-2 col-end-9 row-start-3 row-end-4
+  } else {
+    return (
+      <div className='col-start-2 col-end-9 row-start-2 mb-5 mt-5'>
+        <div
+          className='relative z-20 col-start-2 col-end-9 row-start-3 row-end-4
                      flex h-[128rem] flex-col
                     overflow-x-auto rounded-md'
-      >
-        <div className={'ag-theme-quartz'}>
-          <AgGridReact
-            ref={gridRef}
-            rowData={data}
-            columnDefs={colDefs}
-            gridOptions={gridOptions}
-            domLayout={'autoHeight'}
-            defaultColDef={defaultColDef}
-          />
+        >
+          <div className={'ag-theme-quartz'}>
+            <AgGridReact
+              ref={gridRef}
+              rowData={data}
+              columnDefs={colDefs}
+              gridOptions={gridOptions}
+              domLayout={'autoHeight'}
+              defaultColDef={defaultColDef}
+            />
+          </div>
         </div>
       </div>
-    </div>
-  );
+    );
+  }
 }

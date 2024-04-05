@@ -30,7 +30,7 @@ impl AnalysisJob for SimulatedError {
 
             if !output.status.success() {
                 let error_message = String::from_utf8_lossy(&output.stderr);
-                return Err(eyre!("SimulatedJob failed: {}", error_message));
+                return Err(eyre!("Simulated Error failed: {}", error_message));
             }
 
             Ok(())
@@ -84,7 +84,7 @@ impl AnalysisJob for CorrelationJob {
 
             if !output.status.success() {
                 let error_message = String::from_utf8_lossy(&output.stderr);
-                return Err(eyre!("SimulatedJob failed: {}", error_message));
+                return Err(eyre!("Correlation job failed: {}", error_message));
             }
             let temp_path = std::str::from_utf8(&output.stdout)?.trim();
             println!("Temporary file path: {}", temp_path);
@@ -114,7 +114,7 @@ impl AnalysisJob for EdaJob {
 
             if !output.status.success() {
                 let error_message = String::from_utf8_lossy(&output.stderr);
-                return Err(eyre!("SimulatedJob failed: {}", error_message));
+                return Err(eyre!("EDA job failed: {}", error_message));
             }
             let temp_path = std::str::from_utf8(&output.stdout)?.trim();
             println!("Temporary file path: {}", temp_path);

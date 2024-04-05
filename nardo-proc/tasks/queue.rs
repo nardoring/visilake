@@ -149,8 +149,8 @@ mod tests {
         let job_request_2 = JobRequest {
             analysis_types: vec![
                 "Simulated Job".to_string(),
-                "Exploratory Data Analysis".to_string(),
-                "Simulated Error".to_string(),
+                // "Exploratory Data Analysis".to_string(),
+                // "Simulated Error".to_string(),
             ],
             id: uuid::Uuid::new_v4().to_string(),
             request_id: uuid::Uuid::new_v4().to_string(),

@@ -127,6 +127,19 @@ pub async fn download_object(
 }
 
 pub async fn upload_object(client: &Client, bucket: &str, filename: &str, key: &str) -> Result<()> {
+    let extension = Path::new(filename)
+        .extension()
+        .and_then(|e| e.to_str())
+        .unwrap_or_default();
+
+    let mime_type = match extension {
+        "html" => "text/html",
+        "txt" => "text/plain",
+        "png" => "image/png",
+        // "parquet" => "application/parquet",
+        _ => "application/octet-stream", // Default binary MIME type
+    };
+
     let resp = client.list_buckets().send().await?;
 
     for bucket in resp.buckets() {
@@ -143,6 +156,7 @@ pub async fn upload_object(client: &Client, bucket: &str, filename: &str, key: &
                 .put_object()
                 .bucket(bucket)
                 .key(key)
+                .content_type(mime_type)
                 .body(b)
                 .send()
                 .await?;

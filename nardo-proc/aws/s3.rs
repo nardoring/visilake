@@ -134,9 +134,10 @@ pub async fn upload_object(client: &Client, bucket: &str, filename: &str, key: &
 
     let mime_type = match extension {
         "html" => "text/html",
-        "txt" => "text/plain",
+        "log" => "text/html", // assuming this also has to be text/html to be rendered in iframe
         "png" => "image/png",
-        // "parquet" => "application/parquet",
+        "txt" => "text/plain",
+        // "parquet" => "application/parquet", // unneeded?
         _ => "application/octet-stream", // Default binary MIME type
     };
 

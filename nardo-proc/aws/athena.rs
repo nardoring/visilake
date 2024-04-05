@@ -1,3 +1,4 @@
+#![allow(dead_code)]
 use aws_config::SdkConfig;
 use aws_sdk_athena::{
     config::Builder,
@@ -142,9 +143,8 @@ pub async fn execute_ctas_query(
 
 #[cfg(test)]
 mod tests {
-    use crate::config;
-
     use super::*;
+    use crate::config;
     use aws_config::load_from_env;
     use std::env;
     use tokio::time::{sleep, Duration};

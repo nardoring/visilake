@@ -1,3 +1,4 @@
+#![allow(dead_code)]
 use eyre::Result;
 use log::{debug, error};
 use std::{path::Path, time::Duration};

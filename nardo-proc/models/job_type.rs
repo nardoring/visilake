@@ -1,3 +1,4 @@
+use super::job_request::JobRequest;
 use eyre::Result;
 use serde::{
     de::{self, Visitor},
@@ -9,6 +10,7 @@ use std::{error::Error, fmt, str::FromStr};
 pub enum JobType {
     Eda,
     Corr,
+    SimulatedJob,
     None,
 }
 
@@ -30,6 +32,7 @@ impl FromStr for JobType {
         match s {
             "eda" => Ok(JobType::Eda),
             "correlation" => Ok(JobType::Corr),
+            "simulated" => Ok(JobType::SimulatedJob),
             "NONE" => Ok(JobType::None),
             _ => Err(ParseJobTypeError),
         }
@@ -41,6 +44,7 @@ impl fmt::Display for JobType {
         let job_type_str = match self {
             JobType::Eda => "eda",
             JobType::Corr => "correlation",
+            JobType::SimulatedJob => "simulated",
             JobType::None => "NONE",
         };
         write!(f, "{}", job_type_str)
@@ -48,16 +52,32 @@ impl fmt::Display for JobType {
 }
 
 impl JobType {
-    fn next(&self) -> Option<JobType> {
+    pub fn from_request(job_request: &JobRequest) -> Vec<Self> {
+        job_request
+            .analysis_types
+            .iter()
+            .filter_map(|analysis_type| {
+                match analysis_type.as_str() {
+                    "eda" => Some(JobType::Eda),
+                    "correlation" => Some(JobType::Corr),
+                    "simulated" => Some(JobType::SimulatedJob),
+                    _ => None, // Skip unknown analysis types
+                }
+            })
+            .collect()
+    }
+
+    fn _next(&self) -> Option<JobType> {
         match self {
             JobType::Eda => Some(JobType::Eda),
             JobType::Corr => Some(JobType::None),
+            JobType::SimulatedJob => Some(JobType::SimulatedJob),
             JobType::None => None,
         }
     }
 }
 
-pub fn serialize_job_type<S>(job_type: &JobType, serializer: S) -> Result<S::Ok, S::Error>
+pub fn _serialize_job_type<S>(job_type: &JobType, serializer: S) -> Result<S::Ok, S::Error>
 where
     S: Serializer,
 {
@@ -72,7 +92,7 @@ where
     serializer.serialize_some(&job_types_str)
 }
 
-pub fn deserialize_job_type<'de, D>(deserializer: D) -> Result<JobType, D::Error>
+pub fn _deserialize_job_type<'de, D>(deserializer: D) -> Result<JobType, D::Error>
 where
     D: Deserializer<'de>,
 {

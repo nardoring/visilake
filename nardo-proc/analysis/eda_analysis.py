@@ -51,8 +51,13 @@ def eda_analysis(directory_path, request_id):
         df["Date Local"] = pd.to_datetime(df["Date Local"])
 
     profile = ProfileReport(
-        df, tsmode=True, sortby="Date Local", title=f"Profile for {request_id}"
+        df,
+        tsmode=True,
+        sortby="Date Local",
+        title=f"Profile for {request_id}",
+        config_file="ydata-config.yaml",
     )
+
     # Create a temporary file for the report
     with tempfile.NamedTemporaryFile(
         delete=False, suffix=".html", mode="w", encoding="utf-8"

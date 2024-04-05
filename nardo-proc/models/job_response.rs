@@ -15,7 +15,6 @@ pub struct JobResponse {
     pub request_id: String,  // points to the originating JobRequest
     // pub start_timestamp: i64,
     pub end_timestamp: i64,
-    pub powerbi_link: String, // future
     #[serde(
         serialize_with = "serialize_job_types",
         deserialize_with = "deserialize_job_types"
@@ -33,7 +32,6 @@ pub fn _create_job_response(
     job: &Job,
     job_types: Vec<JobType>,
     job_status: Vec<Status>,
-    powerbi_link: String,
 ) -> JobResponse {
     // let start_timestamp = // TODO logic to get the start timestamp from response
     let end_timestamp = chrono::Utc::now().timestamp();
@@ -42,7 +40,6 @@ pub fn _create_job_response(
         response_id: uuid::Uuid::new_v4().to_string(),
         request_id: job.request_id.clone(),
         end_timestamp,
-        powerbi_link,
         job_type: job_types,
         job_status,
     }
@@ -96,12 +93,6 @@ pub fn _convert_item_to_job_response(
             .map_err(|_| eyre::Error::msg("Invalid endTimestamp"))?
             .parse::<i64>()
             .map_err(|_| eyre::Error::msg("Invalid end timestamp format"))?,
-        powerbi_link: item
-            .get("powerbiLink")
-            .ok_or_else(|| eyre::Error::msg("Missing powerbiLink"))?
-            .as_s()
-            .map_err(|_| eyre::Error::msg("Invalid powerbiLink"))?
-            .to_owned(),
 
         job_type,
         job_status,

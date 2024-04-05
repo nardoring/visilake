@@ -1,3 +1,4 @@
+#![allow(dead_code)]
 use aws_config::SdkConfig;
 use aws_sdk_dynamodb::{
     config::Builder, operation::delete_item::DeleteItemOutput, types::AttributeValue, Client, Error,

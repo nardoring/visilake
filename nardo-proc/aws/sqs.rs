@@ -1,8 +1,13 @@
+#![allow(dead_code)]
 use aws_config::SdkConfig;
 use aws_sdk_sqs::{config::Builder, types::QueueAttributeName, Client};
 use chrono::Utc;
 use eyre::{Error, Result};
 use log::debug;
+
+const MAX_QUEUE_HOURS: i64 = 2;
+const MAX_QUEUE_AGE: i64 = MAX_QUEUE_HOURS * 60 * 60;
+const BASE_QUEUE_STIRNG: &str = "requestUpdates";
 
 #[derive(Debug)]
 struct SQSMessage {
@@ -145,6 +150,21 @@ pub async fn delete_queue(client: &Client, queue_url: &String) {
         Ok(_) => {}
         Err(e) => {
             debug!("Error deleting queue: {}", e.to_string())
+        }
+    }
+}
+
+pub async fn delete_old_queues(sqs_client: &Client, queues: Vec<String>) {
+    for queue in queues.iter().filter(|&q| q.contains(BASE_QUEUE_STIRNG)) {
+        debug!("Processing: {}", queue);
+
+        let queue_age = get_queue_age(sqs_client, &queue)
+            .await
+            .expect("Failed getting age");
+
+        if queue_age > MAX_QUEUE_AGE {
+            debug!("Deleting: {}", queue);
+            delete_queue(sqs_client, &queue).await;
         }
     }
 }

@@ -1,3 +1,4 @@
+#![allow(dead_code)]
 use arrow::{
     array::{BooleanArray, TimestampMillisecondArray},
     compute::filter_record_batch,

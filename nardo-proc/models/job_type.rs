@@ -1,3 +1,4 @@
+use super::job_request::JobRequest;
 use eyre::Result;
 use serde::{
     de::{self, Visitor},
@@ -7,8 +8,10 @@ use std::{error::Error, fmt, str::FromStr};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum JobType {
+    Eda,
     Corr,
-    RollingMean,
+    SimulatedJob,
+    SimulatedError,
     None,
 }
 
@@ -28,8 +31,10 @@ impl FromStr for JobType {
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         match s {
-            "correlation" => Ok(JobType::Corr),
-            "rolling-mean" => Ok(JobType::RollingMean),
+            "Exploratory Data Analysis" => Ok(JobType::Eda),
+            "Correlation" => Ok(JobType::Corr),
+            "Simulated Job" => Ok(JobType::SimulatedJob),
+            "Simulated Error" => Ok(JobType::SimulatedError),
             "NONE" => Ok(JobType::None),
             _ => Err(ParseJobTypeError),
         }
@@ -39,8 +44,10 @@ impl FromStr for JobType {
 impl fmt::Display for JobType {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let job_type_str = match self {
-            JobType::Corr => "correlation",
-            JobType::RollingMean => "rolling-mean",
+            JobType::Eda => "Exploratory Data Analysis",
+            JobType::Corr => "Correlation",
+            JobType::SimulatedJob => "Simulated Job",
+            JobType::SimulatedError => "Simulated Error",
             JobType::None => "NONE",
         };
         write!(f, "{}", job_type_str)
@@ -48,16 +55,34 @@ impl fmt::Display for JobType {
 }
 
 impl JobType {
-    fn next(&self) -> Option<JobType> {
+    pub fn from_request(job_request: &JobRequest) -> Vec<Self> {
+        job_request
+            .analysis_types
+            .iter()
+            .filter_map(|analysis_type| {
+                match analysis_type.as_str() {
+                    "Exploratory Data Analysis" => Some(JobType::Eda),
+                    "Correlation" => Some(JobType::Corr),
+                    "Simulated Job" => Some(JobType::SimulatedJob),
+                    "Simulated Error" => Some(JobType::SimulatedError),
+                    _ => None, // Skip unknown analysis types
+                }
+            })
+            .collect()
+    }
+
+    fn _next(&self) -> Option<JobType> {
         match self {
-            JobType::Corr => Some(JobType::RollingMean),
-            JobType::RollingMean => Some(JobType::None),
+            JobType::Eda => Some(JobType::Eda),
+            JobType::Corr => Some(JobType::None),
+            JobType::SimulatedJob => None,
+            JobType::SimulatedError => None,
             JobType::None => None,
         }
     }
 }
 
-pub fn serialize_job_type<S>(job_type: &JobType, serializer: S) -> Result<S::Ok, S::Error>
+pub fn _serialize_job_type<S>(job_type: &JobType, serializer: S) -> Result<S::Ok, S::Error>
 where
     S: Serializer,
 {
@@ -72,7 +97,7 @@ where
     serializer.serialize_some(&job_types_str)
 }
 
-pub fn deserialize_job_type<'de, D>(deserializer: D) -> Result<JobType, D::Error>
+pub fn _deserialize_job_type<'de, D>(deserializer: D) -> Result<JobType, D::Error>
 where
     D: Deserializer<'de>,
 {

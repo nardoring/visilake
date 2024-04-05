@@ -1,11 +1,11 @@
 import React, { useState, useMemo, useRef, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { api } from '~/utils/api';
-import { AgGridReact } from 'ag-grid-react';
+import { AgGridReact, CustomCellRendererProps } from 'ag-grid-react';
 import type { GetRowIdParams, SortDirection } from 'ag-grid-community';
 import type { ITooltipParams } from 'ag-grid-enterprise';
 import { useSearchBar } from '~/pages/ListPage';
-import PowerBIButton from './PowerBIButton';
+import DownloadLinkButton from './DownloadLinkButton';
 import StatusChip from './StatusChip';
 import 'ag-grid-enterprise';
 import 'ag-grid-community/styles/ag-grid.css';
@@ -204,6 +204,28 @@ export default function JobTable() {
     },
     { field: 'author', filter: 'agMultiColumnFilter' },
     {
+      field: 'csvDownloadLink',
+      headerName: 'Download',
+      cellRenderer: (props: CustomCellRendererProps) =>
+        DownloadLinkButton({
+          jobId: props.data.jobId,
+          s3Link: '',
+          isDisabled: props.data.jobStatus != 'COMPLETE',
+        }),
+      maxWidth: 115,
+      cellClass: 'ag-cell-download-btn',
+      minWidth: 115,
+      resizable: false,
+      sortable: false,
+      tooltipValueGetter: (params: ITooltipParams) => {
+        return 'Download job ouputs';
+      },
+      // Ignore global filter ()
+      getQuickFilterText: () => {
+        return '';
+      },
+    },
+    {
       field: 'jobStatus',
       headerName: 'Status',
       maxWidth: 170,
@@ -232,25 +254,6 @@ export default function JobTable() {
         };
 
         return tooltipMessages[params.value as string] ?? 'INVALID';
-      },
-    },
-    {
-      field: 'powerBILink',
-      headerName: 'PowerBI',
-      cellRenderer: PowerBIButton,
-      maxWidth: 100,
-      minWidth: 100,
-      resizable: false,
-      sortable: false,
-      headerTooltip: 'Provides a data source link to use within PowerBI',
-      tooltipValueGetter: (params: ITooltipParams) => {
-        if ((params.data as { jobStatus: string }).jobStatus !== 'COMPLETE')
-          return 'Link is unavailable';
-        return 'Copy link to clipboard';
-      },
-      // Ignore global filter ()
-      getQuickFilterText: () => {
-        return '';
       },
     },
   ]);

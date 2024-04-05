@@ -31,10 +31,10 @@ impl FromStr for JobType {
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         match s {
-            "eda" => Ok(JobType::Eda),
-            "correlation" => Ok(JobType::Corr),
-            "simulated" => Ok(JobType::SimulatedJob),
-            "simerror" => Ok(JobType::SimulatedError),
+            "Exploratory Data Analysis" => Ok(JobType::Eda),
+            "Correlation" => Ok(JobType::Corr),
+            "Simulated Job" => Ok(JobType::SimulatedJob),
+            "Simulated Error" => Ok(JobType::SimulatedError),
             "NONE" => Ok(JobType::None),
             _ => Err(ParseJobTypeError),
         }
@@ -44,10 +44,10 @@ impl FromStr for JobType {
 impl fmt::Display for JobType {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         let job_type_str = match self {
-            JobType::Eda => "eda",
-            JobType::Corr => "correlation",
-            JobType::SimulatedJob => "simulated",
-            JobType::SimulatedError => "simerror",
+            JobType::Eda => "Exploratory Data Analysis",
+            JobType::Corr => "Correlation",
+            JobType::SimulatedJob => "Simulated Job",
+            JobType::SimulatedError => "Simulated Error",
             JobType::None => "NONE",
         };
         write!(f, "{}", job_type_str)
@@ -61,10 +61,10 @@ impl JobType {
             .iter()
             .filter_map(|analysis_type| {
                 match analysis_type.as_str() {
-                    "eda" => Some(JobType::Eda),
-                    "correlation" => Some(JobType::Corr),
-                    "simulated" => Some(JobType::SimulatedJob),
-                    "simerror" => Some(JobType::SimulatedError),
+                    "Exploratory Data Analysis" => Some(JobType::Eda),
+                    "Correlation" => Some(JobType::Corr),
+                    "Simulated Job" => Some(JobType::SimulatedJob),
+                    "Simulated Error" => Some(JobType::SimulatedError),
                     _ => None, // Skip unknown analysis types
                 }
             })

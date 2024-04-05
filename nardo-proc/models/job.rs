@@ -30,14 +30,8 @@ pub fn create_job_from_request(job_request: &JobRequest) -> Job {
         current_response_id: String::new(), // initially empty, updated as job progresses
         status: Status::Pending,
         last_updated: chrono::Utc::now().timestamp(),
-        input_path: format!(
-            "s3://metadata/{}/{}-data.csv",
-            job_request.id, job_request.id
-        ),
-        output_path: format!(
-            "s3://metadata/{}/{}-result.csv",
-            job_request.id, job_request.id
-        ),
+        input_path: format!("s3://metadata/{}/", job_request.id),
+        output_path: format!("s3://metadata/{}/", job_request.id),
     }
 }
 
@@ -82,7 +76,7 @@ pub fn _convert_item_to_job(item: &HashMap<String, AttributeValue>) -> Result<Jo
             .map_err(|_| eyre::Error::msg("Invalid inputPath"))?
             .to_owned(),
         output_path: item
-            .get("responseID")
+            .get("outputPath")
             .ok_or_else(|| eyre::Error::msg("Missing outputPath"))?
             .as_s()
             .map_err(|_| eyre::Error::msg("Invalid outputPath"))?

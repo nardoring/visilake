@@ -42,9 +42,11 @@ export default function JobTable() {
       onSuccess: (d) => {
         // This is stupid, hacky, and I hate it, but for some reason ag-grid does not respond to react state changes. Not the useQuery, not the useState, not even if I make a useEffect doing a force refresh.
         // I just want to get this to work, so that's what we got to deal with...
-        gridRef.current?.api.forEachNode((rowNode) => {
-          rowNode.data['s3Url'] = d;
-        });
+        gridRef.current?.api.forEachNode(
+          (rowNode: { data: { s3Url: string | undefined } }) => {
+            rowNode.data.s3Url = d;
+          }
+        );
         gridRef.current?.api.refreshCells({
           columns: ['downloadButton'],
           force: true,
@@ -223,7 +225,9 @@ export default function JobTable() {
     {
       field: 'downloadButton',
       headerName: 'Download',
-      cellRenderer: (props: CustomCellRendererProps) => {
+      cellRenderer: (props: {
+        data: { jobId: string; s3Url: string | undefined; jobStatus: string };
+      }) => {
         return DownloadLinkButton({
           jobId: props.data.jobId,
           s3Link: props.data.s3Url,

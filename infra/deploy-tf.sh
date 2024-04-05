@@ -108,7 +108,6 @@ while [[ $# -gt 0 ]]; do
             ;;
         -i|--init)
             setup_datalake
-            deploy
             shift
             ;;
         -w|--warmup)

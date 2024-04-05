@@ -11,6 +11,7 @@ pub enum JobType {
     Eda,
     Corr,
     SimulatedJob,
+    SimulatedError,
     None,
 }
 
@@ -33,6 +34,7 @@ impl FromStr for JobType {
             "eda" => Ok(JobType::Eda),
             "correlation" => Ok(JobType::Corr),
             "simulated" => Ok(JobType::SimulatedJob),
+            "simerror" => Ok(JobType::SimulatedError),
             "NONE" => Ok(JobType::None),
             _ => Err(ParseJobTypeError),
         }
@@ -45,6 +47,7 @@ impl fmt::Display for JobType {
             JobType::Eda => "eda",
             JobType::Corr => "correlation",
             JobType::SimulatedJob => "simulated",
+            JobType::SimulatedError => "simerror",
             JobType::None => "NONE",
         };
         write!(f, "{}", job_type_str)
@@ -61,6 +64,7 @@ impl JobType {
                     "eda" => Some(JobType::Eda),
                     "correlation" => Some(JobType::Corr),
                     "simulated" => Some(JobType::SimulatedJob),
+                    "simerror" => Some(JobType::SimulatedError),
                     _ => None, // Skip unknown analysis types
                 }
             })
@@ -71,7 +75,8 @@ impl JobType {
         match self {
             JobType::Eda => Some(JobType::Eda),
             JobType::Corr => Some(JobType::None),
-            JobType::SimulatedJob => Some(JobType::SimulatedJob),
+            JobType::SimulatedJob => None,
+            JobType::SimulatedError => None,
             JobType::None => None,
         }
     }

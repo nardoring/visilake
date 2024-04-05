@@ -1,6 +1,6 @@
 use super::status::Status;
 use super::{data::TimeSeriesData, job::Job, job_type::JobType};
-use eyre::Result;
+use eyre::{eyre, Result};
 use log::debug;
 use serde::{Deserialize, Serialize};
 use std::sync::{Arc, Mutex};
@@ -14,19 +14,53 @@ pub trait AnalysisJob {
 struct CorrelationJob;
 struct EdaJob;
 struct SimulatedJob;
+struct SimulatedError;
+
+impl AnalysisJob for SimulatedError {
+    fn run(&self, job: Arc<Mutex<Job>>) -> Pin<Box<dyn Future<Output = Result<()>> + Send + '_>> {
+        Box::pin(async move {
+            let job = job.lock().unwrap(); // Lock to access job data
+
+            let output = Command::new("python")
+                .arg("analysis/simulated_error.py")
+                .arg(&job.s3_path)
+                .arg(&job.request_id)
+                .output()?;
+            drop(job);
+
+            if !output.status.success() {
+                let error_message = String::from_utf8_lossy(&output.stderr);
+                return Err(eyre!("SimulatedJob failed: {}", error_message));
+            }
+
+            Ok(())
+        })
+    }
+
+    fn type_name(&self) -> &'static str {
+        "SimulatedError"
+    }
+}
 
 impl AnalysisJob for SimulatedJob {
     fn run(&self, job: Arc<Mutex<Job>>) -> Pin<Box<dyn Future<Output = Result<()>> + Send + '_>> {
         Box::pin(async move {
             let job = job.lock().unwrap(); // Lock to access job data
 
-            Command::new("python")
+            let output = Command::new("python")
                 .arg("analysis/simulated_analysis.py")
-                .arg(&job.input_path)
-                .arg(&job.output_path)
+                .arg(&job.s3_path)
+                .arg(&job.request_id)
                 .output()?;
             drop(job);
-            println!("SIMULATED JOB RUNNING");
+
+            if !output.status.success() {
+                let error_message = String::from_utf8_lossy(&output.stderr);
+                return Err(eyre!("SimulatedJob failed: {}", error_message));
+            }
+            let temp_path = std::str::from_utf8(&output.stdout)?.trim();
+            println!("Temporary file path: {}", temp_path);
+
             Ok(())
         })
     }
@@ -41,12 +75,22 @@ impl AnalysisJob for CorrelationJob {
         Box::pin(async move {
             let job = job.lock().unwrap(); // Lock to access job data
 
-            Command::new("python")
+            let output = Command::new("python")
                 .arg("analysis/correlation_analysis.py")
-                .arg(&job.input_path)
-                .arg(&job.output_path)
+                .arg(&job.s3_path)
+                .arg(&job.request_id)
                 .output()?;
             drop(job);
+
+            if !output.status.success() {
+                let error_message = String::from_utf8_lossy(&output.stderr);
+                return Err(eyre!("SimulatedJob failed: {}", error_message));
+            }
+            let temp_path = std::str::from_utf8(&output.stdout)?.trim();
+            println!("Temporary file path: {}", temp_path);
+            // TODO upload file to s3
+            // TODO delete temp file
+
             Ok(())
         })
     }
@@ -61,12 +105,22 @@ impl AnalysisJob for EdaJob {
         Box::pin(async move {
             let job = job.lock().unwrap(); // Lock to access job data
 
-            Command::new("python")
+            let output = Command::new("python")
                 .arg("analysis/eda_analysis.py")
-                .arg(&job.input_path)
-                .arg(&job.output_path)
+                .arg(&job.s3_path)
+                .arg(&job.request_id)
                 .output()?;
             drop(job);
+
+            if !output.status.success() {
+                let error_message = String::from_utf8_lossy(&output.stderr);
+                return Err(eyre!("SimulatedJob failed: {}", error_message));
+            }
+            let temp_path = std::str::from_utf8(&output.stdout)?.trim();
+            println!("Temporary file path: {}", temp_path);
+            // TODO upload file to s3
+            // TODO delete temp file
+
             Ok(())
         })
     }
@@ -119,8 +173,7 @@ impl fmt::Display for JobQueue {
             writeln!(f, "    ID: {}", job.job_id)?;
             writeln!(f, "    Status: {}", job.status)?;
             writeln!(f, "    Request ID: {}", job.request_id)?;
-            writeln!(f, "    Input Path: {}", job.input_path)?;
-            writeln!(f, "    Output Path: {}", job.output_path)?;
+            writeln!(f, "    s3 Path: {}", job.s3_path)?;
             drop(job);
         }
         Ok(())
@@ -132,6 +185,7 @@ pub fn create_job_instance(job_type: JobType) -> Box<dyn AnalysisJob> {
         JobType::Corr => Box::new(CorrelationJob {}),
         JobType::Eda => Box::new(EdaJob {}),
         JobType::SimulatedJob => Box::new(SimulatedJob {}),
+        JobType::SimulatedError => Box::new(SimulatedError {}),
         JobType::None => panic!("Invalid job type for execution"),
     }
 }

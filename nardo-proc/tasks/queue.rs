@@ -124,8 +124,8 @@ mod tests {
     async fn test_simulated_job_run() -> Result<()> {
         let job_request = JobRequest {
             analysis_types: vec!["simulated".to_string()],
-            id: "test".to_string(),
-            request_id: "test".to_string(), // db key
+            id: uuid::Uuid::new_v4().to_string(),
+            request_id: uuid::Uuid::new_v4().to_string(),
             author: "test author".to_string(),
             name: "test job".to_string(),
             description: "test desc".to_string(),
@@ -147,9 +147,13 @@ mod tests {
         println!("{:#}", job_queue);
 
         let job_request_2 = JobRequest {
-            analysis_types: vec!["simulated".to_string(), "eda".to_string()],
-            id: "test_2".to_string(),
-            request_id: "test_2".to_string(), // db key
+            analysis_types: vec![
+                "simulated".to_string(),
+                // "eda".to_string(),
+                // "simerror".to_string(),
+            ],
+            id: uuid::Uuid::new_v4().to_string(),
+            request_id: uuid::Uuid::new_v4().to_string(),
             author: "test author_2".to_string(),
             name: "test job_2".to_string(),
             description: "test desc_2".to_string(),

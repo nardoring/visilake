@@ -154,10 +154,10 @@
               };
             };
             rustfmt.enable = true;
-            # ruff = {
-            #   enable = true;
-            #   format = true;
-            # };
+            ruff = {
+              enable = true;
+              format = true;
+            };
             shellcheck.enable = true;
             terraform = {
               enable = true;

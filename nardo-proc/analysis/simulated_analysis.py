@@ -1,5 +1,6 @@
 import sys
 
+
 def simulate_job(input_path, output_path):
     print("Simulating job run with the following paths:")
     print(f"Input path: {input_path}")
@@ -10,6 +11,7 @@ def simulate_job(input_path, output_path):
         file.write("This is a simulated output.\n")
 
     print("Processing done.")
+
 
 if __name__ == "__main__":
     if len(sys.argv) != 3:

@@ -40,7 +40,7 @@ export default function JobTable() {
     undefined,
     {
       onSuccess: (d) => {
-        // This is stupid, hacky, and I hate it, but for some reason ag-grid does not response to react state changes. Not the useQuery, not the useState, not even if I make a useEffect doing a force refresh.
+        // This is stupid, hacky, and I hate it, but for some reason ag-grid does not respond to react state changes. Not the useQuery, not the useState, not even if I make a useEffect doing a force refresh.
         // I just want to get this to work, so that's what we got to deal with...
         gridRef.current?.api.forEachNode((rowNode) => {
           rowNode.data['s3Url'] = d;

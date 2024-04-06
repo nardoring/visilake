@@ -269,7 +269,7 @@ export default function JobTable() {
       tooltipValueGetter: (params: ITooltipParams) => {
         const tooltipMessages: Record<string, string> = {
           PENDING: 'Processing job will soon be queued',
-          QUEUED: 'Processing job will soon be started',
+          QUEUED: 'Data is currently being processed',
           PROCESSING: 'Data is currently being processed',
           COMPLETE: 'Processing job has been completed',
           FAILED: 'An error has occurred',

@@ -4,7 +4,7 @@ const statusMap: Record<string, string> = {
   pending: 'Pending',
   complete: 'Completed',
   processing: 'In Progress',
-  queued: 'Queued',
+  queued: 'In Progress',
   failed: 'Failed',
 };
 
@@ -26,12 +26,12 @@ const statusStyles: Record<string, StatusStyle> = {
     borderColor: '#00A13A',
     color: '#7E8285',
   },
-  processing: {
+  queued: {
     backgroundColor: '#C9E8FB',
     borderColor: '#1790D0',
     color: '#7E8285',
   },
-  queued: {
+  processing: {
     backgroundColor: '#FFF2CC',
     borderColor: '#FFE699',
     color: '#7E8285',

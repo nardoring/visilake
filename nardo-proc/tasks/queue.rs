@@ -118,14 +118,16 @@ pub async fn queue_new_requests(
 
 #[cfg(test)]
 mod tests {
+    use crate::utils::generate_request_id;
+
     use super::*;
 
     #[tokio::test]
     async fn test_simulated_job_run() -> Result<()> {
         let job_request = JobRequest {
             analysis_types: vec!["Simulated Job".to_string()],
-            id: uuid::Uuid::new_v4().to_string(),
-            request_id: uuid::Uuid::new_v4().to_string(),
+            id: generate_request_id(),
+            request_id: generate_request_id(),
             author: "test author".to_string(),
             name: "test job".to_string(),
             description: "test desc".to_string(),
@@ -152,8 +154,8 @@ mod tests {
                 // "Exploratory Data Analysis".to_string(),
                 // "Simulated Error".to_string(),
             ],
-            id: uuid::Uuid::new_v4().to_string(),
-            request_id: uuid::Uuid::new_v4().to_string(),
+            id: generate_request_id(),
+            request_id: generate_request_id(),
             author: "test author_2".to_string(),
             name: "test job_2".to_string(),
             description: "test desc_2".to_string(),

@@ -7,7 +7,7 @@ pub fn use_localstack() -> bool {
     std::env::var("LOCALSTACK").unwrap_or_default() == "true"
 }
 
-pub fn _generate_request_id() -> String {
+pub fn generate_request_id() -> String {
     Uuid::new_v4()
         .simple()
         .to_string()

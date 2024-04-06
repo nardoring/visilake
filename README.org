@@ -1,11 +1,12 @@
-* Visilake Web
+* Visilake
+
+This is the mono repo for the visilake application. We deploy the AWS infra, the web-app docker container, and the rust processing jobs here.
 
 The easiest way to deploy the visilake application is by using the =nix= package manager along with our deploy script.
 
 [[file:flake.nix][flake.nix]] provides the all the project's dependencies, builds the nodejs application, packages the nodejs application in a docker container, pulls the [[https://www.localstack.cloud/][Localstack]]-pro docker image, and sets the necessary environment variables to deploy the test environment.
 
 We provide comprehensive instructions for a windows deployment through =WSL2= in our [[https://github.com/nardoring/devenv][devenv]] repository.
-
 
 ** Deployment
 
@@ -48,7 +49,6 @@ The web app will be deployed to [[http://localhost:45139]]
 
 For an outline of the current AWS services used see the [[file:./infra/README.org][infrastructure readme]].
 
-
 ** Stopping the deployed services
 
 To stop the localstack docker containers and any additional containers it has spawned we have a stop script:
@@ -63,6 +63,35 @@ It is wise to prune any unneeded images afterwards. If you do not have other doc
 ./infra/deploy-tf.sh --teardown hard
 #+end_src
 
+** Visilake proc
+To run the rust processing jobs first cd into the visilake-proc directory
+
+#+begin_src shell
+cd visilake-proc
+#+end_src
+
+Next just run the app with cargo
+
+#+begin_src shell
+cargo run
+#+end_src
+
+After the application is done compiling and building, you can run commands we've created for both debugging and running the processing
+
+#+begin_src shell
+Usage: <COMMAND>
+
+Commands:
+  list-topics          List topics from AWS SNS
+  list-queues          List queues from AWS SQS
+  list-s3              List buckets and objects from AWS s3
+  list-messages        List messages from AWS SQS
+  process-queued-jobs  Process queued jobs
+  test-parquet         Injest parquet and display it
+  delete-queues        Deletes old update topic queues
+  exit                 Exits the REPL
+  help                 Print this message or the help of the given subcommand(s)
+#+end_src
 
 ** Prerequisites
 This section is only for non-=nix= based deployments.

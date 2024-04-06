@@ -5,6 +5,7 @@ use super::{data::TimeSeriesData, job::Job, job_type::JobType};
 use eyre::{eyre, Result};
 use log::debug;
 use serde::{Deserialize, Serialize};
+use tracing_subscriber::fmt::format;
 use std::sync::{Arc, Mutex};
 use std::{fmt, future::Future, path::PathBuf, pin::Pin, process::Command};
 use tokio::time::Duration;
@@ -132,31 +133,7 @@ impl AnalysisJob for EdaJob {
         Box::pin(async move {
             let job = job.lock().unwrap(); // Lock to access job data
             let job_id = &job.request_id.clone();
-
-            // Execute athena to query the dataset
-            let shared_config = config::configure().await.unwrap();
-            let client = athena_client(&shared_config);
-    
-            let test_query = "SELECT * FROM mockdata.dataset1 LIMIT 50";
-            let database = "mockdata";
-            let output_location = "s3://aws-athena-query-results-000000000000-us-east-1";
-    
-            let query_execution_id =
-                start_query_execution(&client, test_query, database, output_location)
-                    .await
-                    .expect("Failed to start query execution");
-    
-            let mut status = "".to_string();
-            while status != "SUCCEEDED" {
-                sleep(Duration::from_secs(5)).await;
-                status = check_query_execution_status(&client, &query_execution_id)
-                    .await
-                    .expect("Failed to check query execution status");
-                if status == "FAILED" || status == "CANCELLED" {
-                    panic!("Query execution failed or was cancelled");
-                }
-            }
-
+            
             // Execute the Python script for EDA analysis
             let output = Command::new("python")
                 .arg("analysis/eda_analysis.py")
@@ -187,6 +164,19 @@ impl AnalysisJob for EdaJob {
 
             if !output.status.success() {
                 let error_message = String::from_utf8_lossy(&output.stderr);
+                // Return an error if the script execution failed
+                return Err(eyre!("EDA job failed: {}", error_message));
+            }
+
+            let output_data = Command::new("awslocal")
+            .arg("s3")
+            .arg("cp")
+            .arg(format!("./outputs/{}-data.parquet", job_id))
+            .arg(format!("s3://metadata/{}/{}-data.parquet", job_id, job_id))
+            .output()?;
+
+            if !output_data.status.success() {
+                let error_message = String::from_utf8_lossy(&output_data.stderr);
                 // Return an error if the script execution failed
                 return Err(eyre!("EDA job failed: {}", error_message));
             }

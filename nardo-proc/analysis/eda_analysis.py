@@ -22,6 +22,10 @@ def convert_parquet_to_csv(parquet_path, csv_path):
     df.to_csv(csv_path, index=False)
     # print(f"Converted Parquet file to CSV: {csv_path}")
 
+def convert_csv_to_parquet(csv_path, parquet_path):
+    """Converts a CSV file to Parquet format."""
+    df = pd.read_csv(csv_path)
+    df.to_parquet(parquet_path, index=False)
 
 def eda_analysis(directory, request_id):
     # Dear god what have I done...
@@ -113,6 +117,8 @@ def eda_analysis(directory, request_id):
         profile.to_file(tmpfile.name)
         # print(f"Profile report generated: {tmpfile.name}", file=sys.stderr)
         print(tmpfile.name)
+
+    convert_csv_to_parquet(csv_path, f'./outputs/{request_id}-data.parquet')
 
     # write to local disk for testing
     # profile_output_path = os.path.join(directory, f"{request_id}-eda.html")

@@ -69,7 +69,7 @@ export default function FormPopup({
                 </div>
                 {/*body*/}
                 <div className='relative flex-auto pl-5 pr-5'>
-                  <p className='text-blueGray-500 my-4 text-lg leading-relaxed'>
+                  <p className='text-blueGray-500 text-lg my-4 leading-relaxed'>
                     {formSuccess
                       ? 'Job has successfully been submitted. Processing will begin shortly.'
                       : 'Error has occured. Please contact an administrator.'}

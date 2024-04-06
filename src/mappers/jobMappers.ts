@@ -2,11 +2,11 @@ import type { Job } from '~/models/domain/job';
 import type { JobStatus } from '~/models/domain/jobStatus';
 import type { Job as DatabaseJob } from '~/models/db/job';
 
-function mapJobs(output: DatabaseJob[]): Job[] {
+export function mapJobs(output: DatabaseJob[]): Job[] {
   return output.map((o) => mapJob(o));
 }
 
-function mapJob(job: DatabaseJob): Job {
+export function mapJob(job: DatabaseJob): Job {
   console.log(job);
 
   return {
@@ -24,5 +24,3 @@ function mapJob(job: DatabaseJob): Job {
     jobId: job.requestID.S,
   } as Job;
 }
-
-export default mapJobs;

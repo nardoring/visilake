@@ -1,4 +1,5 @@
 import React, { useState, useMemo, useRef, useEffect } from 'react';
+import { useRouter } from 'next/router';
 import { api } from '~/utils/api';
 import { AgGridReact } from 'ag-grid-react';
 import type { GetRowIdParams, SortDirection } from 'ag-grid-community';
@@ -22,6 +23,7 @@ const ROW_HEIGHT = 70;
 const PAGINATION_PAGE_SIZES = [5, 10, 15, 20];
 
 export default function JobTable() {
+  const router = useRouter();
   const { searchBarText } = useSearchBar();
   const { windowHeight, windowWidth } = useWindowDimensions();
   const gridRef = useRef<AgGridReact>(null);
@@ -128,11 +130,15 @@ export default function JobTable() {
     {
       field: 'jobName',
       filter: 'agTextColumnFilter',
-      cellRenderer: (params: { value: string }) => (
+      cellRenderer: (params: { value: string; data: { jobId: string } }) => (
         <Link
-          href='/ViewPage'
+          href={`/ViewPage/${params.data.jobId}`}
           passHref
           className='hover:font-bold'
+          onClick={(e) => {
+            if (data != null)
+              localStorage.setItem('jobs', JSON.stringify(data));
+          }}
         >
           <p>{params.value}</p>
         </Link>

@@ -1,6 +1,5 @@
 use crate::aws::s3::{s3_client, upload_object};
 use crate::config;
-
 use super::status::Status;
 use super::{data::TimeSeriesData, job::Job, job_type::JobType};
 use eyre::{eyre, Result};
@@ -8,6 +7,8 @@ use log::debug;
 use serde::{Deserialize, Serialize};
 use std::sync::{Arc, Mutex};
 use std::{fmt, future::Future, path::PathBuf, pin::Pin, process::Command};
+use tokio::time::Duration;
+use tokio::time::sleep;
 
 pub trait AnalysisJob {
     fn run(&self, job: Arc<Mutex<Job>>) -> Pin<Box<dyn Future<Output = Result<String>> + Send + '_>>;
@@ -131,6 +132,30 @@ impl AnalysisJob for EdaJob {
         Box::pin(async move {
             let job = job.lock().unwrap(); // Lock to access job data
             let job_id = &job.request_id.clone();
+
+            // Execute athena to query the dataset
+            let shared_config = config::configure().await.unwrap();
+            let client = athena_client(&shared_config);
+    
+            let test_query = "SELECT * FROM mockdata.dataset1 LIMIT 50";
+            let database = "mockdata";
+            let output_location = "s3://aws-athena-query-results-000000000000-us-east-1";
+    
+            let query_execution_id =
+                start_query_execution(&client, test_query, database, output_location)
+                    .await
+                    .expect("Failed to start query execution");
+    
+            let mut status = "".to_string();
+            while status != "SUCCEEDED" {
+                sleep(Duration::from_secs(5)).await;
+                status = check_query_execution_status(&client, &query_execution_id)
+                    .await
+                    .expect("Failed to check query execution status");
+                if status == "FAILED" || status == "CANCELLED" {
+                    panic!("Query execution failed or was cancelled");
+                }
+            }
 
             // Execute the Python script for EDA analysis
             let output = Command::new("python")

@@ -156,7 +156,7 @@ export const jobRouter = createTRPCRouter({
       const requestID = shortUid();
 
       await create_athena_table(
-        'SELECT * FROM mockdata.dataset1 LIMIT 2',
+        'SELECT * FROM procdata.dataset2 LIMIT 2',
         'mockdata',
         requestID
       );

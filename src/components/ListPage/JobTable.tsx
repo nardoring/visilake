@@ -241,7 +241,7 @@ export default function JobTable() {
       resizable: false,
       sortable: false,
       tooltipValueGetter: (params: ITooltipParams) => {
-        return 'Download job ouputs';
+        return 'Download job outputs';
       },
       // Ignore global filter ()
       getQuickFilterText: () => {

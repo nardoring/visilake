@@ -5,7 +5,8 @@ use crate::{
         job_type::{deserialize_job_types, serialize_job_types, JobType},
         status::{deserialize_statuses, serialize_statuses, Status},
     },
-    tasks, utils::generate_request_id,
+    tasks,
+    utils::generate_request_id,
 };
 use aws_sdk_dynamodb::types::AttributeValue;
 use eyre::Result;

@@ -1,16 +1,16 @@
-use crate::aws::s3::{s3_client, upload_object};
-use crate::config;
 use super::status::Status;
 use super::{data::TimeSeriesData, job::Job, job_type::JobType};
+use crate::aws::s3::{s3_client, upload_object};
+use crate::config;
 use eyre::{eyre, Result};
 use log::{debug, info};
 use serde::{Deserialize, Serialize};
-use tracing_subscriber::fmt::format;
 use std::sync::{Arc, Mutex};
 use std::vec::IntoIter;
 use std::{fmt, future::Future, path::PathBuf, pin::Pin, process::Command};
-use tokio::time::Duration;
 use tokio::time::sleep;
+use tokio::time::Duration;
+use tracing_subscriber::fmt::format;
 
 pub trait AnalysisJob {
     fn run(
@@ -125,7 +125,7 @@ impl AnalysisJob for EdaJob {
         Box::pin(async move {
             let job = job.lock().unwrap(); // Lock to access job data
             let job_id = &job.request_id.clone();
-            
+
             // Execute the Python script for EDA analysis
             let output = Command::new("python")
                 .arg("analysis/eda_analysis.py")
@@ -155,11 +155,11 @@ impl AnalysisJob for EdaJob {
             }
 
             let output_data = Command::new("awslocal")
-            .arg("s3")
-            .arg("cp")
-            .arg(format!("./outputs/{}-data.parquet", job_id))
-            .arg(format!("s3://metadata/{}/{}-data.parquet", job_id, job_id))
-            .output()?;
+                .arg("s3")
+                .arg("cp")
+                .arg(format!("./outputs/{}-data.parquet", job_id))
+                .arg(format!("s3://metadata/{}/{}-data.parquet", job_id, job_id))
+                .output()?;
 
             if !output_data.status.success() {
                 let error_message = String::from_utf8_lossy(&output_data.stderr);

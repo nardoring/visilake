@@ -155,7 +155,7 @@ export const jobRouter = createTRPCRouter({
     .mutation(async ({ input }) => {
       const requestID = shortUid();
 
-      create_athena_table(
+      await create_athena_table(
         'SELECT * FROM mockdata.dataset1 LIMIT 2',
         'mockdata',
         requestID

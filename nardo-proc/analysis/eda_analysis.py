@@ -6,7 +6,7 @@ import sys
 import os
 import pandas as pd
 import tempfile
-import subprocess 
+import subprocess
 import gzip
 import urllib.request
 import json
@@ -14,7 +14,8 @@ import csv
 
 from ydata_profiling import ProfileReport
 
-s3url = 'http://s3.us-east-1.localhost.localstack.cloud:4566/metadata'
+s3url = "http://s3.us-east-1.localhost.localstack.cloud:4566/metadata"
+
 
 def convert_parquet_to_csv(parquet_path, csv_path):
     """Converts a Parquet file to CSV format."""
@@ -22,46 +23,48 @@ def convert_parquet_to_csv(parquet_path, csv_path):
     df.to_csv(csv_path, index=False)
     # print(f"Converted Parquet file to CSV: {csv_path}")
 
+
 def convert_csv_to_parquet(csv_path, parquet_path):
     """Converts a CSV file to Parquet format."""
     df = pd.read_csv(csv_path)
     df.to_parquet(parquet_path, index=False)
 
+
 def eda_analysis(directory, request_id):
     # Dear god what have I done...
     athenaFileLs = os.popen(f"awslocal s3 ls {directory}").read()
-    #print(athenaFileLs)
+    # print(athenaFileLs)
     athenaFileName = athenaFileLs.split(" ")[-1]
 
     subprocess.call(f"mkdir -p {request_id}", shell=True)
 
-    #print(f"{s3url}/{request_id}/{athenaFileName}")
+    # print(f"{s3url}/{request_id}/{athenaFileName}")
 
     with urllib.request.urlopen(f"{s3url}/{request_id}/{athenaFileName}") as response:
         # Read the content
         content = gzip.decompress(response.read())
-        
+
         json_strings = []
-        for record in content.decode('utf-8').strip().rstrip('\n').split('\n'):
-            #print(record)
+        for record in content.decode("utf-8").strip().rstrip("\n").split("\n"):
+            # print(record)
             json_strings.append(json.loads(record))
 
-        with open(f'./{request_id}.csv', mode='w') as csv_file:
+        with open(f"./{request_id}.csv", mode="w") as csv_file:
             csv_writer = csv.DictWriter(csv_file, fieldnames=json_strings[0].keys())
             csv_writer.writeheader()
             for record in json_strings:
                 csv_writer.writerow(record)
 
-    csv_path = f'./{request_id}.csv'
+    csv_path = f"./{request_id}.csv"
 
-    #subprocess.call(f"awslocal s3 cp {directory}{athenaFileName} ./{request_id}.gz", shell=True)
-    #print(subprocess.call(f"chmod +r  ./{request_id}.parquet", shell=True))
+    # subprocess.call(f"awslocal s3 cp {directory}{athenaFileName} ./{request_id}.gz", shell=True)
+    # print(subprocess.call(f"chmod +r  ./{request_id}.parquet", shell=True))
 
     # print("EDA Analysis Starting")
     # print(f"Input path: {directory}")
     # print(f"Request id: {request_id}")
-    
-    #directory = f"../"
+
+    # directory = f"../"
 
     # with gzip.open(f"./{request_id}/{request_id}.gz") as f:
     #     print(f.read())
@@ -118,14 +121,15 @@ def eda_analysis(directory, request_id):
         # print(f"Profile report generated: {tmpfile.name}", file=sys.stderr)
         print(tmpfile.name)
 
-    convert_csv_to_parquet(csv_path, f'./outputs/{request_id}-data.parquet')
+    convert_csv_to_parquet(csv_path, f"./outputs/{request_id}-data.parquet")
 
     # write to local disk for testing
     # profile_output_path = os.path.join(directory, f"{request_id}-eda.html")
     # profile.to_file(profile_output_path)
     # print(f"Profile report generated: {profile_output_path}")
 
-#eda_analysis("s3://metadata/test-jobID-781/","test-jobID-781")
+
+# eda_analysis("s3://metadata/test-jobID-781/","test-jobID-781")
 
 if __name__ == "__main__":
     if len(sys.argv) != 3:

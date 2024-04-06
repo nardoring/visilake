@@ -143,7 +143,6 @@ async fn main() -> Result<()> {
     publish_complete_requests(&clients.dynamodb, &clients.sns, &topics, &mut job_queue).await?;
     println!("{:#}", job_queue);
 
-
     // loop {
     //     print!("$ ");
     //     io::stdout().flush().unwrap();

@@ -145,17 +145,17 @@ mod tests {
         println!("{:#}", job_queue);
 
         // one job
-        queue_jobs_from_request(&job_request, &mut job_queue)?;
+        // queue_jobs_from_request(&job_request, &mut job_queue)?;
         println!("{:#}", job_queue);
 
         let job_request_2 = JobRequest {
             analysis_types: vec![
-                "Simulated Job".to_string(),
-                // "Exploratory Data Analysis".to_string(),
+                // "Simulated Job".to_string(),
+                "Exploratory Data Analysis".to_string(),
                 // "Simulated Error".to_string(),
             ],
-            id: generate_request_id(),
-            request_id: generate_request_id(),
+            id: "7pcznpit".to_string(),
+            request_id: "7pcznpit".to_string(),
             author: "test author_2".to_string(),
             name: "test job_2".to_string(),
             description: "test desc_2".to_string(),

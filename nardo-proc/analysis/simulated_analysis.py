@@ -13,22 +13,18 @@ def simulate_job(directory, request_id):
         os.makedirs(directory)
 
     try:
-        with open(f"{directory}{request_id}-data.csv", "w") as file:
-            file.write(f"Processed data based on input from {directory}\n")
-            file.write(f"This is a simulated output for {request_id}.\n")
-        print("Simulated processing done.", file=sys.stderr)
-
         with tempfile.NamedTemporaryFile(
             delete=False,
             mode="w",
-            suffix=".csv",
+            suffix=".parquet",
             dir=directory,
-            prefix=f"{request_id}-temp-",
+            prefix=f"{request_id}-data-",
         ) as tmpfile:
             tmpfile.write(f"Temporary data based on input from {directory}\n")
             tmpfile.write(f"This is a temporary simulated output for {request_id}.\n")
             # Print the path of the temporary file to stdout
             print(tmpfile.name)
+            print("Simulated processing done.", file=sys.stderr)
 
     except Exception as e:
         print(f"Error writing the file: {e}", file=sys.stderr)

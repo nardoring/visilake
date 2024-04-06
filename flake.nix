@@ -127,12 +127,14 @@
 
         localstack = builtins.attrValues localstack-nix.packages.${system};
         treefmtPrograms = builtins.attrValues config.treefmt.build.programs;
-        # pyEnv = pkgs.python3.withPackages (ps:
-        #   with ps; [
-        #     awswrangler
-        #     pandas
-        #     numpy
-        #   ]);
+        pyEnv = pkgs.python3.withPackages (ps:
+          with ps; [
+            # awswrangler
+            # pandas
+            # numpy
+            pyarrow
+            fastparquet
+          ]);
       in {
         treefmt.config = {
           projectRootFile = "flake.nix";
@@ -174,7 +176,7 @@
             [
               toolchain
               pkgs.rust-analyzer-unwrapped
-              # pyEnv
+              pyEnv
               nodejs
               nodePackages.eslint
               # parquet-tools

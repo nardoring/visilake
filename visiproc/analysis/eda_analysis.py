@@ -99,7 +99,7 @@ def eda_analysis(directory, request_id):
         df["date local"] = pd.to_datetime(df["date local"])
 
     profile = ProfileReport(
-        df.head(10),
+        df.head(1000),
         tsmode=True,
         sortby="date local",
         title=f"Profile for {request_id}",

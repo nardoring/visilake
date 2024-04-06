@@ -1758,34 +1758,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "nardo-proc"
-version = "0.1.0"
-dependencies = [
- "arrow",
- "arrow-csv",
- "aws-config",
- "aws-sdk-athena",
- "aws-sdk-dynamodb",
- "aws-sdk-s3",
- "aws-sdk-sns",
- "aws-sdk-sqs",
- "chrono",
- "clap",
- "eyre",
- "fern",
- "http 0.2.11",
- "log",
- "parquet",
- "serde",
- "serde_json",
- "shlex",
- "tempfile",
- "tokio",
- "tracing-subscriber",
- "uuid",
-]
-
-[[package]]
 name = "nu-ansi-term"
 version = "0.46.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2804,6 +2776,34 @@ name = "version_check"
 version = "0.9.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "49874b5167b65d7193b8aba1567f5c7d93d001cafc34600cee003eda787e483f"
+
+[[package]]
+name = "visiproc"
+version = "0.1.0"
+dependencies = [
+ "arrow",
+ "arrow-csv",
+ "aws-config",
+ "aws-sdk-athena",
+ "aws-sdk-dynamodb",
+ "aws-sdk-s3",
+ "aws-sdk-sns",
+ "aws-sdk-sqs",
+ "chrono",
+ "clap",
+ "eyre",
+ "fern",
+ "http 0.2.11",
+ "log",
+ "parquet",
+ "serde",
+ "serde_json",
+ "shlex",
+ "tempfile",
+ "tokio",
+ "tracing-subscriber",
+ "uuid",
+]
 
 [[package]]
 name = "vsimd"

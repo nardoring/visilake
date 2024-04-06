@@ -46,9 +46,9 @@
           overlays = [rust-overlay.overlays.default];
         };
 
-        toolchain = pkgs.rust-bin.fromRustupToolchainFile ./nardo-proc/toolchain.toml;
+        toolchain = pkgs.rust-bin.fromRustupToolchainFile ./visiproc/toolchain.toml;
 
-        visilake-proc = pkgs.callPackage ./nardo-proc {}; # TODO: Rename rust app dir
+        visiproc = pkgs.callPackage ./visiproc {};
 
         visilake = pkgs.buildNpmPackage {
           # https://create.t3.gg/en/deployment/docker
@@ -205,11 +205,11 @@
 
         packages = {
           visilake = visilake;
-          visilake-rust = visilake-proc;
+          visiproc = visiproc;
           visilake-image = visilake-image;
           localstackpro-image = localstackpro-image;
         };
-        # checks.systems = self'.packages.visilake-rust;
+        # checks.systems = self'.packages.visiproc;
       };
     });
 }

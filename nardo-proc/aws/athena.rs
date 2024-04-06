@@ -117,7 +117,7 @@ pub async fn execute_ctas_query(
     //                     AS SELECT * FROM mockdata.dataset1 LIMIT 2"#;
     let ctas_query = format!(
         r#"CREATE TABLE "{}"."{}"
-           WITH (external_location = '{}')
+           WITH (format = 'JSON',  external_location = '{}')
            AS {}"#,
         database, new_table, external_location, base_query
     );
@@ -191,9 +191,9 @@ mod tests {
         let client = athena_client(&shared_config);
 
         let base_query = "SELECT * FROM mockdata.dataset1 LIMIT 2";
-        let new_table_name = "test_table_ctas";
+        let new_table_name = "test_table_ctas_11312";
         let database_name = "mockdata";
-        let s3_external_location = "s3://metadata/test-jobID/";
+        let s3_external_location = "s3://metadata/test-jobID-7812/";
         let output_location = "s3://aws-athena-query-results-000000000000-us-east-1";
 
         let query_execution_id = execute_ctas_query(

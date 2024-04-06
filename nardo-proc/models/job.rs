@@ -24,7 +24,7 @@ pub struct Job {
 
 pub fn create_job_from_request(job_request: &JobRequest) -> Job {
     Job {
-        job_id: generate_request_id(),
+        job_id: job_request.request_id.clone(),
         request_id: job_request.request_id.clone(),
         current_response_id: String::new(), // initially empty, updated as job progresses
         status: Status::Pending,

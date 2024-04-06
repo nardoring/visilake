@@ -128,6 +128,7 @@ export default function JobTable() {
               }
 
               updatedRow?.setDataValue('jobStatus', update.status);
+              gridRef?.current?.api.refreshCells();
             }
           });
         }

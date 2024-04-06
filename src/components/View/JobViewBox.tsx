@@ -87,8 +87,7 @@ export default function JobViewBox({ job }: JobViewBoxProps) {
             <iframe
               src={getS3Url()}
               title='HTML Content'
-              className='min-h-screen w-full'
-              scrolling={`${job.jobStatus == 'COMPLETE' ? 'no' : 'yes'}`}
+              className='h-full min-h-screen w-full'
               style={{ pointerEvents: 'auto', outline: 'none' }}
             ></iframe>
           )

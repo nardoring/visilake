@@ -18,7 +18,7 @@ use std::{
     sync::{Arc, Mutex},
 };
 
-async fn scan_for(
+pub async fn scan_for(
     dynamodb_client: &DynamoDbClient,
     table: &str,
     attr_name: &str,
@@ -36,10 +36,10 @@ async fn scan_for(
     Ok(result.items().to_vec())
 }
 
-async fn update_request_status(
+pub async fn update_request_status(
     dynamodb_client: &DynamoDbClient,
     item: &HashMap<String, AttributeValue>,
-    current_status: Status,
+    current_status: &Status,
     table: &str,
 ) -> Result<HashMap<String, AttributeValue>> {
     if let Some(new_status) = current_status.next() {
@@ -96,20 +96,60 @@ pub async fn queue_new_requests(
 ) -> Result<()> {
     for item in scan_for(dynamodb_client, "mockRequests", "jobStatus", "PENDING").await? {
         // queue the job
-        debug!("Queuing job {:#?}", item);
         let job_request = convert_item_to_job_request(&item)?;
         queue_jobs_from_request(&job_request, job_queue)?;
 
-        // update job request status to QUEUED
         let updated_item =
-            update_request_status(dynamodb_client, &item, job_request.status, "mockRequests")
+            update_request_status(dynamodb_client, &item, &job_request.status, "mockRequests")
                 .await?;
         let job_request = convert_item_to_job_request(&updated_item)?;
+        debug!("Queued job {:#?}", updated_item);
 
         // publish message about the queued job
         let json_string = serde_json::to_string(&job_request)?;
         for topic in topics.iter() {
             publish(sns_client, topic, &json_string).await?;
+        }
+    }
+
+    Ok(())
+}
+
+pub async fn publish_complete_requests(
+    dynamodb_client: &DynamoDbClient,
+    sns_client: &SnsClient,
+    topics: &Vec<String>,
+    job_queue: &mut JobQueue,
+) -> Result<()> {
+    for job_arc in job_queue.iter() {
+        let job = job_arc.lock().unwrap();
+
+        if job.status == Status::Completed {
+            debug!("Job Info: {:?}", *job_arc);
+            for item in scan_for(
+                dynamodb_client,
+                "mockRequests",
+                "requestID",
+                &job.request_id,
+            )
+            .await?
+            {
+                let updated_item = update_request_status(
+                    dynamodb_client,
+                    &item,
+                    &Status::Processing,
+                    "mockRequests",
+                )
+                .await?;
+                let job_request = convert_item_to_job_request(&updated_item)?;
+
+                let json_string = serde_json::to_string(&job_request)?;
+                for topic in topics.iter() {
+                    publish(sns_client, topic, &json_string).await?;
+                }
+            }
+        } else {
+            debug!("Job Info (Not Complete): {:?}", *job);
         }
     }
 
@@ -150,8 +190,8 @@ mod tests {
 
         let job_request_2 = JobRequest {
             analysis_types: vec![
-                // "Simulated Job".to_string(),
-                "Exploratory Data Analysis".to_string(),
+                "Simulated Job".to_string(),
+                // "Exploratory Data Analysis".to_string(),
                 // "Simulated Error".to_string(),
             ],
             id: "test-jobID-781".to_string(),
@@ -174,6 +214,7 @@ mod tests {
         // run jobs
         job_queue.run().await?;
         println!("{:#}", job_queue);
+        // publish_complete_requests(&mut job_queue).await?;
 
         Ok(())
     }

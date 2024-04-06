@@ -3,16 +3,20 @@ use crate::config;
 use super::status::Status;
 use super::{data::TimeSeriesData, job::Job, job_type::JobType};
 use eyre::{eyre, Result};
-use log::debug;
+use log::{debug, info};
 use serde::{Deserialize, Serialize};
 use tracing_subscriber::fmt::format;
 use std::sync::{Arc, Mutex};
+use std::vec::IntoIter;
 use std::{fmt, future::Future, path::PathBuf, pin::Pin, process::Command};
 use tokio::time::Duration;
 use tokio::time::sleep;
 
 pub trait AnalysisJob {
-    fn run(&self, job: Arc<Mutex<Job>>) -> Pin<Box<dyn Future<Output = Result<String>> + Send + '_>>;
+    fn run(
+        &self,
+        job: Arc<Mutex<Job>>,
+    ) -> Pin<Box<dyn Future<Output = Result<String>> + Send + '_>>;
     fn type_name(&self) -> &'static str;
 }
 
@@ -22,7 +26,10 @@ struct SimulatedJob;
 struct SimulatedError;
 
 impl AnalysisJob for SimulatedError {
-    fn run(&self, job: Arc<Mutex<Job>>) -> Pin<Box<dyn Future<Output = Result<String>> + Send + '_>> {
+    fn run(
+        &self,
+        job: Arc<Mutex<Job>>,
+    ) -> Pin<Box<dyn Future<Output = Result<String>> + Send + '_>> {
         Box::pin(async move {
             let job = job.lock().unwrap(); // Lock to access job data
 
@@ -48,7 +55,10 @@ impl AnalysisJob for SimulatedError {
 }
 
 impl AnalysisJob for SimulatedJob {
-    fn run(&self, job: Arc<Mutex<Job>>) -> Pin<Box<dyn Future<Output = Result<String>> + Send + '_>> {
+    fn run(
+        &self,
+        job: Arc<Mutex<Job>>,
+    ) -> Pin<Box<dyn Future<Output = Result<String>> + Send + '_>> {
         Box::pin(async move {
             let job = job.lock().unwrap(); // Lock to access job data
 
@@ -76,7 +86,10 @@ impl AnalysisJob for SimulatedJob {
 }
 
 impl AnalysisJob for CorrelationJob {
-    fn run(&self, job: Arc<Mutex<Job>>) -> Pin<Box<dyn Future<Output = Result<String>> + Send + '_>> {
+    fn run(
+        &self,
+        job: Arc<Mutex<Job>>,
+    ) -> Pin<Box<dyn Future<Output = Result<String>> + Send + '_>> {
         Box::pin(async move {
             let job = job.lock().unwrap(); // Lock to access job data
 
@@ -91,11 +104,9 @@ impl AnalysisJob for CorrelationJob {
                 let error_message = String::from_utf8_lossy(&output.stderr);
                 return Err(eyre!("Correlation job failed: {}", error_message));
             }
-            // let temp_path = std::str::from_utf8(&output.stdout)?.trim();
+
             let temp_path = std::str::from_utf8(&output.stdout)?.trim().to_string();
             println!("Temporary file path: {}", temp_path);
-            // TODO upload file to s3
-            // TODO delete temp file
 
             Ok(temp_path)
         })
@@ -107,29 +118,10 @@ impl AnalysisJob for CorrelationJob {
 }
 
 impl AnalysisJob for EdaJob {
-    // fn run(&self, job: Arc<Mutex<Job>>) -> Pin<Box<dyn Future<Output = Result<()>> + Send + '_>> {
-    //     Box::pin(async move {
-    //         let job = job.lock().unwrap(); // Lock to access job data
-
-    //         let output = Command::new("python")
-    //             .arg("analysis/eda_analysis.py")
-    //             .arg(&job.s3_path)
-    //             .arg(&job.request_id)
-    //             .output()?;
-    //         // let key = format!("{}-eda.html", &job.request_id);
-    //         drop(job);
-
-    //         if !output.status.success() {
-    //             let error_message = String::from_utf8_lossy(&output.stderr);
-    //             return Err(eyre!("EDA job failed: {}", error_message));
-    //         }
-    //         let temp_path = std::str::from_utf8(&output.stdout)?.trim();
-    //         println!("Temporary file path: {}", temp_path);
-
-    //         Ok(())
-    //     })
-    // }
-    fn run(&self, job: Arc<Mutex<Job>>) -> Pin<Box<dyn Future<Output = Result<String>> + Send + '_>> {
+    fn run(
+        &self,
+        job: Arc<Mutex<Job>>,
+    ) -> Pin<Box<dyn Future<Output = Result<String>> + Send + '_>> {
         Box::pin(async move {
             let job = job.lock().unwrap(); // Lock to access job data
             let job_id = &job.request_id.clone();
@@ -140,18 +132,13 @@ impl AnalysisJob for EdaJob {
                 .arg(&job.s3_path)
                 .arg(&job.request_id)
                 .output()?;
-
-            // Release the lock on job as soon as it's no longer needed.
             drop(job);
 
-            // Check if the Python script executed successfully
             if !output.status.success() {
                 let error_message = String::from_utf8_lossy(&output.stderr);
-                // Return an error if the script execution failed
                 return Err(eyre!("EDA job failed: {}", error_message));
             }
 
-            // Extract the temporary file path from the script's output
             let temp_path = std::str::from_utf8(&output.stdout)?.trim().to_string();
             println!("Temporary file path: {}", temp_path);
 
@@ -164,7 +151,6 @@ impl AnalysisJob for EdaJob {
 
             if !output.status.success() {
                 let error_message = String::from_utf8_lossy(&output.stderr);
-                // Return an error if the script execution failed
                 return Err(eyre!("EDA job failed: {}", error_message));
             }
 
@@ -194,6 +180,10 @@ pub struct JobQueue {
     jobs: Vec<(Box<dyn AnalysisJob>, Arc<Mutex<Job>>)>,
 }
 
+pub struct JobQueueIterator {
+    iter: IntoIter<Arc<Mutex<Job>>>,
+}
+
 impl JobQueue {
     pub fn new() -> Self {
         JobQueue { jobs: Vec::new() }
@@ -201,6 +191,18 @@ impl JobQueue {
 
     pub fn add_job(&mut self, job_impl: Box<dyn AnalysisJob>, job_metadata: Arc<Mutex<Job>>) {
         self.jobs.push((job_impl, job_metadata));
+        // debug!("{:#}", self);
+    }
+
+    pub fn iter(&self) -> JobQueueIterator {
+        let jobs_only = self
+            .jobs
+            .iter()
+            .map(|(_, job_meta)| job_meta.clone())
+            .collect::<Vec<_>>();
+        JobQueueIterator {
+            iter: jobs_only.into_iter(),
+        }
     }
 
     pub async fn run(&self) -> Result<String> {
@@ -215,17 +217,8 @@ impl JobQueue {
             } // lock dropped here
 
             // run job
+            job_impl.run(job_metadata.clone()).await?;
 
-            let temp_path = job_impl.run(job_metadata.clone()).await?;
-
-            let shared_config = config::configure().await?;
-            let s3_client = s3_client(&shared_config);
-
-            let job = job_metadata.lock().unwrap();
-            let key = format!("{}-eda.html", &job.request_id);
-            drop(job);
-
-            // upload_object(&s3_client, "mockdata", &temp_path, &key).await?;
             // update job status to complete
             let mut job = job_metadata.lock().unwrap();
             if let Some(new_status) = job.status.next() {
@@ -234,6 +227,14 @@ impl JobQueue {
             } // lock dropped here
         }
         Ok("".to_string())
+    }
+}
+
+impl Iterator for JobQueueIterator {
+    type Item = Arc<Mutex<Job>>;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        self.iter.next()
     }
 }
 

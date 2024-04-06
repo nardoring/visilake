@@ -24,6 +24,7 @@ use std::{
     io::{self, Write},
     sync::Arc,
 };
+use tasks::queue::publish_complete_requests;
 
 struct Clients {
     dynamodb: Arc<aws_sdk_dynamodb::Client>,
@@ -53,6 +54,8 @@ enum Commands {
     QueueJobs,
     /// Process queued jobs
     ProcessQueuedJobs,
+    /// Publish completed jobs
+    CompleteJobs,
     /// Injest parquet and display it
     TestParquet,
     /// Deletes old update topic queues
@@ -97,6 +100,9 @@ async fn respond(line: &str, clients: &Clients) -> Result<bool, eyre::Report> {
         Commands::ProcessQueuedJobs => {
             job_queue.run().await?;
         }
+        Commands::CompleteJobs => {
+            todo!()
+        }
         Commands::TestParquet => {
             todo!()
         }
@@ -134,10 +140,13 @@ async fn main() -> Result<()> {
     job_queue.run().await?;
     println!("{:#}", job_queue);
 
+    publish_complete_requests(&clients.dynamodb, &clients.sns, &topics, &mut job_queue).await?;
+    println!("{:#}", job_queue);
+
+
     // loop {
     //     print!("$ ");
     //     io::stdout().flush().unwrap();
-
     //     let mut command = String::new();
     //     io::stdin().read_line(&mut command)?;
     //     let command = command.trim();

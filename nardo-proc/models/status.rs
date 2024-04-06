@@ -5,7 +5,7 @@ use serde::{
 };
 use std::{error::Error, fmt, str::FromStr};
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(PartialEq, Debug, Clone, Serialize, Deserialize)]
 pub enum Status {
     Pending,
     Queued,

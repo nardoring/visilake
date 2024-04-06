@@ -15,6 +15,9 @@ import { env } from '~/env.mjs';
 import { JobUpdateMessage } from '~/models/sqs/jobUpdateMessage';
 import getSNSClient from '~/clients/sns';
 import { PublishInput } from 'aws-sdk/clients/sns';
+import getAthenaClient from '~/clients/athena';
+import { StartQueryExecutionCommand } from '@aws-sdk/client-athena';
+import { waitForQueryExecution } from '~/utils/athena';
 
 const DYNAMODB_TABLE = 'mockRequests';
 const shortUid = () => uuidv4().substring(0, 8);
@@ -23,6 +26,39 @@ const AUTHOR_NAME = env.NEXT_PUBLIC_AUTHOR_NAME;
 const SNS_TOPIC_ARN =
   'arn:aws:sns:us-east-1:000000000000:requestUpdatesTopic.fifo';
 const SNS_MESSAGE_GROUP_ID = 'updates';
+
+const create_athena_table = async (
+  baseQuery: string,
+  databaseName: string,
+  tableName: string
+) => {
+  const athena = getAthenaClient();
+
+  // Default output location for query results
+  const defaultOutputLocation =
+    process.env.ATHENA_QUERY_RESULTS ??
+    's3://aws-athena-query-results-000000000000-us-east-1';
+  const outputLocation = defaultOutputLocation;
+
+  // Constructing the CTAS query dynamically based on input
+  const ctasQuery = `
+        CREATE TABLE "${databaseName}"."${tableName}"
+        WITH (format = 'JSON', external_location = 's3://metadata/${tableName}')
+        AS ${baseQuery}`;
+
+  const startQueryResponse = await athena.send(
+    new StartQueryExecutionCommand({
+      QueryString: ctasQuery,
+      ResultConfiguration: { OutputLocation: outputLocation },
+    })
+  );
+
+  const queryExecutionId = startQueryResponse.QueryExecutionId;
+  if (!queryExecutionId) {
+    throw new Error('Failed to obtain queryExecutionId from Athena.');
+  }
+  await waitForQueryExecution(athena, queryExecutionId);
+};
 
 export const jobRouter = createTRPCRouter({
   getJobs: publicProcedure.query(async () => {
@@ -118,6 +154,13 @@ export const jobRouter = createTRPCRouter({
     )
     .mutation(async ({ input }) => {
       const requestID = shortUid();
+
+      create_athena_table(
+        'SELECT * FROM mockdata.dataset1 LIMIT 2',
+        'mockdata',
+        requestID
+      );
+
       console.log('\nRequestID:\n', requestID);
 
       const date = Date.now();

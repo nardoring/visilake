@@ -1,11 +1,11 @@
 import React, { useState, useMemo, useRef, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { api } from '~/utils/api';
-import { AgGridReact } from 'ag-grid-react';
+import { AgGridReact, CustomCellRendererProps } from 'ag-grid-react';
 import type { GetRowIdParams, SortDirection } from 'ag-grid-community';
 import type { ITooltipParams } from 'ag-grid-enterprise';
 import { useSearchBar } from '~/pages/ListPage';
-import PowerBIButton from './PowerBIButton';
+import DownloadLinkButton from './DownloadLinkButton';
 import StatusChip from './StatusChip';
 import 'ag-grid-enterprise';
 import 'ag-grid-community/styles/ag-grid.css';
@@ -35,6 +35,25 @@ export default function JobTable() {
       setQueryExecuted(true);
     },
   });
+
+  const { data: s3URL, isLoading: isS3UrlLoading } = api.s3.getS3Url.useQuery(
+    undefined,
+    {
+      onSuccess: (d) => {
+        // This is stupid, hacky, and I hate it, but for some reason ag-grid does not respond to react state changes. Not the useQuery, not the useState, not even if I make a useEffect doing a force refresh.
+        // I just want to get this to work, so that's what we got to deal with...
+        gridRef.current?.api.forEachNode(
+          (rowNode: { data: { s3Url: string | undefined } }) => {
+            rowNode.data.s3Url = d;
+          }
+        );
+        gridRef.current?.api.refreshCells({
+          columns: ['downloadButton'],
+          force: true,
+        });
+      },
+    }
+  );
 
   const [selectedQueueExecutted, setSelectedQueueExecutted] =
     useState<boolean>(false);
@@ -109,6 +128,7 @@ export default function JobTable() {
               }
 
               updatedRow?.setDataValue('jobStatus', update.status);
+              gridRef?.current?.api.refreshCells();
             }
           });
         }
@@ -204,6 +224,31 @@ export default function JobTable() {
     },
     { field: 'author', filter: 'agMultiColumnFilter' },
     {
+      field: 'downloadButton',
+      headerName: 'Download',
+      cellRenderer: (props: {
+        data: { jobId: string; s3Url: string | undefined; jobStatus: string };
+      }) => {
+        return DownloadLinkButton({
+          jobId: props.data.jobId,
+          s3Link: props.data.s3Url,
+          isDisabled: props.data.jobStatus != 'COMPLETE',
+        });
+      },
+      maxWidth: 115,
+      cellClass: 'ag-cell-download-btn',
+      minWidth: 115,
+      resizable: false,
+      sortable: false,
+      tooltipValueGetter: (params: ITooltipParams) => {
+        return 'Download job outputs';
+      },
+      // Ignore global filter ()
+      getQuickFilterText: () => {
+        return '';
+      },
+    },
+    {
       field: 'jobStatus',
       headerName: 'Status',
       maxWidth: 170,
@@ -225,32 +270,13 @@ export default function JobTable() {
       tooltipValueGetter: (params: ITooltipParams) => {
         const tooltipMessages: Record<string, string> = {
           PENDING: 'Processing job will soon be queued',
-          QUEUED: 'Processing job will soon be started',
+          QUEUED: 'Data is currently being processed',
           PROCESSING: 'Data is currently being processed',
           COMPLETE: 'Processing job has been completed',
           FAILED: 'An error has occurred',
         };
 
         return tooltipMessages[params.value as string] ?? 'INVALID';
-      },
-    },
-    {
-      field: 'powerBILink',
-      headerName: 'PowerBI',
-      cellRenderer: PowerBIButton,
-      maxWidth: 100,
-      minWidth: 100,
-      resizable: false,
-      sortable: false,
-      headerTooltip: 'Provides a data source link to use within PowerBI',
-      tooltipValueGetter: (params: ITooltipParams) => {
-        if ((params.data as { jobStatus: string }).jobStatus !== 'COMPLETE')
-          return 'Link is unavailable';
-        return 'Copy link to clipboard';
-      },
-      // Ignore global filter ()
-      getQuickFilterText: () => {
-        return '';
       },
     },
   ]);
@@ -318,33 +344,33 @@ export default function JobTable() {
     gridRef.current?.api?.setGridOption('quickFilterText', searchBarText);
   }, [searchBarText]);
 
-  if (isLoading) {
+  if (isLoading || isS3UrlLoading || s3URL == undefined) {
     // Render a loading indicator or message
     return (
       <div className='fixed z-40 flex h-full w-full items-center justify-center bg-lightIndigo/70'>
         <p className='z-40 pb-80 text-6xl text-black'>Connecting...</p>
       </div>
     );
-  }
-
-  return (
-    <div className='col-start-2 col-end-9 row-start-2 mb-5 mt-5'>
-      <div
-        className='relative z-20 col-start-2 col-end-9 row-start-3 row-end-4
+  } else {
+    return (
+      <div className='col-start-2 col-end-9 row-start-2 mb-5 mt-5'>
+        <div
+          className='relative z-20 col-start-2 col-end-9 row-start-3 row-end-4
                      flex h-[128rem] flex-col
                     overflow-x-auto rounded-md'
-      >
-        <div className={'ag-theme-quartz'}>
-          <AgGridReact
-            ref={gridRef}
-            rowData={data}
-            columnDefs={colDefs}
-            gridOptions={gridOptions}
-            domLayout={'autoHeight'}
-            defaultColDef={defaultColDef}
-          />
+        >
+          <div className={'ag-theme-quartz'}>
+            <AgGridReact
+              ref={gridRef}
+              rowData={data}
+              columnDefs={colDefs}
+              gridOptions={gridOptions}
+              domLayout={'autoHeight'}
+              defaultColDef={defaultColDef}
+            />
+          </div>
         </div>
       </div>
-    </div>
-  );
+    );
+  }
 }

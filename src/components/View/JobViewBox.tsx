@@ -10,9 +10,9 @@ export default function JobViewBox({ job }: JobViewBoxProps) {
 
   const getS3Url = () => {
     if (job.jobStatus == 'COMPLETE') {
-      return `${s3URL}data-lake/metadata/${job.jobId}/${job.jobId}-eda.html`;
+      return `${s3URL}metadata/${job.jobId}/${job.jobId}-eda.html`;
     } else if (job.jobStatus == 'FAILED') {
-      return `${s3URL}data-lake/metadata/${job.jobId}/${job.jobId}-error.log`;
+      return `${s3URL}metadata/${job.jobId}/${job.jobId}-error.log`;
     }
   };
 
@@ -87,8 +87,7 @@ export default function JobViewBox({ job }: JobViewBoxProps) {
             <iframe
               src={getS3Url()}
               title='HTML Content'
-              className='min-h-screen w-full'
-              scrolling={`${job.jobStatus == 'COMPLETE' ? 'no' : 'yes'}`}
+              className='h-full min-h-screen w-full'
               style={{ pointerEvents: 'auto', outline: 'none' }}
             ></iframe>
           )

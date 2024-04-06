@@ -6,6 +6,7 @@ use crate::{
         status::{deserialize_statuses, serialize_statuses, Status},
     },
     tasks,
+    utils::generate_request_id,
 };
 use aws_sdk_dynamodb::types::AttributeValue;
 use eyre::Result;
@@ -24,12 +25,12 @@ pub struct Job {
 
 pub fn create_job_from_request(job_request: &JobRequest) -> Job {
     Job {
-        job_id: uuid::Uuid::new_v4().to_string(),
+        job_id: job_request.request_id.clone(),
         request_id: job_request.request_id.clone(),
         current_response_id: String::new(), // initially empty, updated as job progresses
         status: Status::Pending,
         last_updated: chrono::Utc::now().timestamp(),
-        s3_path: format!("s3://metadata/{}/", job_request.id),
+        s3_path: format!("s3://metadata/{}/", job_request.request_id.clone()),
     }
 }
 

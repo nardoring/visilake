@@ -24,6 +24,7 @@ use std::{
     io::{self, Write},
     sync::Arc,
 };
+use tasks::queue::publish_complete_requests;
 
 struct Clients {
     dynamodb: Arc<aws_sdk_dynamodb::Client>,
@@ -53,6 +54,8 @@ enum Commands {
     QueueJobs,
     /// Process queued jobs
     ProcessQueuedJobs,
+    /// Publish completed jobs
+    CompleteJobs,
     /// Injest parquet and display it
     TestParquet,
     /// Deletes old update topic queues
@@ -66,9 +69,9 @@ async fn respond(line: &str, clients: &Clients) -> Result<bool, eyre::Report> {
     let cli = Cli::try_parse_from(args)?;
 
     let queues = list_queues(&clients.sqs).await?;
-    let topics = list_topics(&clients.sns).await?;
 
     // not an AWS SQS, this is the queue for the actual python jobs running
+    let topics = list_topics(&clients.sns).await?;
     let mut job_queue = JobQueue::new();
 
     match cli.command {
@@ -97,6 +100,9 @@ async fn respond(line: &str, clients: &Clients) -> Result<bool, eyre::Report> {
         Commands::ProcessQueuedJobs => {
             job_queue.run().await?;
         }
+        Commands::CompleteJobs => {
+            todo!()
+        }
         Commands::TestParquet => {
             todo!()
         }
@@ -124,25 +130,37 @@ async fn main() -> Result<()> {
         s3: Arc::new(s3_client(&shared_config)),
     };
 
-    loop {
-        print!("$ ");
-        io::stdout().flush().unwrap();
+    let topics = list_topics(&clients.sns).await?;
+    let mut job_queue = JobQueue::new();
+    println!("{:#}", job_queue);
 
-        let mut command = String::new();
-        io::stdin().read_line(&mut command)?;
-        let command = command.trim();
+    queue_new_requests(&clients.dynamodb, &clients.sns, &topics, &mut job_queue).await?;
+    println!("{:#}", job_queue);
 
-        match respond(command, &clients).await {
-            Ok(quit) => {
-                if quit {
-                    break;
-                }
-            }
-            Err(err) => {
-                writeln!(std::io::stdout(), "{err}")?;
-                std::io::stdout().flush()?;
-            }
-        }
-    }
+    job_queue.run().await?;
+    println!("{:#}", job_queue);
+
+    publish_complete_requests(&clients.dynamodb, &clients.sns, &topics, &mut job_queue).await?;
+    println!("{:#}", job_queue);
+
+    // loop {
+    //     print!("$ ");
+    //     io::stdout().flush().unwrap();
+    //     let mut command = String::new();
+    //     io::stdin().read_line(&mut command)?;
+    //     let command = command.trim();
+
+    //     match respond(command, &clients).await {
+    //         Ok(quit) => {
+    //             if quit {
+    //                 break;
+    //             }
+    //         }
+    //         Err(err) => {
+    //             writeln!(std::io::stdout(), "{err}")?;
+    //             std::io::stdout().flush()?;
+    //         }
+    //     }
+    // }
     Ok(())
 }

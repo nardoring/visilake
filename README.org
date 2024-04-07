@@ -32,8 +32,9 @@ Usage: ./infra/deploy-tf.sh [options]
 
 Options:
   none                   Full Localstack and Terraform Deployment
-  -i, --init             Initiate the git submodule for the datalake and mock data
   -v, --verbose          Enable debug for Terraform and Localstack
+  -i, --init             Initiate the git submodule for the datalake and mock data
+  -w, --warmup           Warmup Athena and download bigdata docker image
   -r, --redeploy         Re-deploy Terraform config to Localstack
   -d, --docker           Re-deploy the visilake docker image to Localstack
   -t, --teardown [mode]  Perform teardown.
@@ -63,11 +64,11 @@ It is wise to prune any unneeded images afterwards. If you do not have other doc
 ./infra/deploy-tf.sh --teardown hard
 #+end_src
 
-** Visilake proc
-To run the rust processing jobs first cd into the visilake-proc directory
+* Visiproc
+To run the rust processing jobs first cd into the visiproc directory
 
 #+begin_src shell
-cd visilake-proc
+cd visiproc
 #+end_src
 
 Next just run the app with cargo
@@ -93,7 +94,9 @@ Commands:
   help                 Print this message or the help of the given subcommand(s)
 #+end_src
 
-** Prerequisites
+Ideally Visiproc would be containerized in the same way Visilake is and deployed to an EC2 instance, though this is future work.
+
+* Prerequisites
 This section is only for non-=nix= based deployments.
 
 Note that we not longer provide a =Dockerfile= or =docker-compose.yml= for this project, but one can be found on an older branch. We do not currently support this method.

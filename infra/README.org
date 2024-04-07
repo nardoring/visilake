@@ -9,8 +9,9 @@ Usage: ./infra/deploy-tf.sh [options]
 
 Options:
   none                   Full Localstack and Terraform Deployment
-  -i, --init             Initiate the git submodule for the datalake and mock data
   -v, --verbose          Enable debug for Terraform and Localstack
+  -i, --init             Initiate the git submodule for the datalake and mock data
+  -w, --warmup           Warmup Athena and download bigdata docker image
   -r, --redeploy         Re-deploy Terraform config to Localstack
   -d, --docker           Re-deploy the visilake docker image to Localstack
   -t, --teardown [mode]  Perform teardown.

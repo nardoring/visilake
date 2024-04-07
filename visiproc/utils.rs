@@ -1,19 +1,9 @@
 use chrono::Local;
 use eyre::Result;
 use fern::InitError;
-use uuid::Uuid;
 
 pub fn use_localstack() -> bool {
     std::env::var("LOCALSTACK").unwrap_or_default() == "true"
-}
-
-pub fn generate_request_id() -> String {
-    Uuid::new_v4()
-        .simple()
-        .to_string()
-        .chars()
-        .take(8)
-        .collect::<String>()
 }
 
 pub fn init_logging() -> Result<(), InitError> {

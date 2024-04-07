@@ -36,6 +36,7 @@
       imports = [inputs.treefmt-nix.flakeModule];
 
       perSystem = {
+        self',
         system,
         config,
         ...
@@ -209,7 +210,7 @@
           visilake-image = visilake-image;
           localstackpro-image = localstackpro-image;
         };
-        # checks.systems = self'.packages.visiproc;
+        checks.systems = self'.packages.visiproc;
       };
     });
 }

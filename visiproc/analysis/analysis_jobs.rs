@@ -21,7 +21,7 @@ impl AnalysisJob for EdaJob {
         run_job(self, job)
     }
 
-    fn handle_result(&self, job_id: &str, temp_path: &str) -> Result<()>{
+    fn handle_result(&self, job_id: &str, temp_path: &str) -> Result<()> {
         let output = Command::new("awslocal")
             .arg("s3")
             .arg("cp")
@@ -64,7 +64,7 @@ impl AnalysisJob for CorrelationJob {
         run_job(self, job)
     }
 
-    fn handle_result(&self, job_id: &str, temp_path: &str) -> Result<()>{
+    fn handle_result(&self, job_id: &str, temp_path: &str) -> Result<()> {
         debug!("Correlation Job: {} - {}", job_id, temp_path);
         Ok(())
     }
@@ -83,7 +83,7 @@ impl AnalysisJob for SimulatedJob {
         run_job(self, job)
     }
 
-    fn handle_result(&self, job_id: &str, temp_path: &str) -> Result<()>{
+    fn handle_result(&self, job_id: &str, temp_path: &str) -> Result<()> {
         debug!("Simulated job: {} - {}", job_id, temp_path);
         Ok(())
     }
@@ -101,7 +101,7 @@ impl AnalysisJob for SimulatedError {
         run_job(self, job)
     }
 
-    fn handle_result(&self, job_id: &str, temp_path: &str) -> Result<()>{
+    fn handle_result(&self, job_id: &str, temp_path: &str) -> Result<()> {
         debug!("Simulated Error: {} - {}", job_id, temp_path);
         Ok(())
     }

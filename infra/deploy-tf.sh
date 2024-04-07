@@ -60,7 +60,6 @@ function setup_datalake() {
     cd infra/mockdata
     git update-index --assume-unchanged metadata/requests.json
     node metadata/dbMockJobGenerator.js
-    cp -f metadata/job-outputs/mockup-view.html ../../public/mockup-view.html
     cd ../..
 }
 

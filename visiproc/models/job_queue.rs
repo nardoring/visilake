@@ -157,7 +157,7 @@ impl AnalysisJob for EdaJob {
             let output_data = Command::new("awslocal")
                 .arg("s3")
                 .arg("cp")
-                .arg(format!("./outputs/{}-data.parquet", job_id))
+                .arg(format!("./outputs/{}/{}-data.parquet", job_id, job_id))
                 .arg(format!("s3://metadata/{}/{}-data.parquet", job_id, job_id))
                 .output()?;
 

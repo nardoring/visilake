@@ -3,7 +3,7 @@ use arrow::{
     array::{BooleanArray, TimestampMillisecondArray},
     compute::filter_record_batch,
     csv,
-    datatypes::{DataType, Field, Schema, TimeUnit},
+    datatypes::{DataType, Schema, TimeUnit},
     record_batch::RecordBatch,
 };
 use arrow_csv::reader::Format;
@@ -277,7 +277,7 @@ mod tests {
     use super::*;
     use arrow::{
         array::{ArrayRef, Date32Array, Float64Array, Int64Array},
-        datatypes::{DataType, Field, Schema, TimeUnit},
+        datatypes::Field,
         util::pretty::print_batches,
     };
     use std::io::Write;

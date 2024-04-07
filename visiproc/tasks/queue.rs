@@ -1,15 +1,15 @@
 use crate::{
+    analysis::analysis_jobs::create_job_instance,
     aws::sns::publish,
     models::{
-        job::create_job_from_request, job::Job, job_queue::create_job_instance,
-        job_queue::JobQueue, job_request::convert_item_to_job_request, job_request::JobRequest,
-        job_response::_create_job_response, job_type::JobType, status::Status,
+        job::create_job_from_request,
+        job_queue::JobQueue,
+        job_request::{convert_item_to_job_request, JobRequest},
+        job_type::JobType,
+        status::Status,
     },
 };
-use aws_sdk_dynamodb::{
-    error::SdkError, operation::update_item::UpdateItemError, types::AttributeValue,
-    Client as DynamoDbClient,
-};
+use aws_sdk_dynamodb::{types::AttributeValue, Client as DynamoDbClient};
 use aws_sdk_sns::Client as SnsClient;
 use eyre::{Report, Result};
 use log::debug;
@@ -72,11 +72,9 @@ pub fn queue_jobs_from_request(job_request: &JobRequest, job_queue: &mut JobQueu
 
     for job_type in analysis_types {
         let job_clone = job_metadata.clone();
-        // Correctly update the job status to Queued
         {
             let mut job = job_clone.lock().unwrap();
-            // if let Some(new_status) = job.status.next() {
-            if let Some(new_status) = Status::Pending.next() {
+            if let Some(new_status) = job.status.next() {
                 job.status = new_status;
             }
         } // Lock is dropped here
@@ -95,21 +93,22 @@ pub async fn queue_new_requests(
     job_queue: &mut JobQueue,
 ) -> Result<()> {
     for item in scan_for(dynamodb_client, "mockRequests", "jobStatus", "PENDING").await? {
-        // queue the job
         let job_request = convert_item_to_job_request(&item)?;
+
+        // queue the job
         queue_jobs_from_request(&job_request, job_queue)?;
 
         let updated_item =
             update_request_status(dynamodb_client, &item, &job_request.status, "mockRequests")
                 .await?;
         let job_request = convert_item_to_job_request(&updated_item)?;
-        debug!("Queued job {:#?}", updated_item);
 
         // publish message about the queued job
         let json_string = serde_json::to_string(&job_request)?;
         for topic in topics.iter() {
             publish(sns_client, topic, &json_string).await?;
         }
+        debug!("Published queued job {:#?}", updated_item);
     }
 
     Ok(())
@@ -158,14 +157,31 @@ pub async fn publish_complete_requests(
 
 #[cfg(test)]
 mod tests {
-    use crate::utils::generate_request_id;
-
     use super::*;
+    use uuid::Uuid;
+
+    pub fn generate_request_id() -> String {
+        Uuid::new_v4()
+            .simple()
+            .to_string()
+            .chars()
+            .take(8)
+            .collect::<String>()
+    }
 
     #[tokio::test]
     async fn test_simulated_job_run() -> Result<()> {
+        let mut job_queue = JobQueue::new();
+
+        // empty queue
+        println!("{:#}", job_queue);
+
         let job_request = JobRequest {
-            analysis_types: vec!["Simulated Job".to_string()],
+            analysis_types: vec![
+                "Simulated Job".to_string(),
+                // "Exploratory Data Analysis".to_string(),
+                // "Simulated Error".to_string(),
+            ],
             id: generate_request_id(),
             request_id: generate_request_id(),
             author: "test author".to_string(),
@@ -179,42 +195,12 @@ mod tests {
             granularity: 0,
         };
 
-        let mut job_queue = JobQueue::new();
-
-        // empty queue
-        println!("{:#}", job_queue);
-
-        // one job
-        // queue_jobs_from_request(&job_request, &mut job_queue)?;
-        println!("{:#}", job_queue);
-
-        let job_request_2 = JobRequest {
-            analysis_types: vec![
-                "Simulated Job".to_string(),
-                // "Exploratory Data Analysis".to_string(),
-                // "Simulated Error".to_string(),
-            ],
-            id: "test-jobID-781".to_string(),
-            request_id: "test-jobID-781".to_string(),
-            author: "test author_2".to_string(),
-            name: "test job_2".to_string(),
-            description: "test desc_2".to_string(),
-            timestamp: 0,
-            status: Status::Pending,
-            sources: vec!["simulated".to_string()],
-            range_start: 0,
-            range_end: 1,
-            granularity: 0,
-        };
-
-        // two jobs
-        queue_jobs_from_request(&job_request_2, &mut job_queue)?;
+        queue_jobs_from_request(&job_request, &mut job_queue)?;
         println!("{:#}", job_queue);
 
         // run jobs
         job_queue.run().await?;
         println!("{:#}", job_queue);
-        // publish_complete_requests(&mut job_queue).await?;
 
         Ok(())
     }

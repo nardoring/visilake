@@ -60,7 +60,7 @@ def eda_analysis(directory, request_id):
         tsmode=True,
         sortby="date local",
         title=f"Profile for {request_id}",
-        config_file="analysis/ydata-config.yaml",
+        config_file="python_jobs/ydata-config.yaml",
     )
 
     directory = f"./outputs/{request_id}"

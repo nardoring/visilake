@@ -8,7 +8,7 @@ def simulate_job(directory, request_id):
     print(f"Path: {directory}", file=sys.stderr)
     print(f"Request id: {request_id}", file=sys.stderr)
 
-    directory = f"../infra/mockdata/metadata/{request_id}/"
+    directory = f"outputs/{request_id}/"
     if not os.path.exists(directory):
         os.makedirs(directory)
 
@@ -18,7 +18,7 @@ def simulate_job(directory, request_id):
             mode="w",
             suffix=".parquet",
             dir=directory,
-            prefix=f"{request_id}-data-",
+            prefix=f"{request_id}-data",
         ) as tmpfile:
             tmpfile.write(f"Temporary data based on input from {directory}\n")
             tmpfile.write(f"This is a temporary simulated output for {request_id}.\n")

@@ -8,7 +8,7 @@ def simulate_job(directory, request_id):
     print(f"Path: {directory}", file=sys.stderr)
     print(f"Request id: {request_id}", file=sys.stderr)
 
-    directory = f"../outputs/{request_id}/"
+    directory = f"outputs/{request_id}/"
     if not os.path.exists(directory):
         os.makedirs(directory)
 

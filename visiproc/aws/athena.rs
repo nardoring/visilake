@@ -2,10 +2,6 @@
 use aws_config::SdkConfig;
 use aws_sdk_athena::{
     config::Builder,
-    operation::{
-        get_query_execution::GetQueryExecutionInput,
-        start_query_execution::StartQueryExecutionInput,
-    },
     types::{QueryExecutionContext, ResultConfiguration},
     Client,
 };
@@ -34,6 +30,7 @@ pub async fn start_query_execution(
         )
         .send()
         .await?;
+    debug!("Query Response {:#?}", response);
 
     if let Some(query_execution_id) = response.query_execution_id {
         Ok(query_execution_id.to_string())
@@ -51,6 +48,7 @@ pub async fn check_query_execution_status(
         .query_execution_id(query_execution_id)
         .send()
         .await?;
+    debug!("Query Response {:#?}", response);
 
     if let Some(query_execution) = response.query_execution {
         if let Some(status) = query_execution.status {
@@ -133,6 +131,7 @@ pub async fn execute_ctas_query(
         )
         .send()
         .await?;
+    debug!("CTAS Query Response {:#?}", response);
 
     if let Some(query_execution_id) = response.query_execution_id {
         Ok(query_execution_id.to_string())
@@ -145,9 +144,17 @@ pub async fn execute_ctas_query(
 mod tests {
     use super::*;
     use crate::config;
-    use aws_config::load_from_env;
-    use std::env;
     use tokio::time::{sleep, Duration};
+    use uuid::Uuid;
+
+    pub fn generate_uuid() -> String {
+        Uuid::new_v4()
+            .simple()
+            .to_string()
+            .chars()
+            .take(8)
+            .collect::<String>()
+    }
 
     #[tokio::test]
     async fn test_query_execution_and_fetch_results() {
@@ -190,18 +197,21 @@ mod tests {
         let shared_config = config::configure().await.unwrap();
         let client = athena_client(&shared_config);
 
+        // we need a unqiue id for each CTAS query
+        let uuid = generate_uuid();
+
         let base_query = "SELECT * FROM mockdata.dataset1 LIMIT 2";
-        let new_table_name = "test_table_ctas_11312";
+        let new_table_name = &uuid;
         let database_name = "mockdata";
-        let s3_external_location = "s3://metadata/test-jobID-7812/";
+        let s3_external_location = format!("s3://metadata/{}/", &uuid);
         let output_location = "s3://aws-athena-query-results-000000000000-us-east-1";
 
         let query_execution_id = execute_ctas_query(
             &client,
             base_query,
-            new_table_name,
+            &new_table_name,
             database_name,
-            s3_external_location,
+            &s3_external_location,
             output_location,
         )
         .await

@@ -10,7 +10,7 @@ use aws_sdk_s3::{
     operation::{
         copy_object::{CopyObjectError, CopyObjectOutput},
         get_object::{GetObjectError, GetObjectOutput},
-        put_object::{PutObjectError, PutObjectOutput},
+        // put_object::{PutObjectError, PutObjectOutput},
     },
     presigning::PresigningConfig,
     primitives::ByteStream,

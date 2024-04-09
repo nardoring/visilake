@@ -9,12 +9,16 @@ rustPlatform.buildRustPackage {
 
   src = lib.cleanSource ./.;
 
-  cargoHash = "sha256-pNuxoO3IYtrUCd5FBKy+I6Xf9ZRczIeimRvHhLtQi0Q=";
+  cargoHash = "sha256-3jWhvjwAheovgglJlRCXKlCg0htiEwNRIykhVIiqDuA=";
 
   nativeBuildInputs = [pkg-config];
 
   checkFlags = [
-    # reason for disabling test
-    # "--skip=example::tests:example_test"
+    ## Integration tests
+    # requires stack to be deployed to localstack
+    "--skip=aws::athena::tests::test_query_execution_and_fetch_results"
+    "--skip=aws::athena::tests::test_ctas_execution_and_check_table_exists"
+    # requires a writeable directory outside of the nix store
+    "--skip=tasks::queue::tests::test_simulated_job_run"
   ];
 }

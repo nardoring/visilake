@@ -1,6 +1,5 @@
 use crate::models::{
     job::Job,
-    job_request::JobRequest,
     job_type::{deserialize_job_types, serialize_job_types, JobType},
     status::{deserialize_statuses, serialize_statuses, Status},
 };

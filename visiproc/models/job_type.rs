@@ -70,16 +70,6 @@ impl JobType {
             })
             .collect()
     }
-
-    fn _next(&self) -> Option<JobType> {
-        match self {
-            JobType::Eda => Some(JobType::Eda),
-            JobType::Corr => Some(JobType::None),
-            JobType::SimulatedJob => None,
-            JobType::SimulatedError => None,
-            JobType::None => None,
-        }
-    }
 }
 
 pub fn _serialize_job_type<S>(job_type: &JobType, serializer: S) -> Result<S::Ok, S::Error>

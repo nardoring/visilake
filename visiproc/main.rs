@@ -1,5 +1,4 @@
-#![allow(unused_imports)]
-// #![allow(unused_variables)]
+mod analysis;
 mod aws;
 mod config;
 mod models;
@@ -19,7 +18,7 @@ use aws::s3::{list_buckets, list_objects, s3_client};
 
 use clap::{Parser, Subcommand};
 use eyre::Result;
-use models::job_queue::{self, JobQueue};
+use models::job_queue::JobQueue;
 use std::{
     io::{self, Write},
     sync::Arc,
@@ -143,24 +142,24 @@ async fn main() -> Result<()> {
     publish_complete_requests(&clients.dynamodb, &clients.sns, &topics, &mut job_queue).await?;
     println!("{:#}", job_queue);
 
-    // loop {
-    //     print!("$ ");
-    //     io::stdout().flush().unwrap();
-    //     let mut command = String::new();
-    //     io::stdin().read_line(&mut command)?;
-    //     let command = command.trim();
+    loop {
+        print!("$ ");
+        io::stdout().flush().unwrap();
+        let mut command = String::new();
+        io::stdin().read_line(&mut command)?;
+        let command = command.trim();
 
-    //     match respond(command, &clients).await {
-    //         Ok(quit) => {
-    //             if quit {
-    //                 break;
-    //             }
-    //         }
-    //         Err(err) => {
-    //             writeln!(std::io::stdout(), "{err}")?;
-    //             std::io::stdout().flush()?;
-    //         }
-    //     }
-    // }
+        match respond(command, &clients).await {
+            Ok(quit) => {
+                if quit {
+                    break;
+                }
+            }
+            Err(err) => {
+                writeln!(std::io::stdout(), "{err}")?;
+                std::io::stdout().flush()?;
+            }
+        }
+    }
     Ok(())
 }
